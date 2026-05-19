@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YardFlow | Accounts Dashboard</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "secondary": "#505f76",
+                "outline": "#76777d",
+                "tertiary-fixed-dim": "#68dba9",
+                "inverse-surface": "#2d3133",
+                "on-primary-container": "#7c839b",
+                "on-primary-fixed": "#131b2e",
+                "inverse-on-surface": "#eff1f3",
+                "primary-fixed": "#dae2fd",
+                "surface-tint": "#565e74",
+                "primary-container": "#131b2e",
+                "on-tertiary-container": "#069669",
+                "on-secondary-container": "#54647a",
+                "on-error": "#ffffff",
+                "surface-container-low": "#f2f4f6",
+                "on-primary-fixed-variant": "#3f465c",
+                "tertiary": "#000000",
+                "surface-dim": "#d8dadc",
+                "surface-container-lowest": "#ffffff",
+                "primary-fixed-dim": "#bec6e0",
+                "surface-container": "#eceef0",
+                "secondary-fixed-dim": "#b7c8e1",
+                "on-tertiary-fixed": "#002114",
+                "surface-container-highest": "#e0e3e5",
+                "surface-bright": "#f7f9fb",
+                "on-tertiary-fixed-variant": "#005137",
+                "on-primary": "#ffffff",
+                "inverse-primary": "#bec6e0",
+                "on-secondary-fixed": "#0b1c30",
+                "error": "#ba1a1a",
+                "surface-variant": "#e0e3e5",
+                "error-container": "#ffdad6",
+                "outline-variant": "#c6c6cd",
+                "on-surface-variant": "#45464d",
+                "secondary-container": "#d0e1fb",
+                "tertiary-fixed": "#85f8c4",
+                "surface-container-high": "#e6e8ea",
+                "on-secondary": "#ffffff",
+                "primary": "#000000",
+                "on-error-container": "#93000a",
+                "on-secondary-fixed-variant": "#38485d",
+                "on-surface": "#191c1e",
+                "surface": "#f7f9fb",
+                "on-tertiary": "#ffffff",
+                "secondary-fixed": "#d3e4fe",
+                "background": "#f7f9fb",
+                "tertiary-container": "#002114",
+                "on-background": "#191c1e"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.5rem",
+                "lg": "1rem",
+                "xl": "1.5rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Plus Jakarta Sans", "sans-serif"],
+                "display": ["Plus Jakarta Sans", "sans-serif"],
+                "body": ["DM Sans", "sans-serif"],
+                "label": ["DM Sans", "sans-serif"],
+                "mono": ["Fira Code", "monospace"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active { background-color: #002114 !important; color: #85f8c4 !important; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased flex">
+<!-- Sidebar Shell -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-primary-container flex flex-col py-6 px-4 z-50 shadow-md">
+<div class="mb-10 flex flex-col items-start px-2">
+<span class="text-xl font-headline font-bold text-on-primary">YardFlow</span>
+<span class="text-on-primary-container text-[11px] font-label tracking-wider uppercase">Ship Recycling ERP</span>
+</div>
+<nav class="flex flex-col gap-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-secondary-container/10 transition-colors rounded-md group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">dashboard</span>
+<span class="text-body-sm font-label">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-secondary-container/10 transition-colors rounded-md group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">inventory_2</span>
+<span class="text-body-sm font-label">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-secondary-container/10 transition-colors rounded-md group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">shopping_cart</span>
+<span class="text-body-sm font-label">Purchases</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-secondary-container/10 transition-colors rounded-md group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">sell</span>
+<span class="text-body-sm font-label">Sales</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-secondary-container/10 transition-colors rounded-md group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">badge</span>
+<span class="text-body-sm font-label">HR</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-tertiary-container text-tertiary-fixed rounded-md active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<span class="text-body-sm font-label">Accounts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-secondary-container/10 transition-colors rounded-md group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">assessment</span>
+<span class="text-body-sm font-label">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-secondary-container/10 transition-colors rounded-md group mt-auto" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">settings</span>
+<span class="text-body-sm font-label">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-[240px] flex flex-col min-h-screen">
+<!-- Top Nav Bar Shell -->
+<header class="flex justify-between items-center h-16 w-full pr-8 pl-8 bg-surface/80 backdrop-blur-md sticky top-0 z-40 border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container border border-outline-variant rounded-full text-body-sm w-64 focus:ring-1 focus:ring-primary focus:border-primary transition-all" placeholder="Search transactions..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-outline hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-label text-[13px] font-bold text-on-surface">Accounts Manager</p>
+<p class="text-caption text-secondary">YardFlow Admin</p>
+</div>
+<img alt="User Profile" class="w-10 h-10 rounded-full border border-outline-variant bg-surface-container-high" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiL1uLkari3tWSeq2ErWDzFRKbQ18Yte9vrCIm7lMAC_fHM9K6TUZMSwS7v9DCHY6YHCiD-OqImZwxI-6XzHi4O4pKMojE2N6JqmORPIsPVhFikpYyU4Vg_ItDnvP15_g1rokyCHA4QYOvofQuhv-4fof_gdDbyTu8OIAoym8oojhAT9uava6rngj05cmvj-5Ud4C-1e5XFtqtLrwhhudBuUmNdb8yXB58uz544n_VFQa_nc6ttHdXtqazit-XUFw3BzYUmHwSixs"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8 space-y-8 max-w-7xl mx-auto w-full">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div>
+<h1 class="text-h1 font-headline font-bold text-primary">Accounts</h1>
+<p class="text-body-sm text-secondary">Manage your cash flows and bank accounts across the yard.</p>
+</div>
+<button class="px-5 py-2.5 bg-white border-2 border-primary text-primary hover:bg-on-primary-container/5 transition-colors font-semibold rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-xl">add</span>
+                    Add Account
+                </button>
+</div>
+<!-- Top Section: Balance Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1: Cash -->
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-secondary-container/30 rounded-md">
+<span class="material-symbols-outlined text-on-secondary-container">payments</span>
+</div>
+<span class="text-caption bg-surface-container-high px-2 py-0.5 rounded text-secondary uppercase font-bold tracking-tighter">Physical Ledger</span>
+</div>
+<div>
+<p class="text-body-sm text-outline font-label uppercase tracking-wider mb-1">Cash on Hand</p>
+<h3 class="text-[32px] font-mono font-bold text-on-surface">৳1,85,000</h3>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/20">
+<a class="text-on-tertiary-container font-semibold text-body-sm flex items-center gap-1 hover:gap-2 transition-all" href="#">
+                            View Transactions <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Card 2: DBBL -->
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-secondary-container/30 rounded-md">
+<span class="material-symbols-outlined text-on-secondary-container">account_balance</span>
+</div>
+<img alt="DBBL" class="w-6 h-6 grayscale opacity-80" onerror="this.style.display='none'" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQeuveBkUkK_05rqQfzLhBZWU0mfFXReUGbr0nPWsRq1PGevr0Ai2fjn_Lr-PUh38Pqyc438l0_AaVmlng2icWqYTgtw6ywcCznq1vK9DT1VHUiH6WiQT-gn82qWur27rtHZ-jMw1j63XlqVct1f2dESR7VuDsRL7-3XjG7MFWQxPTbk_ME5SRuP8-fP5b6bK0tXSs9xX-_jJjsu-JNDOOFBAMk80YUuBmpJ2aFXSBnE4wvPtLz3lYhQq6lz6yNhQuEfJkgfr09ic"/>
+</div>
+<div>
+<p class="text-body-sm text-outline font-label uppercase tracking-wider mb-1">Dutch Bangla Bank</p>
+<h3 class="text-[32px] font-mono font-bold text-on-surface">৳45,500</h3>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/20">
+<a class="text-on-tertiary-container font-semibold text-body-sm flex items-center gap-1 hover:gap-2 transition-all" href="#">
+                            View Transactions <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Card 3: bKash -->
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-secondary-container/30 rounded-md">
+<span class="material-symbols-outlined text-on-secondary-container">smartphone</span>
+</div>
+<span class="text-caption bg-tertiary-fixed/30 px-2 py-0.5 rounded text-on-tertiary-fixed-variant uppercase font-bold tracking-tighter">Active Business</span>
+</div>
+<div>
+<p class="text-body-sm text-outline font-label uppercase tracking-wider mb-1">bKash Business</p>
+<h3 class="text-[32px] font-mono font-bold text-on-surface">৳20,000</h3>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/20">
+<a class="text-on-tertiary-container font-semibold text-body-sm flex items-center gap-1 hover:gap-2 transition-all" href="#">
+                            View Transactions <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Total Bar -->
+<div class="bg-primary-container p-6 rounded-lg flex justify-center items-center gap-4 text-center border-l-4 border-tertiary-fixed shadow-lg">
+<span class="text-on-primary-container font-headline font-semibold text-h3">Total Across All Accounts:</span>
+<span class="text-3xl font-mono font-bold text-white">৳2,50,500</span>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Recent Transactions Table (2/3) -->
+<div class="xl:col-span-2 bg-white rounded-lg shadow-sm border border-outline-variant/30 overflow-hidden">
+<div class="p-6 border-b border-outline-variant/20 flex justify-between items-center bg-surface-container-low/50">
+<h2 class="text-h3 font-headline font-semibold text-primary">Recent Transactions — All Accounts</h2>
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest text-left border-b border-outline-variant/20">
+<th class="px-6 py-4 text-caption font-bold text-outline uppercase tracking-wider">Date</th>
+<th class="px-6 py-4 text-caption font-bold text-outline uppercase tracking-wider">Account</th>
+<th class="px-6 py-4 text-caption font-bold text-outline uppercase tracking-wider">Amount</th>
+<th class="px-6 py-4 text-caption font-bold text-outline uppercase tracking-wider">Reference</th>
+<th class="px-6 py-4 text-caption font-bold text-outline uppercase tracking-wider">Description</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10 text-body-sm">
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-on-surface">19 May</td>
+<td class="px-6 py-4 whitespace-nowrap text-secondary font-medium">Cash</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono font-bold text-success flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">arrow_upward</span>
+                                        ৳45,600
+                                    </td>
+<td class="px-6 py-4 whitespace-nowrap"><a class="text-on-tertiary-container hover:underline" href="#">#SAL-0091</a></td>
+<td class="px-6 py-4 text-secondary">Rahim Traders payment</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-on-surface">18 May</td>
+<td class="px-6 py-4 whitespace-nowrap text-secondary font-medium">Dutch Bangla Bank</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono font-bold text-success flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">arrow_upward</span>
+                                        ৳64,000
+                                    </td>
+<td class="px-6 py-4 whitespace-nowrap"><a class="text-on-tertiary-container hover:underline" href="#">#SAL-0090</a></td>
+<td class="px-6 py-4 text-secondary">Karim partial</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-on-surface">17 May</td>
+<td class="px-6 py-4 whitespace-nowrap text-secondary font-medium">Cash</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono font-bold text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">arrow_downward</span>
+                                        ৳50,000
+                                    </td>
+<td class="px-6 py-4 whitespace-nowrap"><a class="text-on-tertiary-container hover:underline" href="#">#PUR-0024</a></td>
+<td class="px-6 py-4 text-secondary">Chattogram payment</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-on-surface">16 May</td>
+<td class="px-6 py-4 whitespace-nowrap text-secondary font-medium">Cash</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono font-bold text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">arrow_downward</span>
+                                        ৳5,000
+                                    </td>
+<td class="px-6 py-4 whitespace-nowrap text-outline">—</td>
+<td class="px-6 py-4 text-secondary">Advance — Md. Rahim | May advance</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Transfer Card (1/3) -->
+<div class="bg-white rounded-lg shadow-sm border border-outline-variant/30 flex flex-col h-full">
+<div class="p-6 border-b border-outline-variant/20 bg-surface-container-low/50">
+<h2 class="text-h4 font-headline font-semibold text-primary">Transfer Between Accounts</h2>
+</div>
+<div class="p-6 space-y-5 flex-1">
+<div class="space-y-2">
+<label class="text-caption font-bold text-on-surface uppercase tracking-tight">From Account</label>
+<select class="w-full bg-surface-container border border-outline-variant rounded-lg text-body-sm py-2.5 focus:ring-1 focus:ring-primary focus:border-primary transition-all">
+<option>Select source</option>
+<option>Cash on Hand</option>
+<option>Dutch Bangla Bank</option>
+<option>bKash Business</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-caption font-bold text-on-surface uppercase tracking-tight">To Account</label>
+<select class="w-full bg-surface-container border border-outline-variant rounded-lg text-body-sm py-2.5 focus:ring-1 focus:ring-primary focus:border-primary transition-all">
+<option>Select destination</option>
+<option>Cash on Hand</option>
+<option>Dutch Bangla Bank</option>
+<option>bKash Business</option>
+</select>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-caption font-bold text-on-surface uppercase tracking-tight">Amount (৳)</label>
+<input class="w-full bg-surface-container border border-outline-variant rounded-lg font-mono text-body-sm py-2.5 focus:ring-1 focus:ring-primary focus:border-primary transition-all" placeholder="0.00" type="number"/>
+</div>
+<div class="space-y-2">
+<label class="text-caption font-bold text-on-surface uppercase tracking-tight">Date</label>
+<input class="w-full bg-surface-container border border-outline-variant rounded-lg text-body-sm py-2 focus:ring-1 focus:ring-primary focus:border-primary transition-all" type="date"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-caption font-bold text-on-surface uppercase tracking-tight">Remarks</label>
+<textarea class="w-full bg-surface-container border border-outline-variant rounded-lg text-body-sm py-2.5 focus:ring-1 focus:ring-primary focus:border-primary transition-all" placeholder="Reason for transfer..." rows="2"></textarea>
+</div>
+<button class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-on-surface-variant transition-colors active:scale-[0.98] duration-100 flex justify-center items-center gap-2 mt-4 shadow-sm shadow-primary/20">
+<span class="material-symbols-outlined text-xl">swap_horiz</span>
+                            Execute Transfer
+                        </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Subtle Footer Info -->
+<footer class="mt-auto py-6 px-8 text-caption text-outline border-t border-outline-variant/10 flex justify-between">
+<span>YardFlow v2.4.0 — Financial Ledger Module</span>
+<span>Last Sync: Today, 11:24 AM (UTC +6)</span>
+</footer>
+</main>
+<script>
+        // Simple micro-interaction for rows
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                row.classList.add('bg-secondary-container/20');
+                setTimeout(() => {
+                    row.classList.remove('bg-secondary-container/20');
+                }, 300);
+            });
+        });
+
+        // Numeric entry validation (simplified)
+        const amountInput = document.querySelector('input[type="number"]');
+        if(amountInput) {
+            amountInput.addEventListener('input', (e) => {
+                if(e.target.value < 0) e.target.value = 0;
+            });
+        }
+    </script>
+</body></html>

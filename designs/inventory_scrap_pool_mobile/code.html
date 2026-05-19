@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inventory Scrap Pool - Ship Recycling ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=DM+Sans:wght@400;500&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "background": "#f7f9fb",
+                        "surface-container": "#eceef0",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#dae2fd",
+                        "on-secondary-container": "#54647a",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#002114",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface": "#f7f9fb",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "on-surface-variant": "#45464d",
+                        "surface-dim": "#d8dadc",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "secondary": "#505f76",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-high": "#e6e8ea",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#85f8c4",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-container": "#d0e1fb",
+                        "on-surface": "#191c1e",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary": "#000000",
+                        "surface-tint": "#565e74",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "outline-variant": "#c6c6cd",
+                        "inverse-surface": "#2d3133",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "primary": "#000000",
+                        "on-primary-fixed": "#131b2e",
+                        "tertiary-container": "#002114",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary-container": "#131b2e",
+                        "on-tertiary-container": "#069669",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#76777d",
+                        "inverse-primary": "#bec6e0",
+                        "on-primary-container": "#7c839b",
+                        "tertiary-fixed-dim": "#68dba9"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["DM Sans"],
+                        "label": ["DM Sans"],
+                        "mono": ["Fira Code"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body select-none">
+<!-- Top AppBar -->
+<header class="sticky top-0 z-40 bg-surface flex justify-between items-center w-full px-4 py-3 border-b border-outline-variant">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline font-bold text-lg text-primary tracking-tight">Scrap Pool</h1>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged shipyard manager wearing a subtle industrial uniform, presented in a clean and modern corporate portrait style. The lighting is soft and directional, typical of a high-end business application. The background is a blurred industrial office space with clean lines and neutral tones, fitting a light-mode UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUDIt0jnKwyF-l3mua1LdU5ckNCi0o9kz-lxnuwN8Oiihuik5VVidhsBFagb7qmw6se0Qf5dIhyV5ny1lR6vDEnlk2XjTX2ZIC2yiESWx0pWuqPnCgwruioJ7aaY16UoAZ4wJmKIYNtjDJsZefQHKJE-Z0zfvUgEnZZfEUv-zduk7FfdLM36TAcjmeci7Av8BB-gc7Xbfn-YjDMp4FConpyB-NunAfkS0qF57XvEgHCWloQnq3g-5GEGAATm0uyTQZRFMU3Mg74wY"/>
+</div>
+</header>
+<main class="pb-24">
+<!-- KPI Section: Horizontal Scroll -->
+<section class="mt-6">
+<div class="px-4 mb-3 flex items-center justify-between">
+<h2 class="font-headline font-semibold text-base uppercase tracking-wider text-on-surface-variant">Live Overview</h2>
+<span class="text-[10px] bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded-full font-bold">LIVE</span>
+</div>
+<div class="flex overflow-x-auto gap-4 px-4 hide-scrollbar snap-x snap-mandatory">
+<!-- Card 1 -->
+<div class="min-w-[280px] snap-center bg-primary-container p-5 rounded-xl text-on-primary shadow-md">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-tertiary-fixed">layers</span>
+<span class="text-xs font-mono text-on-primary-container">+12% vs last month</span>
+</div>
+<p class="text-sm font-medium text-on-primary-container">Current Scrap Pool</p>
+<h3 class="text-3xl font-mono font-bold mt-1 tracking-tighter">1,245.80<span class="text-lg ml-1 font-normal opacity-70">MT</span></h3>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[280px] snap-center bg-surface-container-lowest p-5 rounded-xl border border-outline-variant shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-on-tertiary-container">payments</span>
+<span class="text-xs font-mono text-on-tertiary-container">LME Rate: $412</span>
+</div>
+<p class="text-sm font-medium text-on-surface-variant">Estimated Value</p>
+<h3 class="text-3xl font-mono font-bold mt-1 tracking-tighter">৳ 51.4<span class="text-lg ml-1 font-normal opacity-70 text-on-surface-variant">Cr</span></h3>
+</div>
+<!-- Card 3 -->
+<div class="min-w-[280px] snap-center bg-surface-container-lowest p-5 rounded-xl border border-outline-variant shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+<span class="text-xs font-mono text-on-surface-variant">14 Oct 2023</span>
+</div>
+<p class="text-sm font-medium text-on-surface-variant">Last Scrap Sale</p>
+<h3 class="text-3xl font-mono font-bold mt-1 tracking-tighter">420.00<span class="text-lg ml-1 font-normal opacity-70 text-on-surface-variant">MT</span></h3>
+</div>
+</div>
+</section>
+<!-- Movement History Section -->
+<section class="mt-8 px-4">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-headline font-semibold text-lg">Scrap Movement History</h2>
+<button class="text-on-tertiary-container text-sm font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                    Filter
+                </button>
+</div>
+<!-- List of Cards -->
+<div class="space-y-3">
+<!-- Movement Item 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-[10px] font-mono uppercase text-on-surface-variant tracking-widest">24 Oct, 2023 • 14:30</p>
+<h4 class="font-bold text-on-surface mt-0.5">MS Plate Scrap Generation</h4>
+</div>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold uppercase tracking-tighter">ADDED</span>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-2 border-t border-outline-variant/30">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase">Quantity</p>
+<p class="font-mono font-bold text-on-tertiary-container">+45.20 MT</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase text-right">Balance</p>
+<p class="font-mono font-bold text-on-surface text-right">1,245.80 MT</p>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded w-fit">
+<span class="material-symbols-outlined text-sm">description</span>
+                        REF: GEN-2023-9912
+                    </p>
+</div>
+<!-- Movement Item 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-[10px] font-mono uppercase text-on-surface-variant tracking-widest">22 Oct, 2023 • 09:15</p>
+<h4 class="font-bold text-on-surface mt-0.5">External Sale - Batch 04</h4>
+</div>
+<span class="px-2 py-0.5 rounded bg-error-container text-on-error-container text-[10px] font-bold uppercase tracking-tighter">SOLD</span>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-2 border-t border-outline-variant/30">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase">Quantity</p>
+<p class="font-mono font-bold text-error">-120.00 MT</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase text-right">Balance</p>
+<p class="font-mono font-bold text-on-surface text-right">1,200.60 MT</p>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded w-fit">
+<span class="material-symbols-outlined text-sm">description</span>
+                        REF: INV-SCRP-402
+                    </p>
+</div>
+<!-- Movement Item 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-[10px] font-mono uppercase text-on-surface-variant tracking-widest">20 Oct, 2023 • 17:45</p>
+<h4 class="font-bold text-on-surface mt-0.5">Hull Cut Scrap Deposit</h4>
+</div>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold uppercase tracking-tighter">ADDED</span>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-2 border-t border-outline-variant/30">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase">Quantity</p>
+<p class="font-mono font-bold text-on-tertiary-container">+210.40 MT</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase text-right">Balance</p>
+<p class="font-mono font-bold text-on-surface text-right">1,320.60 MT</p>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded w-fit">
+<span class="material-symbols-outlined text-sm">description</span>
+                        REF: GEN-2023-8841
+                    </p>
+</div>
+</div>
+<button class="w-full mt-6 py-3 text-sm font-semibold border border-outline text-on-surface-variant rounded-lg hover:bg-surface-container-low transition-colors">
+                View All History
+            </button>
+</section>
+</main>
+<!-- FAB -->
+<button class="fixed bottom-24 right-6 bg-primary text-on-primary h-14 pl-5 pr-6 rounded-full flex items-center gap-2 shadow-lg active:scale-95 duration-150 z-50">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+<span class="font-bold text-sm">+ Sell Scrap</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 bg-surface border-t border-outline-variant z-50 md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant gap-1" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant gap-1" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-[10px] font-medium">Sales</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-tertiary-container bg-tertiary-container/10 rounded-xl px-4 py-1 gap-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="text-[10px] font-bold">Stock</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant gap-1" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-[10px] font-medium">HR</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant gap-1" href="#">
+<span class="material-symbols-outlined">menu_open</span>
+<span class="text-[10px] font-medium">Menu</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for horizontal scroll snap indicators or FAB feedback
+        document.addEventListener('DOMContentLoaded', () => {
+            const fab = document.querySelector('button.fixed.bottom-24');
+            fab.addEventListener('click', () => {
+                // Haptic feedback simulation
+                fab.style.transform = 'scale(0.9)';
+                setTimeout(() => { fab.style.transform = 'scale(1)'; }, 150);
+            });
+        });
+    </script>
+</body></html>

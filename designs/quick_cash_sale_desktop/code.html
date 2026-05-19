@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quick Cash Sale - YardFlow ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#131b2e",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary-fixed-dim": "#68dba9",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f2f4f6",
+                        "on-error": "#ffffff",
+                        "secondary": "#505f76",
+                        "primary": "#000000",
+                        "secondary-fixed": "#d3e4fe",
+                        "outline-variant": "#c6c6cd",
+                        "surface-dim": "#d8dadc",
+                        "surface-bright": "#f7f9fb",
+                        "on-surface-variant": "#45464d",
+                        "surface-tint": "#565e74",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-container": "#d0e1fb",
+                        "on-secondary-container": "#54647a",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface": "#f7f9fb",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#85f8c4",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "on-tertiary-fixed": "#002114",
+                        "background": "#f7f9fb",
+                        "primary-fixed-dim": "#bec6e0",
+                        "tertiary-container": "#002114",
+                        "on-surface": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container": "#eceef0",
+                        "on-background": "#191c1e",
+                        "on-secondary-fixed": "#0b1c30",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#dae2fd",
+                        "outline": "#76777d",
+                        "on-tertiary-container": "#069669",
+                        "tertiary": "#000000",
+                        "on-primary-container": "#7c839b",
+                        "inverse-primary": "#bec6e0",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#131b2e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["DM Sans"],
+                        "label": ["DM Sans"],
+                        "mono": ["Fira Code"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .active-nav { background-color: #002114; color: #069669; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #c6c6cd; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-background">
+<!-- Fixed Side Navigation -->
+<aside class="fixed left-0 top-0 h-full w-[240px] z-50 bg-primary-container border-r border-outline-variant flex flex-col py-6 shadow-md">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 bg-on-primary-fixed flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-white" data-icon="recycling">recycling</span>
+</div>
+<div>
+<h1 class="text-2xl font-headline font-bold text-on-primary">YardFlow</h1>
+<p class="text-[10px] text-on-primary-container uppercase tracking-widest font-bold">Ship Recycling ERP</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Navigation Items Mapping -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:text-on-primary mx-2 hover:bg-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-body">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:text-on-primary mx-2 hover:bg-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-sm font-body">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:text-on-primary mx-2 hover:bg-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="text-sm font-body">Purchases</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-tertiary-container text-on-tertiary-container rounded-lg mx-2 scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="text-sm font-body">Sales</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:text-on-primary mx-2 hover:bg-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="text-sm font-body">HR</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:text-on-primary mx-2 hover:bg-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+<span class="text-sm font-body">Accounts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:text-on-primary mx-2 hover:bg-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="text-sm font-body">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:text-on-primary mx-2 hover:bg-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm font-body">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4 border-t border-outline-variant pt-4">
+<button class="w-full bg-on-tertiary-container text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 mb-4 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+<span class="text-sm font-bold">New Record</span>
+</button>
+<a class="flex items-center gap-3 px-4 py-2 text-on-primary-container hover:text-on-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="help_center">help_center</span>
+<span class="text-sm font-body">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-primary-container hover:text-on-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="text-sm font-body">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Top Navigation -->
+<header class="fixed top-0 right-0 w-[calc(100%-240px)] z-40 bg-surface border-b border-outline-variant shadow-sm flex justify-between items-center h-16 px-8 ml-[240px]">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Search sales, materials..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-on-surface transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant">
+<div class="text-right">
+<p class="text-sm font-bold text-on-surface leading-tight">Admin User</p>
+<p class="text-[10px] text-on-surface-variant uppercase">Yard Manager</p>
+</div>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="Close-up studio portrait of a professional yard manager with a friendly expression, soft cinematic lighting, clean minimalist backdrop, highly detailed skin textures, sharp focus, professional business aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIOjWtQK5oAO7Z-_yuE7HZxDUqMGmFxBv7rQwJXxcrX7JTOlfu5d8UjdbVhIWx3ACRydjGMsinVoobAKiiWX61zLP-6GTDbzZT2LHKkmhRkTmxKpIw0l3PsKA7Jj9v5UPoig0dG7dxKwHnM5i-g72rw3zz_6t3rF6-eoFXHRfBrYaR8o5w3vV3HKk6H1IEjHOEXOFbvNze_j75joOxiCasiT5BT4VENEbV6asExm9Hod4tfer5Bfzdw3bdxY_AZ5cG-Cb4k6ExliE"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[240px] pt-24 pb-12 px-8 min-h-screen flex justify-center items-start">
+<div class="w-full max-w-[520px] bg-white rounded-xl shadow-lg overflow-hidden border border-outline-variant">
+<!-- Header Section -->
+<div class="px-8 py-6 border-b border-surface-container">
+<div class="flex items-center gap-3 mb-1">
+<span class="material-symbols-outlined text-on-tertiary-container" data-icon="bolt" data-weight="fill" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<h2 class="text-xl font-headline font-semibold text-on-surface">Quick Cash Sale</h2>
+</div>
+<p class="text-sm font-body text-secondary">No customer record. Payment received in full.</p>
+</div>
+<!-- Form Content -->
+<form class="p-8 space-y-6" id="quickSaleForm">
+<!-- Material Section -->
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface">Category</label>
+<select class="w-full h-[42px] px-3 border border-outline-variant rounded bg-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
+<option>Scrap Metal</option>
+<option>Non-Ferrous</option>
+<option>E-Waste</option>
+<option>Machinery</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface">Sub-type</label>
+<select class="w-full h-[42px] px-3 border border-outline-variant rounded bg-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
+<option>HMS 1 &amp; 2</option>
+<option>Cast Iron</option>
+<option>Copper Wire</option>
+<option>Aluminium</option>
+</select>
+</div>
+</div>
+<!-- Quantity and Price -->
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface">Quantity (kg)</label>
+<div class="relative">
+<input class="w-full h-[42px] px-3 border border-outline-variant rounded text-lg font-bold focus:ring-2 focus:ring-primary" id="quantity" step="0.01" type="number" value="0.00"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium text-sm">kg</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface">Price (৳)</label>
+<div class="relative">
+<input class="w-full h-[42px] px-3 border border-outline-variant rounded text-lg font-bold focus:ring-2 focus:ring-primary" id="price" step="0.5" type="number" value="0.00"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium text-sm">৳</span>
+</div>
+</div>
+</div>
+<!-- Total Display -->
+<div class="bg-surface-container-low p-4 rounded-lg flex flex-col items-center justify-center border-dashed border-2 border-outline-variant">
+<span class="text-xs uppercase tracking-widest text-on-surface-variant font-bold mb-1">Total Amount Due</span>
+<div class="flex items-baseline gap-2">
+<span class="text-sm font-bold text-on-tertiary-container">৳</span>
+<span class="text-3xl font-mono font-bold text-on-tertiary-container" id="totalAmount">0.00</span>
+</div>
+</div>
+<!-- Logistics & Details -->
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface">Payment Account</label>
+<select class="w-full h-[42px] px-3 border border-outline-variant rounded bg-white text-sm focus:ring-2 focus:ring-primary">
+<option>Main Yard Cash</option>
+<option>Petty Cash Box</option>
+<option>Operations Vault</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface">Sale Date</label>
+<input class="w-full h-[42px] px-3 border border-outline-variant rounded text-sm focus:ring-2 focus:ring-primary" id="saleDate" type="date"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface">Internal Note (Optional)</label>
+<input class="w-full h-[42px] px-3 border border-outline-variant rounded text-sm focus:ring-2 focus:ring-primary" placeholder="e.g. Loading bay 4 delivery" type="text"/>
+</div>
+<!-- Footer Section -->
+<div class="pt-4 border-t border-surface-container space-y-4">
+<div class="bg-tertiary-fixed-dim/20 px-4 py-2 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-on-tertiary-container text-sm" data-icon="info">info</span>
+<span class="text-xs font-bold text-on-tertiary-container uppercase tracking-tight">This sale will be recorded as PAID immediately</span>
+</div>
+<button class="w-full bg-primary h-12 text-on-primary rounded font-bold hover:bg-neutral-800 transition-all active:scale-[0.98] flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined" data-icon="save">save</span>
+                        Save Quick Sale
+                    </button>
+<div class="text-center">
+<a class="text-sm font-body text-on-tertiary-container hover:underline inline-flex items-center gap-1" href="#">
+                            Need to record a customer?
+                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</form>
+</div>
+</main>
+<script>
+        // Set default date to today
+        document.getElementById('saleDate').valueAsDate = new Date();
+
+        const quantityInput = document.getElementById('quantity');
+        const priceInput = document.getElementById('price');
+        const totalDisplay = document.getElementById('totalAmount');
+
+        function calculateTotal() {
+            const qty = parseFloat(quantityInput.value) || 0;
+            const price = parseFloat(priceInput.value) || 0;
+            const total = (qty * price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            totalDisplay.innerText = total;
+            
+            // Atmospheric effect for total update
+            totalDisplay.classList.add('scale-110');
+            setTimeout(() => totalDisplay.classList.remove('scale-110'), 150);
+        }
+
+        quantityInput.addEventListener('input', calculateTotal);
+        priceInput.addEventListener('input', calculateTotal);
+
+        // Simple button interaction
+        document.querySelector('button[type="button"]').addEventListener('click', function() {
+            this.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span> Processing...';
+            setTimeout(() => {
+                this.innerHTML = '<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span> Success';
+                this.classList.replace('bg-primary', 'bg-success');
+                setTimeout(() => location.reload(), 1500);
+            }, 1000);
+        });
+    </script>
+</body></html>

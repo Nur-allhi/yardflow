@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RecycleCore ERP - Mobile Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#565e74",
+              "on-secondary-fixed": "#0b1c30",
+              "on-tertiary-fixed": "#002114",
+              "on-secondary-container": "#54647a",
+              "primary-fixed-dim": "#bec6e0",
+              "secondary-container": "#d0e1fb",
+              "background": "#f7f9fb",
+              "on-primary-container": "#7c839b",
+              "surface-container-low": "#f2f4f6",
+              "secondary-fixed-dim": "#b7c8e1",
+              "on-surface": "#191c1e",
+              "inverse-primary": "#bec6e0",
+              "surface-variant": "#e0e3e5",
+              "tertiary": "#000000",
+              "error-container": "#ffdad6",
+              "on-background": "#191c1e",
+              "tertiary-fixed-dim": "#68dba9",
+              "inverse-on-surface": "#eff1f3",
+              "surface-container-high": "#e6e8ea",
+              "primary-container": "#131b2e",
+              "on-tertiary-container": "#069669",
+              "secondary": "#505f76",
+              "surface-container-lowest": "#ffffff",
+              "on-surface-variant": "#45464d",
+              "on-primary-fixed": "#131b2e",
+              "on-error-container": "#93000a",
+              "on-tertiary": "#ffffff",
+              "surface-container-highest": "#e0e3e5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff",
+              "error": "#ba1a1a",
+              "surface-dim": "#d8dadc",
+              "on-secondary-fixed-variant": "#38485d",
+              "surface": "#f7f9fb",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-error": "#ffffff",
+              "tertiary-fixed": "#85f8c4",
+              "secondary-fixed": "#d3e4fe",
+              "tertiary-container": "#002114",
+              "outline": "#76777d",
+              "surface-container": "#eceef0",
+              "surface-bright": "#f7f9fb",
+              "outline-variant": "#c6c6cd",
+              "primary": "#000000",
+              "on-tertiary-fixed-variant": "#005137",
+              "on-primary": "#ffffff",
+              "inverse-surface": "#2d3133"
+            },
+            borderRadius: {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "display": ["Plus Jakarta Sans"],
+              "body": ["DM Sans"],
+              "label": ["DM Sans"],
+              "code": ["Fira Code"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f7f9fb;
+            font-family: 'DM Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .fira-data {
+            font-family: 'Fira Code', monospace;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-background pb-24">
+<!-- TopNavBar Implementation -->
+<header class="sticky top-0 w-full z-40 bg-surface border-b border-outline-variant flex justify-between items-center h-[64px] px-4">
+<div class="flex items-center gap-3">
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors">
+<span class="material-symbols-outlined text-primary">menu</span>
+</button>
+<h1 class="font-headline font-bold text-xl text-primary">ShipRecycle ERP</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 relative">
+<span class="material-symbols-outlined text-secondary">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center border border-outline-variant overflow-hidden">
+<img alt="Manager Avatar" class="w-full h-full object-cover" data-alt="A professional close-up headshot of a middle-aged shipyard manager wearing a subtle industrial uniform and a safety headset. The lighting is crisp and cool, suggesting a modern high-tech office overlooking a busy harbor. The overall aesthetic is clean, professional, and corporate, emphasizing reliability and leadership in a maritime logistics setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHMYNS9e8yMZ3NwjQ9_OeGYl4ERtB-CpDxf-07RbsEB3NDOViXfbtJzOhWlmEfnKdTXhz2L_ZK3oFAJz0fe9Y1vxitDhXnyD849xCVbkW9V_bwuA-0jZW1BbkTFzA0BW5Ba0EwseEIQXM6K9dpCuRY34g_O4C7lbXNjVwXYe0fSIGsPv4TWI_d6m7B5IJh3kjDQEfHp3gkJZTIAe7KeVtL1MGqEOdbNer7RF-l0xAxb-1QWaxQ7v34q-xCc3x1PABw42l2vlX_Xus"/>
+</div>
+</div>
+</header>
+<main class="p-4 space-y-6 max-w-md mx-auto">
+<!-- Quick Actions: 2x2 Grid -->
+<section>
+<h2 class="font-headline font-semibold text-h3 mb-3 px-1 text-on-surface">Quick Entry</h2>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined text-on-tertiary-container bg-tertiary-fixed text-3xl p-2 rounded-lg mb-2" data-weight="fill" style="font-variation-settings: 'FILL' 1;">add_shopping_cart</span>
+<span class="font-label font-medium text-body-sm text-on-surface">New Sale</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined text-primary-fixed-dim bg-primary-container text-3xl p-2 rounded-lg mb-2" data-weight="fill" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label font-medium text-body-sm text-on-surface">Add Stock</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined text-on-secondary-fixed-variant bg-secondary-fixed text-3xl p-2 rounded-lg mb-2" data-weight="fill" style="font-variation-settings: 'FILL' 1;">engineering</span>
+<span class="font-label font-medium text-body-sm text-on-surface">Labor Entry</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined text-error bg-error-container text-3xl p-2 rounded-lg mb-2" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+<span class="font-label font-medium text-body-sm text-on-surface">Dispatch</span>
+</button>
+</div>
+</section>
+<!-- KPI Cards: 2x2 Grid -->
+<section>
+<div class="grid grid-cols-2 gap-3">
+<div class="p-4 bg-surface-container-high rounded-xl border border-outline-variant">
+<p class="font-label text-caption text-secondary uppercase tracking-wider mb-1">Total Stock</p>
+<p class="fira-data text-xl font-bold text-primary">12,450<span class="text-xs ml-1 font-normal opacity-70">MT</span></p>
+<div class="mt-2 flex items-center text-on-tertiary-container text-xs font-bold">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span> +3.2%
+                    </div>
+</div>
+<div class="p-4 bg-surface-container-high rounded-xl border border-outline-variant">
+<p class="font-label text-caption text-secondary uppercase tracking-wider mb-1">Today Sales</p>
+<p class="fira-data text-xl font-bold text-primary">৳4.8M</p>
+<div class="mt-2 flex items-center text-error text-xs font-bold">
+<span class="material-symbols-outlined text-sm mr-1">trending_down</span> -1.5%
+                    </div>
+</div>
+<div class="p-4 bg-surface-container-high rounded-xl border border-outline-variant">
+<p class="font-label text-caption text-secondary uppercase tracking-wider mb-1">Active Labor</p>
+<p class="fira-data text-xl font-bold text-primary">142</p>
+<p class="text-xs text-secondary mt-2">Across 4 Ships</p>
+</div>
+<div class="p-4 bg-surface-container-high rounded-xl border border-outline-variant">
+<p class="font-label text-caption text-secondary uppercase tracking-wider mb-1">Steel Yield</p>
+<p class="fira-data text-xl font-bold text-primary">82.4%</p>
+<div class="mt-2 flex items-center text-on-tertiary-container text-xs font-bold">
+<span class="material-symbols-outlined text-sm mr-1">verified</span> Target met
+                    </div>
+</div>
+</div>
+</section>
+<!-- Financial Cards: Bento Style -->
+<section class="space-y-3">
+<h2 class="font-headline font-semibold text-h3 px-1 text-on-surface">Financial Overview</h2>
+<!-- Account Balances (Primary Card) -->
+<div class="p-5 bg-primary-container text-on-primary-container rounded-xl shadow-md relative overflow-hidden">
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-on-primary-fixed-variant/10 rounded-full blur-3xl"></div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-label text-caption text-on-primary-container/80 uppercase mb-1">Available Balance</p>
+<p class="fira-data text-3xl font-bold text-primary-fixed">৳24,580,200</p>
+</div>
+<span class="material-symbols-outlined text-primary-fixed opacity-40 text-4xl">account_balance_wallet</span>
+</div>
+<div class="flex gap-4 border-t border-on-primary-fixed-variant/30 pt-4">
+<div>
+<p class="text-[10px] uppercase text-on-primary-container/60">Cash in hand</p>
+<p class="fira-data text-sm font-semibold text-primary-fixed">৳2,100,500</p>
+</div>
+<div class="border-l border-on-primary-fixed-variant/30 pl-4">
+<p class="text-[10px] uppercase text-on-primary-container/60">Bank Assets</p>
+<p class="fira-data text-sm font-semibold text-primary-fixed">৳22,479,700</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<!-- Pending Dues -->
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-warning text-xl">pending_actions</span>
+<p class="font-label text-caption text-secondary uppercase font-bold">Pending Dues</p>
+</div>
+<p class="fira-data text-lg font-bold text-on-surface">৳1.24M</p>
+<p class="text-[10px] text-on-surface-variant mt-1">12 Invoices Overdue</p>
+</div>
+<!-- Pending Salaries -->
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-error text-xl">payments</span>
+<p class="font-label text-caption text-secondary uppercase font-bold">Salaries</p>
+</div>
+<p class="fira-data text-lg font-bold text-on-surface">৳3.45M</p>
+<p class="text-[10px] text-on-surface-variant mt-1">Due in 4 Days</p>
+</div>
+</div>
+</section>
+<!-- Recent Sales: Vertical Card List -->
+<section>
+<div class="flex justify-between items-center mb-4 px-1">
+<h2 class="font-headline font-semibold text-h3 text-on-surface">Recent Sales</h2>
+<button class="text-tertiary-container font-label font-bold text-body-sm flex items-center hover:opacity-70">
+                    View All <span class="material-symbols-outlined text-sm ml-1">chevron_right</span>
+</button>
+</div>
+<div class="space-y-3">
+<!-- Sale Card 1 -->
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl flex items-center gap-4 hover:bg-surface-container transition-colors">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary">iron</span>
+</div>
+<div class="flex-grow min-w-0">
+<h4 class="font-headline font-bold text-body-sm text-primary truncate">HMS Grade 1 &amp; 2</h4>
+<p class="text-caption text-secondary">Inv #SR-2024-089 • 2h ago</p>
+</div>
+<div class="text-right">
+<p class="fira-data font-bold text-on-tertiary-container">৳842,000</p>
+<p class="text-[10px] font-bold text-success uppercase">Paid</p>
+</div>
+</div>
+<!-- Sale Card 2 -->
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl flex items-center gap-4 hover:bg-surface-container transition-colors">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary">propane_tank</span>
+</div>
+<div class="flex-grow min-w-0">
+<h4 class="font-headline font-bold text-body-sm text-primary truncate">Mixed Non-Ferrous Scrap</h4>
+<p class="text-caption text-secondary">Inv #SR-2024-088 • 5h ago</p>
+</div>
+<div class="text-right">
+<p class="fira-data font-bold text-on-surface">৳215,500</p>
+<p class="text-[10px] font-bold text-warning uppercase">Pending</p>
+</div>
+</div>
+<!-- Sale Card 3 -->
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl flex items-center gap-4 hover:bg-surface-container transition-colors">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary">precision_manufacturing</span>
+</div>
+<div class="flex-grow min-w-0">
+<h4 class="font-headline font-bold text-body-sm text-primary truncate">Re-rollable Scrap</h4>
+<p class="text-caption text-secondary">Inv #SR-2024-087 • 8h ago</p>
+</div>
+<div class="text-right">
+<p class="fira-data font-bold text-on-tertiary-container">৳1,120,000</p>
+<p class="text-[10px] font-bold text-success uppercase">Paid</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Visual Anchor: Stock Visualization Chart Placeholder -->
+<section class="h-48 w-full bg-surface-container rounded-xl overflow-hidden relative border border-outline-variant mb-4">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-highest to-transparent opacity-50"></div>
+<div class="absolute top-4 left-4">
+<p class="font-label text-caption font-bold text-secondary uppercase">Stock Trend (7 Days)</p>
+</div>
+<div class="absolute bottom-4 left-0 right-0 h-24 flex items-end justify-around px-4">
+<div class="w-8 bg-primary rounded-t-sm h-[40%]"></div>
+<div class="w-8 bg-primary rounded-t-sm h-[60%]"></div>
+<div class="w-8 bg-primary rounded-t-sm h-[55%]"></div>
+<div class="w-8 bg-primary rounded-t-sm h-[80%]"></div>
+<div class="w-8 bg-primary rounded-t-sm h-[70%]"></div>
+<div class="w-8 bg-tertiary-fixed-dim rounded-t-sm h-[95%]"></div>
+<div class="w-8 bg-primary-fixed-dim rounded-t-sm h-[65%]"></div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Implementation -->
+<nav class="fixed bottom-0 w-full md:hidden z-50 rounded-t-lg bg-surface border-t border-outline-variant shadow-lg flex justify-around items-center h-16 px-2">
+<a class="flex flex-col items-center justify-center text-on-tertiary-container bg-tertiary-container/10 rounded-xl px-4 py-1 transition-all" href="#">
+<span class="material-symbols-outlined text-2xl" data-weight="fill" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label font-medium text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-high transition-all px-4 py-1 rounded-xl" href="#">
+<span class="material-symbols-outlined text-2xl">payments</span>
+<span class="font-label font-medium text-[10px]">Sales</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-high transition-all px-4 py-1 rounded-xl" href="#">
+<span class="material-symbols-outlined text-2xl">warehouse</span>
+<span class="font-label font-medium text-[10px]">Stock</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-high transition-all px-4 py-1 rounded-xl" href="#">
+<span class="material-symbols-outlined text-2xl">groups</span>
+<span class="font-label font-medium text-[10px]">HR</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-high transition-all px-4 py-1 rounded-xl" href="#">
+<span class="material-symbols-outlined text-2xl">grid_view</span>
+<span class="font-label font-medium text-[10px]">Menu</span>
+</a>
+</nav>
+<!-- Micro-interactions Script -->
+<script>
+        document.querySelectorAll('button, a').forEach(elem => {
+            elem.addEventListener('touchstart', () => {
+                elem.style.transform = 'scale(0.96)';
+            });
+            elem.addEventListener('touchend', () => {
+                elem.style.transform = 'scale(1)';
+            });
+        });
+
+        // Simple visibility observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('transition-all', 'duration-500', 'opacity-0', 'translate-y-4');
+            observer.observe(section);
+        });
+    </script>
+</body></html>

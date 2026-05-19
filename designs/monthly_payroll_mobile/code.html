@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Monthly Payroll - May 2025</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed": "#002114",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "on-surface-variant": "#45464d",
+                        "surface": "#f7f9fb",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-tertiary": "#ffffff",
+                        "background": "#f7f9fb",
+                        "on-secondary-container": "#54647a",
+                        "primary-fixed": "#dae2fd",
+                        "surface-container": "#eceef0",
+                        "error-container": "#ffdad6",
+                        "primary": "#000000",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-bright": "#f7f9fb",
+                        "outline-variant": "#c6c6cd",
+                        "inverse-surface": "#2d3133",
+                        "tertiary": "#000000",
+                        "surface-tint": "#565e74",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#76777d",
+                        "inverse-primary": "#bec6e0",
+                        "on-tertiary-container": "#069669",
+                        "tertiary-fixed-dim": "#68dba9",
+                        "on-primary-container": "#7c839b",
+                        "on-primary-fixed": "#131b2e",
+                        "tertiary-container": "#002114",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary-container": "#131b2e",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary-fixed": "#0b1c30",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d8dadc",
+                        "secondary-fixed": "#d3e4fe",
+                        "secondary": "#505f76",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-container": "#d0e1fb",
+                        "on-surface": "#191c1e",
+                        "surface-variant": "#e0e3e5",
+                        "tertiary-fixed": "#85f8c4",
+                        "success": "#22C55E",
+                        "warning": "#EAB308"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["DM Sans"],
+                        "label": ["DM Sans"],
+                        "mono": ["Fira Code"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body select-none">
+<!-- TopAppBar -->
+<header class="bg-surface border-b border-outline-variant shadow-sm docked full-width top-0 fixed w-full z-40 flex justify-between items-center px-4 h-16">
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container-low transition-colors rounded-full active:opacity-80 cursor-pointer">menu</button>
+<h1 class="font-headline text-xl font-semibold text-primary">Payroll</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-headline text-sm font-bold text-on-surface-variant hidden sm:block">May 2025</span>
+<div class="w-10 h-10 rounded-full border-2 border-primary-container overflow-hidden active:opacity-80 cursor-pointer">
+<img alt="User profile avatar" data-alt="A professional headshot of a site manager in his late 40s, wearing a clean white shirt and a focused expression. The background is a blurred industrial office setting with soft, natural lighting. The image maintains a high-end ERP aesthetic with crisp details and a warm, trustworthy tone." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuDZkgbfEeSN3pK2NOEz8zrH15dIR4ZXM4wfVo4e-Dr__YL0MWQLqgWO2RAFzWtYC3ezF7h2O1VYDzYHv9ZDSECdBDSzELO8AhQpZFFw4vwu0V6FpWq67tHEuGMYLRKh5tr7yuQD_BHcZtO6KfFZ0F0zjroTZ1qcurY8uCJ9z41hrjfUzJQWgXJcAaIIBIHVvxD0pevpxTB-_kLr0lsPBOgbE7qu5prnzNxwValHOYTs71MrMkQ00oOod9a0oENP7eJ6D96t39wSk"/>
+</div>
+</div>
+</header>
+<main class="pt-20 pb-24 px-4 max-w-md mx-auto">
+<!-- Date Selector/Indicator -->
+<div class="mb-4 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-caption font-medium text-on-surface-variant uppercase tracking-wider">Statement Period</span>
+<span class="font-headline text-lg font-bold text-primary flex items-center gap-1">
+                    May 2025
+                    <span class="material-symbols-outlined text-sm">expand_more</span>
+</span>
+</div>
+<button class="bg-surface-container-high p-2 rounded-lg text-primary flex items-center justify-center">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+<!-- Horizontal Summary Bar -->
+<section class="flex overflow-x-auto gap-4 mb-6 pb-2 no-scrollbar -mx-4 px-4">
+<div class="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+<span class="text-xs font-medium text-on-surface-variant">Total Payroll</span>
+<span class="font-mono text-base font-semibold text-primary tracking-tight">৳75,000</span>
+</div>
+<div class="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+<span class="text-xs font-medium text-on-surface-variant">Total Advances</span>
+<span class="font-mono text-base font-semibold text-primary tracking-tight">৳21,000</span>
+</div>
+<div class="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+<span class="text-xs font-medium text-on-tertiary-container">Net Payable</span>
+<span class="font-mono text-base font-bold text-on-tertiary-container tracking-tight">৳54,000</span>
+</div>
+<div class="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+<span class="text-xs font-medium text-on-surface-variant">Paid</span>
+<span class="font-mono text-base font-semibold text-outline tracking-tight">৳0</span>
+</div>
+<div class="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+<span class="text-xs font-medium text-warning">Pending</span>
+<span class="font-mono text-base font-bold text-warning tracking-tight">৳54,000</span>
+</div>
+</section>
+<!-- Search and Filter Bar -->
+<div class="relative mb-6">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+<input class="w-full bg-surface border-outline-variant rounded-lg pl-10 pr-4 py-2.5 text-sm focus:ring-1 focus:ring-primary focus:border-primary transition-all" placeholder="Search workers..." type="text"/>
+</div>
+<!-- Worker List -->
+<div class="space-y-4">
+<h3 class="font-headline text-sm font-bold text-on-surface-variant uppercase tracking-widest px-1">Worker Records (4)</h3>
+<!-- Worker Card 1 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-4 shadow-sm active:scale-[0.98] transition-transform duration-150">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h4 class="font-headline text-base font-bold text-primary">Md. Rahim</h4>
+<span class="text-xs font-medium text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full uppercase">Welder</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold text-warning uppercase bg-warning/10 px-2 py-0.5 rounded-sm">Pending</span>
+<span class="text-[10px] text-outline mt-1 font-mono tracking-tighter">ID: WRK-0422</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-4">
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant">Net Payable</span>
+<span class="font-mono text-xl font-bold text-on-tertiary-container">৳7,000</span>
+</div>
+<button class="bg-primary text-on-primary font-headline text-sm font-semibold px-6 py-2 rounded-lg hover:bg-primary-container transition-colors active:opacity-90 shadow-sm">
+                        Pay
+                    </button>
+</div>
+</div>
+<!-- Worker Card 2 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-4 shadow-sm active:scale-[0.98] transition-transform duration-150">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h4 class="font-headline text-base font-bold text-primary">Md. Karim</h4>
+<span class="text-xs font-medium text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full uppercase">Welder</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold text-warning uppercase bg-warning/10 px-2 py-0.5 rounded-sm">Pending</span>
+<span class="text-[10px] text-outline mt-1 font-mono tracking-tighter">ID: WRK-0423</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-4">
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant">Net Payable</span>
+<span class="font-mono text-xl font-bold text-on-tertiary-container">৳16,500</span>
+</div>
+<button class="bg-primary text-on-primary font-headline text-sm font-semibold px-6 py-2 rounded-lg hover:bg-primary-container transition-colors active:opacity-90 shadow-sm">
+                        Pay
+                    </button>
+</div>
+</div>
+<!-- Worker Card 3 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-4 shadow-sm active:scale-[0.98] transition-transform duration-150">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h4 class="font-headline text-base font-bold text-primary">Salim Mia</h4>
+<span class="text-xs font-medium text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full uppercase">Security</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold text-warning uppercase bg-warning/10 px-2 py-0.5 rounded-sm">Pending</span>
+<span class="text-[10px] text-outline mt-1 font-mono tracking-tighter">ID: WRK-0105</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-4">
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant">Net Payable</span>
+<span class="font-mono text-xl font-bold text-on-tertiary-container">৳11,500</span>
+</div>
+<button class="bg-primary text-on-primary font-headline text-sm font-semibold px-6 py-2 rounded-lg hover:bg-primary-container transition-colors active:opacity-90 shadow-sm">
+                        Pay
+                    </button>
+</div>
+</div>
+<!-- Worker Card 4 -->
+<div class="bg-surface rounded-xl border border-outline-variant p-4 shadow-sm active:scale-[0.98] transition-transform duration-150">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h4 class="font-headline text-base font-bold text-primary">Jamal</h4>
+<span class="text-xs font-medium text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full uppercase">General Helper</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold text-warning uppercase bg-warning/10 px-2 py-0.5 rounded-sm">Pending</span>
+<span class="text-[10px] text-outline mt-1 font-mono tracking-tighter">ID: WRK-0889</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-4">
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant">Net Payable</span>
+<span class="font-mono text-xl font-bold text-on-tertiary-container">৳19,000</span>
+</div>
+<button class="bg-primary text-on-primary font-headline text-sm font-semibold px-6 py-2 rounded-lg hover:bg-primary-container transition-colors active:opacity-90 shadow-sm">
+                        Pay
+                    </button>
+</div>
+</div>
+</div>
+<!-- Add Padding for Nav -->
+<div class="h-20"></div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center py-2 bg-surface border-t border-outline-variant pb-safe shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-label text-[10px] font-medium hover:bg-surface-container-low transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-2xl mb-0.5">home</span>
+            Home
+        </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-label text-[10px] font-medium hover:bg-surface-container-low transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-2xl mb-0.5">payments</span>
+            Sales
+        </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-label text-[10px] font-medium hover:bg-surface-container-low transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-2xl mb-0.5">inventory_2</span>
+            Stock
+        </a>
+<a class="flex flex-col items-center justify-center text-tertiary-container font-label text-[10px] font-bold hover:bg-surface-container-low transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-2xl mb-0.5" style="font-variation-settings: 'FILL' 1;">groups</span>
+            HR
+        </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-label text-[10px] font-medium hover:bg-surface-container-low transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-2xl mb-0.5">menu</span>
+            Menu
+        </a>
+</nav>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', function() {
+                this.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', function() {
+                this.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', function() {
+                this.classList.remove('scale-95');
+            });
+        });
+
+        // Simple mock ripple effect
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement("span");
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+            circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+            circle.classList.add("ripple");
+
+            const ripple = button.getElementsByClassName("ripple")[0];
+            if (ripple) { ripple.remove(); }
+            button.appendChild(circle);
+        }
+
+        const buttons = document.getElementsByTagName("button");
+        for (const button of buttons) {
+            button.addEventListener("click", createRipple);
+        }
+    </script>
+<style>
+        span.ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 600ms linear;
+            background-color: rgba(255, 255, 255, 0.4);
+            pointer-events: none;
+        }
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
+</body></html>

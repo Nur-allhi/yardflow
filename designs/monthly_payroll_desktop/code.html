@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YardFlow ERP - Monthly Payroll</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#dae2fd",
+                      "on-surface-variant": "#45464d",
+                      "inverse-primary": "#bec6e0",
+                      "on-tertiary-fixed": "#002114",
+                      "surface-bright": "#f7f9fb",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "on-error": "#ffffff",
+                      "primary-container": "#131b2e",
+                      "surface-container": "#eceef0",
+                      "surface-container-high": "#e6e8ea",
+                      "on-secondary-container": "#54647a",
+                      "surface-dim": "#d8dadc",
+                      "secondary": "#505f76",
+                      "on-tertiary": "#ffffff",
+                      "outline-variant": "#c6c6cd",
+                      "outline": "#76777d",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "surface-tint": "#565e74",
+                      "inverse-surface": "#2d3133",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-surface": "#191c1e",
+                      "surface": "#f7f9fb",
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed": "#131b2e",
+                      "primary": "#000000",
+                      "tertiary-fixed": "#85f8c4",
+                      "on-tertiary-container": "#069669",
+                      "tertiary-container": "#002114",
+                      "on-tertiary-fixed-variant": "#005137",
+                      "on-secondary-fixed": "#0b1c30",
+                      "tertiary-fixed-dim": "#68dba9",
+                      "surface-container-highest": "#e0e3e5",
+                      "background": "#f7f9fb",
+                      "on-background": "#191c1e",
+                      "primary-fixed-dim": "#bec6e0",
+                      "error-container": "#ffdad6",
+                      "surface-variant": "#e0e3e5",
+                      "secondary-fixed": "#d3e4fe",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "on-primary-container": "#7c839b",
+                      "tertiary": "#000000",
+                      "surface-container-low": "#f2f4f6",
+                      "on-error-container": "#93000a",
+                      "secondary-container": "#d0e1fb",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Plus Jakarta Sans"],
+                      "display": ["Plus Jakarta Sans"],
+                      "body": ["DM Sans"],
+                      "label": ["DM Sans"],
+                      "mono": ["Fira Code"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .currency { font-family: 'Fira Code', monospace; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c6c6cd; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #76777d; }
+    </style>
+</head>
+<body class="bg-background font-body text-on-background antialiased overflow-hidden flex h-screen">
+<!-- SideNavBar -->
+<aside class="flex flex-col h-screen fixed left-0 top-0 py-4 bg-primary-container dark:bg-primary-container docked left-0 h-full w-64 shadow-md z-50">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-on-primary tracking-tight font-headline">ShipRecycle ERP</h1>
+<p class="text-xs text-on-primary-container font-label uppercase tracking-widest mt-1">Industrial Ops</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-container/10 rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-container/10 rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label text-sm">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-container/10 rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-label text-sm">Purchases</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-container/10 rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-label text-sm">Sales</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-tertiary-container text-on-tertiary-container rounded-lg mx-2" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label text-sm">HR</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-container/10 rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+<span class="font-label text-sm">Accounts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-container/10 rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="font-label text-sm">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-container/10 rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label text-sm">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<div class="bg-on-primary-container/5 rounded-lg p-3 flex items-center gap-3">
+<img alt="Administrator Avatar" class="w-10 h-10 rounded-full border-2 border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiLROKmXe9Eek-GDiRy__qs1sMLAjElV_yKh-BdlPvQfVSCP2MdjUa_Qw_nR3qX93iN79gdOl413Tt6L-vU3VosqkT8ZOmx2pCc0mtI8Tgl90ZkqUVMAOOPvSuE32HFHNgS0tWH6414Wio-FpuRLR5L6HPO67Vj7gn0Hkds7QXAoE6QQ6QwtCjafU9QFlcQ0HlYg0hjYGbUQq_ePWtMWwfuA-Ca5DWWS20ffmA5WG1H4Huz2krTob8KvHZcX4nUB0G16p720vjOfA"/>
+<div class="overflow-hidden">
+<p class="text-sm font-semibold text-on-primary truncate">Admin User</p>
+<p class="text-xs text-on-primary-container truncate">Fleet Manager</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center h-16 w-full pr-8 sticky top-0 z-40 bg-surface/95 backdrop-blur-sm border-b border-outline-variant pl-8">
+<div class="flex items-center gap-4">
+<h2 class="text-lg font-semibold text-on-surface font-headline">Payroll Management</h2>
+<div class="h-6 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-2 text-on-surface-variant bg-surface-container px-3 py-1.5 rounded-lg">
+<span class="material-symbols-outlined text-sm" data-icon="calendar_month">calendar_month</span>
+<span class="font-medium text-sm">May 2025</span>
+<span class="material-symbols-outlined text-sm cursor-pointer" data-icon="arrow_drop_down">arrow_drop_down</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline text-on-surface font-medium rounded hover:bg-surface-container transition-all scale-98 active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                    Export CSV
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary font-medium rounded hover:opacity-90 transition-all scale-98 active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span>
+                    Process Payroll
+                </button>
+<div class="flex items-center gap-2 ml-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full"><span class="material-symbols-outlined" data-icon="help_outline">help_outline</span></button>
+</div>
+</div>
+</header>
+<!-- View Content -->
+<div class="flex-1 overflow-y-auto p-8 space-y-8">
+<!-- Page Header & Sub-tabs -->
+<div class="flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<div>
+<h1 class="text-3xl font-bold font-headline">Monthly Payroll: May 2025</h1>
+<p class="text-on-surface-variant mt-1">Reviewing 4 employees for the current billing cycle.</p>
+</div>
+</div>
+<div class="flex gap-2 border-b border-outline-variant">
+<button class="px-6 py-3 text-on-surface-variant hover:text-primary font-medium transition-colors">Workers</button>
+<button class="px-6 py-3 text-on-surface-variant hover:text-primary font-medium transition-colors">Advances</button>
+<button class="px-6 py-3 text-primary font-bold border-b-2 border-primary">Payroll</button>
+<button class="px-6 py-3 text-on-surface-variant hover:text-primary font-medium transition-colors">Settings</button>
+</div>
+</div>
+<!-- Payroll Summary Bar (Bento-ish Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+<div class="bg-surface-container p-4 rounded-xl border border-outline-variant">
+<p class="text-xs font-semibold text-on-secondary-container uppercase tracking-wider mb-2">Total Payroll</p>
+<p class="text-2xl font-bold currency">৳75,000</p>
+</div>
+<div class="bg-surface-container p-4 rounded-xl border border-outline-variant">
+<p class="text-xs font-semibold text-on-secondary-container uppercase tracking-wider mb-2">Total Advances</p>
+<p class="text-2xl font-bold currency">৳21,000</p>
+</div>
+<div class="bg-tertiary-container p-4 rounded-xl border border-on-tertiary-container/20">
+<p class="text-xs font-semibold text-on-tertiary-container uppercase tracking-wider mb-2">Total Net Payable</p>
+<p class="text-2xl font-bold currency text-on-tertiary-container">৳54,000</p>
+</div>
+<div class="bg-surface-container p-4 rounded-xl border border-outline-variant">
+<p class="text-xs font-semibold text-on-secondary-container uppercase tracking-wider mb-2">Total Paid</p>
+<p class="text-2xl font-bold currency text-on-surface">৳0</p>
+</div>
+<div class="bg-error-container p-4 rounded-xl border border-error/20">
+<p class="text-xs font-semibold text-error uppercase tracking-wider mb-2">Pending</p>
+<p class="text-2xl font-bold currency text-error">৳54,000</p>
+</div>
+</div>
+<!-- Payroll Table -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+<th class="px-6 py-4">Worker</th>
+<th class="px-6 py-4">Designation</th>
+<th class="px-6 py-4">Base Salary</th>
+<th class="px-6 py-4">Advances (May)</th>
+<th class="px-6 py-4">Net Payable</th>
+<th class="px-6 py-4">Paid</th>
+<th class="px-6 py-4">Balance</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-xs">MR</div>
+<span class="font-medium">Md. Rahim</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Lead Cutter</td>
+<td class="px-6 py-4 currency">৳25,000</td>
+<td class="px-6 py-4 currency text-error">৳18,000</td>
+<td class="px-6 py-4 currency font-bold text-on-tertiary-container">৳7,000</td>
+<td class="px-6 py-4 currency">৳0</td>
+<td class="px-6 py-4 currency">৳7,000</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-error-container text-on-error-container text-[10px] font-bold rounded uppercase">Pending</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-tertiary-container bg-tertiary-fixed hover:bg-tertiary-fixed-dim px-4 py-1.5 rounded text-xs font-bold transition-all" onclick="openModal('Md. Rahim', 7000)">Pay Now</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-xs">MK</div>
+<span class="font-medium">Md. Karim</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Welder</td>
+<td class="px-6 py-4 currency">৳18,000</td>
+<td class="px-6 py-4 currency text-error">৳1,500</td>
+<td class="px-6 py-4 currency font-bold text-on-tertiary-container">৳16,500</td>
+<td class="px-6 py-4 currency">৳0</td>
+<td class="px-6 py-4 currency">৳16,500</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-error-container text-on-error-container text-[10px] font-bold rounded uppercase">Pending</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-tertiary-container bg-tertiary-fixed hover:bg-tertiary-fixed-dim px-4 py-1.5 rounded text-xs font-bold transition-all" onclick="openModal('Md. Karim', 16500)">Pay Now</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-xs">SM</div>
+<span class="font-medium">Salim Mia</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Security</td>
+<td class="px-6 py-4 currency">৳12,000</td>
+<td class="px-6 py-4 currency text-error">৳500</td>
+<td class="px-6 py-4 currency font-bold text-on-tertiary-container">৳11,500</td>
+<td class="px-6 py-4 currency">৳0</td>
+<td class="px-6 py-4 currency">৳11,500</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-error-container text-on-error-container text-[10px] font-bold rounded uppercase">Pending</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-tertiary-container bg-tertiary-fixed hover:bg-tertiary-fixed-dim px-4 py-1.5 rounded text-xs font-bold transition-all" onclick="openModal('Salim Mia', 11500)">Pay Now</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-xs">JA</div>
+<span class="font-medium">Jamal</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">General Helper</td>
+<td class="px-6 py-4 currency">৳20,000</td>
+<td class="px-6 py-4 currency text-error">৳1,000</td>
+<td class="px-6 py-4 currency font-bold text-on-tertiary-container">৳19,000</td>
+<td class="px-6 py-4 currency">৳0</td>
+<td class="px-6 py-4 currency">৳19,000</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-error-container text-on-error-container text-[10px] font-bold rounded uppercase">Pending</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-tertiary-container bg-tertiary-fixed hover:bg-tertiary-fixed-dim px-4 py-1.5 rounded text-xs font-bold transition-all" onclick="openModal('Jamal', 19000)">Pay Now</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<!-- Payment Modal Overlay -->
+<div class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center" id="paymentModal">
+<div class="bg-surface w-full max-w-md rounded-xl shadow-lg border border-outline-variant overflow-hidden animate-in fade-in zoom-in duration-200">
+<!-- Modal Header -->
+<div class="px-6 py-4 bg-surface-container border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline font-semibold text-lg" id="modalTitle">Pay Salary</h3>
+<button class="p-1 hover:bg-surface-container-high rounded-full transition-colors" onclick="closeModal()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<div class="p-6 space-y-6">
+<div class="bg-tertiary-container/10 p-4 rounded-lg flex justify-between items-center">
+<div>
+<p class="text-xs font-semibold text-on-tertiary-container uppercase">Net Payable</p>
+<p class="text-2xl font-bold currency text-on-tertiary-container" id="modalNetPayable">৳0</p>
+</div>
+<span class="material-symbols-outlined text-on-tertiary-container opacity-50 text-4xl" data-icon="payments">payments</span>
+</div>
+<div class="space-y-4">
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-on-surface">Payment Amount (৳)</label>
+<input class="w-full bg-surface border border-outline rounded p-2.5 currency focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" id="payAmount" type="text"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-on-surface">Pay From Account</label>
+<select class="w-full bg-surface border border-outline rounded p-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+<option>Main Cash Ledger (Petty Cash)</option>
+<option>Prime Bank - Yard Acc (x9021)</option>
+<option>bKash Merchant Account</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-on-surface">Payment Date</label>
+<input class="w-full bg-surface border border-outline rounded p-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" type="date" value="2025-05-31"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-on-surface">Reference / Note</label>
+<input class="w-full bg-surface border border-outline rounded p-2.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Optional reference no." type="text"/>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant flex gap-3">
+<button class="flex-1 px-4 py-2 text-on-surface font-semibold rounded border border-outline hover:bg-surface-container transition-colors" onclick="closeModal()">Cancel</button>
+<button class="flex-1 px-4 py-2 bg-primary text-on-primary font-semibold rounded hover:opacity-90 transition-all scale-100 active:scale-95" onclick="confirmPayment()">Confirm Payment</button>
+</div>
+</div>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        function openModal(name, amount) {
+            document.getElementById('modalTitle').innerText = `Pay Salary — ${name} (May 2025)`;
+            document.getElementById('modalNetPayable').innerText = `৳${amount.toLocaleString()}`;
+            document.getElementById('payAmount').value = amount;
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        function confirmPayment() {
+            // Animated Feedback placeholder
+            const btn = event.currentTarget;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm" data-icon="progress_activity">progress_activity</span> Processing...';
+            btn.classList.add('opacity-70', 'pointer-events-none');
+            
+            setTimeout(() => {
+                closeModal();
+                btn.innerHTML = 'Confirm Payment';
+                btn.classList.remove('opacity-70', 'pointer-events-none');
+                alert('Payment processed successfully and ledger updated.');
+            }, 800);
+        }
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body></html>

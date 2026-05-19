@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inventory Sub-types Management | YardFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#bec6e0",
+                        "tertiary-container": "#002114",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "on-surface": "#191c1e",
+                        "tertiary": "#000000",
+                        "secondary-container": "#d0e1fb",
+                        "on-tertiary-container": "#069669",
+                        "on-primary-container": "#7c839b",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-background": "#191c1e",
+                        "outline-variant": "#c6c6cd",
+                        "on-tertiary-fixed": "#002114",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary-fixed": "#85f8c4",
+                        "primary-container": "#131b2e",
+                        "surface": "#f7f9fb",
+                        "secondary": "#505f76",
+                        "primary": "#000000",
+                        "surface-tint": "#565e74",
+                        "surface-dim": "#d8dadc",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "outline": "#76777d",
+                        "surface-container": "#eceef0",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-fixed": "#131b2e",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-high": "#e6e8ea",
+                        "on-surface-variant": "#45464d",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#68dba9",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#bec6e0",
+                        "error": "#ba1a1a",
+                        "background": "#f7f9fb",
+                        "on-secondary-container": "#54647a",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#dae2fd",
+                        "surface-bright": "#f7f9fb",
+                        "inverse-on-surface": "#eff1f3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans", "sans-serif"],
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["DM Sans", "sans-serif"],
+                        "label": ["DM Sans", "sans-serif"],
+                        "mono": ["Fira Code", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'DM Sans', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c6c6cd; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-primary-container text-on-primary border-r border-outline-variant flex flex-col p-4 z-50">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-10 h-10 bg-on-tertiary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">recycling</span>
+</div>
+<div>
+<h1 class="text-h3 font-headline font-bold text-on-primary leading-tight">YardFlow</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-primary-container">Recycling ERP</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-on-primary hover:bg-on-primary-fixed-variant transition-colors transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-body-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-DEFAULT transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="text-body-sm font-semibold">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-on-primary hover:bg-on-primary-fixed-variant transition-colors transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-body-sm">Procurement</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-on-primary hover:bg-on-primary-fixed-variant transition-colors transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-body-sm">Sales</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-on-primary hover:bg-on-primary-fixed-variant transition-colors transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="text-body-sm">Compliance</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-on-primary-fixed-variant pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-on-primary hover:bg-on-primary-fixed-variant transition-colors transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-body-sm">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="flex-1 ml-[240px] flex flex-col min-h-screen relative">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-[240px] h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-8 z-40">
+<div class="flex flex-col">
+<nav class="flex items-center gap-2 text-caption text-on-surface-variant mb-0.5">
+<span>Dashboard</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-medium">Inventory</span>
+</nav>
+<h2 class="text-h4 font-headline font-semibold text-primary">Inventory Management</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border-none rounded-full text-body-sm focus:ring-2 focus:ring-tertiary-container w-64" placeholder="Search resources..." type="text"/>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged male manager in a clean warehouse environment. The lighting is bright and natural, suggesting a high-end corporate office within an industrial recycling facility. He wears a neutral-toned professional shirt, looking confidently at the camera, embodying reliability and leadership in a modern industrial setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUntDYhpQ1yrt-VrAHe6WvYJZSaqVm3fTHU32AKqF7wJ9CGx66USKxFzAyMtLBQuh5lHzn7hildIwIvY-Bni0Oe7CdbAlNdRNk3onx_C0U9Eo9-2-XfT227Eo6v0e_PfS8dxxmMU2G5iIEM63qnextLuuuepH35sLjyq4b5qgoCsTeDW7CM_bPyU_9MkY-7EfyZjAWvdh1fVi3ps4tDGJ6mA3yibcQGuulH2Sba9tI_Hx6rNAWl2yRafq5X0Rwi6tBWl-b_PFedt4"/>
+</div>
+</div>
+</header>
+<!-- Page Sub-navigation -->
+<div class="mt-16 bg-surface px-8 border-b border-outline-variant sticky top-16 z-30">
+<div class="flex gap-8">
+<a class="text-secondary hover:text-primary pb-4 pt-4 text-body-sm transition-colors border-b-2 border-transparent" href="#">Stock Overview</a>
+<a class="text-secondary hover:text-primary pb-4 pt-4 text-body-sm transition-colors border-b-2 border-transparent" href="#">Categories</a>
+<a class="text-on-tertiary-container font-semibold border-b-2 border-on-tertiary-container pb-4 pt-4 text-body-sm" href="#">Sub-types</a>
+<a class="text-secondary hover:text-primary pb-4 pt-4 text-body-sm transition-colors border-b-2 border-transparent" href="#">Scrap Pool</a>
+<a class="text-secondary hover:text-primary pb-4 pt-4 text-body-sm transition-colors border-b-2 border-transparent" href="#">Consumables</a>
+</div>
+</div>
+<!-- Main Content Area: Two-Panel Split -->
+<main class="flex-1 p-8 grid grid-cols-12 gap-6 bg-background">
+<!-- Left Panel: Categories -->
+<section class="col-span-4 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h3 class="text-h3 font-headline text-primary">Categories</h3>
+<button class="flex items-center gap-1 text-on-tertiary-container hover:bg-tertiary-fixed/20 px-2 py-1 rounded transition-colors text-caption font-semibold">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Add
+                    </button>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Active Category -->
+<button class="flex items-center justify-between p-4 bg-white rounded-lg border-l-4 border-on-tertiary-container shadow-sm group text-left transition-all hover:translate-x-1">
+<div>
+<p class="text-body font-bold text-primary">Iron Plates</p>
+<p class="text-caption text-on-surface-variant">6 sub-types available</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary">chevron_right</span>
+</button>
+<!-- Inactive Category -->
+<button class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg border-l-4 border-transparent hover:bg-surface-container transition-all group text-left">
+<div>
+<p class="text-body font-medium text-on-surface-variant">Angle Iron</p>
+<p class="text-caption text-on-surface-variant/70">4 sub-types available</p>
+</div>
+<span class="material-symbols-outlined text-outline/50 group-hover:text-primary">chevron_right</span>
+</button>
+<!-- Inactive Category -->
+<button class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg border-l-4 border-transparent hover:bg-surface-container transition-all group text-left">
+<div>
+<p class="text-body font-medium text-on-surface-variant">Girder</p>
+<p class="text-caption text-on-surface-variant/70">3 sub-types available</p>
+</div>
+<span class="material-symbols-outlined text-outline/50 group-hover:text-primary">chevron_right</span>
+</button>
+<!-- Ghost Add Row -->
+<button class="flex items-center justify-center p-4 bg-transparent border-2 border-dashed border-outline-variant rounded-lg hover:border-on-tertiary-container hover:bg-on-tertiary-fixed/5 transition-all group mt-2">
+<div class="flex items-center gap-2 text-outline group-hover:text-on-tertiary-container">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-body-sm font-medium">Add Category</span>
+</div>
+</button>
+</div>
+</section>
+<!-- Right Panel: Sub-types Table -->
+<section class="col-span-8 flex flex-col gap-4 relative">
+<div class="flex items-center justify-between">
+<h3 class="text-h3 font-headline text-primary">Iron Plates — <span class="text-on-surface-variant">Sub-types</span></h3>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-all active:scale-95 shadow-sm" onclick="toggleModal(true)">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                        Add Sub-type
+                    </button>
+</div>
+<div class="bg-white rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="px-6 py-4 text-caption font-bold text-on-surface-variant uppercase tracking-wider">Sub-type Name</th>
+<th class="px-6 py-4 text-caption font-bold text-on-surface-variant uppercase tracking-wider">Default Price</th>
+<th class="px-6 py-4 text-caption font-bold text-on-surface-variant uppercase tracking-wider">Unit</th>
+<th class="px-6 py-4 text-caption font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-caption font-bold text-on-surface-variant uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-6 py-4 text-body-sm font-medium text-primary">5-8mm (Thin)</td>
+<td class="px-6 py-4 font-mono text-body-sm">৳110.00</td>
+<td class="px-6 py-4 text-body-sm text-secondary">kg</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                        Active
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-on-tertiary-container transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-[18px]">block</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-6 py-4 text-body-sm font-medium text-primary">9-11mm</td>
+<td class="px-6 py-4 font-mono text-body-sm">৳95.00</td>
+<td class="px-6 py-4 text-body-sm text-secondary">kg</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                        Active
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-on-tertiary-container transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-[18px]">block</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-6 py-4 text-body-sm font-medium text-primary">12-13mm</td>
+<td class="px-6 py-4 font-mono text-body-sm">৳92.00</td>
+<td class="px-6 py-4 text-body-sm text-secondary">kg</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                        Active
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-on-tertiary-container transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-[18px]">block</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-6 py-4 text-body-sm font-medium text-primary">14-20mm</td>
+<td class="px-6 py-4 font-mono text-body-sm">৳87.00</td>
+<td class="px-6 py-4 text-body-sm text-secondary">kg</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                        Active
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-on-tertiary-container transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-[18px]">block</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-6 py-4 text-body-sm font-medium text-primary">25mm (Thick)</td>
+<td class="px-6 py-4 font-mono text-body-sm">৳90.00</td>
+<td class="px-6 py-4 text-body-sm text-secondary">kg</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                        Active
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-on-tertiary-container transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-[18px]">block</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 6: Inactive -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-6 py-4 text-body-sm font-medium text-on-surface-variant/60">50mm (Very Thick)</td>
+<td class="px-6 py-4 font-mono text-body-sm text-on-surface-variant/60">৳95.00</td>
+<td class="px-6 py-4 text-body-sm text-secondary/60">kg</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary/10 text-secondary text-[11px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                        Inactive
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-on-tertiary-container transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 hover:text-on-tertiary-container transition-colors"><span class="material-symbols-outlined text-[18px]">check_circle</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Floating Stats Decorative Row -->
+<div class="grid grid-cols-3 gap-4 mt-4">
+<div class="p-4 bg-tertiary-container text-on-tertiary rounded-lg flex items-center justify-between border-l-4 border-on-tertiary-container shadow-sm">
+<div>
+<p class="text-[10px] uppercase font-bold tracking-wider opacity-70">Top Sub-type</p>
+<p class="text-body font-bold">5-8mm Iron Plate</p>
+</div>
+<span class="material-symbols-outlined text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+<div class="p-4 bg-white border border-outline-variant rounded-lg flex items-center justify-between shadow-sm">
+<div>
+<p class="text-[10px] uppercase font-bold text-secondary tracking-wider">Avg Price</p>
+<p class="text-body font-mono font-bold text-primary">৳94.83 /kg</p>
+</div>
+<span class="material-symbols-outlined text-secondary">payments</span>
+</div>
+<div class="p-4 bg-white border border-outline-variant rounded-lg flex items-center justify-between shadow-sm">
+<div>
+<p class="text-[10px] uppercase font-bold text-secondary tracking-wider">Total Stock</p>
+<p class="text-body font-mono font-bold text-primary">12,450 kg</p>
+</div>
+<span class="material-symbols-outlined text-secondary">inventory_2</span>
+</div>
+</div>
+<!-- ADD SUB-TYPE MODAL OVERLAY -->
+<div class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-primary/40 backdrop-blur-sm transition-all duration-300" id="modalOverlay">
+<div class="bg-white w-[480px] p-8 rounded-xl shadow-lg border border-outline-variant transform scale-95 opacity-0 transition-all duration-300" id="modalContent">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-h2 font-headline font-bold text-primary">Add Sub-type</h2>
+<button class="text-outline hover:text-primary transition-colors" onclick="toggleModal(false)">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="space-y-5">
+<div class="flex flex-col gap-1.5">
+<label class="text-body-sm font-bold text-primary">Sub-type Name</label>
+<input class="w-full h-[42px] border-outline-variant focus:border-on-tertiary-container focus:ring-0 rounded-DEFAULT text-body-sm px-4" placeholder="e.g. 30mm Ultra Thick" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="text-body-sm font-bold text-primary">Default Price per kg</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-body-sm text-outline">৳</span>
+<input class="w-full h-[42px] pl-8 border-outline-variant focus:border-on-tertiary-container focus:ring-0 rounded-DEFAULT text-body-sm font-mono" step="0.01" type="number"/>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-body-sm font-bold text-primary">Unit</label>
+<select class="w-full h-[42px] border-outline-variant focus:border-on-tertiary-container focus:ring-0 rounded-DEFAULT text-body-sm px-4">
+<option>kg</option>
+<option>ton</option>
+</select>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-body-sm font-bold text-primary">Low Stock Alert Threshold (kg)</label>
+<input class="w-full h-[42px] border-outline-variant focus:border-on-tertiary-container focus:ring-0 rounded-DEFAULT text-body-sm px-4" placeholder="500" type="number"/>
+<p class="text-[11px] text-on-surface-variant">System will notify when stock falls below this level.</p>
+</div>
+<div class="flex items-center gap-3 pt-4">
+<button class="flex-1 h-[42px] bg-transparent text-secondary-fixed-dim hover:bg-surface-container-low transition-colors font-bold text-body-sm rounded-DEFAULT" onclick="toggleModal(false)" type="button">
+                                    Cancel
+                                </button>
+<button class="flex-1 h-[42px] bg-primary text-on-primary hover:bg-primary/90 transition-all active:scale-95 font-bold text-body-sm rounded-DEFAULT shadow-md" type="submit">
+                                    Save Sub-type
+                                </button>
+</div>
+</form>
+</div>
+</div>
+</section>
+</main>
+</div>
+<script>
+        function toggleModal(show) {
+            const overlay = document.getElementById('modalOverlay');
+            const content = document.getElementById('modalContent');
+            
+            if (show) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            } else {
+                content.classList.add('scale-95', 'opacity-0');
+                content.classList.remove('scale-100', 'opacity-100');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Close modal on background click
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) toggleModal(false);
+        });
+
+        // Micro-interaction for table rows
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.querySelector('td:nth-child(2)').classList.add('text-on-tertiary-container', 'font-bold');
+            });
+            row.addEventListener('mouseleave', () => {
+                row.querySelector('td:nth-child(2)').classList.remove('text-on-tertiary-container', 'font-bold');
+            });
+        });
+    </script>
+</body></html>

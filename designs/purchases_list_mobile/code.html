@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>YardFlow ERP - Purchases</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500;700&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-high": "#e6e8ea",
+                        "primary": "#000000",
+                        "inverse-primary": "#bec6e0",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#45464d",
+                        "background": "#f7f9fb",
+                        "surface-bright": "#f7f9fb",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "outline-variant": "#c6c6cd",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "secondary-container": "#d0e1fb",
+                        "on-secondary-fixed": "#0b1c30",
+                        "on-primary-container": "#7c839b",
+                        "surface-tint": "#565e74",
+                        "tertiary-container": "#002114",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "tertiary-fixed-dim": "#68dba9",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-secondary-container": "#54647a",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#000000",
+                        "secondary": "#505f76",
+                        "on-background": "#191c1e",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-surface": "#191c1e",
+                        "surface": "#f7f9fb",
+                        "tertiary-fixed": "#85f8c4",
+                        "surface-dim": "#d8dadc",
+                        "on-primary-fixed": "#131b2e",
+                        "inverse-on-surface": "#eff1f3",
+                        "primary-fixed": "#dae2fd",
+                        "on-tertiary-container": "#069669",
+                        "outline": "#76777d",
+                        "on-tertiary-fixed": "#002114",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "error": "#ba1a1a",
+                        "primary-container": "#131b2e",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-slate": "#64748B",
+                        "tertiary-sage": "#059669"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans", "sans-serif"],
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["DM Sans", "sans-serif"],
+                        "label": ["DM Sans", "sans-serif"],
+                        "mono": ["Fira Code", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body select-none">
+<!-- Top Bar Component -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 h-[56px] bg-primary shadow-sm">
+<div class="flex items-center gap-4">
+<button class="text-on-primary active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline text-lg font-bold text-on-primary tracking-tight">Purchases</h1>
+</div>
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full border-2 border-primary-fixed-dim/30 overflow-hidden bg-surface-container">
+<img alt="user profile avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged yard manager with a warm expression, wearing a navy blue button-up shirt. The lighting is soft and corporate, set against a clean, modern workspace background with industrial steel accents. The image maintains a high-end, professional ERP dashboard aesthetic with balanced contrast and crisp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzXA9lvknH675qL4c6_Z61UO0wJKnKfHX-RaeYAun0u9GDP9Mdfpk5QQ8r86Ze-av0fO-m9h5ZNDi5PWNC0RYLo_PmBQmiVz0wF9S9ofyuGta0udBqveZMyynK2HBcyKrSgwhJUaClw6CaZ9uAzWYpnc0J1LNFGO7r_8XoR3dnulLpZ_-QLvR-MSFmnZDP0WIO-Hl_YybGAFimCChO5w48QlX4vx8tJo6NMfUl9tOHeKGEwnxw_jj0gL0Jyeq2sk6pWHeByCWSo2g"/>
+</div>
+</div>
+</header>
+<main class="pt-[56px] pb-[88px] min-h-screen">
+<!-- Summary Strip -->
+<section class="mt-4 px-4 overflow-x-auto hide-scrollbar flex gap-3 pb-2">
+<!-- Total Purchases -->
+<div class="flex-shrink-0 min-w-[140px] p-3 bg-surface-container-lowest rounded-lg shadow-sm border border-outline-variant/30">
+<p class="font-label text-[12px] font-medium text-secondary-slate mb-1">Total Purchases</p>
+<p class="font-mono text-[14px] font-bold text-primary">৳12,40,000</p>
+</div>
+<!-- Total Paid -->
+<div class="flex-shrink-0 min-w-[140px] p-3 bg-surface-container-lowest rounded-lg shadow-sm border border-outline-variant/30">
+<p class="font-label text-[12px] font-medium text-secondary-slate mb-1">Total Paid</p>
+<p class="font-mono text-[14px] font-bold text-tertiary-sage">৳9,80,000</p>
+</div>
+<!-- Total Due -->
+<div class="flex-shrink-0 min-w-[140px] p-3 bg-surface-container-lowest rounded-lg shadow-sm border border-outline-variant/30">
+<p class="font-label text-[12px] font-medium text-secondary-slate mb-1">Total Due</p>
+<p class="font-mono text-[14px] font-bold text-error">৳2,60,000</p>
+</div>
+<!-- This Month -->
+<div class="flex-shrink-0 min-w-[140px] p-3 bg-surface-container-lowest rounded-lg shadow-sm border border-outline-variant/30">
+<p class="font-label text-[12px] font-medium text-secondary-slate mb-1">This Month</p>
+<p class="font-mono text-[14px] font-bold text-secondary-slate">৳3,20,000</p>
+</div>
+</section>
+<!-- Actions Row -->
+<section class="mt-4 px-4 flex justify-between items-center">
+<h2 class="font-headline text-sm font-semibold uppercase tracking-wider text-secondary-slate">Record List</h2>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-high text-secondary-slate border border-outline-variant/50 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-headline font-bold text-sm active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                    New
+                </button>
+</div>
+</section>
+<!-- Card List -->
+<section class="mt-4 px-4 space-y-3">
+<!-- Card 1: Partial -->
+<div class="bg-surface-container-lowest rounded-lg p-4 shadow-sm border border-outline-variant/20">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h3 class="font-headline font-bold text-primary text-base">Chattogram Shipyard</h3>
+<p class="text-[12px] text-on-surface-variant font-medium">14 May 2025</p>
+</div>
+<div class="px-2.5 py-1 bg-warning/10 text-warning text-[10px] font-bold rounded-full uppercase tracking-tighter">
+                        Partial
+                    </div>
+</div>
+<div class="flex justify-between items-end mb-4">
+<div>
+<p class="text-[11px] text-secondary-slate font-medium mb-0.5">Purchase Total</p>
+<p class="font-mono text-[18px] font-bold text-primary">৳1,85,000</p>
+</div>
+<div class="text-right">
+<p class="text-[11px] text-warning font-medium mb-0.5">Due Amount</p>
+<p class="font-mono text-[14px] font-bold text-warning">৳85,000</p>
+</div>
+</div>
+<div class="flex gap-2 pt-3 border-t border-outline-variant/30">
+<button class="flex-1 py-2 text-tertiary-sage font-bold text-sm bg-tertiary-sage/5 rounded-lg active:bg-tertiary-sage/10 transition-colors">View</button>
+<button class="flex-1 py-2 bg-primary text-on-primary font-bold text-sm rounded-lg active:opacity-90 transition-opacity">Pay</button>
+</div>
+</div>
+<!-- Card 2: Paid -->
+<div class="bg-surface-container-lowest rounded-lg p-4 shadow-sm border border-outline-variant/20">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h3 class="font-headline font-bold text-primary text-base">Al-Amin Shipbreakers</h3>
+<p class="text-[12px] text-on-surface-variant font-medium">12 May 2025</p>
+</div>
+<div class="px-2.5 py-1 bg-success/10 text-success text-[10px] font-bold rounded-full uppercase tracking-tighter">
+                        Paid
+                    </div>
+</div>
+<div class="mb-4">
+<p class="text-[11px] text-secondary-slate font-medium mb-0.5">Purchase Total</p>
+<p class="font-mono text-[18px] font-bold text-primary">৳62,000</p>
+</div>
+<div class="flex gap-2 pt-3 border-t border-outline-variant/30">
+<button class="w-full py-2 text-tertiary-sage font-bold text-sm bg-tertiary-sage/5 rounded-lg active:bg-tertiary-sage/10 transition-colors">View Details</button>
+</div>
+</div>
+<!-- Card 3: Due -->
+<div class="bg-surface-container-lowest rounded-lg p-4 shadow-sm border border-outline-variant/20">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h3 class="font-headline font-bold text-primary text-base">Madina Steel</h3>
+<p class="text-[12px] text-on-surface-variant font-medium">10 May 2025</p>
+</div>
+<div class="px-2.5 py-1 bg-error/10 text-error text-[10px] font-bold rounded-full uppercase tracking-tighter">
+                        Due
+                    </div>
+</div>
+<div class="flex justify-between items-end mb-4">
+<div>
+<p class="text-[11px] text-secondary-slate font-medium mb-0.5">Purchase Total</p>
+<p class="font-mono text-[18px] font-bold text-primary">৳3,40,000</p>
+</div>
+<div class="text-right">
+<p class="text-[11px] text-error font-medium mb-0.5">Full Due</p>
+<p class="font-mono text-[14px] font-bold text-error">৳3,40,000</p>
+</div>
+</div>
+<div class="flex gap-2 pt-3 border-t border-outline-variant/30">
+<button class="flex-1 py-2 text-tertiary-sage font-bold text-sm bg-tertiary-sage/5 rounded-lg active:bg-tertiary-sage/10 transition-colors">View</button>
+<button class="flex-1 py-2 bg-primary text-on-primary font-bold text-sm rounded-lg active:opacity-90 transition-opacity">Pay Now</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Nav Bar Component -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-[72px] bg-surface-container-lowest border-t border-outline-variant/30 px-2 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/20 transition-all active:scale-90 duration-150 py-1 px-3">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label text-[10px] font-medium mt-1">Home</span>
+</button>
+<!-- Sales is active for "Purchases" context in this flow -->
+<button class="flex flex-col items-center justify-center text-on-tertiary-container bg-tertiary-container/10 rounded-xl px-4 py-1 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="payments" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label text-[10px] font-bold mt-1">Sales</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/20 transition-all active:scale-90 duration-150 py-1 px-3">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label text-[10px] font-medium mt-1">Stock</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/20 transition-all active:scale-90 duration-150 py-1 px-3">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label text-[10px] font-medium mt-1">HR</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/20 transition-all active:scale-90 duration-150 py-1 px-3">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+<span class="font-label text-[10px] font-medium mt-1">Menu</span>
+</button>
+</nav>
+<script>
+        // Simple micro-interaction for the cards
+        document.querySelectorAll('.active\\:scale-90').forEach(button => {
+            button.addEventListener('touchstart', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('touchend', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Add visual feedback to horizontal scroll
+        const scrollContainer = document.querySelector('.hide-scrollbar');
+        let isScrolling = false;
+        scrollContainer.addEventListener('scroll', () => {
+            if(!isScrolling) {
+                scrollContainer.classList.add('opacity-80');
+                isScrolling = true;
+            }
+            clearTimeout(window.scrollTimeout);
+            window.scrollTimeout = setTimeout(() => {
+                scrollContainer.classList.remove('opacity-80');
+                isScrolling = false;
+            }, 150);
+        });
+    </script>
+</body></html>

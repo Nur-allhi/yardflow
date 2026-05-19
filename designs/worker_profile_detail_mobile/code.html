@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Worker Profile Detail - Md. Rahim</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "primary-container": "#131b2e",
+                        "on-surface": "#191c1e",
+                        "inverse-primary": "#bec6e0",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#002114",
+                        "surface": "#f7f9fb",
+                        "on-background": "#191c1e",
+                        "on-secondary-fixed": "#0b1c30",
+                        "inverse-surface": "#2d3133",
+                        "on-surface-variant": "#45464d",
+                        "primary": "#000000",
+                        "surface-container": "#eceef0",
+                        "on-primary-fixed": "#131b2e",
+                        "on-error-container": "#93000a",
+                        "background": "#f7f9fb",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary": "#505f76",
+                        "on-tertiary-fixed": "#002114",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-container": "#069669",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#54647a",
+                        "secondary-container": "#d0e1fb",
+                        "primary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface-variant": "#e0e3e5",
+                        "tertiary-fixed": "#85f8c4",
+                        "surface-tint": "#565e74",
+                        "outline-variant": "#c6c6cd",
+                        "tertiary-fixed-dim": "#68dba9",
+                        "outline": "#76777d",
+                        "on-primary-container": "#7c839b",
+                        "tertiary": "#000000",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#dae2fd",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "error": "#ba1a1a",
+                        "success": "#22C55E",
+                        "warning": "#EAB308"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["DM Sans"],
+                        "label": ["DM Sans"],
+                        "mono": ["Fira Code"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'DM Sans', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="bg-primary-container text-on-primary sticky top-0 z-50 flex justify-between items-center px-4 h-[64px] w-full shadow-sm">
+<div class="flex items-center gap-3">
+<button class="hover:bg-on-primary/10 p-2 rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined text-on-primary">arrow_back</span>
+</button>
+<div>
+<h1 class="font-headline text-lg font-bold leading-tight">Md. Rahim</h1>
+<div class="flex gap-2 items-center mt-0.5">
+<span class="bg-secondary-container/20 text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-sm text-secondary-fixed">Welder</span>
+<span class="bg-success/20 text-success text-[10px] font-bold px-2 py-0.5 rounded-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                        Active
+                    </span>
+</div>
+</div>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary-fixed overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged South Asian male worker wearing a safety vest, set against a blurred industrial shipyard background with steel structures and soft sunlight. The image is rendered in a high-quality cinematic style with realistic skin textures and professional lighting that emphasizes competence and reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2g3_j7vbH5VPvRMWg_7wC6Lf6j2jaeEuoGBU3x4wFPU5yoHSAT18eIDjBFyPiCQbZP1_gv3I5kyM9pzElb5wmYid0CxtiVceCI8DVZ-wmIY015uUzFdoeLdrMw4kwPN1MM_dQQjspFzeGNXk1mwpQyRPyoRIr2f0OcMyH9dlkAtJK75-cqKc5F70InxgzV9zu0kFADlxe1OgGddyzw7BcL9MGh28u8ao53yqo26KpSajH7IWUySGO2aoXuWQOBkU_zh2HEycJgCw"/>
+</div>
+</header>
+<main class="px-4 py-6 space-y-8 max-w-[375px] mx-auto">
+<!-- Top Stats Grid -->
+<section class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
+<p class="text-on-surface-variant text-[11px] font-medium uppercase tracking-tight mb-1">Monthly Salary</p>
+<p class="font-mono text-lg font-semibold text-primary">৳15,000</p>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
+<p class="text-on-surface-variant text-[11px] font-medium uppercase tracking-tight mb-1">Month Advances</p>
+<p class="font-mono text-lg font-semibold text-warning">৳8,000</p>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
+<p class="text-on-surface-variant text-[11px] font-medium uppercase tracking-tight mb-1">Net Payable</p>
+<p class="font-mono text-lg font-semibold text-on-tertiary-container">৳7,000</p>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
+<p class="text-on-surface-variant text-[11px] font-medium uppercase tracking-tight mb-1">Total Earned</p>
+<p class="font-mono text-lg font-semibold text-primary">৳1,80,000</p>
+</div>
+</section>
+<!-- Salary History Section -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h2 class="font-headline text-h3 text-on-surface">Salary History</h2>
+<button class="text-on-tertiary-container text-caption font-bold hover:underline">View All</button>
+</div>
+<div class="space-y-3">
+<!-- April Card -->
+<div class="bg-surface p-4 rounded-xl border border-outline-variant flex justify-between items-center transition-all hover:shadow-md">
+<div class="space-y-1">
+<p class="text-on-surface font-semibold">April 2025</p>
+<p class="text-on-surface-variant text-caption">Base: <span class="font-mono text-on-surface">৳15k</span> | Adv: <span class="font-mono text-warning">৳2k</span></p>
+</div>
+<div class="text-right">
+<p class="font-mono font-bold text-primary">৳13,000</p>
+<span class="text-[10px] font-bold text-success uppercase">Paid</span>
+</div>
+</div>
+<!-- March Card -->
+<div class="bg-surface p-4 rounded-xl border border-outline-variant flex justify-between items-center transition-all hover:shadow-md">
+<div class="space-y-1">
+<p class="text-on-surface font-semibold">March 2025</p>
+<p class="text-on-surface-variant text-caption">Base: <span class="font-mono text-on-surface">৳15k</span> | Adv: <span class="font-mono text-warning">৳1.5k</span></p>
+</div>
+<div class="text-right">
+<p class="font-mono font-bold text-primary">৳13,500</p>
+<span class="text-[10px] font-bold text-success uppercase">Paid</span>
+</div>
+</div>
+<!-- Feb Card -->
+<div class="bg-surface p-4 rounded-xl border border-outline-variant flex justify-between items-center transition-all hover:shadow-md opacity-80">
+<div class="space-y-1">
+<p class="text-on-surface font-semibold">February 2025</p>
+<p class="text-on-surface-variant text-caption">Base: <span class="font-mono text-on-surface">৳15k</span> | Adv: <span class="font-mono text-warning">৳0</span></p>
+</div>
+<div class="text-right">
+<p class="font-mono font-bold text-primary">৳15,000</p>
+<span class="text-[10px] font-bold text-success uppercase">Paid</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Advance History Section -->
+<section class="space-y-4">
+<h2 class="font-headline text-h3 text-on-surface">Advance History</h2>
+<div class="flex gap-2 overflow-x-auto pb-2 scroll-smooth">
+<button class="px-5 py-2 rounded-full bg-secondary-container text-on-secondary-container font-semibold text-caption whitespace-nowrap shadow-sm">May</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-caption whitespace-nowrap hover:bg-surface-container-highest transition-colors">April</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-caption whitespace-nowrap hover:bg-surface-container-highest transition-colors">March</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-caption whitespace-nowrap hover:bg-surface-container-highest transition-colors">February</button>
+</div>
+<!-- Advance List for May -->
+<div class="space-y-3 mt-4">
+<div class="flex gap-4 p-4 bg-surface-container-low rounded-lg border-l-4 border-warning">
+<div class="flex-shrink-0 bg-warning/10 text-warning w-10 h-10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h4 class="font-semibold text-on-surface">18 May</h4>
+<span class="font-mono font-bold text-warning">৳3,000</span>
+</div>
+<p class="text-caption text-on-surface-variant">Payment Method: Cash</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 bg-surface-container-low rounded-lg border-l-4 border-warning">
+<div class="flex-shrink-0 bg-warning/10 text-warning w-10 h-10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h4 class="font-semibold text-on-surface">10 May</h4>
+<span class="font-mono font-bold text-warning">৳5,000</span>
+</div>
+<p class="text-caption text-on-surface-variant italic">"Advance for rent"</p>
+<p class="text-caption text-on-surface-variant">Payment Method: Cash</p>
+</div>
+</div>
+</div>
+<!-- Calculation Summary -->
+<div class="bg-primary-container p-6 rounded-xl text-on-primary mt-6 space-y-4 shadow-lg">
+<h3 class="text-caption font-bold uppercase tracking-widest text-on-primary-container">Calculation Summary (May)</h3>
+<div class="space-y-2">
+<div class="flex justify-between items-center border-b border-on-primary-container/20 pb-2">
+<span class="text-body-sm opacity-80">Base Salary</span>
+<span class="font-mono text-body">৳15,000</span>
+</div>
+<div class="flex justify-between items-center border-b border-on-primary-container/20 pb-2">
+<span class="text-body-sm opacity-80">Total Advances</span>
+<span class="font-mono text-body text-warning">৳8,000</span>
+</div>
+<div class="flex justify-between items-center pt-2">
+<span class="font-bold text-lg">Net Payable</span>
+<span class="font-mono text-xl font-bold text-on-tertiary-container">৳7,000</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Bottom CTA -->
+<div class="fixed bottom-[72px] left-0 w-full p-4 bg-gradient-to-t from-background via-background/80 to-transparent z-40">
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-lg shadow-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add_circle</span>
+            Record Advance
+        </button>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-2 h-[72px] bg-surface-container-lowest border-t border-outline-variant shadow-md">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mb-1 group-active:scale-90 transition-transform">home</span>
+<span class="font-label text-[10px] font-medium">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mb-1 group-active:scale-90 transition-transform">monetization_on</span>
+<span class="font-label text-[10px] font-medium">Sales</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mb-1 group-active:scale-90 transition-transform">layers</span>
+<span class="font-label text-[10px] font-medium">Stock</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-1.5 transition-all shadow-sm">
+<span class="material-symbols-outlined font-variation-settings-'FILL' 1">engineering</span>
+<span class="font-label text-[10px] font-bold">HR</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined mb-1 group-active:scale-90 transition-transform">menu</span>
+<span class="font-label text-[10px] font-medium">Menu</span>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for tabs
+        const tabs = document.querySelectorAll('.overflow-x-auto button');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'font-semibold');
+                    t.classList.add('bg-surface-container-high', 'text-on-surface-variant', 'font-medium');
+                });
+                tab.classList.add('bg-secondary-container', 'text-on-secondary-container', 'font-semibold');
+                tab.classList.remove('bg-surface-container-high', 'text-on-surface-variant', 'font-medium');
+            });
+        });
+
+        // Add a subtle parallax-like entry for cards
+        window.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('main > *');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(10px)';
+                card.style.transition = `all 0.4s ease-out ${index * 0.05}s`;
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 10);
+            });
+        });
+    </script>
+</body></html>

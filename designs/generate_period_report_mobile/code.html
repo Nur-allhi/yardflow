@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Period Report - Ship Recycling ERP</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed-variant": "#3f465c",
+              "surface": "#f7f9fb",
+              "secondary-container": "#d0e1fb",
+              "on-secondary-container": "#54647a",
+              "on-primary": "#ffffff",
+              "surface-container-highest": "#e0e3e5",
+              "surface-tint": "#565e74",
+              "on-secondary": "#ffffff",
+              "surface-bright": "#f7f9fb",
+              "on-surface-variant": "#45464d",
+              "outline-variant": "#c6c6cd",
+              "surface-dim": "#d8dadc",
+              "secondary-fixed": "#d3e4fe",
+              "primary": "#000000",
+              "secondary": "#505f76",
+              "on-secondary-fixed-variant": "#38485d",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#f2f4f6",
+              "on-error": "#ffffff",
+              "tertiary-fixed-dim": "#68dba9",
+              "error-container": "#ffdad6",
+              "inverse-on-surface": "#eff1f3",
+              "primary-container": "#131b2e",
+              "secondary-fixed-dim": "#b7c8e1",
+              "tertiary": "#000000",
+              "on-primary-container": "#7c839b",
+              "inverse-primary": "#bec6e0",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "primary-fixed": "#dae2fd",
+              "outline": "#76777d",
+              "on-tertiary-container": "#069669",
+              "on-tertiary": "#ffffff",
+              "surface-container-high": "#e6e8ea",
+              "surface-container": "#eceef0",
+              "on-background": "#191c1e",
+              "on-secondary-fixed": "#0b1c30",
+              "surface-variant": "#e0e3e5",
+              "tertiary-container": "#002114",
+              "on-surface": "#191c1e",
+              "inverse-surface": "#2d3133",
+              "primary-fixed-dim": "#bec6e0",
+              "background": "#f7f9fb",
+              "on-tertiary-fixed-variant": "#005137",
+              "on-tertiary-fixed": "#002114",
+              "tertiary-fixed": "#85f8c4",
+              "error": "#ba1a1a"
+            },
+            borderRadius: {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans", "sans-serif"],
+              "display": ["Plus Jakarta Sans", "sans-serif"],
+              "body": ["DM Sans", "sans-serif"],
+              "label": ["DM Sans", "sans-serif"],
+              "code": ["Fira Code", "monospace"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-code { font-family: 'Fira Code', monospace; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for high density data screens */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c6c6cd; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center px-4 h-16 bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container shadow-sm">
+<div class="flex items-center justify-between w-full">
+<button aria-label="Menu" class="p-2 hover:bg-primary-container/20 transition-colors duration-200 rounded-full">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline text-[20px] font-semibold leading-[1.3]">Period Report</h1>
+<div class="w-10 h-10 rounded-full border border-outline-variant overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a shipyard operations manager in his 40s, wearing a clean white shirt and a safety helmet resting on a desk behind him. The lighting is bright and industrial, reflecting a modern office within a ship recycling yard. The image has a sharp, high-contrast look consistent with a corporate ERP interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzE1Jla2m9EdouI4J036M0-nqtW0SYOTlyujYMeKGtpmjhVAgirtXL64RwY0elwhTYe_ZXB8U-ceOuNPR87SyWXRnYdA623Y3aThZSj-H1PrDkERMauHaYBlkyPSNejvZcMZAAcmv0u7OfiABm0CK8WpbcerB3YciZ03UFA8gdhTfJsteZazHR8-DOnxJBWVkS0dpQpSiby0jYu7gJh00gfbKnVsvnLAU5NNvUtWPR0egc9LuJ0R-GwHDK5aa-zZ-mbTqJavZpvRs"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-20 px-4 space-y-6">
+<!-- Step 1: Select Report Period -->
+<section class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-on-primary text-[12px] font-bold">1</span>
+<h2 class="font-headline text-[18px] font-semibold">Select Report Period</h2>
+</div>
+<div class="grid gap-3">
+<!-- Selectable Card 1 -->
+<button class="period-card w-full text-left p-4 bg-surface-container-lowest border-2 border-primary rounded-lg transition-all duration-200 shadow-sm relative overflow-hidden group" onclick="selectCard(this)">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-[12px] font-medium text-on-surface-variant uppercase tracking-wider">Current Period</p>
+<p class="font-headline text-[16px] font-bold">This Month — May 2025</p>
+</div>
+<span class="material-symbols-outlined text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</button>
+<!-- Selectable Card 2 -->
+<button class="period-card w-full text-left p-4 bg-surface-container-lowest border border-outline-variant rounded-lg transition-all duration-200 hover:border-primary group" onclick="selectCard(this)">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-[12px] font-medium text-on-surface-variant uppercase tracking-wider">Annual Overview</p>
+<p class="font-headline text-[16px] font-bold">This Year — 2025</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">circle</span>
+</div>
+</button>
+<!-- Selectable Card 3 -->
+<button class="period-card w-full text-left p-4 bg-surface-container-lowest border border-outline-variant rounded-lg transition-all duration-200 hover:border-primary group" onclick="selectCard(this)">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-[12px] font-medium text-on-surface-variant uppercase tracking-wider">Specific Range</p>
+<p class="font-headline text-[16px] font-bold">Custom Date Range</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">calendar_month</span>
+</div>
+</button>
+</div>
+<button class="w-full h-12 bg-primary text-on-primary font-headline font-bold rounded-lg active:scale-[0.98] transition-transform">
+                Generate Report
+            </button>
+</section>
+<hr class="border-outline-variant"/>
+<!-- Step 2: Results -->
+<section class="space-y-6 animate-in fade-in duration-700">
+<div class="flex items-center justify-between">
+<h2 class="font-headline text-[18px] font-bold">Period Report — May 2025</h2>
+<div class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full flex items-center gap-1">
+<span class="text-[12px] font-bold">PROFIT</span>
+<span class="material-symbols-outlined text-[14px]">check</span>
+</div>
+</div>
+<!-- SECTION A — VOLUME ANALYSIS -->
+<div class="bg-surface-container rounded-lg p-4 space-y-3">
+<h3 class="text-[12px] font-bold text-on-surface-variant border-b border-outline-variant pb-2 tracking-widest uppercase">SECTION A — VOLUME ANALYSIS</h3>
+<div class="grid grid-cols-2 gap-y-4 gap-x-2">
+<div>
+<p class="text-[11px] text-secondary">Total Purchased</p>
+<p class="font-code text-[14px] font-semibold">18,450 kg</p>
+</div>
+<div>
+<p class="text-[11px] text-secondary">Sold Fabricated</p>
+<p class="font-code text-[14px] font-semibold text-on-tertiary-container">12,100 kg</p>
+</div>
+<div>
+<p class="text-[11px] text-secondary">Sold Raw</p>
+<p class="font-code text-[14px] font-semibold">4,200 kg</p>
+</div>
+<div>
+<p class="text-[11px] text-secondary">Scrap Sold</p>
+<p class="font-code text-[14px] font-semibold">1,850 kg</p>
+</div>
+<div>
+<p class="text-[11px] text-secondary">Current Stock</p>
+<p class="font-code text-[14px] font-semibold">2,300 kg</p>
+</div>
+<div class="bg-warning/10 p-1 rounded">
+<p class="text-[11px] text-warning font-bold">Burnout Gap</p>
+<p class="font-code text-[14px] font-bold text-warning">-300 kg</p>
+</div>
+</div>
+</div>
+<!-- SECTION B — INCOME -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 space-y-4">
+<h3 class="text-[12px] font-bold text-on-surface-variant border-b border-outline-variant pb-2 tracking-widest uppercase">SECTION B — INCOME</h3>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-[14px] text-secondary">Fabricated Sales</span>
+<span class="font-code text-[14px]">৳8,45,000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[14px] text-secondary">Raw Sales</span>
+<span class="font-code text-[14px]">৳2,10,000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[14px] text-secondary">Scrap Sales</span>
+<span class="font-code text-[14px]">৳65,000</span>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-dashed border-outline-variant">
+<span class="text-[14px] font-bold text-on-tertiary-container">TOTAL INCOME</span>
+<span class="font-code text-[18px] font-bold text-on-tertiary-container">৳11,20,000</span>
+</div>
+</div>
+</div>
+<!-- SECTION C — COSTS -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 space-y-4">
+<h3 class="text-[12px] font-bold text-on-surface-variant border-b border-outline-variant pb-2 tracking-widest uppercase">SECTION C — COSTS</h3>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-[14px] text-secondary">Raw Material</span>
+<span class="font-code text-[14px]">৳7,80,000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[14px] text-secondary">Consumables</span>
+<span class="font-code text-[14px]">৳45,200</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[14px] text-secondary">Salaries</span>
+<span class="font-code text-[14px]">৳1,15,000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[14px] text-secondary">Expenses</span>
+<span class="font-code text-[14px]">৳52,000</span>
+</div>
+<div class="flex justify-between items-center text-error">
+<span class="text-[14px]">Burnout Loss</span>
+<span class="font-code text-[14px]">৳12,000</span>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-dashed border-outline-variant">
+<span class="text-[14px] font-bold">TOTAL COST</span>
+<span class="font-code text-[18px] font-bold">৳10,04,200</span>
+</div>
+</div>
+</div>
+<!-- RESULT BOX -->
+<div class="bg-surface-container-highest border-l-8 border-on-tertiary-container rounded-lg p-6 shadow-md mb-8">
+<p class="text-[12px] font-bold text-secondary uppercase tracking-tighter mb-2">Final Performance Summary</p>
+<div class="space-y-1">
+<p class="text-[14px] text-on-surface">Net Profit:</p>
+<p class="font-code text-[32px] font-bold text-on-tertiary-container leading-none">৳1,15,800</p>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant flex items-center justify-between">
+<span class="text-[14px] text-secondary font-medium">Yield Efficiency:</span>
+<span class="font-code text-[16px] font-bold text-on-surface">৳6.29/kg</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Bottom Action -->
+<div class="fixed bottom-16 left-0 w-full px-4 py-3 bg-background/80 backdrop-blur-sm z-40 border-t border-outline-variant">
+<button class="w-full h-14 bg-primary text-on-primary font-headline font-bold rounded-lg flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+            Export PDF Report
+        </button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 bg-surface border-t border-outline-variant">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-on-surface-variant transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[10px] mt-1">Home</span>
+</a>
+<!-- Sales -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-on-surface-variant transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-label text-[10px] mt-1">Sales</span>
+</a>
+<!-- Stock -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-on-surface-variant transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label text-[10px] mt-1">Stock</span>
+</a>
+<!-- HR -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-on-surface-variant transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span class="font-label text-[10px] mt-1">HR</span>
+</a>
+<!-- Menu/Report Active -->
+<a class="flex flex-col items-center justify-center text-on-tertiary-container dark:text-tertiary-fixed font-bold transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu</span>
+<span class="font-label text-[10px] mt-1">Menu</span>
+</a>
+</nav>
+<script>
+        function selectCard(element) {
+            // Remove active classes from all cards
+            document.querySelectorAll('.period-card').forEach(card => {
+                card.classList.remove('border-primary', 'border-2');
+                card.classList.add('border-outline-variant', 'border');
+                const icon = card.querySelector('.material-symbols-outlined');
+                if (icon.innerText === 'check_circle' || icon.innerText === 'circle') {
+                    icon.innerText = 'circle';
+                    icon.style.fontVariationSettings = "'FILL' 0";
+                    icon.classList.remove('text-on-tertiary-container');
+                    icon.classList.add('text-outline');
+                }
+            });
+
+            // Add active classes to selected card
+            element.classList.add('border-primary', 'border-2');
+            element.classList.remove('border-outline-variant', 'border');
+            const icon = element.querySelector('.material-symbols-outlined');
+            if (icon.innerText === 'circle' || icon.innerText === 'check_circle') {
+                icon.innerText = 'check_circle';
+                icon.style.fontVariationSettings = "'FILL' 1";
+                icon.classList.remove('text-outline');
+                icon.classList.add('text-on-tertiary-container');
+            }
+        }
+    </script>
+</body></html>

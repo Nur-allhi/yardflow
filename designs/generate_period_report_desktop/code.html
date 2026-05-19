@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Generate Period Report | RecycleERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "primary-fixed": "#dae2fd",
+                    "secondary-container": "#d0e1fb",
+                    "inverse-surface": "#2d3133",
+                    "surface-bright": "#f7f9fb",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-variant": "#e0e3e5",
+                    "surface-container": "#eceef0",
+                    "on-tertiary": "#ffffff",
+                    "background": "#f7f9fb",
+                    "surface-container-high": "#e6e8ea",
+                    "surface-container-low": "#f2f4f6",
+                    "inverse-primary": "#bec6e0",
+                    "primary": "#000000",
+                    "on-tertiary-fixed": "#002114",
+                    "on-secondary-container": "#54647a",
+                    "primary-container": "#131b2e",
+                    "on-primary-fixed": "#131b2e",
+                    "on-primary": "#ffffff",
+                    "tertiary-container": "#002114",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "on-tertiary-fixed-variant": "#005137",
+                    "on-secondary": "#ffffff",
+                    "on-surface": "#191c1e",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#0b1c30",
+                    "on-background": "#191c1e",
+                    "on-surface-variant": "#45464d",
+                    "surface-dim": "#d8dadc",
+                    "secondary": "#505f76",
+                    "error-container": "#ffdad6",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#d3e4fe",
+                    "tertiary-fixed-dim": "#68dba9",
+                    "outline": "#76777d",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "on-primary-container": "#7c839b",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-tertiary-container": "#069669",
+                    "tertiary-fixed": "#85f8c4",
+                    "tertiary": "#000000",
+                    "surface": "#f7f9fb",
+                    "outline-variant": "#c6c6cd",
+                    "surface-tint": "#565e74",
+                    "primary-fixed-dim": "#bec6e0",
+                    "sage-green": "#059669"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "display": ["Plus Jakarta Sans"],
+                    "body": ["DM Sans"],
+                    "label": ["DM Sans"],
+                    "mono": ["Fira Code"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .sidebar-active-bar { position: absolute; left: 0; width: 4px; height: 100%; background-color: #059669; }
+        body { background-color: #F8FAFC; }
+    </style>
+</head>
+<body class="font-body text-on-surface antialiased overflow-x-hidden">
+<!-- Sidebar (Shared Component Blueprint) -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-primary-container text-on-primary-container flex flex-col p-4 shadow-md z-50">
+<div class="mb-8 px-2">
+<h1 class="font-headline text-2xl font-bold text-on-primary">RecycleERP</h1>
+<p class="text-[10px] text-on-primary-container/60 uppercase tracking-widest mt-1">Yard Management v1.0</p>
+</div>
+<nav class="space-y-1 flex-1">
+<div class="flex items-center p-3 text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 transition-colors cursor-pointer active:scale-95 rounded-lg">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="text-sm">Dashboard</span>
+</div>
+<div class="flex items-center p-3 text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 transition-colors cursor-pointer active:scale-95 rounded-lg">
+<span class="material-symbols-outlined mr-3">inventory_2</span>
+<span class="text-sm">Inventory</span>
+</div>
+<div class="flex items-center p-3 text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 transition-colors cursor-pointer active:scale-95 rounded-lg">
+<span class="material-symbols-outlined mr-3">precision_manufacturing</span>
+<span class="text-sm">Operations</span>
+</div>
+<!-- Reports Active State -->
+<div class="relative flex items-center p-3 bg-secondary-container text-on-secondary-container rounded-lg font-bold cursor-pointer active:scale-95">
+<div class="sidebar-active-bar"></div>
+<span class="material-symbols-outlined mr-3">analytics</span>
+<span class="text-sm">Reports</span>
+</div>
+<div class="flex items-center p-3 text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 transition-colors cursor-pointer active:scale-95 rounded-lg">
+<span class="material-symbols-outlined mr-3">payments</span>
+<span class="text-sm">Payroll</span>
+</div>
+<div class="flex items-center p-3 text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 transition-colors cursor-pointer active:scale-95 rounded-lg">
+<span class="material-symbols-outlined mr-3">account_balance_wallet</span>
+<span class="text-sm">Financials</span>
+</div>
+<div class="flex items-center p-3 text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 transition-colors cursor-pointer active:scale-95 rounded-lg">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="text-sm">Settings</span>
+</div>
+</nav>
+<div class="pt-4 border-t border-on-primary-container/10">
+<div class="flex items-center gap-3 p-2">
+<img alt="User" class="w-8 h-8 rounded-full bg-secondary-fixed-dim" data-alt="A professional close-up headshot of a senior industrial administrator in a modern office environment. The lighting is crisp and cool, reflecting a clean light-mode aesthetic. The subject is wearing a professional charcoal polo shirt against a blurred architectural glass background. The color palette emphasizes clean whites, deep navies, and soft grays." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSITpv3gXk6elJS9ZTojP2ia1C927Ghfbkqt_PMnNR5ycYZdgUVdv83mtEM_sIlF4M9_CY7iup5Mrph2KUBO4aJu81Wu4FKmupFtz9uv7daHdi_RllJDOynaPXYbD3AWR4YrcSItEexpeKB9GuTm1Z2yHQbD0AXAQ1PXFqy2Y_3IWop5AiqRI4dXQMJSb67_Qrc8ytfgJBGZps-DI74Ey14cRSKtLoUrAbPAB3cP9ym1qolo0Ht1h3OI7bEMjsMZo7fEJx7w57f_g"/>
+<div class="overflow-hidden">
+<p class="text-xs font-bold text-on-primary truncate">Admin User</p>
+<p class="text-[10px] text-on-primary-container/70 truncate">Yard Manager</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-240px)] h-16 bg-surface border-b border-outline-variant flex items-center justify-between px-8 z-40">
+<h2 class="font-headline text-xl font-semibold text-primary">Period Report</h2>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 bg-surface-container-low px-4 py-1.5 rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 text-on-surface" placeholder="Search transactions..." type="text"/>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant transition-all">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<img alt="User Avatar" class="w-9 h-9 rounded-full border border-outline-variant" data-alt="A high-quality, professional avatar of a man in his 40s wearing business attire, presented in a minimalist circular frame. The portrait is bright with natural daylight, maintaining a high-key professional look consistent with a corporate ERP interface. The background is a clean, neutral white and gray industrial design space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbP1sHZtgtxbqe3N1cF5K-cOU-ZRxs3ztnjJLA9kswzr-8kS3nbncPqxe4297T2JmMqGfntfqZOt3qcA9J6hPgOUYPZ7qt8-h9esBvbDfuabhzG-MtXkkTsj3s5MesiLNFtSPTrxXB-LcaBtfKqFHRHngzq1_gbSOG-pBUOaEiAgcwBe2cXcbVTJN8Srhkr4xqfc3F1JJBOavJR-zQIURIF-LpfttpxM_zcL1D_4hBT0IyIJM_Ed-NcKTw3-gNOp9Cj24dGBhkxag"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[240px] pt-16 min-h-screen p-8">
+<!-- Breadcrumb -->
+<a class="inline-flex items-center text-sm font-medium text-on-surface-variant hover:text-primary mb-8 transition-colors group" href="#">
+<span class="material-symbols-outlined text-lg mr-2 group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            Back to Reports
+        </a>
+<!-- Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-10 gap-8">
+<!-- Column 1: Configuration -->
+<div class="lg:col-span-4 space-y-6">
+<header>
+<h3 class="font-headline text-lg font-semibold text-primary">Select Report Period</h3>
+<p class="text-sm text-on-surface-variant">Choose the duration for financial and volume analysis.</p>
+</header>
+<div class="space-y-4">
+<!-- Option 1 (Selected) -->
+<label class="relative flex items-center p-4 bg-white border-2 border-primary rounded-xl cursor-pointer group transition-all shadow-sm">
+<input checked="" class="hidden" name="period" type="radio"/>
+<div class="flex-1">
+<p class="font-semibold text-primary">This Month — May 2025</p>
+<p class="text-sm text-on-surface-variant">01 May - 19 May (Current)</p>
+</div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</label>
+<!-- Option 2 -->
+<label class="relative flex items-center p-4 bg-white border border-outline-variant rounded-xl cursor-pointer hover:border-outline transition-all group shadow-sm">
+<input class="hidden" name="period" type="radio"/>
+<div class="flex-1">
+<p class="font-semibold text-on-surface">This Year — 2025</p>
+<p class="text-sm text-on-surface-variant">Full fiscal year performance</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-outline transition-colors">radio_button_unchecked</span>
+</label>
+<!-- Option 3 -->
+<label class="relative flex items-center p-4 bg-white border border-outline-variant rounded-xl cursor-pointer hover:border-outline transition-all group shadow-sm">
+<input class="hidden" name="period" type="radio"/>
+<div class="flex-1">
+<p class="font-semibold text-on-surface">Custom Date Range</p>
+<p class="text-sm text-on-surface-variant">Select start and end dates</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-outline transition-colors">date_range</span>
+</label>
+</div>
+<div class="pt-4 space-y-3">
+<button class="w-full h-12 bg-primary text-on-primary font-semibold rounded-lg hover:bg-inverse-surface transition-colors active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">refresh</span>
+                        Generate Report
+                    </button>
+<p class="text-xs text-on-surface-variant text-center italic">Report will be saved automatically after generation</p>
+</div>
+<!-- Visual Decorative Card -->
+<div class="rounded-xl overflow-hidden shadow-md relative group h-48">
+<img alt="Recycling Yard" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A cinematic, high-angle aerial view of a meticulously organized ship recycling yard. Massive steel hull sections are stacked in clean geometric patterns under bright, midday sun. The environment is clean, orderly, and reflects a modern industrial efficiency. The color palette is dominated by steel blues, metallic grays, and the deep black of heavy machinery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4Rh4D8kxe6Ij6pzAsFLaVdM6Lb9-8B08LmyiJqEU4gQsJfa3XNfjURoz4GthN9eHpTY5XVyLlv5LxFa1BOf1FasVKixtPpiXoy4xBp0kuwB-PmVzEiMFDSEgyNDekrP_abS0zRsVXJ2vyNGKQUsjBny66VCiubOLAPp5n_YSZZ_RXCCmmD6TnoUW78Ggcqel0TY2PtlWUXP2aVrvYPUSdEifhQVZ6dwhvLr1-JQL0POGSoHUYMWSbyH2_TTgEQOceDuknqTAFLF4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex flex-col justify-end p-6">
+<p class="text-white font-headline font-bold text-lg leading-tight">Optimizing Industrial Throughput</p>
+<p class="text-white/70 text-xs mt-1">Live yield tracking enabled for May 2025</p>
+</div>
+</div>
+</div>
+<!-- Column 2: Report Preview -->
+<div class="lg:col-span-6">
+<div class="bg-white rounded-xl shadow-lg border border-outline-variant overflow-hidden flex flex-col min-h-[800px]">
+<!-- Preview Header -->
+<div class="p-8 border-b border-outline-variant flex justify-between items-start">
+<div>
+<h2 class="font-headline text-2xl font-bold text-primary">Period Report — May 2025</h2>
+<p class="text-on-surface-variant mt-1">Generated: 19 May 2025 • Reference ID: #ERP-MAY25-09</p>
+</div>
+<span class="px-4 py-2 bg-on-tertiary-container/10 text-on-tertiary-container rounded-full text-sm font-bold flex items-center gap-2 border border-on-tertiary-container/20">
+                            PROFIT <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</span>
+</div>
+<div class="p-8 space-y-10 flex-1">
+<!-- SECTION A — VOLUME ANALYSIS -->
+<section>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">scale</span>
+<h4 class="font-headline font-bold uppercase tracking-wider text-xs text-on-surface-variant">Section A — Volume Analysis</h4>
+</div>
+<div class="grid grid-cols-2 gap-x-12 gap-y-3">
+<div class="flex justify-between items-center py-2 border-b border-surface-container">
+<span class="text-on-surface-variant">Total Purchased</span>
+<span class="font-mono font-semibold">18,400 kg</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-surface-container">
+<span class="text-on-surface-variant">Current Stock</span>
+<span class="font-mono font-semibold">2,960 kg</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-surface-container">
+<span class="text-on-surface-variant">Sold (Fabricated)</span>
+<span class="font-mono font-semibold">9,200 kg</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-surface-container">
+<span class="text-on-surface-variant">Sold (Raw)</span>
+<span class="font-mono font-semibold">4,800 kg</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-surface-container">
+<span class="text-on-surface-variant">Scrap Sold</span>
+<span class="font-mono font-semibold">1,200 kg</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-surface-container">
+<span class="text-on-surface-variant">Burnout (Gap)</span>
+<span class="font-mono font-semibold text-warning">240 kg (1.3%)</span>
+</div>
+</div>
+</section>
+<!-- SECTION B — INCOME -->
+<section>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">trending_up</span>
+<h4 class="font-headline font-bold uppercase tracking-wider text-xs text-on-surface-variant">Section B — Income</h4>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between">
+<span class="text-on-surface">Fabricated Sales Revenue</span>
+<span class="font-mono">৳8,74,000</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface">Raw Pass-through Sales</span>
+<span class="font-mono">৳4,56,000</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface">Scrap Sales Revenue</span>
+<span class="font-mono">৳60,000</span>
+</div>
+<div class="flex justify-between items-center pt-3 mt-1 border-t-2 border-primary-container/10">
+<span class="font-headline font-bold text-primary">TOTAL INCOME</span>
+<span class="font-headline font-bold text-sage-green text-xl">৳13,90,000</span>
+</div>
+</div>
+</section>
+<!-- SECTION C — COSTS -->
+<section>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">trending_down</span>
+<h4 class="font-headline font-bold uppercase tracking-wider text-xs text-on-surface-variant">Section C — Costs</h4>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between">
+<span class="text-on-surface">Raw Material Cost</span>
+<span class="font-mono text-on-surface-variant">৳11,20,000</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface">Consumables</span>
+<span class="font-mono text-on-surface-variant">৳45,000</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface">Worker Salaries</span>
+<span class="font-mono text-on-surface-variant">৳75,000</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface">Other Expenses</span>
+<span class="font-mono text-on-surface-variant">৳15,000</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface">Burnout Loss (est.)</span>
+<span class="font-mono text-on-surface-variant">৳19,200</span>
+</div>
+<div class="flex justify-between items-center pt-3 mt-1 border-t border-outline-variant">
+<span class="font-headline font-bold text-primary">TOTAL COST</span>
+<span class="font-headline font-bold text-lg">৳12,74,200</span>
+</div>
+</div>
+</section>
+<!-- PROFIT HIGHLIGHT CARD -->
+<div class="bg-on-tertiary-container/5 border-l-[12px] border-sage-green p-8 rounded-lg flex items-center justify-between">
+<div>
+<p class="text-sm font-bold text-on-tertiary-container/70 uppercase tracking-widest mb-1">Net Profit</p>
+<h2 class="font-mono text-4xl font-bold text-sage-green tracking-tight">৳1,15,800</h2>
+</div>
+<div class="text-right">
+<p class="text-sm text-on-surface-variant">Yield Efficiency</p>
+<p class="font-mono text-xl font-semibold text-primary">৳6.29/kg</p>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="p-8 bg-surface-container-low border-t border-outline-variant flex gap-4">
+<button class="flex-1 h-12 bg-primary text-on-primary font-bold rounded-lg hover:shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+                            Export PDF
+                        </button>
+<button class="flex-1 h-12 bg-transparent border border-primary text-primary font-bold rounded-lg hover:bg-primary/5 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">save</span>
+                            Save &amp; Close
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Subtle micro-interaction for selection cards
+        const cards = document.querySelectorAll('label');
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                cards.forEach(c => {
+                    c.classList.remove('border-primary', 'border-2');
+                    c.classList.add('border-outline-variant', 'border');
+                    const icon = c.querySelector('.material-symbols-outlined');
+                    if(icon && icon.textContent === 'check_circle') {
+                        icon.textContent = 'radio_button_unchecked';
+                        icon.style.fontVariationSettings = "'FILL' 0";
+                    }
+                    if(icon && icon.textContent === 'date_range') {
+                        icon.classList.add('text-outline-variant');
+                        icon.classList.remove('text-primary');
+                    }
+                });
+                
+                card.classList.add('border-primary', 'border-2');
+                card.classList.remove('border-outline-variant', 'border');
+                const activeIcon = card.querySelector('.material-symbols-outlined');
+                if(activeIcon && activeIcon.textContent !== 'date_range') {
+                    activeIcon.textContent = 'check_circle';
+                    activeIcon.style.fontVariationSettings = "'FILL' 1";
+                    activeIcon.classList.add('text-primary');
+                } else if(activeIcon) {
+                    activeIcon.classList.add('text-primary');
+                    activeIcon.classList.remove('text-outline-variant');
+                }
+            });
+        });
+    </script>
+</body></html>

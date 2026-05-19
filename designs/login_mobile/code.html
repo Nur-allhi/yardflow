@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | ShipRecycle ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&amp;family=Dm+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-primary-container": "#7c839b", "on-surface": "#191c1e", "on-error": "#ffffff", "on-background": "#191c1e", tertiary: "#000000", "surface-container-high": "#e6e8ea", "surface-tint": "#565e74", surface: "#f7f9fb", "primary-fixed": "#dae2fd", "on-primary-fixed-variant": "#3f465c", "secondary-fixed": "#d3e4fe", background: "#f7f9fb", "primary-container": "#131b2e", "border-base": "#E2E8F0", "on-secondary-fixed-variant": "#38485d", "on-tertiary-fixed-variant": "#005137", "tertiary-fixed": "#85f8c4", "surface-container-highest": "#e0e3e5", success: "#22C55E", "tertiary-fixed-dim": "#68dba9", "on-tertiary-fixed": "#002114", outline: "#76777d", "inverse-surface": "#2d3133", "primary-fixed-dim": "#bec6e0", info: "#0EA5E9", "on-secondary-container": "#54647a", "secondary-container": "#d0e1fb", secondary: "#505f76", "surface-container": "#eceef0", "on-primary": "#ffffff", "tertiary-container": "#002114", warning: "#EAB308", "inverse-on-surface": "#eff1f3", "surface-container-lowest": "#ffffff", "surface-variant": "#e0e3e5", primary: "#000000", "surface-bright": "#f7f9fb", "on-error-container": "#93000a", "surface-dim": "#d8dadc", "on-secondary-fixed": "#0b1c30", "secondary-fixed-dim": "#b7c8e1", "error-container": "#ffdad6", "surface-container-low": "#f2f4f6", "inverse-primary": "#bec6e0", "on-primary-fixed": "#131b2e", "on-tertiary": "#ffffff", error: "#ba1a1a", "outline-variant": "#c6c6cd", "on-tertiary-container": "#069669", "on-secondary": "#ffffff", "on-surface-variant": "#45464d"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {xs: "4px", "2xl": "48px", lg: "24px", md: "16px", xl: "32px", "3xl": "64px", sm: "8px"}, fontFamily: {caption: ["DM Sans"], "body-lg": ["DM Sans"], h2: ["Plus Jakarta Sans"], "h1-mobile": ["Plus Jakarta Sans"], "body-sm": ["DM Sans"], h1: ["Plus Jakarta Sans"], body: ["Dm Sans"], h3: ["Plus Jakarta Sans"], h4: ["Plus Jakarta Sans"], code: ["Fira Code"], display: ["Plus Jakarta Sans"], headline: ["Plus Jakarta Sans"], label: ["Dm Sans"]}, fontSize: {caption: ["12px", {lineHeight: "1.4", fontWeight: "500"}], "body-lg": ["18px", {lineHeight: "1.6", fontWeight: "400"}], h2: ["24px", {lineHeight: "1.25", fontWeight: "600"}], "h1-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], h1: ["32px", {lineHeight: "1.2", fontWeight: "700"}], body: ["16px", {lineHeight: "1.6", fontWeight: "400"}], h3: ["20px", {lineHeight: "1.3", fontWeight: "600"}], h4: ["16px", {lineHeight: "1.35", fontWeight: "500"}], code: ["14px", {lineHeight: "1.6", fontWeight: "400"}], display: ["40px", {lineHeight: "1.15", fontWeight: "700"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0F172A;
+            overflow-x: hidden;
+        }
+        .slide-up {
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .bg-pattern {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- Top Section (40% Height) -->
+<header class="h-[353px] w-full flex flex-col items-center justify-center text-center p-lg relative overflow-hidden bg-pattern">
+<div class="relative z-10">
+<span class="material-symbols-outlined text-surface text-[48px] mb-md" data-icon="precision_manufacturing">precision_manufacturing</span>
+<h1 class="font-h1-mobile text-h1-mobile text-surface tracking-tight mb-xs">YardFlow <span style="letter-spacing: -0.025em;"> ERP</span></h1>
+<p class="font-body-sm text-body-sm text-surface-container-highest opacity-90 max-w-[280px]">
+                Manage your workshop. Track every kilogram.
+            </p>
+</div>
+<!-- Decorative blurred light -->
+<div class="absolute -top-20 -right-20 w-64 h-64 bg-on-tertiary-container/10 rounded-full blur-3xl"></div>
+</header>
+<!-- Bottom Section (White Card - 60% Height) -->
+<main class="flex-grow slide-up bg-surface rounded-t-[16px] shadow-2xl z-20 flex flex-col p-lg">
+<div class="w-12 h-1 bg-surface-container-high rounded-full mx-auto mb-xl opacity-50"></div>
+<div class="mb-xl">
+<h2 class="font-h2 text-h2 text-on-surface mb-xs">Welcome back</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Sign in to your organization</p>
+</div>
+<form class="space-y-lg flex flex-col flex-grow" id="loginForm">
+<!-- Email Input -->
+<div class="space-y-xs">
+<label class="font-body-sm text-body-sm font-bold text-on-surface" for="email">Email address</label>
+<div class="relative">
+<input class="w-full h-[42px] px-md bg-surface border border-border-base rounded-DEFAULT font-body-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-on-tertiary-container transition-all" id="email" name="email" placeholder="admin@shiprecycle.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="space-y-xs">
+<label class="font-body-sm text-body-sm font-bold text-on-surface" for="password">Password</label>
+<div class="relative">
+<input class="w-full h-[42px] px-md pr-[44px] bg-surface border border-border-base rounded-DEFAULT font-body-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-on-tertiary-container transition-all" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined text-[20px]" id="passToggleIcon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Forgot Password -->
+<div class="flex justify-end">
+<a class="font-body-sm text-body-sm text-on-tertiary-container font-medium hover:underline" href="#">Forgot password?</a>
+</div>
+<!-- Sign In Button -->
+<button class="w-full h-[48px] bg-primary-container text-surface font-bold rounded-DEFAULT flex items-center justify-center gap-sm hover:opacity-90 active:scale-[0.98] transition-all" type="submit">
+                Sign In
+                <span class="material-symbols-outlined text-[20px]">login</span>
+</button>
+<!-- Divider -->
+<div class="flex items-center gap-md py-sm">
+<div class="h-[1px] flex-grow bg-surface-container-high"></div>
+<span class="font-caption text-caption text-on-surface-variant uppercase tracking-widest">or</span>
+<div class="h-[1px] flex-grow bg-surface-container-high"></div>
+</div>
+<!-- Register Button -->
+<button class="w-full h-[48px] bg-transparent border-2 border-primary-container text-primary-container font-bold rounded-DEFAULT hover:bg-surface-container-low transition-colors" type="button">
+                Register your business
+            </button>
+</form>
+<!-- Footer Text -->
+<footer class="mt-auto pt-2xl pb-lg text-center">
+<p class="font-caption text-caption text-on-surface-variant/70 flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">verified_user</span>
+                Multi-tenant — your data is completely private
+            </p>
+</footer>
+</main>
+<script>
+        function togglePassword() {
+            const passInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('passToggleIcon');
+            
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                toggleIcon.innerText = 'visibility_off';
+            } else {
+                passInput.type = 'password';
+                toggleIcon.innerText = 'visibility';
+            }
+        }
+
+        // Form submission ripple effect
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span>';
+            setTimeout(() => {
+                btn.innerHTML = 'Signing in...';
+            }, 800);
+        });
+    </script>
+</body></html>

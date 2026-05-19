@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inventory Scrap Pool | RecycleERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fb",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-surface-variant": "#45464d",
+                        "on-primary-container": "#7c839b",
+                        "on-error": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-container": "#d0e1fb",
+                        "surface-tint": "#565e74",
+                        "primary-container": "#131b2e",
+                        "primary-fixed": "#dae2fd",
+                        "surface-variant": "#e0e3e5",
+                        "on-background": "#191c1e",
+                        "surface-bright": "#f7f9fb",
+                        "inverse-primary": "#bec6e0",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "secondary": "#505f76",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "secondary-fixed": "#d3e4fe",
+                        "outline-variant": "#c6c6cd",
+                        "on-tertiary-container": "#069669",
+                        "on-secondary-container": "#54647a",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#2d3133",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#eceef0",
+                        "background": "#f7f9fb",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#002114",
+                        "surface-container-low": "#f2f4f6",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "primary": "#000000",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "on-tertiary-fixed": "#002114",
+                        "error": "#ba1a1a",
+                        "outline": "#76777d",
+                        "tertiary": "#000000",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed-dim": "#68dba9",
+                        "on-secondary-fixed": "#0b1c30",
+                        "tertiary-fixed": "#85f8c4",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["DM Sans"],
+                        "label": ["DM Sans"],
+                        "mono": ["Fira Code"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'DM Sans', sans-serif; background-color: #f7f9fb; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c6c6cd; border-radius: 10px; }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- SideNavBar Component -->
+<aside class="fixed h-full w-[240px] left-0 top-0 hidden md:flex flex-col bg-primary-container shadow-md z-50">
+<div class="flex flex-col h-full py-6">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 bg-on-primary rounded flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">recycling</span>
+</div>
+<div>
+<h1 class="text-2xl font-headline font-bold text-on-primary leading-none">RecycleERP</h1>
+<p class="text-[10px] text-on-primary-container uppercase tracking-widest mt-1">Ship Recycling Hub</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:text-on-primary hover:bg-on-primary/10 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary bg-secondary/20 border-r-4 border-tertiary-fixed transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:text-on-primary hover:bg-on-primary/10 transition-colors" href="#">
+<span class="material-symbols-outlined">recycling</span>
+<span class="font-body">Recycling</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:text-on-primary hover:bg-on-primary/10 transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body">Sales</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:text-on-primary hover:bg-on-primary/10 transition-colors" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-body">Finance</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:text-on-primary hover:bg-on-primary/10 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body">Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="bg-on-primary/5 rounded-lg p-4 flex items-center gap-3">
+<img alt="User" class="w-8 h-8 rounded-full border border-on-primary/20" data-alt="A professional portrait of a senior inventory manager in a modern industrial setting, with soft lighting and a focused, trustworthy expression. The background shows a clean, organized warehouse with steel beams and high-tech equipment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXLLI1HHJHfA70wYQTM0D-Y_5HwXhgLsqwglPvfOJx1z-jrOlzf1tf0rcp1FkGof76qH5RpHT1KvvJU_S-uZqDABERR01nB-8TLgrBlLLoPzqp3VSPeChcKnN3cPGf4uVy4aNeoiegwwNGmHLe1I_TFdT0huiddtEto-Muy25CifXMw29RcJM1l-HcvEitHqLIWUMdwYXZ8lV6NvkVjJpPb59VOWQi56IHzcyTs4XdS1SVm__ZVrjZ2gaRNjot612mGTLUe-W-zP4"/>
+<div class="overflow-hidden">
+<p class="text-on-primary text-xs font-semibold truncate">Rahman M.</p>
+<p class="text-on-primary-container text-[10px] truncate">Admin Authority</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar Component -->
+<header class="docked full-width top-0 sticky z-40 bg-surface border-b border-outline-variant flex justify-between items-center w-full px-4 md:pl-[256px] py-3">
+<div class="flex items-center gap-4">
+<h2 class="font-headline text-lg font-semibold text-primary">Ship Recycling ERP</h2>
+<nav class="hidden lg:flex items-center gap-6 ml-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Stock Ledger</a>
+<a class="text-primary font-bold border-b-2 border-primary text-sm pb-1" href="#">Scrap Pool</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Machinery</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Raw Materials</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border border-outline-variant rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary w-64" placeholder="Search inventory..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">help</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="md:pl-[240px] min-h-screen pb-24 md:pb-8">
+<div class="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
+<!-- KPI Section -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1: Current Scrap Pool -->
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between h-40">
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant text-sm font-medium">Current Scrap Pool</span>
+<span class="material-symbols-outlined text-on-tertiary-container">database</span>
+</div>
+<div class="mt-4">
+<span class="text-4xl font-mono font-bold text-on-tertiary-container">1,240</span>
+<span class="text-on-tertiary-container font-medium ml-1">kg</span>
+</div>
+<div class="text-[10px] text-on-surface-variant uppercase tracking-wider flex items-center gap-1 mt-2">
+<span class="material-symbols-outlined text-[12px] text-success">trending_up</span>
+                        Updated 2h ago
+                    </div>
+</div>
+<!-- Card 2: Estimated Value -->
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between h-40">
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant text-sm font-medium">Estimated Value</span>
+<span class="material-symbols-outlined text-secondary">payments</span>
+</div>
+<div class="mt-4">
+<span class="text-4xl font-mono font-bold text-secondary">৳62,000</span>
+</div>
+<div class="text-sm text-secondary font-mono bg-secondary-container/20 px-2 py-0.5 rounded w-fit mt-2">
+                        @ ৳50/kg
+                    </div>
+</div>
+<!-- Card 3: Last Scrap Sale -->
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between h-40">
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant text-sm font-medium">Last Scrap Sale</span>
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+</div>
+<div class="mt-4">
+<span class="text-4xl font-mono font-bold text-on-surface">15</span>
+<span class="text-on-surface-variant font-medium ml-1">days ago</span>
+</div>
+<div class="text-sm text-on-surface-variant flex items-center gap-2 mt-2">
+<span class="font-mono">800 kg sold</span>
+</div>
+</div>
+</div>
+<!-- Content Split Section -->
+<div class="grid grid-cols-1 lg:grid-cols-10 gap-8">
+<!-- Left Column: Scrap Movement History (60%) -->
+<div class="lg:col-span-6 space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-headline text-xl font-bold text-primary">Scrap Movement History</h3>
+<button class="text-sm font-medium text-on-tertiary-container flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-sm">download</span>
+                            Export Ledger
+                        </button>
+</div>
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant/30 overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant/50">
+<th class="px-4 py-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Date</th>
+<th class="px-4 py-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Type</th>
+<th class="px-4 py-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Qty (kg)</th>
+<th class="px-4 py-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Reference</th>
+<th class="px-4 py-3 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Balance</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<tr class="border-b border-outline-variant/20 hover:bg-surface-container-lowest/50">
+<td class="px-4 py-4 font-mono text-xs">2025-04-12</td>
+<td class="px-4 py-4">
+<span class="bg-on-tertiary-container/10 text-on-tertiary-container px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">Added</span>
+</td>
+<td class="px-4 py-4 font-mono font-medium">+240.00</td>
+<td class="px-4 py-4 text-on-surface-variant truncate max-w-[120px]">Period Reconciliation — April 2025</td>
+<td class="px-4 py-4 font-mono text-primary font-bold">1,240.00</td>
+</tr>
+<tr class="border-b border-outline-variant/20 hover:bg-surface-container-lowest/50">
+<td class="px-4 py-4 font-mono text-xs">2025-04-05</td>
+<td class="px-4 py-4">
+<span class="bg-primary-container text-on-primary px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">Sold</span>
+</td>
+<td class="px-4 py-4 font-mono font-medium">-800.00</td>
+<td class="px-4 py-4 text-on-surface-variant truncate max-w-[120px]">Scrap Sale #SC-004</td>
+<td class="px-4 py-4 font-mono">1,000.00</td>
+</tr>
+<tr class="border-b border-outline-variant/20 hover:bg-surface-container-lowest/50">
+<td class="px-4 py-4 font-mono text-xs">2025-03-28</td>
+<td class="px-4 py-4">
+<span class="bg-on-tertiary-container/10 text-on-tertiary-container px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">Added</span>
+</td>
+<td class="px-4 py-4 font-mono font-medium">+350.00</td>
+<td class="px-4 py-4 text-on-surface-variant truncate max-w-[120px]">Dismantling Yield — Hull Sect. B</td>
+<td class="px-4 py-4 font-mono">1,800.00</td>
+</tr>
+<tr class="border-b border-outline-variant/20 hover:bg-surface-container-lowest/50">
+<td class="px-4 py-4 font-mono text-xs">2025-03-20</td>
+<td class="px-4 py-4">
+<span class="bg-on-tertiary-container/10 text-on-tertiary-container px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">Added</span>
+</td>
+<td class="px-4 py-4 font-mono font-medium">+150.00</td>
+<td class="px-4 py-4 text-on-surface-variant truncate max-w-[120px]">Floor Cleanup Sweep</td>
+<td class="px-4 py-4 font-mono">1,450.00</td>
+</tr>
+<tr class="border-b border-outline-variant/20 hover:bg-surface-container-lowest/50">
+<td class="px-4 py-4 font-mono text-xs">2025-03-15</td>
+<td class="px-4 py-4">
+<span class="bg-primary-container text-on-primary px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">Sold</span>
+</td>
+<td class="px-4 py-4 font-mono font-medium">-1,200.00</td>
+<td class="px-4 py-4 text-on-surface-variant truncate max-w-[120px]">Scrap Sale #SC-003</td>
+<td class="px-4 py-4 font-mono">1,300.00</td>
+</tr>
+<tr class="border-b border-outline-variant/20 hover:bg-surface-container-lowest/50">
+<td class="px-4 py-4 font-mono text-xs">2025-03-10</td>
+<td class="px-4 py-4">
+<span class="bg-on-tertiary-container/10 text-on-tertiary-container px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">Added</span>
+</td>
+<td class="px-4 py-4 font-mono font-medium">+500.00</td>
+<td class="px-4 py-4 text-on-surface-variant truncate max-w-[120px]">Machinery Casing Scrap</td>
+<td class="px-4 py-4 font-mono">2,500.00</td>
+</tr>
+<tr class="border-b border-outline-variant/20 hover:bg-surface-container-lowest/50">
+<td class="px-4 py-4 font-mono text-xs">2025-03-02</td>
+<td class="px-4 py-4">
+<span class="bg-primary-container text-on-primary px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">Sold</span>
+</td>
+<td class="px-4 py-4 font-mono font-medium">-600.00</td>
+<td class="px-4 py-4 text-on-surface-variant truncate max-w-[120px]">Scrap Sale #SC-002</td>
+<td class="px-4 py-4 font-mono">2,000.00</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest/50">
+<td class="px-4 py-4 font-mono text-xs">2025-02-20</td>
+<td class="px-4 py-4">
+<span class="bg-on-tertiary-container/10 text-on-tertiary-container px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">Added</span>
+</td>
+<td class="px-4 py-4 font-mono font-medium">+2,600.00</td>
+<td class="px-4 py-4 text-on-surface-variant truncate max-w-[120px]">Opening Balance</td>
+<td class="px-4 py-4 font-mono">2,600.00</td>
+</tr>
+</tbody>
+</table>
+<div class="p-4 bg-surface-container-low border-t border-outline-variant/30 flex justify-center">
+<button class="text-xs font-bold text-on-surface-variant hover:text-primary transition-colors uppercase tracking-widest">Load Older History</button>
+</div>
+</div>
+</div>
+<!-- Right Column: Record Scrap Sale Card (40%) -->
+<div class="lg:col-span-4 space-y-4">
+<h3 class="font-headline text-xl font-bold text-primary">New Scrap Sale</h3>
+<div class="bg-surface-container-lowest p-6 rounded-lg border border-outline-variant/30 shadow-md">
+<form class="space-y-4" id="scrapSaleForm">
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2">
+<label class="block text-sm font-medium text-primary mb-1">Date</label>
+<input class="w-full h-[42px] px-3 border border-outline-variant rounded focus:ring-1 focus:ring-primary focus:border-primary bg-white outline-none" type="date" value="2025-04-18"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-primary mb-1">Quantity to Sell</label>
+<div class="relative">
+<input class="w-full h-[42px] px-3 pr-10 border border-outline-variant rounded focus:ring-1 focus:ring-primary focus:border-primary bg-white outline-none font-mono" id="qtyInput" placeholder="0.00" type="number"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-on-surface-variant">KG</span>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-1">Available: 1,240 kg</p>
+</div>
+<div>
+<label class="block text-sm font-medium text-primary mb-1">Price per kg</label>
+<div class="relative">
+<input class="w-full h-[42px] px-3 pr-10 border border-outline-variant rounded focus:ring-1 focus:ring-primary focus:border-primary bg-white outline-none font-mono" id="priceInput" type="number" value="50"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-on-surface-variant">৳</span>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-1">Market ~৳50/kg</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-3 rounded-md border border-dashed border-outline-variant">
+<label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Total Amount</label>
+<input class="w-full bg-transparent border-none p-0 text-2xl font-mono font-bold text-on-tertiary-container focus:ring-0" id="totalAmount" readonly="" type="text" value="৳ 0.00"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-primary mb-1">Buyer Name</label>
+<input class="w-full h-[42px] px-3 border border-outline-variant rounded focus:ring-1 focus:ring-primary focus:border-primary bg-white outline-none" placeholder="e.g. Steel Mill Corp" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-primary mb-1">Receive Payment</label>
+<select class="w-full h-[42px] px-3 border border-outline-variant rounded focus:ring-1 focus:ring-primary focus:border-primary bg-white outline-none">
+<option>Cash in Hand</option>
+<option>Bank Transfer (BRAC)</option>
+<option>Bank Transfer (City Bank)</option>
+<option>Pending Invoice</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-primary mb-1">Notes</label>
+<textarea class="w-full px-3 py-2 border border-outline-variant rounded focus:ring-1 focus:ring-primary focus:border-primary bg-white outline-none resize-none" placeholder="Additional details..." rows="2"></textarea>
+</div>
+<button class="w-full py-3 bg-primary-container text-on-primary font-bold rounded-lg hover:bg-primary transition-all active:scale-[0.98] flex items-center justify-center gap-2" type="submit">
+<span class="material-symbols-outlined text-sm">save</span>
+                                Record Scrap Sale
+                            </button>
+</form>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar for Mobile -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 bg-surface border-t border-outline-variant md:hidden z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-xs">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-tertiary-container bg-secondary-container/30 rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label text-xs">Inventory</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">factory</span>
+<span class="font-label text-xs">Process</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label text-xs">Ledger</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label text-xs">User</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction: Dynamic Total Calculation
+        const qtyInput = document.getElementById('qtyInput');
+        const priceInput = document.getElementById('priceInput');
+        const totalOutput = document.getElementById('totalAmount');
+
+        function updateTotal() {
+            const qty = parseFloat(qtyInput.value) || 0;
+            const price = parseFloat(priceInput.value) || 0;
+            const total = qty * price;
+            totalOutput.value = '৳ ' + total.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+        }
+
+        qtyInput.addEventListener('input', updateTotal);
+        priceInput.addEventListener('input', updateTotal);
+
+        // Form Submission Effect
+        document.getElementById('scrapSaleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-sm">sync</span> Processing...`;
+            
+            setTimeout(() => {
+                btn.innerHTML = `<span class="material-symbols-outlined text-sm">check_circle</span> Sale Recorded!`;
+                btn.classList.replace('bg-primary-container', 'bg-on-tertiary-container');
+                
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    btn.classList.replace('bg-on-tertiary-container', 'bg-primary-container');
+                    e.target.reset();
+                    updateTotal();
+                }, 2000);
+            }, 1000);
+        });
+
+        // Search Bar Focus Effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('scale-[1.02]');
+            searchInput.parentElement.style.transition = 'all 0.2s ease';
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('scale-[1.02]');
+        });
+    </script>
+</body></html>

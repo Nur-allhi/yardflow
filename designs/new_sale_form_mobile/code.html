@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>New Sale | Ship Recycling ERP</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=Fira+Code:wght@300..700&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "tertiary-fixed-dim": "#68dba9",
+                "secondary-fixed-dim": "#b7c8e1",
+                "inverse-primary": "#bec6e0",
+                "surface-variant": "#e0e3e5",
+                "surface": "#f7f9fb",
+                "secondary-fixed": "#d3e4fe",
+                "on-primary-container": "#7c839b",
+                "on-primary-fixed-variant": "#3f465c",
+                "primary": "#000000",
+                "on-error": "#ffffff",
+                "inverse-surface": "#2d3133",
+                "tertiary": "#000000",
+                "on-tertiary-fixed": "#002114",
+                "surface-container-lowest": "#ffffff",
+                "on-tertiary-fixed-variant": "#005137",
+                "surface-container-highest": "#e0e3e5",
+                "on-background": "#191c1e",
+                "on-secondary-container": "#54647a",
+                "secondary-container": "#d0e1fb",
+                "outline-variant": "#c6c6cd",
+                "on-tertiary-container": "#069669",
+                "on-secondary": "#ffffff",
+                "outline": "#76777d",
+                "on-primary": "#ffffff",
+                "on-secondary-fixed": "#0b1c30",
+                "surface-bright": "#f7f9fb",
+                "on-secondary-fixed-variant": "#38485d",
+                "background": "#f7f9fb",
+                "surface-dim": "#d8dadc",
+                "surface-tint": "#565e74",
+                "primary-container": "#131b2e",
+                "on-primary-fixed": "#131b2e",
+                "error": "#ba1a1a",
+                "surface-container": "#eceef0",
+                "on-error-container": "#93000a",
+                "inverse-on-surface": "#eff1f3",
+                "primary-fixed": "#dae2fd",
+                "on-surface-variant": "#45464d",
+                "surface-container-low": "#f2f4f6",
+                "error-container": "#ffdad6",
+                "surface-container-high": "#e6e8ea",
+                "tertiary-fixed": "#85f8c4",
+                "secondary": "#505f76",
+                "on-surface": "#191c1e",
+                "primary-fixed-dim": "#bec6e0",
+                "tertiary-container": "#002114",
+                "on-tertiary": "#ffffff",
+                "navy-primary": "#0F172A",
+                "sage-tertiary": "#059669"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.5rem",
+                "lg": "1rem",
+                "xl": "1.5rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Plus Jakarta Sans"],
+                "display": ["Plus Jakarta Sans"],
+                "body": ["DM Sans"],
+                "label": ["DM Sans"],
+                "mono": ["Fira Code"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'DM Sans', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        .sticky-bottom { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            background: #FFFFFF;
+            box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.08);
+            z-index: 100;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface pb-24">
+<!-- Top Bar Component -->
+<header class="fixed top-0 w-full z-50 bg-surface border-b border-outline-variant shadow-sm h-16 flex justify-between items-center px-4">
+<button class="w-10 h-10 flex items-center justify-center text-primary transition-colors hover:bg-surface-container rounded-full">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline text-lg font-bold text-navy-primary">New Sale</h1>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A professional close-up of a shipyard administrative manager's digital avatar, rendered in a crisp, modern vector style. The avatar sits against a clean, minimal white and navy blue interface background consistent with industrial ERP design. Soft, neutral lighting highlights the clean lines and professional demeanor of the character." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQSP4uCJwk5GDHic_Prgs75BB6wh2FrHP65pgnbSeDWNEWizK-OlOAAZouJ4rwGZ731xObK7o2RYzyKT8ZbuORPRAh0lEXDcJdx5MSRPgmJL7-D98Jtoa6E60pVS1ROHCtuzGzwT92XpgHYoc4WMp50BynwaXEvpkEysGF19-5oSLip3bYcrBQVRsemhIjlqpnvAciFQaKp9W1pNoL5Kj8TKhauXlPAJGSAIat1pq-_ooTAtJXyzrO09NzBo9WzrWxMrl8RSQJfzo"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="mt-20 px-4 space-y-4">
+<!-- Sale Type Selection -->
+<section class="space-y-3">
+<div class="bg-secondary-container border-2 border-sage-tertiary p-4 rounded-lg flex items-center justify-between transition-all active:scale-95 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-sage-tertiary text-white rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="manufacturing" style="font-variation-settings: 'FILL' 1;">manufacturing</span>
+</div>
+<div>
+<p class="font-headline font-semibold text-navy-primary">Fabricated Sale</p>
+<p class="text-xs text-on-surface-variant">Processed steel &amp; scrap</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-sage-tertiary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="bg-surface border border-outline-variant p-4 rounded-lg flex items-center justify-between transition-all active:scale-95 opacity-70">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container text-on-surface-variant rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+</div>
+<div>
+<p class="font-headline font-semibold text-on-surface-variant">Raw Pass-through</p>
+<p class="text-xs text-on-surface-variant">Direct vessel dismantling items</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Customer Details Section -->
+<section class="bg-surface p-4 rounded-lg shadow-sm space-y-4">
+<h3 class="font-headline font-semibold text-navy-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">person</span> Customer Details
+            </h3>
+<!-- Toggle Group -->
+<div class="flex bg-surface-container rounded-md p-1">
+<button class="flex-1 py-2 text-sm font-semibold rounded bg-white text-navy-primary shadow-sm">Recorded Sale</button>
+<button class="flex-1 py-2 text-sm font-medium text-on-surface-variant">Quick Cash Sale</button>
+</div>
+<!-- Search Dropdown -->
+<div class="space-y-1">
+<label class="text-xs font-semibold text-navy-primary">Customer Name</label>
+<div class="relative">
+<input class="w-full h-[42px] px-3 pr-10 border border-outline-variant rounded bg-white text-sm focus:ring-1 focus:ring-sage-tertiary focus:border-sage-tertiary outline-none" type="text" value="Modern Steel Re-Rolling Mills"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant">expand_more</span>
+</div>
+<div class="flex items-center gap-1.5 text-warning font-medium text-xs mt-1">
+<span class="material-symbols-outlined text-xs">warning</span>
+                    Customer current due: ৳50,000
+                </div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1">
+<label class="text-xs font-semibold text-navy-primary">Sale Date</label>
+<input class="w-full h-[42px] px-3 border border-outline-variant rounded bg-white text-sm outline-none" type="date" value="2023-10-27"/>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-semibold text-navy-primary">Ship Reference</label>
+<select class="w-full h-[42px] px-3 border border-outline-variant rounded bg-white text-sm outline-none appearance-none">
+<option>MV OCEAN_KING_A1</option>
+</select>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-semibold text-navy-primary">Internal Notes</label>
+<textarea class="w-full p-3 border border-outline-variant rounded bg-white text-sm outline-none focus:ring-1 focus:ring-sage-tertiary" placeholder="Add specific delivery instructions..." rows="2"></textarea>
+</div>
+</section>
+<!-- Material Line Items Section -->
+<section class="bg-surface p-4 rounded-lg shadow-sm space-y-4">
+<div class="flex justify-between items-center">
+<h3 class="font-headline font-semibold text-navy-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">inventory_2</span> Line Items
+                </h3>
+<button class="text-sage-tertiary text-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">add_circle</span> Add Item
+                </button>
+</div>
+<!-- Line Item Card -->
+<div class="border border-outline-variant rounded-md p-3 space-y-2 relative">
+<button class="absolute top-2 right-2 text-error h-8 w-8 flex items-center justify-center rounded-full hover:bg-error-container/20">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+<div class="pr-8">
+<p class="font-bold text-navy-primary">Iron Plate, 5-8mm</p>
+<p class="text-xs text-on-surface-variant">Grade B - Ship Section A</p>
+</div>
+<div class="grid grid-cols-3 gap-2 pt-2 border-t border-surface-container">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider">Weight</p>
+<p class="font-mono text-sm">480 kg</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider">Rate</p>
+<p class="font-mono text-sm">৳95/kg</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider">Subtotal</p>
+<p class="font-mono text-sm font-bold text-navy-primary">৳45,600</p>
+</div>
+</div>
+</div>
+<!-- Items Total -->
+<div class="bg-surface-container-low p-3 rounded flex justify-between items-center border-t border-outline-variant">
+<span class="text-sm font-medium text-navy-primary">Items Total</span>
+<span class="font-mono text-lg font-bold text-navy-primary">৳45,600</span>
+</div>
+</section>
+<!-- Payment Settlement Section -->
+<section class="bg-surface p-4 rounded-lg shadow-sm space-y-4">
+<h3 class="font-headline font-semibold text-navy-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">payments</span> Settlement
+            </h3>
+<div class="space-y-2">
+<div class="border border-outline-variant rounded p-3 flex items-center gap-3 active:bg-surface-container-high transition-colors">
+<input class="text-navy-primary focus:ring-navy-primary" name="pay_type" type="radio"/>
+<div class="flex-1">
+<p class="text-sm font-semibold">Pay Full Amount</p>
+<p class="text-xs text-on-surface-variant">Clears invoice balance immediately</p>
+</div>
+</div>
+<div class="border-2 border-navy-primary bg-primary-container/5 rounded p-3 flex items-center gap-3">
+<input checked="" class="text-navy-primary focus:ring-navy-primary" name="pay_type" type="radio"/>
+<div class="flex-1">
+<p class="text-sm font-semibold">Pay Partial Amount</p>
+<p class="text-xs text-on-surface-variant">Remaining balance goes to credit</p>
+</div>
+</div>
+</div>
+<div class="space-y-3">
+<div class="space-y-1">
+<label class="text-xs font-semibold text-navy-primary">Payment Account</label>
+<div class="relative">
+<select class="w-full h-[42px] px-3 border border-outline-variant rounded bg-white text-sm outline-none appearance-none">
+<option>Main Cash Account (A-101)</option>
+<option>Standard Chartered Bank</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<!-- Real-time Summary -->
+<div class="bg-navy-primary text-white p-4 rounded-lg space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-xs text-on-primary-container">Receiving Now</span>
+<div class="relative">
+<span class="absolute left-2 top-1 text-on-primary-container">৳</span>
+<input class="bg-white/10 border-none rounded px-6 py-1 font-mono text-lg text-right w-32 focus:ring-1 focus:ring-sage-tertiary" type="text" value="30,000"/>
+</div>
+</div>
+<div class="flex justify-between items-center border-t border-white/10 pt-3">
+<span class="text-xs text-on-primary-container">Remaining Due</span>
+<span class="font-mono text-lg font-bold text-inverse-primary">৳15,600</span>
+</div>
+<div class="flex justify-end pt-1">
+<span class="px-2 py-1 bg-sage-tertiary text-[10px] font-bold rounded uppercase tracking-widest flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span> PAID
+                        </span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Bottom Bar -->
+<footer class="sticky-bottom h-20 px-4 flex items-center gap-3">
+<button class="flex-1 h-12 border border-navy-primary text-navy-primary font-bold rounded-md hover:bg-surface-container active:scale-95 transition-all">
+            Cancel
+        </button>
+<button class="flex-[2] h-12 bg-navy-primary text-white font-bold rounded-md flex items-center justify-center gap-2 hover:bg-black active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">save</span>
+            Save Sale
+        </button>
+</footer>
+<!-- Atmosphere Effects -->
+<script>
+        // Subtle micro-interactions for inputs
+        document.querySelectorAll('input, select, textarea').forEach(el => {
+            el.addEventListener('focus', () => {
+                el.parentElement.classList.add('scale-[1.01]');
+                el.parentElement.style.transition = 'all 0.2s ease';
+            });
+            el.addEventListener('blur', () => {
+                el.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+
+        // Simple toggle state simulation
+        const toggleButtons = document.querySelectorAll('.flex.bg-surface-container button');
+        toggleButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                toggleButtons.forEach(b => {
+                    b.classList.remove('bg-white', 'text-navy-primary', 'shadow-sm', 'font-semibold');
+                    b.classList.add('text-on-surface-variant', 'font-medium');
+                });
+                btn.classList.add('bg-white', 'text-navy-primary', 'shadow-sm', 'font-semibold');
+                btn.classList.remove('text-on-surface-variant', 'font-medium');
+            });
+        });
+    </script>
+</body></html>

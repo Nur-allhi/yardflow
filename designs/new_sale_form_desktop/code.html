@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YardFlow - New Sale</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=Fira+Code:wght@300..700&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed-variant": "#3f465c",
+                      "surface-tint": "#565e74",
+                      "primary-fixed": "#dae2fd",
+                      "on-tertiary-container": "#069669",
+                      "on-primary-container": "#7c839b",
+                      "tertiary-fixed": "#85f8c4",
+                      "on-primary-fixed": "#131b2e",
+                      "surface-variant": "#e0e3e5",
+                      "error": "#ba1a1a",
+                      "outline": "#76777d",
+                      "secondary-container": "#d0e1fb",
+                      "on-secondary-fixed": "#0b1c30",
+                      "on-surface-variant": "#45464d",
+                      "outline-variant": "#c6c6cd",
+                      "primary-fixed-dim": "#bec6e0",
+                      "on-error-container": "#93000a",
+                      "inverse-on-surface": "#eff1f3",
+                      "background": "#f7f9fb",
+                      "surface-container-high": "#e6e8ea",
+                      "surface-bright": "#f7f9fb",
+                      "tertiary-fixed-dim": "#68dba9",
+                      "surface-container-low": "#f2f4f6",
+                      "inverse-primary": "#bec6e0",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "primary": "#000000",
+                      "secondary": "#505f76",
+                      "tertiary": "#000000",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed": "#d3e4fe",
+                      "surface-container-highest": "#e0e3e5",
+                      "surface-dim": "#d8dadc",
+                      "on-secondary-container": "#54647a",
+                      "error-container": "#ffdad6",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#005137",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "primary-container": "#131b2e",
+                      "on-tertiary-fixed": "#002114",
+                      "tertiary-container": "#002114",
+                      "on-surface": "#191c1e",
+                      "on-background": "#191c1e",
+                      "inverse-surface": "#2d3133",
+                      "on-error": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "surface-container": "#eceef0",
+                      "surface": "#f7f9fb",
+                      "on-primary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.5rem",
+                      "lg": "1rem",
+                      "xl": "1.5rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Plus Jakarta Sans", "sans-serif"],
+                      "display": ["Plus Jakarta Sans", "sans-serif"],
+                      "body": ["DM Sans", "sans-serif"],
+                      "label": ["DM Sans", "sans-serif"],
+                      "mono": ["Fira Code", "monospace"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'DM Sans', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c6c6cd; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Sidebar (Shared Components Logic) -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-primary-container flex flex-col py-6 z-50">
+<div class="px-6 mb-10 flex items-center gap-3">
+<div class="w-10 h-10 bg-on-primary-fixed-variant rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">recycling</span>
+</div>
+<div>
+<h2 class="text-2xl font-black text-on-primary tracking-tight leading-none">YardFlow</h2>
+<p class="text-[10px] text-on-primary-container uppercase tracking-widest mt-1">Ship Recycling ERP</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 text-on-primary-container hover:text-on-primary rounded-md px-4 py-3 mx-2 hover:bg-on-primary-fixed-variant/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 bg-on-tertiary-container text-on-tertiary rounded-md px-4 py-3 mx-2 opacity-90 transition-all" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-medium text-sm">Inventory</span>
+</a>
+<a class="flex items-center gap-3 text-on-primary-container hover:text-on-primary rounded-md px-4 py-3 mx-2 hover:bg-on-primary-fixed-variant/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium text-sm">Operations</span>
+</a>
+<a class="flex items-center gap-3 text-on-primary-container hover:text-on-primary rounded-md px-4 py-3 mx-2 hover:bg-on-primary-fixed-variant/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-medium text-sm">Payroll</span>
+</a>
+<a class="flex items-center gap-3 text-on-primary-container hover:text-on-primary rounded-md px-4 py-3 mx-2 hover:bg-on-primary-fixed-variant/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">health_and_safety</span>
+<span class="font-medium text-sm">Safety</span>
+</a>
+<a class="flex items-center gap-3 text-on-primary-container hover:text-on-primary rounded-md px-4 py-3 mx-2 hover:bg-on-primary-fixed-variant/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-medium text-sm">Reports</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-on-primary-container/10">
+<a class="flex items-center gap-3 text-on-primary-container hover:text-on-primary rounded-md px-4 py-3 mx-2 hover:bg-on-primary-fixed-variant/20 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 text-on-primary-container hover:text-on-primary rounded-md px-4 py-3 mx-2 hover:bg-on-primary-fixed-variant/20 transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-medium text-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-surface flex justify-between items-center px-8 z-40 border-b border-outline-variant">
+<div class="flex items-center gap-4 flex-1 max-w-md">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full font-body" placeholder="Search orders, materials, or tickets..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="text-secondary hover:text-primary transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-secondary hover:text-primary transition-all">
+<span class="material-symbols-outlined">history</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant"></div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded font-medium text-sm hover:opacity-90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">ios_share</span>
+                Quick Export
+            </button>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-sm font-bold text-on-surface leading-none">Admin</p>
+<p class="text-[10px] text-on-surface-variant font-medium">Yard Manager</p>
+</div>
+<img alt="Administrator Profile" class="w-10 h-10 rounded-full object-cover border-2 border-surface-container-high shadow-sm" data-alt="A professional headshot of a business administrator in a modern office, characterized by soft directional lighting and a clean, high-end corporate aesthetic. The man is wearing a crisp white shirt and a dark tailored blazer, reflecting leadership and precision. The background is slightly blurred with muted tones of navy and grey, maintaining a focus on the subject's clear and determined expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAz8i1-1iRbSgdvQ4q64GTnbEyzVHDbHqPAl3YPkmDak6T-56K4BnjsP49zrIvCWZzjbyQg20uoRcrouNMcx4HmIrUHyXWOZPxmoqY4k7zKKz0U0EOA2Lw8_XwNFKH8VMs_o5qf1Px0rXNgQNJAp32M1FQcJG5HtPbpMh2SFtkK5tRcOoV1b748tJyzEQbjIWoC4n2LxTEEANqUQbIXKgZim0eNyfm2aNQBoKNIy6V8qpGRv5OnQqqD4DoP3v6_v1vwyrCJiKu6DwQ"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 pb-32 px-12">
+<div class="max-w-[860px] mx-auto">
+<header class="mb-8">
+<div class="flex items-center gap-2 text-on-surface-variant text-sm mb-2">
+<a class="hover:text-primary" href="#">Sales Dashboard</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="font-medium text-on-surface">New Entry</span>
+</div>
+<h1 class="text-4xl font-bold text-on-surface tracking-tight">New Sale</h1>
+</header>
+<form class="space-y-10">
+<!-- Section 1: Sale Type -->
+<section>
+<h3 class="text-lg font-semibold text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">category</span>
+                        Sale Type
+                    </h3>
+<div class="grid grid-cols-2 gap-4">
+<label class="relative cursor-pointer group">
+<input checked="" class="peer sr-only" name="sale_type" type="radio"/>
+<div class="p-6 rounded-lg bg-surface border-2 border-primary-container bg-primary-container/[0.03] transition-all hover:bg-surface-container-low h-full">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold text-on-surface">Fabricated Sale</h4>
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-sm text-on-surface-variant">Iron processed by workers to customer spec. Most common industrial recycling flow.</p>
+</div>
+</label>
+<label class="relative cursor-pointer group">
+<input class="peer sr-only" name="sale_type" type="radio"/>
+<div class="p-6 rounded-lg bg-surface border border-outline-variant transition-all hover:border-primary peer-checked:border-primary-container peer-checked:bg-primary-container/[0.03] h-full">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold text-on-surface">Raw Pass-through</h4>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">circle</span>
+</div>
+<p class="text-sm text-on-surface-variant">Sold directly without processing. Full weight transaction from raw stock ledger.</p>
+</div>
+</label>
+</div>
+</section>
+<!-- Section 2: Customer -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">person</span>
+                            Customer Details
+                        </h3>
+<div class="flex bg-surface-container rounded p-1 border border-outline-variant">
+<button class="px-4 py-1.5 text-xs font-bold rounded bg-on-primary-container text-white transition-all" type="button">Recorded Sale</button>
+<button class="px-4 py-1.5 text-xs font-bold rounded text-secondary hover:text-primary transition-all" type="button">Quick Cash Sale</button>
+</div>
+</div>
+<div class="bg-surface p-6 rounded-lg border border-outline-variant space-y-6">
+<div class="grid grid-cols-2 gap-6">
+<div class="space-y-1">
+<label class="text-sm font-medium text-on-surface">Search Customer</label>
+<div class="relative">
+<select class="w-full h-[42px] px-4 py-2 bg-white border border-outline-variant rounded focus:ring-2 focus:ring-primary appearance-none font-body">
+<option selected="">Karim Construction</option>
+<option>Bengal Steel Works</option>
+<option>Dhakai Foundry</option>
+</select>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined pointer-events-none text-outline">arrow_drop_down</span>
+</div>
+<div class="flex items-center gap-1.5 mt-2 py-1.5 px-3 bg-[#FEFCE8] border border-[#EAB308]/20 rounded-sm">
+<span class="material-symbols-outlined text-[16px] text-[#EAB308]">warning</span>
+<span class="text-xs font-mono font-bold text-[#854D0E]">Customer current due: ৳50,000</span>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-sm font-medium text-on-surface">Sale Date</label>
+<div class="relative">
+<input class="w-full h-[42px] px-4 py-2 bg-white border border-outline-variant rounded focus:ring-2 focus:ring-primary font-body" type="date" value="2023-11-24"/>
+</div>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-sm font-medium text-on-surface">Special Instructions / Notes</label>
+<textarea class="w-full px-4 py-3 bg-white border border-outline-variant rounded focus:ring-2 focus:ring-primary font-body text-sm" placeholder="Enter delivery notes or specification requests..." rows="2"></textarea>
+</div>
+</div>
+</section>
+<!-- Section 3: Line Items -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">list_alt</span>
+                            Material Line Items
+                        </h3>
+</div>
+<div class="bg-surface rounded-lg border border-outline-variant overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Material Category</th>
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Sub-type</th>
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider text-right">kg</th>
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider text-right">price/kg</th>
+<th class="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider text-right">Total</th>
+<th class="px-6 py-4 w-12"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 text-sm font-medium text-on-surface">Iron Plate</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">5-8mm</td>
+<td class="px-6 py-4 text-sm font-mono text-right">480</td>
+<td class="px-6 py-4 text-sm font-mono text-right">৳95</td>
+<td class="px-6 py-4 text-sm font-mono font-bold text-right">৳45,600</td>
+<td class="px-6 py-4 text-center">
+<button class="text-error hover:opacity-70 transition-opacity" type="button">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-4 border-t border-outline-variant">
+<button class="flex items-center gap-2 text-on-tertiary-container hover:underline font-bold text-sm" type="button">
+<span class="material-symbols-outlined">add_circle</span>
+                                + Add Item
+                            </button>
+</div>
+</div>
+</section>
+<!-- Section 4: Payment -->
+<section>
+<h3 class="text-lg font-semibold text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">account_balance_wallet</span>
+                        Payment Settlement
+                    </h3>
+<div class="grid grid-cols-12 gap-6">
+<div class="col-span-5 space-y-4">
+<div class="grid grid-cols-2 gap-3">
+<label class="relative cursor-pointer">
+<input checked="" class="peer sr-only" name="payment_mode" type="radio"/>
+<div class="py-3 px-4 rounded text-center border-2 border-primary-container bg-primary-container/[0.03] text-sm font-bold text-on-surface peer-checked:opacity-100">Pay Full</div>
+</label>
+<label class="relative cursor-pointer">
+<input class="peer sr-only" name="payment_mode" type="radio"/>
+<div class="py-3 px-4 rounded text-center border border-outline-variant text-sm font-bold text-secondary hover:border-primary peer-checked:border-primary-container peer-checked:bg-primary-container/[0.03] peer-checked:text-on-surface">Pay Partial</div>
+</label>
+</div>
+<div class="space-y-1">
+<label class="text-sm font-medium text-on-surface">Account Selector</label>
+<div class="relative">
+<select class="w-full h-[42px] px-4 py-2 bg-white border border-outline-variant rounded focus:ring-2 focus:ring-primary appearance-none font-body">
+<option>Main Cash Account (A-01)</option>
+<option>City Bank Corporate</option>
+<option>Mobile Wallet - bKash</option>
+</select>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined pointer-events-none text-outline">arrow_drop_down</span>
+</div>
+</div>
+</div>
+<div class="col-span-7">
+<div class="bg-surface-container-high p-6 rounded-lg space-y-4 shadow-sm border border-outline-variant">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant font-medium">Total Amount:</span>
+<span class="font-mono text-xl font-bold text-on-surface">৳45,600</span>
+</div>
+<div class="flex justify-between items-center text-on-tertiary-container">
+<span class="font-medium">Receiving Now:</span>
+<span class="font-mono font-bold text-lg">৳45,600</span>
+</div>
+<div class="flex justify-between items-center pb-4 border-b border-outline-variant/30 text-on-surface-variant">
+<span class="font-medium">Remaining Due:</span>
+<span class="font-mono font-bold">৳0</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant font-medium">Status:</span>
+<span class="px-3 py-1 bg-on-tertiary-container text-white text-xs font-black uppercase tracking-wider rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">verified</span> Paid
+                                    </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</form>
+</div>
+</main>
+<!-- Footer Sticky Bar -->
+<footer class="fixed bottom-0 right-0 w-[calc(100%-16rem)] bg-surface border-t border-outline-variant px-12 py-4 flex items-center justify-between z-50">
+<div class="text-sm text-on-surface-variant italic">
+            Entry verified by <span class="font-bold text-on-surface">Admin</span> at 14:22 GMT+6
+        </div>
+<div class="flex gap-4">
+<button class="px-8 py-2.5 rounded font-bold text-secondary hover:bg-surface-container-low transition-all">
+                Cancel
+            </button>
+<button class="bg-primary-container text-white px-10 py-2.5 rounded font-bold hover:shadow-lg active:scale-95 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">save</span>
+                Save Sale
+            </button>
+</div>
+</footer>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.name === 'payment_mode') {
+                    // Visual feedback for payment mode toggle
+                }
+            });
+        });
+
+        // Simple account selector hover effect
+        const customDropdowns = document.querySelectorAll('select');
+        customDropdowns.forEach(dropdown => {
+            dropdown.addEventListener('focus', () => {
+                dropdown.parentElement.classList.add('ring-2', 'ring-primary/20');
+            });
+            dropdown.addEventListener('blur', () => {
+                dropdown.parentElement.classList.remove('ring-2', 'ring-primary/20');
+            });
+        });
+    </script>
+</body></html>

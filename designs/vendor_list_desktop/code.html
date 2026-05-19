@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vendors | YardFlow Ship Recycling ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#000000",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "inverse-primary": "#bec6e0",
+                        "tertiary-fixed-dim": "#68dba9",
+                        "surface-container-low": "#f2f4f6",
+                        "inverse-on-surface": "#eff1f3",
+                        "background": "#f7f9fb",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-bright": "#f7f9fb",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c6c6cd",
+                        "on-secondary-fixed": "#0b1c30",
+                        "on-surface-variant": "#45464d",
+                        "outline": "#76777d",
+                        "secondary-container": "#d0e1fb",
+                        "surface-variant": "#e0e3e5",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#85f8c4",
+                        "on-primary-fixed": "#131b2e",
+                        "on-primary-container": "#7c839b",
+                        "on-tertiary-container": "#069669",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-tint": "#565e74",
+                        "primary-fixed": "#dae2fd",
+                        "surface-container": "#eceef0",
+                        "surface": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#002114",
+                        "tertiary-container": "#002114",
+                        "on-surface": "#191c1e",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#131b2e",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-container": "#54647a",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary": "#000000",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#d3e4fe",
+                        "secondary": "#505f76",
+                        "success": "#22C55E",
+                        "warning": "#EAB308",
+                        "info": "#0EA5E9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans", "sans-serif"],
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["DM Sans", "sans-serif"],
+                        "label": ["DM Sans", "sans-serif"],
+                        "mono": ["Fira Code", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .mono-nums { font-family: 'Fira Code', monospace; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c6c6cd; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Side Navigation Bar -->
+<aside class="h-screen w-[240px] fixed left-0 top-0 bg-primary dark:bg-primary border-r border-outline-variant shadow-sm flex flex-col py-6 z-50">
+<div class="px-6 mb-10">
+<h1 class="text-h2 font-headline font-bold text-on-primary">YardFlow</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-primary/50 font-medium">Ship Recycling ERP</p>
+</div>
+<nav class="flex-grow flex flex-col gap-1 px-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-body-sm font-label">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-tertiary-container bg-tertiary-container/10 border-l-4 border-on-tertiary-container transition-all duration-150" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-body-sm font-label">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">directions_boat</span>
+<span class="text-body-sm font-label">Vessel Tracking</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-body-sm font-label">Labor Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">health_and_safety</span>
+<span class="text-body-sm font-label">Safety Logs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="text-body-sm font-label">Reports</span>
+</a>
+</nav>
+<div class="px-2 mt-auto flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-body-sm font-label">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-body-sm font-label">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[240px] min-h-screen">
+<!-- Top App Bar -->
+<header class="h-16 w-full sticky top-0 z-40 bg-surface dark:bg-surface-container-high border-b border-outline-variant shadow-sm flex justify-between items-center px-8">
+<div class="flex items-center gap-4 flex-grow max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-10 text-body-sm focus:ring-1 focus:ring-on-tertiary-container/30 h-10" placeholder="Search vendors, invoices, or vessel materials..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">history</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<img alt="User profile avatar" class="w-9 h-9 rounded-full object-cover border-2 border-outline-variant group-hover:border-on-tertiary-container transition-all" data-alt="A professional headshot of a senior logistics manager in a modern office, wearing a dark blazer over a crisp white shirt. The lighting is soft and flattering, typical of a high-end corporate portrait with a shallow depth of field, highlighting industrial expertise and professional trust within the ship recycling industry's leadership team." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCez0B2_gow1LYpTj43m2nLwNLHoznbajUjUWAn3CMHxaYr5vBnaJvlgC0WqCGu2_Jrt6iiCFzULAzW3sfi_vdsQ-dcHw5nIsFAVGreZMdx9VgFEBYSoKuD2pggTSjJR5VT_0tNHx2F4Tsi3vSLv9EVYwlgGPcr2OHKlSdLa_pC-LlO71cKtixSXwcGeBSVzCKQ0nC909AKQnRJk2oMPMfRK_jGFnXLCUYTekFR8LpauoBtNF7E4ikYa0c7X3_nHZktXfnSfqCxlVU"/>
+<div class="hidden xl:block">
+<p class="text-body-sm font-bold leading-tight">Rahman Ali</p>
+<p class="text-[10px] text-on-surface-variant">Yard Supervisor</p>
+</div>
+</div>
+</div>
+</header>
+<div class="p-8 max-w-7xl mx-auto">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-h1 font-headline font-bold text-primary mb-1">Vendors</h2>
+<nav class="flex text-caption text-on-surface-variant gap-2">
+<span>ERP</span> <span>/</span> <span>Inventory</span> <span>/</span> <span class="text-on-surface font-semibold">Vendor List</span>
+</nav>
+</div>
+<button class="bg-on-tertiary-container text-white px-6 py-2.5 rounded-lg font-label font-bold text-body-sm hover:opacity-90 shadow-sm flex items-center gap-2 transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+                    + Add Vendor
+                </button>
+</div>
+<!-- Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<!-- Total Vendors -->
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/30 flex items-center justify-between">
+<div>
+<p class="text-caption text-on-surface-variant font-medium mb-1">Total Vendors</p>
+<h3 class="text-h2 font-headline font-bold text-primary">8</h3>
+</div>
+<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">store</span>
+</div>
+</div>
+<!-- Total Payable -->
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/30 flex items-center justify-between">
+<div>
+<p class="text-caption text-on-surface-variant font-medium mb-1">Total Payable</p>
+<h3 class="text-h2 font-headline font-bold text-warning mono-nums">৳2,60,000</h3>
+</div>
+<div class="w-12 h-12 bg-warning/10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-warning">payments</span>
+</div>
+</div>
+<!-- Settled Vendors -->
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/30 flex items-center justify-between">
+<div>
+<p class="text-caption text-on-surface-variant font-medium mb-1">Settled Vendors</p>
+<h3 class="text-h2 font-headline font-bold text-success">5 <span class="text-caption font-normal text-on-surface-variant ml-1">(no due)</span></h3>
+</div>
+<div class="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-success">check_circle</span>
+</div>
+</div>
+</div>
+<!-- Vendor Table Section -->
+<section class="bg-white rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
+<div class="p-6 border-b border-outline-variant/20 flex justify-between items-center">
+<h4 class="text-h3 font-headline font-semibold text-primary">Vendor Directory</h4>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container-low text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+</button>
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container-low text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low text-on-surface-variant uppercase text-[10px] tracking-wider font-bold">
+<tr>
+<th class="px-6 py-4">Vendor Name</th>
+<th class="px-6 py-4">Phone</th>
+<th class="px-6 py-4">Type</th>
+<th class="px-6 py-4">Total Purchases</th>
+<th class="px-6 py-4">Total Paid</th>
+<th class="px-6 py-4">Due Balance</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10 text-body-sm">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-5 font-bold text-primary">Chattogram Shipyard</td>
+<td class="px-6 py-5 text-on-surface-variant">01711-XXXXXX</td>
+<td class="px-6 py-5"><span class="px-2 py-1 bg-surface-container rounded text-[11px] font-semibold">Shipyard</span></td>
+<td class="px-6 py-5 mono-nums">৳8,40,000</td>
+<td class="px-6 py-5 mono-nums">৳7,55,000</td>
+<td class="px-6 py-5 mono-nums font-bold text-warning">৳85,000</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-warning/10 text-warning">
+                                        Due
+                                    </span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end items-center gap-4">
+<button class="text-on-tertiary-container font-bold hover:underline decoration-2">View</button>
+<button class="bg-on-tertiary-container text-white px-4 py-1.5 rounded-lg text-[12px] font-bold hover:bg-on-tertiary-container/90 transition-all" onclick="openPaymentModal()">Pay</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-5 font-bold text-primary">Al-Amin Shipbreakers</td>
+<td class="px-6 py-5 text-on-surface-variant">01812-XXXXXX</td>
+<td class="px-6 py-5"><span class="px-2 py-1 bg-surface-container rounded text-[11px] font-semibold">Shipyard</span></td>
+<td class="px-6 py-5 mono-nums">৳3,20,000</td>
+<td class="px-6 py-5 mono-nums">৳3,20,000</td>
+<td class="px-6 py-5 mono-nums font-medium text-success">৳0</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-success/10 text-success">
+                                        Settled
+                                    </span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end items-center gap-4">
+<button class="text-on-tertiary-container font-bold hover:underline decoration-2">View</button>
+<div class="w-[45px]"></div>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-5 font-bold text-primary">Karim Hardware</td>
+<td class="px-6 py-5 text-on-surface-variant">01911-XXXXXX</td>
+<td class="px-6 py-5"><span class="px-2 py-1 bg-surface-container rounded text-[11px] font-semibold">Consumable</span></td>
+<td class="px-6 py-5 mono-nums">৳45,000</td>
+<td class="px-6 py-5 mono-nums">৳30,000</td>
+<td class="px-6 py-5 mono-nums font-bold text-warning">৳15,000</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-warning/10 text-warning">
+                                        Due
+                                    </span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end items-center gap-4">
+<button class="text-on-tertiary-container font-bold hover:underline decoration-2">View</button>
+<button class="bg-on-tertiary-container text-white px-4 py-1.5 rounded-lg text-[12px] font-bold hover:bg-on-tertiary-container/90 transition-all">Pay</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-outline-variant/10 flex items-center justify-between bg-surface-container-low/30">
+<p class="text-caption text-on-surface-variant">Showing 3 of 8 vendors</p>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant rounded-md bg-white hover:bg-surface-container-low transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="p-2 border border-outline-variant rounded-md bg-white hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Payment Modal -->
+<div class="fixed inset-0 z-[100] hidden" id="payment-modal">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-primary/60 backdrop-blur-sm" onclick="closePaymentModal()"></div>
+<!-- Modal Card -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden border border-outline-variant/20 animate-[scaleIn_0.2s_ease-out]">
+<div class="px-6 py-5 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-low">
+<h3 class="text-h3 font-headline font-bold text-primary">Pay Chattogram Shipyard</h3>
+<button class="text-on-surface-variant hover:text-primary transition-colors" onclick="closePaymentModal()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-6">
+<div class="bg-warning/10 p-4 rounded-lg mb-6 border border-warning/20">
+<p class="text-caption font-bold text-warning uppercase tracking-wider mb-1">Outstanding Due</p>
+<p class="text-h2 font-headline font-bold text-warning mono-nums">৳85,000</p>
+</div>
+<form class="space-y-4">
+<div class="space-y-1.5">
+<label class="text-[12px] font-bold text-on-surface uppercase tracking-wide">Amount to Pay</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-mono">৳</span>
+<input class="w-full pl-8 pr-4 py-2.5 border border-outline-variant rounded focus:ring-2 focus:ring-on-tertiary-container/20 focus:border-on-tertiary-container outline-none transition-all mono-nums" placeholder="0.00" type="text" value="85,000"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-[12px] font-bold text-on-surface uppercase tracking-wide">Pay From Account</label>
+<select class="w-full px-4 py-2.5 border border-outline-variant rounded focus:ring-2 focus:ring-on-tertiary-container/20 focus:border-on-tertiary-container outline-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2376777d%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:20px_20px] bg-[right_12px_center] bg-no-repeat transition-all">
+<option>Company Operating Account (...9012)</option>
+<option>Petty Cash Yard B</option>
+<option>General Ledger Savings</option>
+</select>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1.5">
+<label class="text-[12px] font-bold text-on-surface uppercase tracking-wide">Date</label>
+<input class="w-full px-4 py-2.5 border border-outline-variant rounded focus:ring-2 focus:ring-on-tertiary-container/20 focus:border-on-tertiary-container outline-none transition-all" type="date" value="2023-10-24"/>
+</div>
+<div class="space-y-1.5">
+<label class="text-[12px] font-bold text-on-surface uppercase tracking-wide">Payment Method</label>
+<select class="w-full px-4 py-2.5 border border-outline-variant rounded focus:ring-2 focus:ring-on-tertiary-container/20 focus:border-on-tertiary-container outline-none transition-all">
+<option>Bank Transfer</option>
+<option>Cash</option>
+<option>Cheque</option>
+</select>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-[12px] font-bold text-on-surface uppercase tracking-wide">Note</label>
+<textarea class="w-full px-4 py-2.5 border border-outline-variant rounded focus:ring-2 focus:ring-on-tertiary-container/20 focus:border-on-tertiary-container outline-none transition-all resize-none" placeholder="Reference invoice #INV-2023-042..." rows="2"></textarea>
+</div>
+</form>
+</div>
+<div class="px-6 py-5 bg-surface-container-low flex justify-end gap-3 border-t border-outline-variant/10">
+<button class="px-5 py-2 text-on-surface-variant font-bold hover:bg-outline-variant/20 rounded-lg transition-all" onclick="closePaymentModal()">Cancel</button>
+<button class="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:opacity-90 shadow-sm transition-all active:scale-95" onclick="confirmPayment()">Record Payment</button>
+</div>
+</div>
+</div>
+<style>
+        @keyframes scaleIn {
+            from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+<script>
+        function openPaymentModal() {
+            const modal = document.getElementById('payment-modal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePaymentModal() {
+            const modal = document.getElementById('payment-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function confirmPayment() {
+            // Mock interaction
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = 'Processing...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerText = 'Success!';
+                btn.classList.replace('bg-primary', 'bg-success');
+                setTimeout(() => {
+                    closePaymentModal();
+                    // Reset for demo
+                    btn.innerText = originalText;
+                    btn.classList.replace('bg-success', 'bg-primary');
+                    btn.disabled = false;
+                }, 1000);
+            }, 800);
+        }
+
+        // Add row hover interactions or ripple effects if desired
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('click', (e) => {
+                if(e.target.tagName !== 'BUTTON') {
+                    // Navigate to details if implemented
+                }
+            });
+        });
+    </script>
+</body></html>

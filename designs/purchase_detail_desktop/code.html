@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YardFlow - Purchase Detail #PUR-0024</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#505f76",
+                    "on-surface-variant": "#45464d",
+                    "surface-dim": "#d8dadc",
+                    "primary-fixed": "#dae2fd",
+                    "primary-container": "#131b2e",
+                    "error-container": "#ffdad6",
+                    "surface-container-high": "#e6e8ea",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-primary-fixed": "#131b2e",
+                    "surface-variant": "#e0e3e5",
+                    "surface-bright": "#f7f9fb",
+                    "on-secondary-container": "#54647a",
+                    "inverse-surface": "#2d3133",
+                    "tertiary-container": "#002114",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed-dim": "#bec6e0",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "background": "#f7f9fb",
+                    "outline-variant": "#c6c6cd",
+                    "tertiary-fixed": "#85f8c4",
+                    "on-tertiary-container": "#069669",
+                    "on-surface": "#191c1e",
+                    "error": "#ba1a1a",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#005137",
+                    "surface-tint": "#565e74",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-container": "#7c839b",
+                    "on-background": "#191c1e",
+                    "tertiary-fixed-dim": "#68dba9",
+                    "surface-container-low": "#f2f4f6",
+                    "tertiary": "#000000",
+                    "outline": "#76777d",
+                    "inverse-primary": "#bec6e0",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "surface": "#f7f9fb",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#eceef0",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "primary": "#000000",
+                    "on-tertiary-fixed": "#002114",
+                    "on-secondary-fixed": "#0b1c30",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-tertiary": "#ffffff",
+                    "secondary-container": "#d0e1fb",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "display": ["Plus Jakarta Sans"],
+                    "body": ["DM Sans"],
+                    "label": ["DM Sans"],
+                    "code": ["Fira Code"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'DM Sans', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-code { font-family: 'Fira Code', monospace; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c6c6cd; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen">
+<!-- Fixed Side Navigation -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-primary-container flex flex-col py-6 px-4 shadow-sm z-50">
+<div class="mb-8 px-4 flex items-center gap-3">
+<div class="w-10 h-10 bg-on-tertiary-container rounded-lg flex items-center justify-center text-white font-bold text-xl">YF</div>
+<div>
+<div class="font-headline text-on-primary font-bold text-lg leading-tight">YardFlow</div>
+<div class="font-body text-on-primary-container text-[10px] uppercase tracking-widest font-bold">Ship Recycling ERP</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body text-body-sm font-medium">Dashboard</span>
+</a>
+<!-- Inventory -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body text-body-sm font-medium">Inventory</span>
+</a>
+<!-- Purchases (Active) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-tertiary-container text-on-tertiary-container rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+<span class="font-body text-body-sm font-medium">Purchases</span>
+</a>
+<!-- Sales -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">sell</span>
+<span class="font-body text-body-sm font-medium">Sales</span>
+</a>
+<!-- HR -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span class="font-body text-body-sm font-medium">HR</span>
+</a>
+<!-- Accounts -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-body text-body-sm font-medium">Accounts</span>
+</a>
+<!-- Reports -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body text-body-sm font-medium">Reports</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-on-primary-fixed-variant/20 pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body text-body-sm font-medium">Settings</span>
+</a>
+<div class="mt-4 px-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsI0qYEHwi5UJloO5gCfg-5U5oVSrRiLRuy7WhpytzH078LYSFKr72O48NBi7JLzWBvD0V2xGTj-ZAwfoJRdwYhGbAxVemVX1xHVXaETTBlmxB_b2Tm_UoOjUVw3KFU6Q8yfD_V3kjq3NydIQJPFlDcH7_HrYLv_V-Q0MZKIKUiaKp_7zZgxxEL5TXtyUJ5nM90Mb3H4gBdrDRyaF-XPzuulMUZJEjVO-1iLGP8B1ueHwNIYeeUWpLRKFgoBqmw_TeVuuybAMsEGk"/>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-xs font-bold text-on-primary truncate">Md. Rahim</p>
+<p class="text-[10px] text-on-primary-container truncate uppercase">Operations Mgr</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-[240px] flex flex-col min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 left-[240px] h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-8 z-40">
+<div class="flex items-center gap-4">
+<h1 class="font-headline text-h4 font-bold text-primary">Purchase #PUR-0024</h1>
+<span class="px-3 py-1 bg-warning/10 text-warning text-[10px] font-bold tracking-widest rounded-full uppercase border border-warning/20">Partial</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors cursor-pointer">notifications</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-error rounded-full border border-surface"></span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">help_outline</span>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-on-primary-fixed-variant transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-sm">payments</span>
+                    Record Payment
+                </button>
+</div>
+</header>
+<!-- Page Sub-header & Canvas -->
+<div class="mt-16 p-8 flex-1">
+<!-- Breadcrumb/Context Header -->
+<div class="mb-8 flex items-center gap-4">
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div>
+<h2 class="font-headline text-xl font-bold">Chattogram Shipyard</h2>
+<p class="text-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">event</span>
+                        14 May 2025
+                    </p>
+</div>
+</div>
+<!-- Content Grid (60/40 Split) -->
+<div class="grid grid-cols-12 gap-6">
+<!-- LEFT COLUMN -->
+<div class="col-span-12 lg:col-span-7 space-y-6">
+<!-- Purchase Summary Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+<h3 class="font-headline font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span>
+                                Purchase Details
+                            </h3>
+<button class="text-tertiary-fixed-dim hover:text-on-tertiary-container transition-colors">
+<span class="material-symbols-outlined">edit_square</span>
+</button>
+</div>
+<div class="p-6 grid grid-cols-2 gap-y-6">
+<div>
+<p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider mb-1">Vendor</p>
+<a class="text-on-tertiary-container font-bold underline decoration-dotted underline-offset-4" href="#">Chattogram Shipyard</a>
+</div>
+<div>
+<p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider mb-1">Purchase Date</p>
+<p class="text-on-surface font-medium">14 May 2025</p>
+</div>
+<div>
+<p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider mb-1">Created By</p>
+<p class="text-on-surface font-medium">Md. Rahim</p>
+</div>
+<div>
+<p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider mb-1">Note</p>
+<p class="text-on-surface font-medium italic">"May shipment - mixed plates"</p>
+</div>
+</div>
+</div>
+<!-- Items Purchased Table -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-outline-variant bg-surface-container-low">
+<h3 class="font-headline font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                                Material Breakdown
+                            </h3>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high border-b border-outline-variant">
+<th class="px-6 py-3 text-[10px] font-bold uppercase text-on-surface-variant tracking-wider">Material Sub-type</th>
+<th class="px-6 py-3 text-[10px] font-bold uppercase text-on-surface-variant tracking-wider text-right">Quantity (kg)</th>
+<th class="px-6 py-3 text-[10px] font-bold uppercase text-on-surface-variant tracking-wider text-right">Price/kg</th>
+<th class="px-6 py-3 text-[10px] font-bold uppercase text-on-surface-variant tracking-wider text-right">Total</th>
+</tr>
+</thead>
+<tbody class="font-body text-sm divide-y divide-outline-variant/30">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-bold text-on-surface">Plates 5-8mm</td>
+<td class="px-6 py-4 font-code text-right">500</td>
+<td class="px-6 py-4 font-code text-right">৳110</td>
+<td class="px-6 py-4 font-code text-right font-medium">৳55,000</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-bold text-on-surface">Plates 12-13mm</td>
+<td class="px-6 py-4 font-code text-right">300</td>
+<td class="px-6 py-4 font-code text-right">৳92</td>
+<td class="px-6 py-4 font-code text-right font-medium">৳27,600</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-bold text-on-surface">Angle Iron 50mm</td>
+<td class="px-6 py-4 font-code text-right">200</td>
+<td class="px-6 py-4 font-code text-right">৳88</td>
+<td class="px-6 py-4 font-code text-right font-medium">৳17,600</td>
+</tr>
+</tbody>
+<tfoot>
+<tr class="bg-surface-container-low border-t-2 border-primary/10">
+<td class="px-6 py-4 font-headline font-bold text-primary text-right uppercase tracking-widest text-xs" colspan="3">Total Amount Due</td>
+<td class="px-6 py-4 font-code text-right text-lg font-bold text-primary">৳1,00,200</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN -->
+<div class="col-span-12 lg:col-span-5 space-y-6">
+<!-- Payment Summary Card -->
+<div class="bg-primary-container text-on-primary-fixed border border-outline-variant rounded-xl p-6 shadow-md relative overflow-hidden">
+<!-- Decorative glow -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-on-tertiary-container/10 blur-[60px] rounded-full -mr-16 -mt-16"></div>
+<h3 class="font-headline font-bold text-white mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-on-tertiary-container">account_balance_wallet</span>
+                            Financial Summary
+                        </h3>
+<div class="space-y-4 relative z-10">
+<div class="flex justify-between items-center">
+<span class="text-on-primary-container text-sm">Total Amount</span>
+<span class="font-code font-bold text-white">৳1,00,200</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-primary-container text-sm">Total Paid</span>
+<span class="font-code font-bold text-on-tertiary-container">৳50,000</span>
+</div>
+<div class="flex justify-between items-center border-t border-on-primary-fixed-variant/30 pt-4">
+<span class="text-on-primary-container font-bold text-sm">Balance Due</span>
+<span class="font-code font-bold text-warning text-lg">৳50,200</span>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="mt-8">
+<div class="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-2">
+<span class="text-on-tertiary-container">Paid 49.9%</span>
+<span class="text-on-primary-container">Due 50.1%</span>
+</div>
+<div class="h-3 w-full bg-on-primary-fixed-variant/20 rounded-full overflow-hidden flex">
+<div class="h-full bg-on-tertiary-container" style="width: 49.9%;"></div>
+</div>
+</div>
+</div>
+<!-- Payment History Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-outline-variant bg-surface-container-low">
+<h3 class="font-headline font-bold text-primary flex items-center gap-2 text-sm uppercase tracking-wide">
+<span class="material-symbols-outlined text-primary text-lg">history</span>
+                                Payment Ledger
+                            </h3>
+</div>
+<div class="p-0">
+<div class="divide-y divide-outline-variant/30">
+<div class="p-6 flex items-start gap-4 bg-on-tertiary-container/5">
+<div class="w-10 h-10 rounded-full bg-on-tertiary-container/10 flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined">done_all</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<p class="font-code font-bold text-on-surface">৳50,000</p>
+<p class="text-[10px] text-on-surface-variant font-medium">14 May 2025</p>
+</div>
+<p class="text-xs text-on-surface-variant mb-2"><span class="font-bold">Mode:</span> Cash</p>
+<p class="text-xs text-on-surface italic">"Initial payment upon arrival"</p>
+</div>
+</div>
+</div>
+</div>
+<div class="p-6 border-t border-outline-variant bg-surface-container-lowest">
+<button class="w-full py-3 rounded-lg border-2 border-dashed border-outline hover:border-primary hover:text-primary transition-all text-on-surface-variant font-bold text-sm flex items-center justify-center gap-2 group">
+<span class="material-symbols-outlined group-hover:rotate-90 transition-transform">add</span>
+                                Add New Record
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Contextual Image / Map / Document Preview -->
+<div class="mt-12">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="relative h-64 rounded-2xl overflow-hidden group">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A high-angle architectural shot of a massive ship recycling yard in Chattogram. Towering steel plates are stacked in orderly rows under a bright tropical sun. The industrial environment is clean and organized, with heavy machinery moving in the background, all captured in a sharp, realistic style with high-key lighting that emphasizes the industrial scale." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDBNA0ddy3Z-oYY6o7lc3oyA-7dzH0RnVyRFUHt0rg7CbrpqlXl3mZVoZrkA-kj_dCprgVwW3gJPRRMMCFEKc_GvdHAj6BWYw-pgnrSCDrIug89Fet6hbKXAGP9I--A0b38mdoNX1JgY4zJ1vcmS8wQuUQTvsBjGiR5UlFnhjoIze4Wf5aJCRqeWZY1ZzopPuj4PCyFvnaCcC-wG5y2EQcPvCXqJA7wqBOgBaWFY2WIRWOcUdKuTRYYmTkfa8eHR3Uxchqyy5eQYE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/80 to-transparent flex items-end p-6">
+<div>
+<p class="text-white font-bold font-headline">Chattogram Yard Terminal 4</p>
+<p class="text-on-primary-container text-xs">Primary delivery site for shipment #PUR-0024</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-highest rounded-2xl p-8 flex flex-col justify-center border border-outline-variant">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 bg-on-tertiary-container/10 rounded-xl flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined text-3xl">description</span>
+</div>
+<div>
+<h4 class="font-bold text-primary">Associated Documents</h4>
+<p class="text-xs text-on-surface-variant">3 files attached to this purchase</p>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between items-center p-3 bg-surface-container-lowest rounded-lg border border-outline-variant/30 hover:border-primary transition-colors cursor-pointer">
+<span class="text-xs font-medium truncate">Delivery_Challan_CH12.pdf</span>
+<span class="material-symbols-outlined text-sm">download</span>
+</div>
+<div class="flex justify-between items-center p-3 bg-surface-container-lowest rounded-lg border border-outline-variant/30 hover:border-primary transition-colors cursor-pointer">
+<span class="text-xs font-medium truncate">Quality_Cert_Plates.pdf</span>
+<span class="material-symbols-outlined text-sm">download</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-auto px-8 py-6 border-t border-outline-variant bg-surface-container-low flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">System Status: Optimal</p>
+</div>
+<p class="text-[10px] text-on-surface-variant font-medium">YardFlow v2.4.0 — Unified Ship Recycling Ledger</p>
+</footer>
+</main>
+<script>
+        // Simple micro-interaction for active scaling
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'scale(0.98)';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = 'scale(1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

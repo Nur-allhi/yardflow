@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HR &amp; Payroll - ShipRecycle ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#d3e4fe",
+                        "outline": "#76777d",
+                        "outline-variant": "#c6c6cd",
+                        "surface-variant": "#e0e3e5",
+                        "on-secondary": "#ffffff",
+                        "primary": "#000000",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container": "#eceef0",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "tertiary-container": "#002114",
+                        "on-tertiary-fixed": "#002114",
+                        "secondary-container": "#d0e1fb",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "on-surface-variant": "#45464d",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "on-secondary-container": "#54647a",
+                        "primary-container": "#131b2e",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-background": "#191c1e",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#505f76",
+                        "on-secondary-fixed": "#0b1c30",
+                        "on-primary-fixed": "#131b2e",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#68dba9",
+                        "surface": "#f7f9fb",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "inverse-surface": "#2d3133",
+                        "inverse-primary": "#bec6e0",
+                        "tertiary-fixed": "#85f8c4",
+                        "on-primary-container": "#7c839b",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary-fixed-dim": "#bec6e0",
+                        "tertiary": "#000000",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#565e74",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "background": "#f7f9fb",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e6e8ea",
+                        "primary-fixed": "#dae2fd",
+                        "on-tertiary-container": "#069669",
+                        "error": "#ba1a1a",
+                        "success": "#22C55E",
+                        "warning": "#EAB308"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["DM Sans"],
+                        "label": ["DM Sans"],
+                        "mono": ["Fira Code"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'DM Sans', sans-serif; }
+        h1, h2, h3, .headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono-num { font-family: 'Fira Code', monospace; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] text-on-surface">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-primary dark:bg-primary-container flex flex-col py-6 gap-2 shadow-sm z-50">
+<div class="px-6 mb-8">
+<h1 class="text-lg font-bold text-on-primary">ShipRecycle ERP</h1>
+<p class="text-xs text-on-primary/60 uppercase tracking-widest font-bold">Iron &amp; Steel Trade</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary transition-colors mx-2 rounded-md hover:bg-primary-fixed-dim/10" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary transition-colors mx-2 rounded-md hover:bg-primary-fixed-dim/10" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary transition-colors mx-2 rounded-md hover:bg-primary-fixed-dim/10" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-sm font-medium">Purchases</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary transition-colors mx-2 rounded-md hover:bg-primary-fixed-dim/10" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-medium">Sales</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-on-tertiary-container text-on-tertiary rounded-md mx-2 transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-sm font-medium">HR</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary transition-colors mx-2 rounded-md hover:bg-primary-fixed-dim/10" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="text-sm font-medium">Accounts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary transition-colors mx-2 rounded-md hover:bg-primary-fixed-dim/10" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="text-sm font-medium">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary/70 hover:text-on-primary transition-colors mx-2 rounded-md hover:bg-primary-fixed-dim/10" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<div class="flex items-center gap-3 p-3 bg-primary-container/50 rounded-lg">
+<img alt="User profile" class="w-10 h-10 rounded-full border border-on-primary/20 object-cover" data-alt="A professional headshot of a middle-aged male manager in a corporate setting. He is wearing a crisp white shirt and a navy blue blazer, projecting an air of confidence and reliability. The lighting is bright and even, typical of a modern office environment, with a clean and neutral background that maintains the professional light-mode aesthetic of the ERP system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyMXifJtF2QXLJlWQfoM69ssqH9dqAZAWMdLm7VktA2NCNFtkSZRW91w1OCClmtLzBaJULQ28DKXPdSDZ_MIdqUwS2jTFAGqp5G1Y7xQlpDVeOhpZ-OynL6xraydXJ4DjCtXEz6qay6lDXEnGMHnGKWjQqdxY0-IpRPw4vHnTWxcvZTmfPijkVIvOrSAHRtVExpsEdgzS15K3YHTk_KcEjKiChUWNvCyy7gqyLVHoZ0lAToITmD8yV-6tgR0yTIvqAK1zeKli8bx8"/>
+<div>
+<p class="text-sm font-bold text-on-primary">Manager Profile</p>
+<p class="text-xs text-on-primary/50">Admin Access</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar (Shared Component) -->
+<header class="fixed top-0 right-0 left-[240px] h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-8 z-40">
+<div class="flex items-center gap-6">
+<h2 class="text-xl font-black text-primary">HR &amp; Payroll</h2>
+<div class="flex items-center gap-1">
+<nav class="flex h-16">
+<a class="flex items-center px-4 text-on-tertiary-container font-bold border-b-2 border-on-tertiary-container h-full" href="#">Workers</a>
+<a class="flex items-center px-4 text-secondary hover:bg-surface-container-low transition-colors h-full" href="#">Advances</a>
+<a class="flex items-center px-4 text-secondary hover:bg-surface-container-low transition-colors h-full" href="#">Payroll</a>
+</nav>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-md text-sm w-64 focus:ring-2 focus:ring-on-tertiary-container/20" placeholder="Search workers..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-md font-bold text-sm flex items-center gap-2 transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+                + Add Worker
+            </button>
+<div class="flex gap-2">
+<span class="material-symbols-outlined p-2 text-secondary hover:bg-surface-container-low rounded-full cursor-pointer">notifications</span>
+<span class="material-symbols-outlined p-2 text-secondary hover:bg-surface-container-low rounded-full cursor-pointer">help</span>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-24 pb-12 ml-[240px] px-8">
+<!-- Stats Row -->
+<div class="grid grid-cols-4 gap-6 mb-8">
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/30">
+<p class="text-secondary text-sm font-medium mb-1">Total Workers</p>
+<p class="text-3xl font-black text-primary">124</p>
+<p class="text-xs text-success mt-2 flex items-center gap-1"><span class="material-symbols-outlined text-xs">trending_up</span> +2 this month</p>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/30">
+<p class="text-secondary text-sm font-medium mb-1">Active Payroll</p>
+<p class="text-3xl font-black text-primary mono-num">৳1,840,000</p>
+<p class="text-xs text-secondary mt-2">Est. monthly liability</p>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/30">
+<p class="text-secondary text-sm font-medium mb-1">Pending Advances</p>
+<p class="text-3xl font-black text-warning mono-num">৳45,200</p>
+<p class="text-xs text-secondary mt-2">Oct 2023 cycle</p>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/30">
+<p class="text-secondary text-sm font-medium mb-1">Attendance Today</p>
+<p class="text-3xl font-black text-primary">118/124</p>
+<p class="text-xs text-error mt-2">6 Absentees</p>
+</div>
+</div>
+<!-- Table Container -->
+<div class="bg-white rounded-lg shadow-sm border border-outline-variant/30 overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant/50 flex justify-between items-center">
+<h3 class="font-bold text-lg">Worker Directory</h3>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-3 py-1.5 text-xs font-bold border border-outline-variant rounded hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-sm">filter_list</span> Filter
+                    </button>
+<button class="flex items-center gap-2 px-3 py-1.5 text-xs font-bold border border-outline-variant rounded hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-sm">download</span> Export
+                    </button>
+</div>
+</div>
+<table class="w-full border-collapse">
+<thead class="bg-surface-container-low/50">
+<tr>
+<th class="px-6 py-4 text-left text-xs font-bold text-secondary uppercase tracking-wider">Worker Name</th>
+<th class="px-6 py-4 text-left text-xs font-bold text-secondary uppercase tracking-wider">Designation</th>
+<th class="px-6 py-4 text-left text-xs font-bold text-secondary uppercase tracking-wider">Monthly Salary</th>
+<th class="px-6 py-4 text-left text-xs font-bold text-secondary uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-left text-xs font-bold text-secondary uppercase tracking-wider">This Month: Advances</th>
+<th class="px-6 py-4 text-right text-xs font-bold text-secondary uppercase tracking-wider">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-xs">MR</div>
+<span class="font-bold text-sm">Md. Rahim</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">Welder</td>
+<td class="px-6 py-4 whitespace-nowrap font-bold text-sm mono-num">৳15,000</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 py-1 text-[10px] font-black uppercase bg-success/10 text-success rounded-sm border border-success/20">Active</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="text-sm font-bold text-warning mono-num">৳8,000 advances taken</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<div class="flex justify-end gap-2">
+<button class="text-xs font-bold px-3 py-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-high">View</button>
+<button class="text-xs font-bold px-3 py-1 rounded bg-on-tertiary-container/10 text-on-tertiary-container hover:bg-on-tertiary-container/20" onclick="toggleModal(true)">Advance</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xs">MK</div>
+<span class="font-bold text-sm">Md. Karim</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">Helper</td>
+<td class="px-6 py-4 whitespace-nowrap font-bold text-sm mono-num">৳12,000</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 py-1 text-[10px] font-black uppercase bg-success/10 text-success rounded-sm border border-success/20">Active</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-outline">৳0</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<div class="flex justify-end gap-2">
+<button class="text-xs font-bold px-3 py-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-high">View</button>
+<button class="text-xs font-bold px-3 py-1 rounded bg-on-tertiary-container/10 text-on-tertiary-container hover:bg-on-tertiary-container/20">Advance</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-xs">SM</div>
+<span class="font-bold text-sm">Salim Mia</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">Manager</td>
+<td class="px-6 py-4 whitespace-nowrap font-bold text-sm mono-num">৳25,000</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 py-1 text-[10px] font-black uppercase bg-success/10 text-success rounded-sm border border-success/20">Active</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="text-sm font-bold text-warning mono-num">৳5,000 advances taken</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<div class="flex justify-end gap-2">
+<button class="text-xs font-bold px-3 py-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-high">View</button>
+<button class="text-xs font-bold px-3 py-1 rounded bg-on-tertiary-container/10 text-on-tertiary-container hover:bg-on-tertiary-container/20">Advance</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-xs">JM</div>
+<span class="font-bold text-sm">Jamal</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">Grinder</td>
+<td class="px-6 py-4 whitespace-nowrap font-bold text-sm mono-num">৳13,000</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 py-1 text-[10px] font-black uppercase bg-success/10 text-success rounded-sm border border-success/20">Active</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-outline">৳0</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<div class="flex justify-end gap-2">
+<button class="text-xs font-bold px-3 py-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-high">View</button>
+<button class="text-xs font-bold px-3 py-1 rounded bg-on-tertiary-container/10 text-on-tertiary-container hover:bg-on-tertiary-container/20">Advance</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-dim text-on-surface-variant flex items-center justify-center font-bold text-xs">OW</div>
+<span class="font-bold text-sm text-outline">Old Worker</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-outline">Helper</td>
+<td class="px-6 py-4 whitespace-nowrap font-bold text-sm mono-num text-outline">৳10,000</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2 py-1 text-[10px] font-black uppercase bg-secondary/10 text-secondary rounded-sm border border-secondary/20">Inactive</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-outline">—</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<div class="flex justify-end gap-2">
+<button class="text-xs font-bold px-3 py-1 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-high">View</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-6 py-4 border-t border-outline-variant/30 flex justify-between items-center text-sm text-secondary">
+<span>Showing 5 of 124 workers</span>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-outline-variant rounded hover:bg-surface-container-low disabled:opacity-50" disabled="">Previous</button>
+<button class="px-3 py-1 bg-primary text-on-primary rounded">1</button>
+<button class="px-3 py-1 border border-outline-variant rounded hover:bg-surface-container-low">2</button>
+<button class="px-3 py-1 border border-outline-variant rounded hover:bg-surface-container-low">3</button>
+<button class="px-3 py-1 border border-outline-variant rounded hover:bg-surface-container-low">Next</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Modal Overlay -->
+<div class="hidden fixed inset-0 z-[100] bg-primary/40 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300" id="advanceModal">
+<div class="bg-white w-full max-w-lg rounded-xl shadow-lg overflow-hidden transform transition-all scale-95 duration-200" id="modalContainer">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h3 class="font-bold text-lg text-primary">Record Salary Advance</h3>
+<button class="material-symbols-outlined text-secondary hover:text-primary transition-colors" onclick="toggleModal(false)">close</button>
+</div>
+<form class="p-6 space-y-4">
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2">
+<label class="block text-xs font-bold text-secondary uppercase mb-1">Worker Name</label>
+<input class="w-full px-4 py-2 bg-surface-container rounded-md border-none text-sm font-bold text-primary cursor-not-allowed" readonly="" type="text" value="Md. Rahim"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-secondary uppercase mb-1">Amount (৳)</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-outline">৳</span>
+<input class="w-full pl-8 pr-4 py-2 border border-outline-variant rounded-md text-sm mono-num focus:ring-2 focus:ring-on-tertiary-container/20 focus:border-on-tertiary-container" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold text-secondary uppercase mb-1">Pay From Account</label>
+<select class="w-full px-4 py-2 border border-outline-variant rounded-md text-sm focus:ring-2 focus:ring-on-tertiary-container/20 focus:border-on-tertiary-container">
+<option>Dutch Bangla Bank</option>
+<option>Petty Cash</option>
+<option>City Bank</option>
+</select>
+</div>
+<div>
+<label class="block text-xs font-bold text-secondary uppercase mb-1">Date</label>
+<input class="w-full px-4 py-2 border border-outline-variant rounded-md text-sm focus:ring-2 focus:ring-on-tertiary-container/20 focus:border-on-tertiary-container" type="date" value="2023-10-25"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-secondary uppercase mb-1">Month/Year</label>
+<input class="w-full px-4 py-2 border border-outline-variant rounded-md text-sm focus:ring-2 focus:ring-on-tertiary-container/20 focus:border-on-tertiary-container" type="text" value="Oct 2023"/>
+</div>
+<div class="col-span-2">
+<label class="block text-xs font-bold text-secondary uppercase mb-1">Note</label>
+<textarea class="w-full px-4 py-2 border border-outline-variant rounded-md text-sm focus:ring-2 focus:ring-on-tertiary-container/20 focus:border-on-tertiary-container" placeholder="Additional details..." rows="3"></textarea>
+</div>
+</div>
+<div class="flex items-center gap-3 pt-4 border-t border-outline-variant mt-2">
+<button class="flex-1 px-4 py-2.5 text-sm font-bold text-on-surface-variant bg-surface-container rounded-md hover:bg-surface-container-high transition-colors" onclick="toggleModal(false)" type="button">Cancel</button>
+<button class="flex-1 px-4 py-2.5 text-sm font-bold text-on-primary bg-primary rounded-md hover:opacity-90 transition-all active:scale-[0.98]" type="submit">Record Advance</button>
+</div>
+</form>
+</div>
+</div>
+<script>
+        function toggleModal(show) {
+            const modal = document.getElementById('advanceModal');
+            const container = document.getElementById('modalContainer');
+            
+            if (show) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.add('opacity-100');
+                    container.classList.remove('scale-95');
+                    container.classList.add('scale-100');
+                }, 10);
+            } else {
+                modal.classList.remove('opacity-100');
+                container.classList.remove('scale-100');
+                container.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Close modal on click outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('advanceModal');
+            if (event.target == modal) {
+                toggleModal(false);
+            }
+        }
+    </script>
+</body></html>

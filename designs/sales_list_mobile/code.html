@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YardFlow - Sales List</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#2d3133",
+                    "tertiary-fixed-dim": "#68dba9",
+                    "primary-fixed": "#dae2fd",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#e6e8ea",
+                    "primary-fixed-dim": "#bec6e0",
+                    "on-secondary": "#ffffff",
+                    "surface-container-low": "#f2f4f6",
+                    "surface-bright": "#f7f9fb",
+                    "surface-variant": "#e0e3e5",
+                    "outline-variant": "#c6c6cd",
+                    "on-background": "#191c1e",
+                    "secondary-container": "#d0e1fb",
+                    "outline": "#76777d",
+                    "on-primary-container": "#7c839b",
+                    "surface-tint": "#565e74",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-container": "#002114",
+                    "primary": "#000000",
+                    "secondary": "#505f76",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "on-primary-fixed": "#131b2e",
+                    "on-tertiary-fixed-variant": "#005137",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-error-container": "#93000a",
+                    "primary-container": "#131b2e",
+                    "on-surface-variant": "#45464d",
+                    "inverse-primary": "#bec6e0",
+                    "tertiary-fixed": "#85f8c4",
+                    "on-tertiary-container": "#069669",
+                    "error": "#ba1a1a",
+                    "on-surface": "#191c1e",
+                    "surface-container": "#eceef0",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#d8dadc",
+                    "on-tertiary-fixed": "#002114",
+                    "background": "#f7f9fb",
+                    "tertiary": "#000000",
+                    "on-secondary-fixed": "#0b1c30",
+                    "error-container": "#ffdad6",
+                    "surface": "#f7f9fb",
+                    "on-secondary-container": "#54647a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "display": ["Plus Jakarta Sans"],
+                    "body": ["DM Sans"],
+                    "label": ["DM Sans"],
+                    "mono": ["Fira Code"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-background antialiased selection:bg-on-tertiary-container selection:text-on-tertiary">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-4 h-16 w-full fixed top-0 z-50 bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container border-b border-outline-variant dark:border-outline shadow-sm">
+<div class="flex items-center gap-4">
+<button class="hover:bg-primary-fixed-dim/10 transition-colors duration-200 active:opacity-80 p-1">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline text-xl font-bold tracking-tight text-on-primary">YardFlow</h1>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden border border-outline-variant">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A professional portrait of a male shipyard manager in his early 40s, wearing clean industrial safety gear and a hard hat. The lighting is crisp and modern, reflecting an efficient ERP software user profile environment. The background is a blurred shipping yard with heavy steel structures, maintaining a minimalist and high-end industrial aesthetic with a clean color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCThgg5H2yiG-aSrBOq15b0E6cky16hBm0RC6dVXBtw79LOoUD6evZg362k2coyJyiLMsHo4Rihkm_KhtWDS0qXyJjetBHfz6iOjmQ3tt1PtZi-WVFvEjCJERvD67lLp4jg3ca8QCb5YED6t9aVp6OWEauTA5Ql2HmnvGE5_BGmz5T2EnAM0GUh0igR_IT9MRTwsSh5-cgyZ5owN4nFTY_1BohJL8xq2tOK7gGZl3qRm3AuB8Hgb5XizUSCBrM_EDcbgDvVwdMdkAg"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<main class="pt-20 pb-24 px-4 max-w-[375px] mx-auto min-h-screen">
+<!-- Top Summary: Compact horizontal scroll -->
+<section class="mb-6">
+<h2 class="font-headline text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3 px-1">Sales Overview</h2>
+<div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+<!-- Total Sales -->
+<div class="flex-shrink-0 w-[140px] p-3 rounded-xl bg-surface-container border border-outline-variant">
+<p class="text-[10px] font-medium text-on-surface-variant uppercase mb-1">Total Sales</p>
+<p class="font-mono text-base font-bold text-primary">৳18,40,000</p>
+</div>
+<!-- Total Received -->
+<div class="flex-shrink-0 w-[140px] p-3 rounded-xl bg-surface-container border border-outline-variant">
+<p class="text-[10px] font-medium text-on-surface-variant uppercase mb-1">Received</p>
+<p class="font-mono text-base font-bold text-on-tertiary-container">৳15,20,000</p>
+</div>
+<!-- Total Due -->
+<div class="flex-shrink-0 w-[140px] p-3 rounded-xl bg-error-container border border-on-error-container/10">
+<p class="text-[10px] font-medium text-on-error-container uppercase mb-1">Total Due</p>
+<p class="font-mono text-base font-bold text-error">৳3,20,000</p>
+</div>
+<!-- Today -->
+<div class="flex-shrink-0 w-[140px] p-3 rounded-xl bg-secondary-container border border-on-secondary-container/10">
+<p class="text-[10px] font-medium text-on-secondary-container uppercase mb-1">Today</p>
+<p class="font-mono text-base font-bold text-on-secondary-fixed">৳1,24,500</p>
+</div>
+</div>
+</section>
+<!-- List of Sales -->
+<section class="space-y-3">
+<div class="flex items-center justify-between px-1 mb-2">
+<h3 class="font-headline text-sm font-semibold">Recent Transactions</h3>
+<span class="text-xs font-medium text-secondary">Show all</span>
+</div>
+<!-- Sale Card 1 -->
+<div class="bg-surface p-4 rounded-xl border border-outline-variant shadow-sm space-y-3 active:scale-[0.98] transition-transform">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-sm font-bold text-on-surface">Rahim Traders</h4>
+<p class="font-mono text-[10px] text-on-surface-variant">SAL-0091</p>
+</div>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-high text-on-surface">Fabricated</span>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-[10px] text-secondary font-medium">480 kg</p>
+<p class="font-mono text-lg font-bold text-primary">৳45,600</p>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">Paid</span>
+<p class="text-[10px] text-on-surface-variant mt-1">19 May 2025</p>
+</div>
+</div>
+<div class="pt-2 flex gap-2">
+<button class="flex-1 py-2 text-xs font-bold rounded-lg bg-surface-container-highest text-primary hover:bg-outline-variant transition-colors">View Details</button>
+</div>
+</div>
+<!-- Sale Card 2 (With Due) -->
+<div class="bg-surface p-4 rounded-xl border border-outline-variant shadow-sm space-y-3 active:scale-[0.98] transition-transform">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-sm font-bold text-on-surface">Karim Construction</h4>
+<p class="font-mono text-[10px] text-on-surface-variant">SAL-0090</p>
+</div>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-high text-on-surface">Raw</span>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-[10px] text-secondary font-medium">1,200 kg</p>
+<p class="font-mono text-lg font-bold text-primary">৳1,14,000</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-bold text-on-error-container bg-error-container px-2 py-0.5 rounded mb-1">Due: ৳50,000</p>
+<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-secondary-container text-on-secondary-container uppercase">Partial</span>
+<p class="text-[10px] text-on-surface-variant mt-1">18 May 2025</p>
+</div>
+</div>
+<div class="pt-2 flex gap-2">
+<button class="flex-1 py-2 text-xs font-bold rounded-lg border border-outline-variant text-primary">View</button>
+<button class="flex-1 py-2 text-xs font-bold rounded-lg bg-on-tertiary-container text-on-tertiary">Collect</button>
+</div>
+</div>
+<!-- Sale Card 3 -->
+<div class="bg-surface p-4 rounded-xl border border-outline-variant shadow-sm space-y-3 active:scale-[0.98] transition-transform">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-sm font-bold text-on-surface">Cash Sale</h4>
+<p class="font-mono text-[10px] text-on-surface-variant">SAL-0089</p>
+</div>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-high text-on-surface">Fabricated</span>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-[10px] text-secondary font-medium">120 kg</p>
+<p class="font-mono text-lg font-bold text-primary">৳11,400</p>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">Paid</span>
+<p class="text-[10px] text-on-surface-variant mt-1">17 May 2025</p>
+</div>
+</div>
+<div class="pt-2 flex gap-2">
+<button class="flex-1 py-2 text-xs font-bold rounded-lg bg-surface-container-highest text-primary">View Details</button>
+</div>
+</div>
+<!-- Sale Card 4 -->
+<div class="bg-surface p-4 rounded-xl border border-outline-variant shadow-sm space-y-3 active:scale-[0.98] transition-transform">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-sm font-bold text-on-surface">Jahan Steel</h4>
+<p class="font-mono text-[10px] text-on-surface-variant">SAL-0088</p>
+</div>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-high text-on-surface">Scrap</span>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-[10px] text-secondary font-medium">800 kg</p>
+<p class="font-mono text-lg font-bold text-primary">৳40,000</p>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">Paid</span>
+<p class="text-[10px] text-on-surface-variant mt-1">16 May 2025</p>
+</div>
+</div>
+<div class="pt-2 flex gap-2">
+<button class="flex-1 py-2 text-xs font-bold rounded-lg bg-surface-container-highest text-primary">View Details</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-4 w-14 h-14 bg-on-tertiary-container text-on-tertiary rounded-full shadow-lg flex items-center justify-center z-50 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="flex justify-around items-center h-20 px-2 pb-safe w-full fixed bottom-0 z-50 bg-surface dark:bg-inverse-surface border-t border-outline-variant dark:border-outline shadow-lg">
+<div class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-3 py-1 hover:bg-surface-container-high transition-colors scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label text-xs font-medium">Home</span>
+</div>
+<!-- Active Tab: Sales -->
+<div class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-xl px-3 py-1 scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="payments" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label text-xs font-medium">Sales</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-3 py-1 hover:bg-surface-container-high transition-colors scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label text-xs font-medium">Stock</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-3 py-1 hover:bg-surface-container-high transition-colors scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label text-xs font-medium">HR</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim px-3 py-1 hover:bg-surface-container-high transition-colors scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+<span class="font-label text-xs font-medium">Menu</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('.active\\:scale-\\[0\\.98\\]').forEach(card => {
+            card.addEventListener('click', () => {
+                // Potential navigation or expansion logic
+                console.log('Card tapped');
+            });
+        });
+
+        // Simple scroll observer for TopAppBar shadow
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 10) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body></html>

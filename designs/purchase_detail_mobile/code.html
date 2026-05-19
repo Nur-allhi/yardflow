@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Purchase Detail - Ship Recycling ERP</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#0b1c30",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary": "#000000",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-tertiary-fixed": "#002114",
+                        "on-secondary-container": "#54647a",
+                        "inverse-surface": "#2d3133",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-variant": "#e0e3e5",
+                        "inverse-primary": "#bec6e0",
+                        "surface-container": "#eceef0",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "background": "#f7f9fb",
+                        "surface-bright": "#f7f9fb",
+                        "secondary-container": "#d0e1fb",
+                        "primary": "#000000",
+                        "secondary": "#505f76",
+                        "on-surface-variant": "#45464d",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#565e74",
+                        "on-background": "#191c1e",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-fixed": "#d3e4fe",
+                        "primary-container": "#131b2e",
+                        "on-primary-fixed": "#131b2e",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-tertiary-container": "#069669",
+                        "error": "#ba1a1a",
+                        "on-primary-container": "#7c839b",
+                        "surface-dim": "#d8dadc",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "outline": "#76777d",
+                        "surface": "#f7f9fb",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c6c6cd",
+                        "on-surface": "#191c1e",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#68dba9",
+                        "tertiary-container": "#002114",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed": "#85f8c4",
+                        "primary-fixed": "#dae2fd",
+                        "success": "#22C55E",
+                        "warning": "#EAB308",
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["DM Sans"],
+                        "label": ["DM Sans"],
+                        "code": ["Fira Code"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            max-width: 375px;
+            margin: 0 auto;
+            background-color: #f7f9fb;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface">
+<!-- Top Bar Component -->
+<header class="fixed top-0 w-full max-w-[375px] z-50 bg-surface dark:bg-background border-b border-outline-variant dark:border-on-surface-variant shadow-sm flex justify-between items-center px-4 h-16">
+<div class="flex items-center gap-3">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="font-headline text-sm font-bold text-primary">Purchase #PUR-0024</h1>
+<div class="flex items-center gap-2">
+<span class="inline-block px-2 py-0.5 rounded-sm bg-warning/10 text-warning text-[10px] font-bold tracking-wider">PARTIAL</span>
+</div>
+</div>
+</div>
+<img alt="Admin Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A professional high-quality close-up studio portrait of a male logistics manager wearing a navy blue collared shirt. The background is a clean, minimalist off-white industrial office setting. The lighting is soft and even, creating a trustworthy and modern business aesthetic that fits within a premium ship recycling enterprise platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGgkUsm4sIx5IkdxMVX3S7RXhUdkRIqVJyDpK_y1nOnKHOoyf2ReI_mbbMz0EjNNd7IAI-xaPevMovZQqycVquboL9_xEcPGha1jQXg0mrCXi3f8J9_TcIhRtsl2_iZUvgndCF21a7IdQ8O9Mdh5T9laUh0dy82LhaeZSUnhWMkNX9Hr-JG9GZIy1GwwIz5qlllIU-R3zmlopg9LZLXORSmtBdOFOtC1uLLZjRORiDRNK8DOGhbBM_pVHE1gxR06KP7mkg-1l11vE"/>
+</header>
+<main class="pt-20 pb-24 px-4 space-y-6">
+<!-- Section 1: Payment Summary Card -->
+<section class="bg-surface-container-lowest p-5 rounded-xl shadow-sm border border-outline-variant">
+<h2 class="font-headline text-h4 font-semibold text-on-surface mb-4">Payment Summary</h2>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant text-body-sm">Total Amount</span>
+<span class="font-code font-medium text-primary">৳1,00,200</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-tertiary-container text-body-sm">Total Paid</span>
+<span class="font-code font-bold text-on-tertiary-container">৳50,000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-warning text-body-sm">Balance Due</span>
+<span class="font-code font-bold text-warning">৳50,200</span>
+</div>
+<!-- Progress Bar -->
+<div class="pt-2">
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden flex">
+<div class="h-full bg-on-tertiary-container" style="width: 49.9%;"></div>
+<div class="h-full bg-warning" style="width: 50.1%;"></div>
+</div>
+<div class="flex justify-between mt-1 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+<span>Paid (49.9%)</span>
+<span>Due</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Items Purchased -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline text-h4 font-semibold text-on-surface">Items Purchased</h2>
+<span class="text-caption text-on-surface-variant">3 Items</span>
+</div>
+<div class="space-y-3">
+<!-- Item Card 1 -->
+<div class="bg-surface rounded-lg p-4 border border-outline-variant shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-bold text-primary">MS Scrap (Heavy)</h3>
+<span class="font-code text-on-surface-variant text-sm">৳48,000</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tight">Quantity</p>
+<p class="font-code text-sm">800 kg</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tight">Price/kg</p>
+<p class="font-code text-sm">৳60.00</p>
+</div>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="bg-surface rounded-lg p-4 border border-outline-variant shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-bold text-primary">Cast Iron Plate</h3>
+<span class="font-code text-on-surface-variant text-sm">৳32,200</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tight">Quantity</p>
+<p class="font-code text-sm">460 kg</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tight">Price/kg</p>
+<p class="font-code text-sm">৳70.00</p>
+</div>
+</div>
+</div>
+<!-- Item Card 3 -->
+<div class="bg-surface rounded-lg p-4 border border-outline-variant shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-bold text-primary">Mixed Brass Fixings</h3>
+<span class="font-code text-on-surface-variant text-sm">৳20,000</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tight">Quantity</p>
+<p class="font-code text-sm">50 kg</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tight">Price/kg</p>
+<p class="font-code text-sm">৳400.00</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Payment History -->
+<section>
+<h2 class="font-headline text-h4 font-semibold text-on-surface mb-4">Payment History</h2>
+<div class="relative pl-6 space-y-6 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-outline-variant">
+<!-- History Item 1 -->
+<div class="relative">
+<div class="absolute -left-[20px] top-1.5 w-4 h-4 rounded-full bg-on-tertiary-container border-4 border-white shadow-sm"></div>
+<div class="bg-surface-container-low rounded-lg p-3">
+<div class="flex justify-between items-start">
+<span class="text-caption font-bold text-on-surface-variant">14 May 2025</span>
+<span class="font-code text-sm font-bold text-on-tertiary-container">৳50,000</span>
+</div>
+<div class="mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary">payments</span>
+<span class="text-body-sm text-secondary">Cash</span>
+</div>
+<p class="text-caption text-on-surface-variant mt-1">Initial deposit for the bulk ms scrap load.</p>
+</div>
+</div>
+<!-- Empty State / Future Payment placeholder -->
+<div class="relative opacity-50">
+<div class="absolute -left-[20px] top-1.5 w-4 h-4 rounded-full bg-outline-variant border-4 border-white"></div>
+<div class="p-3">
+<p class="text-caption text-on-surface-variant italic">Next payment pending...</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Bottom Bar -->
+<div class="fixed bottom-0 w-full max-w-[375px] bg-surface/90 backdrop-blur-md p-4 border-t border-outline-variant z-50">
+<button class="w-full h-12 bg-on-tertiary-container text-white font-bold rounded-lg flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-lg shadow-on-tertiary-container/20">
+<span class="material-symbols-outlined">add_card</span>
+            Record Payment
+        </button>
+</div>
+<script>
+        // Simple micro-interaction for item cards
+        document.querySelectorAll('.bg-surface').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.classList.add('bg-surface-container');
+            });
+            card.addEventListener('touchend', () => {
+                setTimeout(() => {
+                    card.classList.remove('bg-surface-container');
+                }, 100);
+            });
+        });
+    </script>
+</body></html>

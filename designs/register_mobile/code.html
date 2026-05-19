@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=375, initial-scale=1.0" name="viewport"/>
+<title>Business Registration | ShipRecycle ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&amp;family=Dm+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: #F8FAFC;
+        }
+        .password-strength-meter {
+            height: 4px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"surface-container-lowest": "#ffffff", "on-secondary": "#ffffff", "tertiary-fixed-dim": "#68dba9", "surface-container-low": "#f2f4f6", "outline-variant": "#c6c6cd", warning: "#EAB308", "surface-variant": "#e0e3e5", "secondary-container": "#d0e1fb", "surface-tint": "#565e74", "inverse-on-surface": "#eff1f3", secondary: "#505f76", "tertiary-container": "#002114", "secondary-fixed": "#d3e4fe", "secondary-fixed-dim": "#b7c8e1", "on-primary-fixed-variant": "#3f465c", "on-tertiary-fixed-variant": "#005137", "on-primary-fixed": "#131b2e", "on-error-container": "#93000a", "inverse-primary": "#bec6e0", "on-primary": "#ffffff", "on-error": "#ffffff", "border-base": "#E2E8F0", "on-surface": "#191c1e", "tertiary-fixed": "#85f8c4", "on-tertiary-container": "#069669", "on-tertiary-fixed": "#002114", "error-container": "#ffdad6", "surface-container-high": "#e6e8ea", "primary-fixed-dim": "#bec6e0", "primary-fixed": "#dae2fd", "inverse-surface": "#2d3133", "surface-bright": "#f7f9fb", "on-background": "#191c1e", success: "#22C55E", outline: "#76777d", info: "#0EA5E9", "on-primary-container": "#7c839b", primary: "#000000", "on-tertiary": "#ffffff", "on-secondary-fixed-variant": "#38485d", "surface-container-highest": "#e0e3e5", "primary-container": "#131b2e", "on-surface-variant": "#45464d", "surface-container": "#eceef0", error: "#ba1a1a", "surface-dim": "#d8dadc", background: "#f7f9fb", surface: "#f7f9fb", "on-secondary-container": "#54647a", "on-secondary-fixed": "#0b1c30", tertiary: "#000000"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {lg: "24px", "2xl": "48px", "3xl": "64px", xl: "32px", xs: "4px", md: "16px", sm: "8px"}, fontFamily: {h4: ["Plus Jakarta Sans"], h1: ["Plus Jakarta Sans"], code: ["Fira Code"], body: ["Dm Sans"], "body-sm": ["DM Sans"], h3: ["Plus Jakarta Sans"], display: ["Plus Jakarta Sans"], h2: ["Plus Jakarta Sans"], "h1-mobile": ["Plus Jakarta Sans"], caption: ["DM Sans"], "body-lg": ["DM Sans"], headline: ["Plus Jakarta Sans"], label: ["Dm Sans"]}, fontSize: {h4: ["16px", {lineHeight: "1.35", fontWeight: "500"}], h1: ["32px", {lineHeight: "1.2", fontWeight: "700"}], code: ["14px", {lineHeight: "1.6", fontWeight: "400"}], body: ["16px", {lineHeight: "1.6", fontWeight: "400"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], h3: ["20px", {lineHeight: "1.3", fontWeight: "600"}], display: ["40px", {lineHeight: "1.15", fontWeight: "700"}], h2: ["24px", {lineHeight: "1.25", fontWeight: "600"}], "h1-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], caption: ["12px", {lineHeight: "1.4", fontWeight: "500"}], "body-lg": ["18px", {lineHeight: "1.6", fontWeight: "400"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen text-on-surface antialiased">
+<!-- Sticky Header -->
+<header class="sticky top-0 z-50 bg-surface/80 backdrop-blur-md px-[20px] py-md border-b border-border-base">
+<div class="flex flex-col gap-xs">
+<span class="font-h3 text-h3 text-primary-container tracking-tight">YardFlow ERP</span>
+<h1 class="font-h1-mobile text-h1-mobile text-on-surface">Register your business</h1>
+</div>
+</header>
+<main class="px-[20px] pt-lg pb-[120px]">
+<form class="flex flex-col gap-xl" id="registrationForm">
+<!-- Section 1: Organization Details -->
+<section class="flex flex-col gap-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">corporate_fare</span>
+<h2 class="font-h3 text-h3">Organization Details</h2>
+</div>
+<div class="grid gap-md">
+<!-- Business Name -->
+<div class="flex flex-col gap-xs">
+<label class="font-body text-body-sm font-bold text-on-surface-variant" for="business_name">Business Name</label>
+<input class="h-[42px] px-md rounded-DEFAULT border border-border-base focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container outline-none transition-all placeholder:text-outline-variant bg-surface" id="business_name" name="business_name" placeholder="e.g. Atlantic Scrap Metal Ltd." required="" type="text"/>
+</div>
+<!-- Phone -->
+<div class="flex flex-col gap-xs">
+<label class="font-body text-body-sm font-bold text-on-surface-variant" for="phone">Phone Number</label>
+<div class="relative">
+<input class="w-full h-[42px] px-md rounded-DEFAULT border border-border-base focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container outline-none transition-all placeholder:text-outline-variant bg-surface" id="phone" name="phone" placeholder="+1 (555) 000-0000" required="" type="tel"/>
+</div>
+</div>
+<!-- Address -->
+<div class="flex flex-col gap-xs">
+<label class="font-body text-body-sm font-bold text-on-surface-variant" for="address">Business Address</label>
+<textarea class="p-md rounded-DEFAULT border border-border-base focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container outline-none transition-all placeholder:text-outline-variant bg-surface resize-none" id="address" name="address" placeholder="Enter full maritime or shipyard address..." required="" rows="3"></textarea>
+</div>
+</div>
+</section>
+<!-- Divider -->
+<div class="h-[1px] bg-outline-variant/30"></div>
+<!-- Section 2: Owner Account -->
+<section class="flex flex-col gap-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<h2 class="font-h3 text-h3">Owner Account</h2>
+</div>
+<div class="grid gap-md">
+<!-- Full Name -->
+<div class="flex flex-col gap-xs">
+<label class="font-body text-body-sm font-bold text-on-surface-variant" for="full_name">Full Name</label>
+<input class="h-[42px] px-md rounded-DEFAULT border border-border-base focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container outline-none transition-all placeholder:text-outline-variant bg-surface" id="full_name" name="full_name" placeholder="John Doe" required="" type="text"/>
+</div>
+<!-- Email -->
+<div class="flex flex-col gap-xs">
+<label class="font-body text-body-sm font-bold text-on-surface-variant" for="email">Email Address</label>
+<input class="h-[42px] px-md rounded-DEFAULT border border-border-base focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container outline-none transition-all placeholder:text-outline-variant bg-surface" id="email" name="email" placeholder="admin@shiprecycle.com" required="" type="email"/>
+</div>
+<!-- Password -->
+<div class="flex flex-col gap-xs">
+<label class="font-body text-body-sm font-bold text-on-surface-variant" for="password">Password</label>
+<div class="relative">
+<input class="w-full h-[42px] px-md rounded-DEFAULT border border-border-base focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container outline-none transition-all placeholder:text-outline-variant bg-surface" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant/60" onclick="togglePassword('password')" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+<!-- Strength Bar -->
+<div class="mt-xs">
+<div class="w-full bg-surface-container-high h-[4px] rounded-full overflow-hidden">
+<div class="password-strength-meter w-0 bg-error" id="strengthBar"></div>
+</div>
+<span class="font-caption text-caption text-on-surface-variant mt-[2px] block" id="strengthText">Strength: Empty</span>
+</div>
+</div>
+<!-- Confirm Password -->
+<div class="flex flex-col gap-xs">
+<label class="font-body text-body-sm font-bold text-on-surface-variant" for="confirm_password">Confirm Password</label>
+<div class="relative">
+<input class="w-full h-[42px] px-md rounded-DEFAULT border border-border-base focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container outline-none transition-all placeholder:text-outline-variant bg-surface" id="confirm_password" name="confirm_password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant/60" onclick="togglePassword('confirm_password')" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Terms & Policy -->
+<p class="font-caption text-caption text-on-surface-variant text-center px-md">
+                By creating an account, you agree to our 
+                <a class="text-tertiary-container font-bold hover:underline" href="#">Terms of Service</a> and 
+                <a class="text-tertiary-container font-bold hover:underline" href="#">Privacy Policy</a>.
+            </p>
+</form>
+</main>
+<!-- Sticky Footer CTA -->
+<footer class="fixed bottom-0 left-0 right-0 bg-surface border-t border-border-base px-[20px] py-lg shadow-[0_-4px_12px_rgba(15,23,42,0.05)]">
+<button class="w-full h-[48px] bg-primary-container text-on-primary font-body font-bold rounded-lg flex items-center justify-center gap-sm active:scale-[0.98] transition-transform" form="registrationForm" type="submit">
+<span class="">Create Organization &amp; Sign In</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</footer>
+<script>
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            const btn = input.nextElementSibling.querySelector('span');
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                btn.textContent = 'visibility';
+            }
+        }
+
+        const passwordInput = document.getElementById('password');
+        const strengthBar = document.getElementById('strengthBar');
+        const strengthText = document.getElementById('strengthText');
+
+        passwordInput.addEventListener('input', () => {
+            const val = passwordInput.value;
+            let strength = 0;
+            
+            if (val.length > 0) strength += 20;
+            if (val.length > 7) strength += 20;
+            if (/[A-Z]/.test(val)) strength += 20;
+            if (/[0-9]/.test(val)) strength += 20;
+            if (/[^A-Za-z0-9]/.test(val)) strength += 20;
+
+            strengthBar.style.width = strength + '%';
+            
+            if (strength <= 20) {
+                strengthBar.className = 'password-strength-meter bg-error';
+                strengthText.textContent = 'Strength: Weak';
+                strengthText.className = 'font-caption text-caption text-error mt-[2px] block';
+            } else if (strength <= 60) {
+                strengthBar.className = 'password-strength-meter bg-warning';
+                strengthText.textContent = 'Strength: Moderate';
+                strengthText.className = 'font-caption text-caption text-warning mt-[2px] block';
+            } else {
+                strengthBar.className = 'password-strength-meter bg-success';
+                strengthText.textContent = 'Strength: Strong';
+                strengthText.className = 'font-caption text-caption text-success mt-[2px] block';
+            }
+
+            if (val.length === 0) {
+                strengthBar.style.width = '0%';
+                strengthText.textContent = 'Strength: Empty';
+                strengthText.className = 'font-caption text-caption text-on-surface-variant mt-[2px] block';
+            }
+        });
+
+        // Form submission micro-interaction
+        document.getElementById('registrationForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.closest('body').querySelector('footer button');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Processing...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Success!';
+                btn.classList.replace('bg-primary-container', 'bg-success');
+            }, 1500);
+        });
+    </script>
+</body></html>

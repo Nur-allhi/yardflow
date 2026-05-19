@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Customer List | YardFlow ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "tertiary-fixed-dim": "#68dba9",
+                        "on-primary-fixed": "#131b2e",
+                        "primary-container": "#131b2e",
+                        "on-tertiary-container": "#069669",
+                        "surface-container": "#eceef0",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "tertiary-fixed": "#85f8c4",
+                        "tertiary": "#000000",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-tint": "#565e74",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#002114",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-secondary-fixed": "#0b1c30",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#54647a",
+                        "on-primary-container": "#7c839b",
+                        "background": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#dae2fd",
+                        "tertiary-container": "#002114",
+                        "secondary": "#505f76",
+                        "on-surface": "#191c1e",
+                        "secondary-container": "#d0e1fb",
+                        "inverse-primary": "#bec6e0",
+                        "secondary-fixed": "#d3e4fe",
+                        "error-container": "#ffdad6",
+                        "primary": "#000000",
+                        "outline-variant": "#c6c6cd",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#45464d",
+                        "surface-variant": "#e0e3e5",
+                        "outline": "#76777d",
+                        "surface-dim": "#d8dadc",
+                        "on-background": "#191c1e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["DM Sans"],
+                        "label": ["DM Sans"],
+                        "mono": ["Fira Code"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'DM Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline shadow-sm flex justify-between items-center w-full px-4 h-[64px] sticky top-0 z-40">
+<div class="flex items-center gap-4">
+<button class="transition-colors duration-200 active:scale-95 text-primary dark:text-on-primary">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline font-bold text-lg text-primary dark:text-on-primary tracking-tight">YardFlow</h1>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged operations manager wearing a reflective safety vest, set against a blurred background of a clean industrial scrap yard. The lighting is bright and natural, maintaining a clean light-mode aesthetic. The style is sharp, modern, and business-focused with high clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAR-sR8ObAEv_z1qUpUXz7vG5xM33rBaAlhI8MmFMQs6y3aHLezGQdGQq22_yRtVhny3lY6PmyOQKxP5gr16DoBiX0aBXpmj8ZgyfCrGHGeeuVXxj3FOFvB7doQzpSj_UAzsGZos46Zy6cXmnO178CsWy4so8-yFFOUKO4flNAw9yHbAC08mZsCOsc4Nn6k2vPQlyhHF_TR_1bWypwPihtwGMsjmqZBaCySqeP7dckdfA9VGj-E7fOPnZSaFSIxHEf3RafVwIl6ml0"/>
+</div>
+</div>
+</header>
+<main class="max-w-[375px] mx-auto px-4 py-6">
+<!-- Page Title & Quick Action -->
+<div class="flex justify-between items-center mb-6">
+<div>
+<h2 class="font-headline font-bold text-2xl text-on-surface">Customers</h2>
+<p class="text-on-surface-variant text-sm font-body">Directory &amp; Receivables</p>
+</div>
+<button class="bg-primary text-on-primary p-3 rounded-xl shadow-sm active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+</button>
+</div>
+<!-- Summary Cards (Horizontal Scroll) -->
+<div class="flex overflow-x-auto gap-3 pb-4 no-scrollbar -mx-4 px-4">
+<!-- Total Customers -->
+<div class="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl border border-outline-variant flex flex-col gap-1">
+<span class="text-caption font-label text-on-surface-variant uppercase tracking-wider">Total Count</span>
+<span class="font-mono font-medium text-2xl">24</span>
+</div>
+<!-- Total Receivable -->
+<div class="min-w-[200px] bg-tertiary-container/5 p-4 rounded-xl border border-on-tertiary-container/20 flex flex-col gap-1">
+<div class="flex items-center gap-1">
+<span class="text-caption font-label text-on-tertiary-container uppercase tracking-wider font-bold">Total Receivable</span>
+<span class="material-symbols-outlined text-xs text-on-tertiary-container" data-icon="trending_up">trending_up</span>
+</div>
+<span class="font-mono font-bold text-2xl text-on-tertiary-container">৳3,20,000</span>
+</div>
+<!-- Settled -->
+<div class="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl border border-outline-variant flex flex-col gap-1">
+<span class="text-caption font-label text-on-surface-variant uppercase tracking-wider">Settled</span>
+<span class="font-mono font-medium text-2xl">18</span>
+</div>
+</div>
+<!-- List Section -->
+<div class="mt-4 flex flex-col gap-3">
+<!-- Customer Card 1: Rahim Traders -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-4 flex flex-col gap-4 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-semibold text-base text-on-surface">Rahim Traders</h3>
+<p class="text-caption font-body text-on-surface-variant">01711-XXXXXX</p>
+</div>
+<span class="bg-primary-container text-on-primary-container text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wide">Regular</span>
+</div>
+<div class="flex items-end justify-between border-t border-dashed border-outline-variant pt-3">
+<div class="flex flex-col">
+<span class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tighter">Current Due</span>
+<span class="font-mono text-lg font-medium text-on-surface">৳0</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-on-tertiary-container bg-tertiary-fixed-dim/20 px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            SETTLED
+                        </span>
+<button class="bg-surface-container-high text-on-surface px-4 py-2 rounded-lg text-sm font-label font-bold active:bg-surface-variant">View</button>
+</div>
+</div>
+</div>
+<!-- Customer Card 2: Karim Construction -->
+<div class="bg-surface-container-lowest rounded-xl border-l-4 border-l-amber-500 border border-outline-variant p-4 flex flex-col gap-4 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-semibold text-base text-on-surface">Karim Construction</h3>
+<p class="text-caption font-body text-on-surface-variant">01812-XXXXXX</p>
+</div>
+<span class="bg-primary-container text-on-primary-container text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wide">Regular</span>
+</div>
+<div class="flex items-end justify-between border-t border-dashed border-outline-variant pt-3">
+<div class="flex flex-col">
+<span class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tighter">Current Due</span>
+<span class="font-mono text-xl font-bold text-amber-600">৳50,000</span>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container-high text-on-surface px-4 py-2 rounded-lg text-sm font-label font-bold active:bg-surface-variant">View</button>
+<button class="bg-on-tertiary-container text-on-primary px-4 py-2 rounded-lg text-sm font-label font-bold active:scale-95 transition-transform flex items-center gap-1 shadow-md">
+<span class="material-symbols-outlined text-sm" data-icon="payments">payments</span>
+                            Collect
+                        </button>
+</div>
+</div>
+</div>
+<!-- Customer Card 3: Walk-in Customer -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-4 flex flex-col gap-4 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-semibold text-base text-on-surface">Walk-in Customer</h3>
+<p class="text-caption font-body text-on-surface-variant">—</p>
+</div>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wide">Walk-in</span>
+</div>
+<div class="flex items-end justify-between border-t border-dashed border-outline-variant pt-3">
+<div class="flex flex-col">
+<span class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tighter">Current Due</span>
+<span class="font-mono text-lg font-medium text-on-surface">৳0</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-on-tertiary-container bg-tertiary-fixed-dim/20 px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            SETTLED
+                        </span>
+<button class="bg-surface-container-high text-on-surface px-4 py-2 rounded-lg text-sm font-label font-bold active:bg-surface-variant">View</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-[80px] px-2 pb-safe bg-primary-container dark:bg-inverse-surface border-t border-on-primary-container/10 shadow-lg z-50">
+<button class="flex flex-col items-center justify-center text-on-primary-container dark:text-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label font-medium text-[10px] mt-1">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-tertiary-container bg-tertiary-fixed dark:bg-tertiary-fixed-dim rounded-xl px-4 py-1 active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="payments" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label font-bold text-[10px] mt-1">Sales</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-primary-container dark:text-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label font-medium text-[10px] mt-1">Stock</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-primary-container dark:text-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label font-medium text-[10px] mt-1">HR</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-primary-container dark:text-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+<span class="font-label font-medium text-[10px] mt-1">Menu</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions for industrial feel
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', function() {
+                this.classList.add('brightness-90');
+            });
+            btn.addEventListener('touchend', function() {
+                this.classList.remove('brightness-90');
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YardFlow - Saved Report View</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#54647a",
+                    "on-error-container": "#93000a",
+                    "primary-fixed-dim": "#bec6e0",
+                    "on-primary-fixed": "#131b2e",
+                    "secondary-container": "#d0e1fb",
+                    "tertiary-fixed-dim": "#68dba9",
+                    "surface-container-high": "#e6e8ea",
+                    "surface-bright": "#f7f9fb",
+                    "tertiary-container": "#002114",
+                    "surface-container-low": "#f2f4f6",
+                    "on-surface": "#191c1e",
+                    "primary-container": "#131b2e",
+                    "surface-tint": "#565e74",
+                    "on-tertiary-fixed-variant": "#005137",
+                    "tertiary": "#000000",
+                    "outline-variant": "#c6c6cd",
+                    "on-tertiary-fixed": "#002114",
+                    "error-container": "#ffdad6",
+                    "outline": "#76777d",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-tertiary": "#ffffff",
+                    "primary": "#000000",
+                    "primary-fixed": "#dae2fd",
+                    "secondary-fixed": "#d3e4fe",
+                    "surface-container": "#eceef0",
+                    "surface": "#f7f9fb",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "error": "#ba1a1a",
+                    "on-surface-variant": "#45464d",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-fixed": "#85f8c4",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#505f76",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "on-primary": "#ffffff",
+                    "inverse-primary": "#bec6e0",
+                    "on-secondary-fixed": "#0b1c30",
+                    "background": "#f7f9fb",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "surface-dim": "#d8dadc",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-container": "#069669",
+                    "surface-variant": "#e0e3e5",
+                    "on-primary-container": "#7c839b",
+                    "inverse-surface": "#2d3133",
+                    "on-error": "#ffffff",
+                    "on-background": "#191c1e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "display": ["Plus Jakarta Sans"],
+                    "body": ["DM Sans"],
+                    "label": ["DM Sans"],
+                    "code": ["Fira Code"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'DM Sans', sans-serif; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-code { font-family: 'Fira Code', monospace; }
+        
+        /* Custom scrollbar for clean UI */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c6c6cd; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col pb-20">
+<!-- TOP NAVIGATION SHELL (Mobile Variant) -->
+<header class="fixed top-0 left-0 right-0 bg-surface z-50 flex items-center justify-between px-4 h-16 shadow-sm">
+<div class="flex items-center gap-3">
+<button class="p-2 text-on-surface hover:bg-surface-container rounded-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<span class="font-headline font-bold text-lg text-primary tracking-tight">Period Report</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="User avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDEjw-aUHF1d9cy5sI6mCNNUUM2m1zPR3Z2a9cu7YELhSlx0gspNuoYCOOL-7bk1d41yW3kVsOBGKNbIO5ccOi1bSBah8rjtkJTYkmjj4aNDYPhG0k9d0SAmy0IxliywSHawRCEiCX7H_VjbcCDNwRywje6AqRuE4ne4MoDLISsrSad6jDSbTJ-UBueBUyld74jAOmW33NsYQ2ATLLQq3nhQ61e3AAqDXs1_I22ATMQoV0m7CDW_vBTRvsOQJ_8qfyf1Tjc52-cHM"/>
+</div>
+</div>
+</header>
+<!-- MAIN CANVAS -->
+<main class="mt-16 px-4 py-6 flex-grow max-w-md mx-auto w-full">
+<!-- HEADER SECTION -->
+<div class="mb-6 flex flex-col gap-4">
+<div class="flex flex-col">
+<div class="flex items-center gap-2 flex-wrap">
+<h1 class="font-headline font-bold text-h2 text-on-surface">Period Report — April 2025</h1>
+<span class="inline-flex items-center px-2 py-0.5 rounded-sm bg-tertiary-container text-on-tertiary-container font-headline font-bold text-[10px] tracking-wider uppercase">PROFIT</span>
+</div>
+<p class="font-body text-on-surface-variant text-sm mt-1">Generated: 1 May 2025</p>
+</div>
+<button class="w-full bg-primary text-on-primary h-[42px] flex items-center justify-center gap-2 rounded font-headline font-semibold text-sm active:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-[20px]" data-icon="picture_as_pdf">picture_as_pdf</span>
+                Export PDF
+            </button>
+</div>
+<!-- STACKED CARDS -->
+<div class="flex flex-col gap-4">
+<!-- 1. RESULT BOX -->
+<div class="bg-surface-container-lowest border-l-4 border-on-tertiary-container rounded-lg p-5 shadow-sm">
+<p class="text-on-surface-variant font-body text-xs uppercase tracking-widest font-bold mb-1">Net Profit</p>
+<div class="font-code text-[28px] font-bold text-on-tertiary-container leading-none mb-6">
+                    ৳98,400.00
+                </div>
+<div class="grid grid-cols-3 gap-2 pt-4 border-t border-outline-variant">
+<div class="flex flex-col">
+<span class="text-[10px] text-on-surface-variant font-bold uppercase">Yield Eff.</span>
+<span class="font-code text-sm font-semibold text-primary">৳5.35/kg</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] text-on-surface-variant font-bold uppercase">G. Margin</span>
+<span class="font-code text-sm font-semibold text-primary">22.4%</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] text-on-surface-variant font-bold uppercase">Opex Ratio</span>
+<span class="font-code text-sm font-semibold text-primary">12.8%</span>
+</div>
+</div>
+</div>
+<!-- 2. VOLUME ANALYSIS CARD -->
+<div class="bg-surface rounded-lg border border-outline-variant p-4">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-secondary" data-icon="weight">weight</span>
+<h3 class="font-headline font-semibold text-on-surface">Volume Analysis</h3>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center pb-2 border-b border-surface-container">
+<span class="text-sm text-on-surface-variant">Total Tonnage Received</span>
+<span class="font-code text-sm font-bold">142,500 kg</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-surface-container">
+<span class="text-sm text-on-surface-variant">Processed Output</span>
+<span class="font-code text-sm font-bold">138,200 kg</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-surface-container text-on-tertiary-container">
+<span class="text-sm">Structural Steel</span>
+<span class="font-code text-sm font-bold">92,400 kg</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-surface-container">
+<span class="text-sm text-on-surface-variant">Scrap / Residue</span>
+<span class="font-code text-sm font-bold">45,800 kg</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm text-error">Loss Variance</span>
+<span class="font-code text-sm font-bold text-error">-4,300 kg</span>
+</div>
+</div>
+</div>
+<!-- 3. REVENUE & INCOME CARD -->
+<div class="bg-surface rounded-lg border border-outline-variant overflow-hidden">
+<div class="bg-surface-container-high px-4 py-3 flex justify-between items-center">
+<h3 class="font-headline font-semibold text-sm uppercase tracking-wide">Revenue</h3>
+<span class="font-code font-bold text-on-tertiary-container">৳438,200.00</span>
+</div>
+<div class="p-4 space-y-3">
+<div class="flex justify-between items-center">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Fabricated Sales</span>
+<span class="text-[10px] text-on-surface-variant">34 Transactions</span>
+</div>
+<span class="font-code text-sm">৳284,500.00</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Loose Scrap</span>
+<span class="text-[10px] text-on-surface-variant">Bulk Transfer</span>
+</div>
+<span class="font-code text-sm">৳112,400.00</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Machinery Parts</span>
+<span class="text-[10px] text-on-surface-variant">Specialized Sales</span>
+</div>
+<span class="font-code text-sm">৳41,300.00</span>
+</div>
+</div>
+</div>
+<!-- 4. OPERATIONAL EXPENDITURES CARD -->
+<div class="bg-surface rounded-lg border border-outline-variant overflow-hidden">
+<div class="bg-surface-container-high px-4 py-3 flex justify-between items-center">
+<h3 class="font-headline font-semibold text-sm uppercase tracking-wide">Expenditures</h3>
+<span class="font-code font-bold text-error">৳339,800.00</span>
+</div>
+<div class="p-4 space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-sm font-medium">Raw Material</span>
+<span class="font-code text-sm text-on-surface-variant">৳240,000.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm font-medium">Labor Cost</span>
+<span class="font-code text-sm text-on-surface-variant">৳56,400.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm font-medium">Transport</span>
+<span class="font-code text-sm text-on-surface-variant">৳28,200.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm font-medium">Utility</span>
+<span class="font-code text-sm text-on-surface-variant">৳15,200.00</span>
+</div>
+</div>
+</div>
+<!-- 5. INVENTORY HEALTH CARD -->
+<div class="relative bg-primary-container h-32 rounded-lg overflow-hidden flex items-center justify-center group">
+<img class="absolute inset-0 w-full h-full object-cover opacity-40 grayscale group-hover:scale-105 transition-transform duration-700" data-alt="A macro close-up view of industrial steel beams stacked neatly in a warehouse. The lighting is dim with dramatic high-contrast shadows, reflecting a professional industrial setting. The overall atmosphere is cold and metallic, using a palette of deep navy and dark grays to create a sense of order and massive scale within the recycling yard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8WdK-NfZtYYh4MWwQlsbHukDnwThcHPpW6RN-ReYFg6Xv24FYhsD3wNw13chxlxmIyvIyieFYsNnCDSgwgaapKC_sF_538aSWyUG7ZP1xuNj-LlEZ1oFdIENWcBIY3992Hg2wCUazIi5mLJ2gUs-feb7vMOVCytGstA4yts0nysFaWUuEswjVqreaK6_Kcsk9YNsB4tydQcP0dozeSFmOi_ZFsF-qbl-mtrx7sJfrlAy8ZYXEQkfn40-erGNflk5Lo9dh5DfFXKI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container to-transparent"></div>
+<div class="relative text-center z-10 px-4">
+<div class="font-code text-2xl font-bold text-on-primary">94.8%</div>
+<div class="font-headline text-xs font-bold text-on-primary-container uppercase tracking-widest">Capacity Utilization</div>
+</div>
+</div>
+<!-- FOOTER INFO -->
+<div class="mt-8 mb-4 flex flex-col items-center justify-center gap-1 opacity-60">
+<div class="font-code text-[10px] text-on-surface-variant">AUDIT_ID: YF-2025-04-A19</div>
+<div class="font-body text-[10px] text-on-surface-variant">YardFlow System v4.12.2</div>
+</div>
+</div>
+</main>
+<!-- BOTTOM NAVBAR -->
+<nav class="fixed bottom-0 left-0 right-0 h-16 bg-surface-container flex items-center justify-around z-50">
+<a class="flex flex-col items-center gap-1 text-on-surface-variant active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="home">home</span>
+<span class="text-[10px] font-medium font-body">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="payments">payments</span>
+<span class="text-[10px] font-medium font-body">Sales</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-tertiary-container active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="text-[10px] font-bold font-body">Stock</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="groups">groups</span>
+<span class="text-[10px] font-medium font-body">HR</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="apps">apps</span>
+<span class="text-[10px] font-medium font-body">Menu</span>
+</a>
+</nav>
+<script>
+        // Simple ripple-like effect for cards on touch
+        document.querySelectorAll('.bg-surface, .bg-surface-container-lowest').forEach(card => {
+            card.addEventListener('touchstart', function() {
+                this.classList.add('opacity-80');
+            });
+            card.addEventListener('touchend', function() {
+                this.classList.remove('opacity-80');
+            });
+        });
+
+        // Navigation active state simulation
+        const navItems = document.querySelectorAll('nav a');
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                navItems.forEach(i => {
+                    i.classList.remove('text-on-tertiary-container');
+                    i.classList.add('text-on-surface-variant');
+                    const icon = i.querySelector('.material-symbols-outlined');
+                    icon.style.fontVariationSettings = "'FILL' 0";
+                });
+                item.classList.add('text-on-tertiary-container');
+                item.classList.remove('text-on-surface-variant');
+                const activeIcon = item.querySelector('.material-symbols-outlined');
+                activeIcon.style.fontVariationSettings = "'FILL' 1";
+            });
+        });
+    </script>
+</body></html>

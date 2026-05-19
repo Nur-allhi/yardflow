@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Accounts Overview - Ship Recycling ERP</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "background": "#f7f9fb",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container": "#eceef0",
+                        "on-tertiary-fixed": "#002114",
+                        "tertiary-fixed-dim": "#68dba9",
+                        "on-secondary-container": "#54647a",
+                        "inverse-surface": "#2d3133",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-tertiary-container": "#069669",
+                        "on-primary-container": "#7c839b",
+                        "tertiary": "#000000",
+                        "on-surface": "#191c1e",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f7f9fb",
+                        "primary-fixed": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-container": "#d0e1fb",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#002114",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-background": "#191c1e",
+                        "surface-tint": "#565e74",
+                        "secondary": "#505f76",
+                        "on-surface-variant": "#45464d",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#0b1c30",
+                        "tertiary-fixed": "#85f8c4",
+                        "primary": "#000000",
+                        "inverse-primary": "#bec6e0",
+                        "primary-container": "#131b2e",
+                        "outline": "#76777d",
+                        "on-primary-fixed": "#131b2e",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-bright": "#f7f9fb",
+                        "outline-variant": "#c6c6cd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["DM Sans"],
+                        "label": ["DM Sans"],
+                        "mono": ["Fira Code"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen pb-20">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-on-background shadow-sm border-b border-outline-variant dark:border-outline fixed top-0 w-full z-40 flex justify-between items-center px-4 h-16">
+<button class="text-on-surface-variant dark:text-outline p-2 hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors rounded-full active:opacity-80">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline text-h3 font-semibold text-primary dark:text-primary-fixed">Accounts</h1>
+<div class="h-10 w-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border-2 border-outline-variant">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional studio portrait of a corporate site manager wearing modern business attire. The lighting is crisp and industrial, reflecting a high-end shipyard management environment. The style is clean and minimalist, using a palette of deep navy and white to maintain a consistent professional ERP aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8dqkLnfOv5JKdXl7HAGAXvJffM81lmbbgffTNh80scjFfuHkukvCrcBR60oT1NDyeGbKnlsmdnWvxSqhwopvaEpAhQaq9FghS3rN_QImwL4m6WiIyhLa--Ugd1Og7B7q-QbrbAeFaflfnf2EOEDLdY3pGdG19F5IbYyf6cJn9YfiV7P6AyIkHupKohKIA34Rlp1FPd9Tf2BNifyls96w4E0IYe7mHGbJAjcOhGWr9YhRWx8RuLdcPJAA-hA02FlkK66bePS29HR8"/>
+</div>
+</header>
+<main class="pt-20 px-0">
+<!-- Horizontal Account Cards -->
+<section class="flex overflow-x-auto snap-x snap-mandatory gap-4 px-4 pb-6 hide-scrollbar">
+<!-- Card: Cash -->
+<div class="min-w-[280px] snap-center bg-primary-container text-on-primary-container p-5 rounded-xl shadow-md border border-on-primary-container/20 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] font-bold tracking-widest bg-on-primary-container text-primary-container px-2 py-0.5 rounded-sm uppercase">CASH</span>
+<span class="material-symbols-outlined text-on-primary-container/60">payments</span>
+</div>
+<h2 class="font-headline text-lg font-medium text-white mb-1">Cash</h2>
+</div>
+<div class="font-mono text-2xl font-bold text-white mt-4">
+                    ৳1,85,000
+                </div>
+</div>
+<!-- Card: Dutch Bangla Bank -->
+<div class="min-w-[280px] snap-center bg-surface-container-highest p-5 rounded-xl shadow-md border border-outline-variant flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] font-bold tracking-widest bg-secondary text-white px-2 py-0.5 rounded-sm uppercase">BANK</span>
+<span class="material-symbols-outlined text-secondary">account_balance</span>
+</div>
+<h2 class="font-headline text-lg font-medium text-on-surface mb-1">Dutch Bangla Bank</h2>
+</div>
+<div class="font-mono text-2xl font-bold text-primary mt-4">
+                    ৳45,500
+                </div>
+</div>
+<!-- Card: bKash Business -->
+<div class="min-w-[280px] snap-center bg-surface-container-highest p-5 rounded-xl shadow-md border border-outline-variant flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] font-bold tracking-widest bg-on-tertiary-container text-white px-2 py-0.5 rounded-sm uppercase">MFS</span>
+<span class="material-symbols-outlined text-on-tertiary-container">account_balance_wallet</span>
+</div>
+<h2 class="font-headline text-lg font-medium text-on-surface mb-1">bKash Business</h2>
+</div>
+<div class="font-mono text-2xl font-bold text-primary mt-4">
+                    ৳20,000
+                </div>
+</div>
+</section>
+<!-- Total Bar -->
+<div class="w-full bg-surface-container-low border-y border-outline-variant py-3 px-4 flex justify-between items-center mb-6">
+<span class="text-caption text-on-surface-variant font-medium">Total Across All Accounts</span>
+<span class="font-mono font-bold text-primary text-base">৳2,50,500</span>
+</div>
+<!-- Transfer Funds Button -->
+<div class="px-4 mb-8">
+<button class="w-full bg-primary text-white py-4 rounded-lg font-headline font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-sm">
+<span class="material-symbols-outlined">swap_horiz</span>
+                Transfer Funds
+            </button>
+</div>
+<!-- Recent Transactions -->
+<section class="px-4">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline text-h4 font-bold text-on-surface">Recent Transactions</h3>
+<button class="text-on-tertiary-container text-caption font-bold">View All</button>
+</div>
+<div class="space-y-3">
+<!-- Transaction 1 -->
+<div class="bg-surface p-4 rounded-lg border border-outline-variant shadow-sm flex items-center gap-4 active:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center text-success shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_upward</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-on-surface text-sm truncate">Sale #SAL-0091</h4>
+<span class="font-mono text-sm font-bold text-on-tertiary-container">+৳45,600</span>
+</div>
+<p class="text-caption text-on-surface-variant">Rahim Traders payment</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[10px] text-outline uppercase font-bold">19 May</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-[10px] text-outline uppercase font-bold">Cash</span>
+</div>
+</div>
+</div>
+<!-- Transaction 2 -->
+<div class="bg-surface p-4 rounded-lg border border-outline-variant shadow-sm flex items-center gap-4 active:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center text-success shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_upward</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-on-surface text-sm truncate">Sale #SAL-0090</h4>
+<span class="font-mono text-sm font-bold text-on-tertiary-container">+৳64,000</span>
+</div>
+<p class="text-caption text-on-surface-variant">Karim partial</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[10px] text-outline uppercase font-bold">18 May</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-[10px] text-outline uppercase font-bold">Dutch Bangla</span>
+</div>
+</div>
+</div>
+<!-- Transaction 3 -->
+<div class="bg-surface p-4 rounded-lg border border-outline-variant shadow-sm flex items-center gap-4 active:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center text-error shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_downward</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-on-surface text-sm truncate">Purchase #PUR-0024</h4>
+<span class="font-mono text-sm font-bold text-error">-৳50,000</span>
+</div>
+<p class="text-caption text-on-surface-variant">Chattogram payment</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[10px] text-outline uppercase font-bold">17 May</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-[10px] text-outline uppercase font-bold">Cash</span>
+</div>
+</div>
+</div>
+<!-- Transaction 4 -->
+<div class="bg-surface p-4 rounded-lg border border-outline-variant shadow-sm flex items-center gap-4 active:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center text-error shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_downward</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-on-surface text-sm truncate">Advance — Md. Rahim</h4>
+<span class="font-mono text-sm font-bold text-error">-৳5,000</span>
+</div>
+<p class="text-caption text-on-surface-variant">Staff advance payment</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[10px] text-outline uppercase font-bold">16 May</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-[10px] text-outline uppercase font-bold">Cash</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center py-2 bg-surface border-t border-outline-variant pb-safe shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-caption font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label text-caption font-medium">Sales</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label text-caption font-medium">Stock</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label text-caption font-medium">HR</span>
+</a>
+<a class="flex flex-col items-center justify-center text-tertiary-container font-bold hover:bg-surface-container-low transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<span class="font-label text-caption">Accounts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">menu</span>
+<span class="font-label text-caption font-medium">Menu</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for smooth scrolling snap points
+        const container = document.querySelector('.overflow-x-auto');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        container.addEventListener('mousedown', (e) => {
+            isDown = true;
+            container.classList.add('active');
+            startX = e.pageX - container.offsetLeft;
+            scrollLeft = container.scrollLeft;
+        });
+        container.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+        container.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+        container.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const walk = (x - startX) * 2;
+            container.scrollLeft = scrollLeft - walk;
+        });
+    </script>
+</body></html>

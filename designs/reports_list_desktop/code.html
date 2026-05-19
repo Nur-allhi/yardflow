@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YardFlow - Reports Module</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#d3e4fe",
+                    "on-secondary-container": "#54647a",
+                    "on-primary-fixed": "#131b2e",
+                    "on-primary-container": "#7c839b",
+                    "surface-dim": "#d8dadc",
+                    "surface": "#f7f9fb",
+                    "outline-variant": "#c6c6cd",
+                    "on-tertiary-fixed": "#002114",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-container": "#069669",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "inverse-surface": "#2d3133",
+                    "inverse-on-surface": "#eff1f3",
+                    "tertiary-fixed": "#85f8c4",
+                    "secondary": "#505f76",
+                    "error": "#ba1a1a",
+                    "tertiary": "#000000",
+                    "on-secondary": "#ffffff",
+                    "inverse-primary": "#bec6e0",
+                    "primary-fixed": "#dae2fd",
+                    "outline": "#76777d",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-secondary-fixed": "#0b1c30",
+                    "background": "#f7f9fb",
+                    "surface-container-high": "#e6e8ea",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#e0e3e5",
+                    "on-error": "#ffffff",
+                    "on-surface": "#191c1e",
+                    "surface-tint": "#565e74",
+                    "surface-container": "#eceef0",
+                    "on-tertiary-fixed-variant": "#005137",
+                    "primary": "#000000",
+                    "primary-container": "#131b2e",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#68dba9",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "primary-fixed-dim": "#bec6e0",
+                    "surface-container-low": "#f2f4f6",
+                    "secondary-container": "#d0e1fb",
+                    "on-surface-variant": "#45464d",
+                    "on-background": "#191c1e",
+                    "tertiary-container": "#002114",
+                    "surface-bright": "#f7f9fb",
+                    "surface-container-lowest": "#ffffff",
+                    "success": "#22C55E",
+                    "warning": "#EAB308"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "display": ["Plus Jakarta Sans"],
+                    "body": ["DM Sans"],
+                    "label": ["DM Sans"],
+                    "mono": ["Fira Code"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'DM Sans', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(198, 198, 205, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar Component -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-primary-container flex flex-col py-6 border-r border-outline-variant shadow-sm z-50">
+<div class="px-6 mb-10">
+<h1 class="font-headline text-h3 font-bold text-on-primary text-xl tracking-tight">YardFlow</h1>
+<p class="text-on-primary-container text-xs mt-1 uppercase tracking-widest font-bold">Industrial ERP</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<!-- Dashboard -->
+<a class="text-on-primary-container hover:text-on-primary mx-2 px-4 py-3 flex items-center gap-3 transition-colors cursor-pointer group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body text-body-sm">Dashboard</span>
+</a>
+<!-- Inventory -->
+<a class="text-on-primary-container hover:text-on-primary mx-2 px-4 py-3 flex items-center gap-3 transition-colors cursor-pointer group" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-body text-body-sm">Inventory</span>
+</a>
+<!-- Sales -->
+<a class="text-on-primary-container hover:text-on-primary mx-2 px-4 py-3 flex items-center gap-3 transition-colors cursor-pointer group" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-body text-body-sm">Sales</span>
+</a>
+<!-- Logistics -->
+<a class="text-on-primary-container hover:text-on-primary mx-2 px-4 py-3 flex items-center gap-3 transition-colors cursor-pointer group" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-body text-body-sm">Logistics</span>
+</a>
+<!-- Reports (ACTIVE) -->
+<a class="bg-tertiary-container text-on-tertiary-container rounded-md mx-2 px-4 py-3 flex items-center gap-3 transition-all duration-200 ease-in-out active:scale-95 shadow-sm" href="#">
+<span class="material-symbols-outlined" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-body text-body-sm font-semibold">Reports</span>
+</a>
+<!-- Settings -->
+<a class="text-on-primary-container hover:text-on-primary mx-2 px-4 py-3 flex items-center gap-3 transition-colors cursor-pointer group" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body text-body-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-2 flex flex-col gap-1">
+<button class="mb-4 mx-2 bg-on-tertiary-container text-on-primary px-4 py-3 rounded-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity font-bold text-sm">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Report
+            </button>
+<hr class="border-on-primary-container/20 mx-4 mb-4"/>
+<a class="text-on-primary-container hover:text-on-primary mx-2 px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-body text-body-sm">Support</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary mx-2 px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-body text-body-sm">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar Component -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-8 z-40">
+<div class="flex items-center gap-6">
+<h2 class="font-headline text-h2 font-bold text-primary">Reports</h2>
+<nav class="hidden md:flex gap-8 items-end h-16">
+<a class="text-tertiary-container font-semibold border-b-2 border-tertiary-container pb-5 transition-colors" href="#">All Reports</a>
+<a class="text-on-surface-variant hover:text-primary pb-5 transition-colors" href="#">Scheduled</a>
+<a class="text-on-surface-variant hover:text-primary pb-5 transition-colors" href="#">Shared</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="material-symbols-outlined p-2 text-on-surface-variant hover:text-primary cursor-pointer transition-colors" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</div>
+<span class="material-symbols-outlined p-2 text-on-surface-variant hover:text-primary cursor-pointer transition-colors" data-icon="history">history</span>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-outline-variant object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2Xtf2tSvTAT33mCE6zkBeqM0r1-ffLFddRfDR-MrlYiBtFoMzWDQM3rIu0taghy_fmYjANtzacYCQcS6aoOqpLXOdiPWxQPFwTl3gtNpUuLVCvNgXseN9lJ8EkQgvwtUMwUXy5cBVddCRWMag7I6beCH3hscbgZ5ZPhmOOlnargkuhUugYx5usaUVTldZvO6SITKVfbJ9cQbg7JMkiQFjdFlL42FwkPXMs6iD0xeJ6vq9unHXMq5oM7jWpI8rfv2hZeqxX7Br_vc"/>
+</div>
+</header>
+<!-- Canvas -->
+<div class="mt-16 p-8">
+<!-- Header Actions -->
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-h3 font-bold text-on-surface">Profit &amp; Loss Archive</h3>
+<p class="text-on-surface-variant text-sm">Review historical yard performance and financial statements.</p>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 hover:bg-black/90 transition-all active:scale-95 shadow-md">
+<span class="material-symbols-outlined" data-icon="add_chart">add_chart</span>
+                    Generate New Report
+                </button>
+</div>
+<!-- Dashboard Summary Widgets (Bento Pattern) -->
+<div class="grid grid-cols-12 gap-6 mb-8">
+<div class="col-span-12 lg:col-span-8 glass-panel p-6 rounded-xl flex flex-col justify-between overflow-hidden relative">
+<div class="relative z-10">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-1">Fiscal Year Outlook</p>
+<h4 class="text-2xl font-bold font-headline mb-4">Steady Growth Observed</h4>
+<div class="flex gap-8">
+<div>
+<span class="text-xs text-on-surface-variant">Total Net Profit YTD</span>
+<p class="text-xl font-mono font-bold text-on-tertiary-container">৳+12,45,200</p>
+</div>
+<div class="w-[1px] bg-outline-variant"></div>
+<div>
+<span class="text-xs text-on-surface-variant">Top Yield Period</span>
+<p class="text-xl font-mono font-bold">May 2025</p>
+</div>
+</div>
+</div>
+<div class="absolute right-0 top-0 h-full w-1/2 opacity-10">
+<img class="h-full w-full object-cover" data-alt="A sophisticated data visualization dashboard showing climbing financial bar charts and percentage indicators. The style is clean and professional with a white and deep navy blue palette, suggesting industrial accuracy and corporate transparency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx4KSzOSutb6O9cXYL-77mLGs3A7aN93hruxqZ68e2GNgZ524u_NiAcI2yaSEvWib62Q7-VosrjHJcGGnoVNmQ5KxxXIcXKySovoTbZuVPpeajQ8e5K4QOURgk49xAPStqUoyWtijo3SZfeOaFfjyN7R5WcyYLJ5XNKFS2bBx8IEbzNvZOhk_cgJx1ORDWeOB8T8Bg3un8XU5ONyQoKSpGZrr5ajgKbetxcRrvHUtGHtaFYNgzD14Ox7V96CfPDPxl--xVwHPWEWs"/>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-4 bg-secondary-container p-6 rounded-xl relative overflow-hidden group">
+<div class="relative z-10 h-full flex flex-col">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl mb-4" data-icon="cloud_download">cloud_download</span>
+<h4 class="text-on-secondary-container font-bold text-lg leading-tight">Batch Export<br/>Archives</h4>
+<p class="text-on-secondary-container/80 text-sm mt-2">Download last 12 months in a single ZIP file.</p>
+<button class="mt-auto self-start text-on-secondary-container font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+                            Start Export <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- High-Density Data Table -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h3 class="font-bold text-on-surface">Historical Log</h3>
+<div class="flex items-center gap-3">
+<div class="relative">
+<input class="bg-surface border border-outline-variant rounded-md pl-9 pr-4 py-1.5 text-sm focus:ring-2 focus:ring-primary/10 outline-none w-64" placeholder="Filter records..." type="text"/>
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg" data-icon="search">search</span>
+</div>
+<button class="p-1.5 hover:bg-surface-container-high rounded-md transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-xs font-bold uppercase tracking-wider text-on-surface-variant bg-surface-container-low">
+<th class="px-6 py-3 border-b border-outline-variant">Period</th>
+<th class="px-6 py-3 border-b border-outline-variant">Type</th>
+<th class="px-6 py-3 border-b border-outline-variant">Net Result</th>
+<th class="px-6 py-3 border-b border-outline-variant">Status</th>
+<th class="px-6 py-3 border-b border-outline-variant">Generated</th>
+<th class="px-6 py-3 border-b border-outline-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="text-sm divide-y divide-outline-variant">
+<!-- Entry 1 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4 font-bold text-on-surface">May 2025</td>
+<td class="px-6 py-4 text-on-surface-variant">Monthly</td>
+<td class="px-6 py-4 font-mono font-medium text-on-tertiary-container">৳+1,15,800</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-success/10 text-success border border-success/20">PROFIT</span>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">19 May 2025</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-4">
+<button class="text-on-tertiary-container hover:underline font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="visibility">visibility</span> View
+                                        </button>
+<button class="text-on-tertiary-container hover:underline font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="picture_as_pdf">picture_as_pdf</span> Export PDF
+                                        </button>
+</div>
+</td>
+</tr>
+<!-- Entry 2 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4 font-bold text-on-surface">April 2025</td>
+<td class="px-6 py-4 text-on-surface-variant">Monthly</td>
+<td class="px-6 py-4 font-mono font-medium text-on-tertiary-container">৳+98,400</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-success/10 text-success border border-success/20">PROFIT</span>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">1 May 2025</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-4">
+<button class="text-on-tertiary-container hover:underline font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="visibility">visibility</span> View
+                                        </button>
+<button class="text-on-tertiary-container hover:underline font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="picture_as_pdf">picture_as_pdf</span> Export PDF
+                                        </button>
+</div>
+</td>
+</tr>
+<!-- Entry 3 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4 font-bold text-on-surface">March 2025</td>
+<td class="px-6 py-4 text-on-surface-variant">Monthly</td>
+<td class="px-6 py-4 font-mono font-medium text-error">৳-22,000</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-error/10 text-error border border-error/20">LOSS</span>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">2 Apr 2025</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-4">
+<button class="text-on-tertiary-container hover:underline font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="visibility">visibility</span> View
+                                        </button>
+<button class="text-on-tertiary-container hover:underline font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="picture_as_pdf">picture_as_pdf</span> Export PDF
+                                        </button>
+</div>
+</td>
+</tr>
+<!-- Entry 4 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4 font-bold text-on-surface">2024 Annual</td>
+<td class="px-6 py-4 text-on-surface-variant">Yearly</td>
+<td class="px-6 py-4 font-mono font-medium text-on-tertiary-container">৳+8,40,000</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-success/10 text-success border border-success/20">PROFIT</span>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">3 Jan 2025</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-4">
+<button class="text-on-tertiary-container hover:underline font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="visibility">visibility</span> View
+                                        </button>
+<button class="text-on-tertiary-container hover:underline font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="picture_as_pdf">picture_as_pdf</span> Export PDF
+                                        </button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-outline-variant bg-surface-container-low flex justify-between items-center">
+<p class="text-xs text-on-surface-variant">Showing 4 of 24 archived reports</p>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-outline-variant rounded bg-surface hover:bg-surface-container-high transition-colors text-xs font-bold text-on-surface disabled:opacity-50" disabled="">Previous</button>
+<button class="px-3 py-1 border border-outline-variant rounded bg-surface hover:bg-surface-container-high transition-colors text-xs font-bold text-on-surface">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.cursor = 'pointer';
+            });
+        });
+
+        // Simple mock search filter logic
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(term) ? '' : 'none';
+            });
+        });
+    </script>
+</body></html>

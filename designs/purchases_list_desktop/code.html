@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Purchases | YardFlow Ship Recycling ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=DM+Sans:wght@400;500;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#e6e8ea",
+                        "on-primary-fixed": "#131b2e",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#0b1c30",
+                        "inverse-primary": "#bec6e0",
+                        "background": "#f7f9fb",
+                        "surface-tint": "#565e74",
+                        "outline": "#76777d",
+                        "primary-fixed": "#dae2fd",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#000000",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1e",
+                        "surface-container-low": "#f2f4f6",
+                        "on-surface": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "tertiary-fixed": "#85f8c4",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#45464d",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#002114",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-secondary-container": "#54647a",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#002114",
+                        "outline-variant": "#c6c6cd",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#7c839b",
+                        "on-tertiary-container": "#069669",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary": "#505f76",
+                        "surface-variant": "#e0e3e5",
+                        "surface-dim": "#d8dadc",
+                        "primary-fixed-dim": "#bec6e0",
+                        "secondary-container": "#d0e1fb",
+                        "primary-container": "#131b2e",
+                        "tertiary-fixed-dim": "#68dba9",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "surface": "#f7f9fb",
+                        "primary": "#000000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["DM Sans"],
+                        "label": ["DM Sans"],
+                        "mono": ["Fira Code"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'DM Sans', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-surface-bright text-on-surface">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-primary-container border-r border-outline-variant shadow-sm z-50 flex flex-col py-6 px-4">
+<div class="mb-8 flex items-center gap-3">
+<img alt="YardFlow Logo" class="w-10 h-10 rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTjhVPTdp-wU9ZxLwaMVBePOcT0Mclo4H2GN_-OxAybge5vinkUH28-jr2T-QvS6FHj0JmPgHiRjZFGyWYck9e2pPFAPQUvehB1ePSBjhXcW-FDN0ayAQ7r4O0FxfxGHF6En1OmONgCMQUh4s1G460lmud1R3AD5BJ1RlYOuGPaWakOV349_qd1YsZvqa7uHT-TexYjHAVm6ndXXS_n_vRdVs5wmkMOWpxXhIuhZHvDBQMB96iziZmR_N6H-R09A6M_3BofxomncY"/>
+<div class="flex flex-col">
+<span class="font-headline text-h3 font-bold text-on-primary">YardFlow</span>
+<span class="font-body text-body-sm font-medium text-on-primary-container">Ship Recycling ERP</span>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body text-body-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body text-body-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-tertiary-container text-on-tertiary-container rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+<span class="font-body text-body-sm font-medium">Purchases</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">sell</span>
+<span class="font-body text-body-sm font-medium">Sales</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span class="font-body text-body-sm font-medium">HR</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-body text-body-sm font-medium">Accounts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body text-body-sm font-medium">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-primary-container hover:bg-on-primary-fixed-variant/10 transition-colors rounded-md active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body text-body-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="pt-4 border-t border-on-primary-container/20">
+<div class="flex items-center gap-3 px-4">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold">JD</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-on-primary">John Doe</span>
+<span class="text-[10px] text-on-primary-container">Yard Manager</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-[240px] pt-16 min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-[240px] h-16 bg-surface border-b border-outline-variant z-40 flex justify-between items-center px-8">
+<div class="flex items-center gap-4">
+<h1 class="font-headline text-[1.25rem] font-semibold text-primary">Purchases</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">notifications</span>
+<div class="absolute -top-1 -right-1 w-2 h-2 bg-error rounded-full"></div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">help_outline</span>
+<div class="h-8 w-px bg-outline-variant"></div>
+<img alt="User Profile" class="w-8 h-8 rounded-full cursor-pointer active:opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBGqkwL5r1l5PYaIOXHm1wqknYRmi2Bt8cgpM471ioRdy-_9dYm83m9GuFMsv2RGBhGzNARUyujhuqhYMWZvejPHzSLgZfDTmparTG0UH2gQpXRT1L8-8RO-j0g8WjTJKd79m0Of1L9P0G20V4x6SS01o63fncwPH5h3oqjxNEWTaDtWyTiq78ezCBnAAl5cU7GkvzlJ0_f_QZqAYS0h1nsy0D7Yqpcbhq-e4UfmHAQObq0S1Ai0fov3Y303t5l2M70ikXaCQU2lo"/>
+</div>
+</header>
+<!-- Main Content Area -->
+<div class="p-8 max-w-[1600px] mx-auto">
+<!-- Page Header Actions -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-[2rem] font-bold text-primary mb-1">Purchases</h2>
+<p class="text-on-surface-variant text-body-sm">Manage incoming raw materials and vendor transactions.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 border border-outline text-on-surface font-medium rounded-lg hover:bg-surface-container transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">group</span>
+                        Vendors
+                    </button>
+<button class="px-4 py-2 bg-primary-container text-on-primary font-medium rounded-lg hover:bg-black transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">add</span>
+                        New Purchase
+                    </button>
+</div>
+</div>
+<!-- Summary Strip -->
+<div class="grid grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
+<p class="text-on-surface-variant text-body-sm font-medium mb-2">Total Purchases</p>
+<p class="font-mono text-2xl font-bold text-primary">৳12,40,000</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
+<p class="text-on-surface-variant text-body-sm font-medium mb-2">Total Paid</p>
+<p class="font-mono text-2xl font-bold text-on-tertiary-container">৳9,80,000</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
+<p class="text-on-surface-variant text-body-sm font-medium mb-2">Total Due</p>
+<p class="font-mono text-2xl font-bold text-error">৳2,60,000</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
+<p class="text-on-surface-variant text-body-sm font-medium mb-2">This Month</p>
+<p class="font-mono text-2xl font-bold text-secondary">৳3,20,000</p>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant mb-6 flex flex-wrap items-center gap-4">
+<div class="flex items-center gap-2 bg-surface px-3 py-2 border border-outline-variant rounded-lg min-w-[200px]">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">calendar_today</span>
+<input class="bg-transparent border-none text-sm focus:ring-0 p-0 w-full" placeholder="Date Range" type="text" value="May 01 - May 15, 2025"/>
+</div>
+<select class="bg-surface border-outline-variant text-sm rounded-lg py-2 pl-3 pr-8 focus:ring-primary-container focus:border-primary-container">
+<option>All Vendors</option>
+<option>Chattogram Shipyard</option>
+<option>Al-Amin Shipbreakers</option>
+<option>Madina Steel</option>
+</select>
+<div class="flex gap-1 bg-surface-container-high p-1 rounded-lg">
+<button class="px-4 py-1.5 text-xs font-bold rounded bg-primary-container text-on-primary">All</button>
+<button class="px-4 py-1.5 text-xs font-bold rounded text-on-surface-variant hover:bg-surface">Paid</button>
+<button class="px-4 py-1.5 text-xs font-bold rounded text-on-surface-variant hover:bg-surface">Partial</button>
+<button class="px-4 py-1.5 text-xs font-bold rounded text-on-surface-variant hover:bg-surface">Due</button>
+</div>
+<div class="flex-1"></div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface border-outline-variant rounded-lg text-sm w-64 focus:ring-primary-container focus:border-primary-container" placeholder="Search purchase #, vendor..." type="text"/>
+</div>
+</div>
+<!-- Purchases Table -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-high border-b border-outline-variant">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-on-surface uppercase tracking-wider">Date</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface uppercase tracking-wider">Purchase #</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface uppercase tracking-wider">Vendor</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface uppercase tracking-wider">Items Summary</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface uppercase tracking-wider">Total (৳)</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface uppercase tracking-wider">Paid (৳)</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface uppercase tracking-wider">Due (৳)</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-[#F8FAFC] transition-colors group">
+<td class="px-6 py-4 text-sm font-medium">14 May 2025</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">PUR-0024</td>
+<td class="px-6 py-4 text-sm">Chattogram Shipyard</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Plates 5-8mm, 12-13mm (2 items)</td>
+<td class="px-6 py-4 font-mono text-sm">1,85,000</td>
+<td class="px-6 py-4 font-mono text-sm">1,00,000</td>
+<td class="px-6 py-4 font-mono text-sm text-error">85,000</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-warning/10 text-warning text-[10px] font-bold rounded uppercase">Partial</span>
+</td>
+<td class="px-6 py-4 text-right space-x-3">
+<a class="text-on-tertiary-container font-bold text-sm hover:underline" href="#">View</a>
+<a class="text-primary font-bold text-sm hover:underline" href="#">Pay</a>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-[#F8FAFC] transition-colors group">
+<td class="px-6 py-4 text-sm font-medium">12 May 2025</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">PUR-0023</td>
+<td class="px-6 py-4 text-sm">Al-Amin Shipbreakers</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Angle Iron 50mm (1 item)</td>
+<td class="px-6 py-4 font-mono text-sm">62,000</td>
+<td class="px-6 py-4 font-mono text-sm">62,000</td>
+<td class="px-6 py-4 font-mono text-sm">0</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-success/10 text-success text-[10px] font-bold rounded uppercase">Paid</span>
+</td>
+<td class="px-6 py-4 text-right">
+<a class="text-on-tertiary-container font-bold text-sm hover:underline" href="#">View</a>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-[#F8FAFC] transition-colors group">
+<td class="px-6 py-4 text-sm font-medium">10 May 2025</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">PUR-0022</td>
+<td class="px-6 py-4 text-sm">Madina Steel</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Girders (3 items)</td>
+<td class="px-6 py-4 font-mono text-sm">3,40,000</td>
+<td class="px-6 py-4 font-mono text-sm">0</td>
+<td class="px-6 py-4 font-mono text-sm text-error">3,40,000</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-error/10 text-error text-[10px] font-bold rounded uppercase">Due</span>
+</td>
+<td class="px-6 py-4 text-right space-x-3">
+<a class="text-on-tertiary-container font-bold text-sm hover:underline" href="#">View</a>
+<a class="text-primary font-bold text-sm hover:underline" href="#">Pay</a>
+</td>
+</tr>
+<!-- Sample Row 4 -->
+<tr class="hover:bg-[#F8FAFC] transition-colors group">
+<td class="px-6 py-4 text-sm font-medium">08 May 2025</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">PUR-0021</td>
+<td class="px-6 py-4 text-sm">BSRM Industrial</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Deformed Bars 12mm (1 item)</td>
+<td class="px-6 py-4 font-mono text-sm">1,25,000</td>
+<td class="px-6 py-4 font-mono text-sm">1,25,000</td>
+<td class="px-6 py-4 font-mono text-sm">0</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-success/10 text-success text-[10px] font-bold rounded uppercase">Paid</span>
+</td>
+<td class="px-6 py-4 text-right">
+<a class="text-on-tertiary-container font-bold text-sm hover:underline" href="#">View</a>
+</td>
+</tr>
+<!-- Sample Row 5 -->
+<tr class="hover:bg-[#F8FAFC] transition-colors group">
+<td class="px-6 py-4 text-sm font-medium">07 May 2025</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">PUR-0020</td>
+<td class="px-6 py-4 text-sm">PHP Steels Ltd.</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">HR Coils (2 items)</td>
+<td class="px-6 py-4 font-mono text-sm">4,10,000</td>
+<td class="px-6 py-4 font-mono text-sm">2,00,000</td>
+<td class="px-6 py-4 font-mono text-sm text-error">2,10,000</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-warning/10 text-warning text-[10px] font-bold rounded uppercase">Partial</span>
+</td>
+<td class="px-6 py-4 text-right space-x-3">
+<a class="text-on-tertiary-container font-bold text-sm hover:underline" href="#">View</a>
+<a class="text-primary font-bold text-sm hover:underline" href="#">Pay</a>
+</td>
+</tr>
+<!-- Sample Row 6 -->
+<tr class="hover:bg-[#F8FAFC] transition-colors group">
+<td class="px-6 py-4 text-sm font-medium">05 May 2025</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">PUR-0019</td>
+<td class="px-6 py-4 text-sm">KSRM Trading</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Channels 100mm (1 item)</td>
+<td class="px-6 py-4 font-mono text-sm">88,000</td>
+<td class="px-6 py-4 font-mono text-sm">0</td>
+<td class="px-6 py-4 font-mono text-sm text-error">88,000</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-error/10 text-error text-[10px] font-bold rounded uppercase">Due</span>
+</td>
+<td class="px-6 py-4 text-right space-x-3">
+<a class="text-on-tertiary-container font-bold text-sm hover:underline" href="#">View</a>
+<a class="text-primary font-bold text-sm hover:underline" href="#">Pay</a>
+</td>
+</tr>
+<!-- Sample Row 7 -->
+<tr class="hover:bg-[#F8FAFC] transition-colors group">
+<td class="px-6 py-4 text-sm font-medium">04 May 2025</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">PUR-0018</td>
+<td class="px-6 py-4 text-sm">Anwar Steel</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Square Bars (1 item)</td>
+<td class="px-6 py-4 font-mono text-sm">45,000</td>
+<td class="px-6 py-4 font-mono text-sm">45,000</td>
+<td class="px-6 py-4 font-mono text-sm">0</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-success/10 text-success text-[10px] font-bold rounded uppercase">Paid</span>
+</td>
+<td class="px-6 py-4 text-right">
+<a class="text-on-tertiary-container font-bold text-sm hover:underline" href="#">View</a>
+</td>
+</tr>
+<!-- Sample Row 8 -->
+<tr class="hover:bg-[#F8FAFC] transition-colors group">
+<td class="px-6 py-4 text-sm font-medium">01 May 2025</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">PUR-0017</td>
+<td class="px-6 py-4 text-sm">Seven Rings Steel</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Pipes 2" Industrial (4 items)</td>
+<td class="px-6 py-4 font-mono text-sm">2,95,000</td>
+<td class="px-6 py-4 font-mono text-sm">2,95,000</td>
+<td class="px-6 py-4 font-mono text-sm">0</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-success/10 text-success text-[10px] font-bold rounded uppercase">Paid</span>
+</td>
+<td class="px-6 py-4 text-right">
+<a class="text-on-tertiary-container font-bold text-sm hover:underline" href="#">View</a>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant flex items-center justify-between">
+<span class="text-sm text-on-surface-variant">Showing 1–10 of 47</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center border border-outline-variant rounded bg-surface hover:bg-surface-container transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center border border-primary-container rounded bg-primary-container text-on-primary text-xs font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center border border-outline-variant rounded bg-surface hover:bg-surface-container text-xs font-medium">2</button>
+<button class="w-8 h-8 flex items-center justify-center border border-outline-variant rounded bg-surface hover:bg-surface-container text-xs font-medium">3</button>
+<button class="w-8 h-8 flex items-center justify-center border border-outline-variant rounded bg-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Micro-interactions for chips and hover effects
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.querySelector('td:nth-child(2)').classList.add('underline');
+            });
+            row.addEventListener('mouseleave', () => {
+                row.querySelector('td:nth-child(2)').classList.remove('underline');
+            });
+        });
+
+        // Filter chip toggle logic
+        const filterButtons = document.querySelectorAll('.bg-surface-container-high button');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => {
+                    b.classList.remove('bg-primary-container', 'text-on-primary');
+                    b.classList.add('text-on-surface-variant', 'hover:bg-surface');
+                });
+                btn.classList.add('bg-primary-container', 'text-on-primary');
+                btn.classList.remove('text-on-surface-variant', 'hover:bg-surface');
+            });
+        });
+    </script>
+</body></html>
