@@ -4,6 +4,7 @@ import { materialSubtypes } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
 import { calculateWAC, getStockQuantity } from "@/lib/calculations/wac";
+import { requireOrg } from "@/lib/auth/session";
 
 const subtypeSchema = z.object({
   category_id: z.string().uuid("Invalid category"),
@@ -13,10 +14,7 @@ const subtypeSchema = z.object({
 });
 
 export async function GET(request: Request) {
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const orgId = await requireOrg();
 
   const { searchParams } = new URL(request.url);
   const categoryId = searchParams.get("category_id");
@@ -45,10 +43,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const orgId = await requireOrg();
 
   try {
     const body = await request.json();

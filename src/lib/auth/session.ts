@@ -44,3 +44,15 @@ export async function clearSession(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.delete(COOKIE_NAME);
 }
+
+export async function requireOrg(): Promise<string> {
+  const session = await getSession();
+  if (!session) throw new Error("Unauthorized");
+  return session.org_id;
+}
+
+export async function requireSession(): Promise<SessionPayload> {
+  const session = await getSession();
+  if (!session) throw new Error("Unauthorized");
+  return session;
+}

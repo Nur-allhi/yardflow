@@ -1,0 +1,217 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+export default function NewAccountPage() {
+  const router = useRouter();
+
+  const [name, setName] = useState("");
+  const [type, setType] = useState<"cash" | "bank">("cash");
+  const [bankName, setBankName] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [openingBalance, setOpeningBalance] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name.trim()) {
+      setError("Account name is required");
+      return;
+    }
+    if (type === "bank" && !bankName.trim()) {
+      setError("Bank name is required for bank accounts");
+      return;
+    }
+
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          type,
+          bank_name: type === "bank" ? bankName.trim() : undefined,
+          account_number: type === "bank" ? accountNumber.trim() || undefined : undefined,
+          opening_balance: openingBalance ? parseFloat(openingBalance) : 0,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to create account");
+      }
+
+      router.push("/accounts");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="p-4 md:p-8">
+      <div className="flex items-center gap-3 mb-6">
+        <Link
+          href="/accounts"
+          className="w-9 h-9 flex items-center justify-center rounded-full border border-[#c6c6cd] text-[#505f76] hover:bg-[#f2f4f6] transition-colors"
+        >
+          <span className="material-symbols-outlined">arrow_back</span>
+        </Link>
+        <h1 className="font-display text-xl md:text-2xl font-bold text-[#0F172A]">
+          New Account
+        </h1>
+      </div>
+
+      <form onSubmit={handleSubmit}>
+        <div className="max-w-lg mx-auto space-y-6">
+          <section className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm p-5 md:p-6">
+            <div className="flex items-center gap-2 mb-5">
+              <span className="material-symbols-outlined text-[#0F172A]">account_balance</span>
+              <h2 className="font-display text-lg font-semibold">Account Details</h2>
+            </div>
+
+            {error && (
+              <div className="mb-4 p-3 bg-[#ffdad6] border border-[#ba1a1a]/20 rounded-lg text-sm text-[#ba1a1a] font-medium">
+                {error}
+              </div>
+            )}
+
+            <div className="space-y-5">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                  Account Name <span className="text-[#ba1a1a]">*</span>
+                </label>
+                <input
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
+                  placeholder="e.g. Main Cash"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                  Type <span className="text-[#ba1a1a]">*</span>
+                </label>
+                <div className="grid grid-cols-2 gap-4">
+                  {(["cash", "bank"] as const).map((option) => (
+                    <label
+                      key={option}
+                      className={`relative cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                        type === option
+                          ? "border-[#0F172A] bg-[#0F172A]/5"
+                          : "border-[#c6c6cd] hover:border-[#0F172A]"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="type"
+                        value={option}
+                        checked={type === option}
+                        onChange={() => setType(option)}
+                        className="sr-only"
+                      />
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-[#0F172A]">
+                          {option === "cash" ? "payments" : "account_balance"}
+                        </span>
+                        <span className="font-bold text-sm text-[#0F172A] capitalize">{option}</span>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {type === "bank" && (
+                <>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                      Bank Name <span className="text-[#ba1a1a]">*</span>
+                    </label>
+                    <input
+                      required
+                      value={bankName}
+                      onChange={(e) => setBankName(e.target.value)}
+                      className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
+                      placeholder="e.g. Sonali Bank"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                      Account Number
+                    </label>
+                    <input
+                      value={accountNumber}
+                      onChange={(e) => setAccountNumber(e.target.value)}
+                      className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
+                      placeholder="e.g. 1234567890"
+                    />
+                  </div>
+                </>
+              )}
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                  Opening Balance (৳)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={openingBalance}
+                  onChange={(e) => setOpeningBalance(e.target.value)}
+                  className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none"
+                  placeholder="0.00"
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Desktop buttons */}
+          <div className="hidden md:flex items-center gap-3">
+            <Link
+              href="/accounts"
+              className="flex-1 h-[42px] bg-transparent text-[#505f76] hover:bg-[#f2f4f6] transition-colors font-bold text-sm rounded border border-[#c6c6cd] flex items-center justify-center"
+            >
+              Cancel
+            </Link>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="flex-1 h-[42px] bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
+            >
+              {submitting ? "Saving..." : "Save Account"}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile sticky bottom bar */}
+        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-[#c6c6cd] px-4 py-3 z-40 flex items-center gap-3 shadow-lg">
+          <Link
+            href="/accounts"
+            className="flex-1 h-12 bg-transparent text-[#505f76] font-bold text-sm rounded-lg border border-[#c6c6cd] flex items-center justify-center"
+          >
+            Cancel
+          </Link>
+          <button
+            type="submit"
+            disabled={submitting}
+            className="flex-1 h-12 bg-[#0F172A] text-white font-bold text-sm rounded-lg shadow-md active:scale-[0.98] transition-all disabled:opacity-40"
+          >
+            {submitting ? "Saving..." : "Save Account"}
+          </button>
+        </div>
+      </form>
+
+      <div className="md:hidden h-20" />
+    </div>
+  );
+}

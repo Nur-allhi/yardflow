@@ -24,7 +24,8 @@ export async function calculateWAC(
       ),
     );
 
-  const { total_value, total_quantity } = result[0];
+  const total_value = Number(result[0].total_value);
+  const total_quantity = Number(result[0].total_quantity);
 
   if (total_quantity === 0) return 0;
   return total_value / total_quantity;
@@ -53,5 +54,5 @@ export async function getStockQuantity(
       ),
     );
 
-  return result[0].net;
+  return Number(result[0].net) || 0;
 }

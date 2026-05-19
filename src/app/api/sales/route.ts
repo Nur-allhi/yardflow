@@ -15,15 +15,14 @@ import {
   sql,
   gte,
   lte,
+  desc,
 } from "drizzle-orm";
 import { saleSchema } from "@/lib/validations/schemas";
 import { calculateWAC } from "@/lib/calculations/wac";
+import { requireOrg } from "@/lib/auth/session";
 
 export async function GET(request: Request) {
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const orgId = await requireOrg();
 
   const { searchParams } = new URL(request.url);
   const customerId = searchParams.get("customer_id");
@@ -32,6 +31,9 @@ export async function GET(request: Request) {
   const dateFrom = searchParams.get("date_from");
   const dateTo = searchParams.get("date_to");
   const search = searchParams.get("search");
+  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
+  const limit = Math.max(1, Math.min(100, parseInt(searchParams.get("limit") ?? "15", 10)));
+  const offset = (page - 1) * limit;
 
   const conditions = [
     eq(sales.organization_id, orgId),
@@ -43,6 +45,36 @@ export async function GET(request: Request) {
   if (status) conditions.push(eq(sales.status, status as "paid" | "partial" | "due"));
   if (dateFrom) conditions.push(gte(sales.sale_date, new Date(dateFrom)));
   if (dateTo) conditions.push(lte(sales.sale_date, new Date(dateTo)));
+
+  const filterConditions = and(
+    ...conditions,
+    search
+      ? sql`(${customers.name} ILIKE ${"%" + search + "%"} OR COALESCE(${sales.note}, '') ILIKE ${"%" + search + "%"})`
+      : undefined,
+  );
+
+  const weightSubquery = db
+    .select({
+      sale_id: saleItems.sale_id,
+      total_kg: sql<number>`COALESCE(SUM(CAST(${saleItems.quantity_kg} AS numeric)), 0)`,
+    })
+    .from(saleItems)
+    .groupBy(saleItems.sale_id)
+    .as('weight_sub');
+
+  const [{ count }] = await db
+    .select({
+      count: sql<number>`COUNT(*)::int`,
+    })
+    .from(sales)
+    .leftJoin(
+      customers,
+      and(
+        eq(sales.customer_id, customers.id),
+        sql`${customers.deleted_at} IS NULL`,
+      ),
+    )
+    .where(filterConditions);
 
   const saleList = await db
     .select({
@@ -58,6 +90,7 @@ export async function GET(request: Request) {
       note: sales.note,
       created_at: sales.created_at,
       customer_name: customers.name,
+      total_kg: weightSubquery.total_kg,
     })
     .from(sales)
     .leftJoin(
@@ -67,33 +100,31 @@ export async function GET(request: Request) {
         sql`${customers.deleted_at} IS NULL`,
       ),
     )
-    .where(
-      and(
-        ...conditions,
-        search
-          ? sql`(${customers.name} ILIKE ${"%" + search + "%"} OR COALESCE(${sales.note}, '') ILIKE ${"%" + search + "%"})`
-          : undefined,
-      ),
-    )
-    .orderBy(sql`${sales.sale_date} DESC`);
+    .leftJoin(weightSubquery, eq(sales.id, weightSubquery.sale_id))
+    .where(filterConditions)
+    .orderBy(desc(sales.sale_date))
+    .limit(limit)
+    .offset(offset);
 
   const now = new Date();
-  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const firstOfMonthStr = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
 
   const summaryResult = await db
     .select({
       total_sales: sql<number>`COUNT(*)::int`,
       total_paid: sql<string>`COALESCE(SUM((${sales.paid_amount})::numeric), 0)`,
       total_amount: sql<string>`COALESCE(SUM((${sales.total_amount})::numeric), 0)`,
-      this_month: sql<string>`COALESCE(SUM((${sales.total_amount})::numeric) FILTER (WHERE ${sales.sale_date} >= ${firstOfMonth}), 0)`,
+      this_month: sql<string>`COALESCE(SUM((${sales.total_amount})::numeric) FILTER (WHERE ${sales.sale_date} >= ${firstOfMonthStr}), 0)`,
     })
     .from(sales)
-    .where(
+    .leftJoin(
+      customers,
       and(
-        eq(sales.organization_id, orgId),
-        sql`${sales.deleted_at} IS NULL`,
+        eq(sales.customer_id, customers.id),
+        sql`${customers.deleted_at} IS NULL`,
       ),
-    );
+    )
+    .where(filterConditions);
 
   const summary = summaryResult[0];
   const totalAmount = Number(summary.total_amount);
@@ -105,6 +136,7 @@ export async function GET(request: Request) {
       total_amount: Number(s.total_amount),
       paid_amount: Number(s.paid_amount),
       due_amount: Number(s.due_amount),
+      total_kg: Number(s.total_kg),
       customer_name: s.customer_name || "Cash Sale",
     })),
     summary: {
@@ -113,14 +145,14 @@ export async function GET(request: Request) {
       total_due: totalAmount - totalPaid,
       this_month: Number(summary.this_month),
     },
+    total_count: count,
+    page,
+    limit,
   });
 }
 
 export async function POST(request: Request) {
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const orgId = await requireOrg();
 
   try {
     const body = await request.json();

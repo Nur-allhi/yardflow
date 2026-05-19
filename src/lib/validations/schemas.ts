@@ -99,6 +99,24 @@ export const salePaymentSchema = z.object({
   note: z.string().optional(),
 });
 
+export const accountSchema = z.object({
+  name: z.string().min(1, "Account name is required"),
+  type: z.enum(["cash", "bank"]),
+  bank_name: z.string().optional(),
+  account_number: z.string().optional(),
+  opening_balance: z.number().optional(),
+});
+
+export const accountTransferSchema = z.object({
+  from_account_id: z.string().uuid("Invalid source account"),
+  to_account_id: z.string().uuid("Invalid destination account"),
+  amount: z.number().positive("Amount must be positive"),
+  transfer_date: z.string().min(1, "Date is required"),
+  note: z.string().optional(),
+});
+
+export type AccountInput = z.infer<typeof accountSchema>;
+export type AccountTransferInput = z.infer<typeof accountTransferSchema>;
 export type CustomerInput = z.infer<typeof customerSchema>;
 export type SaleInput = z.infer<typeof saleSchema>;
 export type SalePaymentInput = z.infer<typeof salePaymentSchema>;

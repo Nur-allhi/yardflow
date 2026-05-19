@@ -224,10 +224,69 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 - `/sales/new/quick` — Quick cash sale (no customer, items + immediate payment)
 - `/sales/[id]` — Sale detail (items table, financial summary, payment ledger, payment modal)
 
+## Session: 2026-05-19 — Major Modules Completion
+
+### Accounts Module
+#### API Routes
+- `GET/POST /api/accounts` — list + create account (with opening balance transaction)
+- `GET/PUT/DELETE /api/accounts/[id]` — single account CRUD with transaction history
+- `GET /api/accounts/transactions` — recent transactions across all accounts (for overview)
+- `POST /api/accounts/transfer` — transfer between accounts (transaction: debit source + credit destination)
+
+#### Pages
+- `/accounts` — Full overview: account cards per account, total bar, recent transactions table, inline transfer card
+- `/accounts/new` — Add account form (cash/bank type, conditional fields, opening balance)
+- `/accounts/[id]` — Account detail with transaction history (credit/debit badges)
+- `/accounts/transfer` — Transfer form (from/to selects with balance display)
+
+### Sales List Page (Rebuilt from stub)
+- Full `/sales` page matching design: 4 summary cards, filters (date/customer/type/status chips), table with pagination, mobile card view
+- API updated: pagination (`page`/`limit`), total weight per sale via subquery
+
+### Scrap Sale Module
+- `POST /api/sales/scrap` — scrap sale with scrap pool deduction (transaction)
+- `/sales/scrap/new` — Scrap sale form (single item, buyer name, auto-calc total)
+
+### HR/Payroll Module
+#### API Routes
+- `GET/POST /api/hr/workers` — list (with monthly advance totals + summary stats) + create
+- `GET/PUT/DELETE /api/hr/workers/[id]` — single worker CRUD with advance history
+- `GET/POST /api/hr/advances` — list with filters + create (transaction with account debit)
+- `GET /api/hr/payroll` — monthly payroll view (base, advances, net payable per worker)
+- `POST /api/hr/payroll/pay` — pay salary (transaction with account debit, upsert)
+
+#### Pages
+- `/hr/workers` — Worker list (4 stats cards, search, table, mobile cards)
+- `/hr/workers/new` — Add worker form
+- `/hr/workers/[id]` — Worker profile with advance history
+- `/hr/advances/new` — Record salary advance (worker select, auto month/year)
+- `/hr/payroll` — Monthly payroll (month/year selector, stats, table, pay modal)
+
+### Reports Module
+#### Calculation Logic
+- `lib/calculations/profit.ts` — `calculatePeriodProfit(orgId, startDate, endDate)` computes full P&L: volume metrics (purchased/sold/scrap/stock/burnout) + financial metrics (income/costs/profit)
+- `lib/calculations/burnout.ts` — re-exports
+
+#### API Routes
+- `GET/POST /api/reports` — list saved reports + generate new (validates, calculates, saves snapshot)
+- `GET /api/reports/[id]` — single report detail
+
+#### Pages
+- `/reports` — Reports list (table, mobile cards)
+- `/reports/generate` — Generate report (period type selector with month/year/custom inputs)
+- `/reports/[id]` — Full report view (result banner, volume analysis, financial analysis, print button)
+
+### Fixes
+- **WAC null bug**: In `calculateWAC()`, PostgreSQL `SUM()` returns strings from `numeric` type — strict `=== 0` fails against `"0"`, causing `NaN`. Fixed by coercing with `Number()`. Added `?? 0` fallbacks in InventoryClient.
+- **ESLint**: Fixed `no-explicit-any` in accounts page error handler.
+
+### AGENTS.md Update
+- Added rule to check `designs/{page_name}_desktop/` and `designs/{page_name}_mobile/` before building any UI page
+
 ## Upcoming Work (in priority order)
-1. HR/Payroll module (workers, salary advances, salary payments)
-2. Accounts module (cash/bank accounts, transfers)
-3. Reports module (period-end reconciliation, P&L, stock valuation, dues aging)
+1. Consumables log (API + page)
+2. Settings / Team management pages
+3. Seed & Test — run seed script, walk through every module end-to-end, fix bugs
 
 ## Quality Gates
 - `npx tsc --noEmit` — zero errors required

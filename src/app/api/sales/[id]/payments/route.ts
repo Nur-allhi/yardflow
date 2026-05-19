@@ -7,16 +7,14 @@ import {
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { salePaymentSchema } from "@/lib/validations/schemas";
+import { requireOrg } from "@/lib/auth/session";
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const orgId = await requireOrg();
 
   try {
     const body = await request.json();

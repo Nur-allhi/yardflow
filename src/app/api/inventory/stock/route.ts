@@ -3,11 +3,19 @@ import { db } from "@/lib/db";
 import { materialCategories, materialSubtypes, scrapPool } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { getStockQuantity, calculateWAC } from "@/lib/calculations/wac";
+import { getSession } from "@/lib/auth/session";
 
 export async function GET(request: Request) {
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const headerOrg = request.headers.get("x-org-id");
+  let orgId: string;
+  if (headerOrg) {
+    orgId = headerOrg;
+  } else {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    orgId = session.org_id;
   }
 
   const categories = await db

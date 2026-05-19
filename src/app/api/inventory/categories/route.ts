@@ -3,17 +3,15 @@ import { db } from "@/lib/db";
 import { materialCategories } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
+import { requireOrg } from "@/lib/auth/session";
 
 const categorySchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
 });
 
-export async function GET(request: Request) {
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+export async function GET(_request: Request) {
+  const orgId = await requireOrg();
 
   const categories = await db
     .select()
@@ -30,10 +28,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const orgId = await requireOrg();
 
   try {
     const body = await request.json();

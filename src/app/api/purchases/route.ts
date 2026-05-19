@@ -15,12 +15,10 @@ import {
 } from "drizzle-orm";
 import { purchaseSchema } from "@/lib/validations/schemas";
 import { calculateWAC } from "@/lib/calculations/wac";
+import { requireOrg } from "@/lib/auth/session";
 
 export async function GET(request: Request) {
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const orgId = await requireOrg();
 
   const { searchParams } = new URL(request.url);
   const vendorId = searchParams.get("vendor_id");
@@ -71,14 +69,14 @@ export async function GET(request: Request) {
     .orderBy(sql`${purchases.purchase_date} DESC`);
 
   const now = new Date();
-  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const firstOfMonthStr = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
 
   const summaryResult = await db
     .select({
       total_purchases: sql<number>`COUNT(*)::int`,
       total_paid: sql<string>`COALESCE(SUM((${purchases.paid_amount})::numeric), 0)`,
       total_amount: sql<string>`COALESCE(SUM((${purchases.total_amount})::numeric), 0)`,
-      this_month: sql<string>`COALESCE(SUM((${purchases.total_amount})::numeric) FILTER (WHERE ${purchases.purchase_date} >= ${firstOfMonth}), 0)`,
+      this_month: sql<string>`COALESCE(SUM((${purchases.total_amount})::numeric) FILTER (WHERE ${purchases.purchase_date} >= ${firstOfMonthStr}), 0)`,
     })
     .from(purchases)
     .where(
@@ -109,10 +107,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const orgId = await requireOrg();
 
   try {
     const body = await request.json();

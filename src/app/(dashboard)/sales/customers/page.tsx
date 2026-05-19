@@ -277,7 +277,7 @@ export default function CustomersPage() {
                             {typeChip.label}
                           </span>
                         </td>
-                        <td className="px-6 py-5 font-mono text-sm text-[#505f76]">{formatMoney(c.total_purchases)}</td>
+                        <td className="px-6 py-5 font-mono text-sm text-[#505f76]">{c.total_purchases}</td>
                         <td className="px-6 py-5 font-mono text-sm text-[#505f76]">{formatMoney(c.total_paid)}</td>
                         <td className={`px-6 py-5 font-mono text-sm font-bold ${c.due_balance > 0 ? "text-[#CA8A04]" : "text-[#16A34A]"}`}>
                           {formatMoney(c.due_balance)}

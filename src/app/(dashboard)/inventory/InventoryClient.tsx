@@ -23,9 +23,9 @@ interface Category {
 
 interface StockData {
   categories: Category[];
-  total_stock_kg: number;
-  total_stock_value: number;
-  scrap_pool_kg: number;
+  total_stock_kg: number | null;
+  total_stock_value: number | null;
+  scrap_pool_kg: number | null;
 }
 
 function getStatusInfo(kg: number) {
@@ -34,17 +34,18 @@ function getStatusInfo(kg: number) {
   return { label: "In Stock", color: "bg-success/10 text-success", dot: "bg-success", badgeBg: "bg-[#059669]/10 text-[#059669] border border-[#059669]/20" };
 }
 
-function formatTk(amount: number): string {
-  if (amount === 0) return "৳0";
-  const num = Math.round(amount).toString();
+function formatTk(amount: number | null | undefined): string {
+  const val = amount ?? 0;
+  if (val === 0) return "৳0";
+  const num = Math.round(val).toString();
   const last3 = num.slice(-3);
   const rest = num.slice(0, -3);
   const lakhFormatted = rest ? `${rest},${last3}` : last3;
   return `৳${lakhFormatted}`;
 }
 
-function formatKg(kg: number): string {
-  return `${kg.toLocaleString("en-IN")} kg`;
+function formatKg(kg: number | null | undefined): string {
+  return `${(kg ?? 0).toLocaleString("en-IN")} kg`;
 }
 
 const tabs = [
@@ -229,7 +230,7 @@ export function InventoryClient({ data }: { data: StockData | null }) {
           </p>
           <div className="flex items-baseline gap-1 md:gap-2 mt-1 md:mt-2">
             <h2 className="text-lg md:text-3xl font-bold font-display text-[#0F172A]">
-              {data.total_stock_kg.toLocaleString("en-IN")}
+              {(data.total_stock_kg ?? 0).toLocaleString("en-IN")}
             </h2>
             <span className="text-[10px] md:text-sm text-[#505f76] font-mono">kg</span>
           </div>
@@ -241,7 +242,7 @@ export function InventoryClient({ data }: { data: StockData | null }) {
           <div className="flex items-baseline gap-1 mt-1 md:mt-2">
             <span className="text-sm md:text-xl font-bold text-[#0F172A]">৳</span>
             <h2 className="text-lg md:text-3xl font-bold font-display text-[#0F172A]">
-              {data.total_stock_value.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
+              {(data.total_stock_value ?? 0).toLocaleString("en-IN", { maximumFractionDigits: 0 })}
             </h2>
           </div>
         </div>
@@ -251,7 +252,7 @@ export function InventoryClient({ data }: { data: StockData | null }) {
           </p>
           <div className="flex items-baseline gap-1 mt-1 md:mt-2">
             <h2 className="text-lg md:text-3xl font-bold font-display text-[#0F172A]">
-              {data.scrap_pool_kg.toLocaleString("en-IN")}
+              {(data.scrap_pool_kg ?? 0).toLocaleString("en-IN")}
             </h2>
             <span className="text-[10px] md:text-sm text-[#505f76] font-mono">kg</span>
           </div>
@@ -358,7 +359,7 @@ export function InventoryClient({ data }: { data: StockData | null }) {
             recycling
           </span>
           <p className="text-lg font-medium mb-2">Scrap Pool</p>
-          <p className="text-sm">{data.scrap_pool_kg.toLocaleString("en-IN")} kg accumulated</p>
+          <p className="text-sm">{(data.scrap_pool_kg ?? 0).toLocaleString("en-IN")} kg accumulated</p>
         </div>
       )}
 

@@ -3,12 +3,10 @@ import { db } from "@/lib/db";
 import { vendors, purchases } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { vendorSchema } from "@/lib/validations/schemas";
+import { requireOrg } from "@/lib/auth/session";
 
-export async function GET(request: Request) {
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+export async function GET(_request: Request) {
+  const orgId = await requireOrg();
 
   const vendorList = await db
     .select({
@@ -51,10 +49,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const orgId = await requireOrg();
 
   try {
     const body = await request.json();

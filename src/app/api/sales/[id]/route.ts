@@ -9,16 +9,14 @@ import {
   accounts,
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
+import { requireOrg } from "@/lib/auth/session";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const orgId = request.headers.get("x-org-id");
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const orgId = await requireOrg();
 
   const [sale] = await db
     .select({

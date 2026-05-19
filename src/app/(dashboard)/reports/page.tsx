@@ -1,0 +1,270 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+
+interface PeriodReport {
+  id: string;
+  period_type: "monthly" | "yearly" | "custom";
+  start_date: string;
+  end_date: string;
+  total_income: string;
+  total_cost: string;
+  net_profit: string;
+  result: "profit" | "loss";
+  generated_at: string;
+}
+
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function formatMoney(n: number | string) {
+  const val = typeof n === "string" ? parseFloat(n) : n;
+  return "৳" + val.toLocaleString("en-IN");
+}
+
+function ResultBadge({ result }: { result: string }) {
+  const isProfit = result === "profit";
+  return (
+    <span
+      className={`px-2 py-1 text-[10px] font-bold rounded uppercase tracking-wider ${
+        isProfit
+          ? "bg-success/10 text-success border border-success/20"
+          : "bg-error/10 text-error border border-error/20"
+      }`}
+    >
+      {isProfit ? "Profit" : "Loss"}
+    </span>
+  );
+}
+
+function PeriodLabel(row: PeriodReport) {
+  if (row.period_type === "monthly") {
+    const d = new Date(row.start_date);
+    return d.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+  }
+  if (row.period_type === "yearly") {
+    return new Date(row.start_date).getFullYear().toString();
+  }
+  return formatDate(row.start_date) + " - " + formatDate(row.end_date);
+}
+
+function DateRangeLabel(row: PeriodReport) {
+  return formatDate(row.start_date) + " - " + formatDate(row.end_date);
+}
+
+export default function ReportsPage() {
+  const [reports, setReports] = useState<PeriodReport[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadReports = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/reports");
+      if (!res.ok) throw new Error("Failed to load reports");
+      const data = await res.json();
+      setReports(Array.isArray(data) ? data : data.reports || []);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadReports();
+  }, [loadReports]);
+
+  const typeLabel: Record<string, string> = {
+    monthly: "Monthly",
+    yearly: "Yearly",
+    custom: "Custom",
+  };
+
+  return (
+    <div className="p-4 md:p-8">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
+        <Link href="/" className="hover:text-[#0F172A]">ERP</Link>
+        <span className="material-symbols-outlined text-xs">chevron_right</span>
+        <span className="text-[#0F172A] font-bold">Reports</span>
+      </nav>
+
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
+        <div>
+          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-[#0F172A] tracking-tight">
+            Reports
+          </h1>
+          <p className="text-[#505f76] text-sm hidden md:block">
+            Review historical yard performance and financial statements.
+          </p>
+        </div>
+        <Link
+          href="/reports/generate"
+          className="flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white font-semibold rounded-lg hover:bg-[#0F172A]/90 transition-all text-sm shadow-sm active:scale-95"
+        >
+          <span className="material-symbols-outlined text-lg">add_chart</span>
+          Generate Report
+        </Link>
+      </div>
+
+      {/* Loading */}
+      {loading && (
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-white rounded-xl border border-[#c6c6cd]/30 p-6 animate-pulse">
+              <div className="h-4 bg-[#e6e8ea] rounded w-1/3 mb-3" />
+              <div className="h-4 bg-[#e6e8ea] rounded w-1/2" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Error */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+          <p className="text-[#EF4444] font-medium text-sm">{error}</p>
+          <button
+            onClick={loadReports}
+            className="mt-3 px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!loading && !error && reports.length === 0 && (
+        <div className="bg-white rounded-xl border border-[#c6c6cd]/30 p-12 text-center">
+          <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">
+            analytics
+          </span>
+          <p className="text-[#505f76] text-sm font-medium mb-1">
+            No reports generated yet
+          </p>
+          <p className="text-[#505f76] text-xs">
+            Create your first period report to see financial and volume analysis.
+          </p>
+          <Link
+            href="/reports/generate"
+            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-[#0F172A] text-white text-sm font-semibold rounded-lg"
+          >
+            <span className="material-symbols-outlined text-lg">add_chart</span>
+            Generate Report
+          </Link>
+        </div>
+      )}
+
+      {/* Desktop Table */}
+      {!loading && !error && reports.length > 0 && (
+        <div className="hidden md:block bg-white rounded-xl border border-[#c6c6cd] overflow-hidden shadow-sm">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
+              <tr>
+                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">Period</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">Type</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">Date Range</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider text-right">Income</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider text-right">Cost</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider text-right">Profit</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">Result</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">Generated At</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#c6c6cd]/50">
+              {reports.map((r) => (
+                <tr key={r.id} className="hover:bg-[#F8FAFC] transition-colors group">
+                  <td className="px-6 py-4 text-sm font-bold text-[#0F172A]">
+                    {PeriodLabel(r)}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-[#505f76]">
+                    {typeLabel[r.period_type] || r.period_type}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-[#505f76]">
+                    {DateRangeLabel(r)}
+                  </td>
+                  <td className="px-6 py-4 font-mono text-sm text-right">
+                    {formatMoney(r.total_income)}
+                  </td>
+                  <td className="px-6 py-4 font-mono text-sm text-right">
+                    {formatMoney(r.total_cost)}
+                  </td>
+                  <td className="px-6 py-4 font-mono text-sm text-right font-semibold">
+                    {formatMoney(r.net_profit)}
+                  </td>
+                  <td className="px-6 py-4">
+                    <ResultBadge result={r.result} />
+                  </td>
+                  <td className="px-6 py-4 text-sm text-[#505f76]">
+                    {formatDate(r.generated_at)}
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <Link
+                      href={`/reports/${r.id}`}
+                      className="text-[#059669] font-bold text-sm hover:underline inline-flex items-center gap-1"
+                    >
+                      <span className="material-symbols-outlined text-sm">visibility</span>
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Mobile Cards */}
+      {!loading && !error && reports.length > 0 && (
+        <div className="md:hidden space-y-3">
+          {reports.map((r) => (
+            <div key={r.id} className="bg-white rounded-lg p-4 shadow-sm border border-[#c6c6cd]/20">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h3 className="font-display font-bold text-[#0F172A] text-base">
+                    {PeriodLabel(r)}
+                  </h3>
+                  <p className="text-xs text-[#505f76]">{DateRangeLabel(r)}</p>
+                </div>
+                <ResultBadge result={r.result} />
+              </div>
+              <div className="grid grid-cols-3 gap-2 mb-3">
+                <div>
+                  <p className="text-[10px] text-[#505f76] font-bold uppercase tracking-wider">Income</p>
+                  <p className="font-mono text-sm font-semibold text-[#0F172A]">{formatMoney(r.total_income)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-[#505f76] font-bold uppercase tracking-wider">Cost</p>
+                  <p className="font-mono text-sm text-[#505f76]">{formatMoney(r.total_cost)}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] text-[#505f76] font-bold uppercase tracking-wider">Profit</p>
+                  <p className={`font-mono text-sm font-bold ${r.result === "profit" ? "text-[#059669]" : "text-[#ba1a1a]"}`}>
+                    {formatMoney(r.net_profit)}
+                  </p>
+                </div>
+              </div>
+              <Link
+                href={`/reports/${r.id}`}
+                className="flex items-center justify-center gap-1 py-2 text-[#059669] font-bold text-sm bg-[#059669]/5 rounded-lg"
+              >
+                <span className="material-symbols-outlined text-sm">visibility</span>
+                View Report
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

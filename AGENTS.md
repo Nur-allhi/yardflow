@@ -91,6 +91,7 @@ npx drizzle-kit migrate
 
 - Always follow the design system when creating or reviewing components and pages
 - Design System: `@DESIGN.md`
+- **UX DESIGNS**: Before building any UI page, check `designs/` folder for the matching design (look for `{page_name}_desktop/` and `{page_name}_mobile/` directories, read `code.html` and `screen.png` for reference)
 - Status badge colors: green = paid/profit · amber = partial/pending · red = due/loss · gray = inactive
 - Money format: `1,25,000 tk` (Bengali lakh format, tk suffix)
 - Weight format: `1,250.500 kg` (3 decimal places, kg suffix)
