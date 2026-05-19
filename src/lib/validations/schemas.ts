@@ -48,3 +48,57 @@ export const purchasePaymentSchema = z.object({
 export type VendorInput = z.infer<typeof vendorSchema>;
 export type PurchaseInput = z.infer<typeof purchaseSchema>;
 export type PurchasePaymentInput = z.infer<typeof purchasePaymentSchema>;
+
+export const customerSchema = z.object({
+  name: z.string().min(1, "Customer name is required"),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  type: z.enum(["regular", "walk_in"]).optional(),
+  opening_balance: z.number().optional(),
+});
+
+export const saleItemSchema = z.object({
+  subtype_id: z.string().uuid("Invalid subtype"),
+  quantity_kg: z.number().positive("Quantity must be positive"),
+  price_per_kg: z.number().positive("Price must be positive"),
+});
+
+export const quickSaleSchema = z.object({
+  sale_date: z.string().min(1, "Date is required"),
+  items: z.array(saleItemSchema).min(1, "At least one item required"),
+  amount_received: z.number().min(0, "Amount must be >= 0"),
+  account_id: z.string().uuid("Invalid account"),
+  note: z.string().optional(),
+});
+
+export const saleSchema = z.object({
+  customer_id: z.string().uuid("Invalid customer").nullable().optional(),
+  sale_type: z.enum(["fabricated", "raw_passthrough", "scrap"]),
+  is_quick_cash_sale: z.boolean().optional(),
+  sale_date: z.string().min(1, "Date is required"),
+  items: z.array(saleItemSchema).min(1, "At least one item required"),
+  amount_received: z.number().min(0).optional(),
+  account_id: z.string().uuid("Invalid account").optional(),
+  note: z.string().optional(),
+});
+
+export const scrapSaleSchema = z.object({
+  sale_date: z.string().min(1, "Date is required"),
+  quantity_kg: z.number().positive("Quantity must be positive"),
+  price_per_kg: z.number().positive("Price must be positive"),
+  buyer_name: z.string().optional(),
+  amount_received: z.number().min(0, "Amount must be >= 0"),
+  account_id: z.string().uuid("Invalid account"),
+  note: z.string().optional(),
+});
+
+export const salePaymentSchema = z.object({
+  amount: z.number().positive("Amount must be positive"),
+  account_id: z.string().uuid("Invalid account"),
+  payment_date: z.string().min(1, "Date is required"),
+  note: z.string().optional(),
+});
+
+export type CustomerInput = z.infer<typeof customerSchema>;
+export type SaleInput = z.infer<typeof saleSchema>;
+export type SalePaymentInput = z.infer<typeof salePaymentSchema>;

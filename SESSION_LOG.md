@@ -177,6 +177,29 @@ src/app/api/
         ├── route.ts                # GET purchase detail
         └── payments/route.ts       # POST record payment (transaction)
 ```
+### Sales Module Layout
+```
+src/app/(dashboard)/sales/
+├── page.tsx                         # Sales list (filter bar, table/cards, summary)
+├── customers/
+│   └── page.tsx                     # Customer list (table/cards, add/edit modal)
+├── new/
+│   ├── page.tsx                     # New regular sale (customer, items, payment)
+│   └── quick/
+│       └── page.tsx                 # Quick cash sale (no customer, immediate)
+└── [id]/
+    └── page.tsx                     # Sale detail (items, payments, payment modal)
+
+src/app/api/
+└── sales/
+    ├── route.ts                     # GET (list), POST (create with transaction)
+    ├── customers/
+    │   └── route.ts                 # GET (list), POST (create)
+    │   └── [id]/route.ts           # GET, PUT, DELETE customer
+    └── [id]/
+        ├── route.ts                 # GET sale detail
+        └── payments/route.ts        # POST record payment (transaction)
+```
 Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 
 ## Tools & Integrations
@@ -186,11 +209,25 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
   - Requires an LLM API key (`GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, or `OPENAI_API_KEY`)
 - **Drizzle Kit**: `npx drizzle-kit generate` + `npx drizzle-kit migrate` for schema changes
 
+### Phase 7 — Sales Module
+#### API Routes
+- `GET/POST /api/sales/customers` — list (enriched with totals) + create
+- `GET/PUT/DELETE /api/sales/customers/[id]` — single customer CRUD
+- `GET/POST /api/sales` — list with filters (customer, type, status, date, search) + summary; create with transaction (items + stock_ledger + WAC + payment)
+- `GET /api/sales/[id]` — detail with customer, items (subtype name), payments (account name)
+- `POST /api/sales/[id]/payments` — record payment (transaction: payment + sale update + account_transaction)
+
+#### Pages
+- `/sales/customers` — Customer list with 3 summary cards, table/cards, add/edit modal
+- `/sales` — Sales list with 4 summary cards, filter bar, type/status chips, table/cards
+- `/sales/new` — Regular sale form (customer picker, sale type, dynamic items, payment)
+- `/sales/new/quick` — Quick cash sale (no customer, items + immediate payment)
+- `/sales/[id]` — Sale detail (items table, financial summary, payment ledger, payment modal)
+
 ## Upcoming Work (in priority order)
-1. Sales module (customers CRUD, quick cash sale, regular sale, payments, stock deduction)
-2. HR/Payroll module (workers, salary advances, salary payments)
-3. Accounts module (cash/bank accounts, transfers)
-4. Reports module (period-end reconciliation, P&L, stock valuation, dues aging)
+1. HR/Payroll module (workers, salary advances, salary payments)
+2. Accounts module (cash/bank accounts, transfers)
+3. Reports module (period-end reconciliation, P&L, stock valuation, dues aging)
 
 ## Quality Gates
 - `npx tsc --noEmit` — zero errors required
