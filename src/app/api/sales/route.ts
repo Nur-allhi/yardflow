@@ -46,12 +46,13 @@ export async function GET(request: Request) {
   if (dateFrom) conditions.push(gte(sales.sale_date, new Date(dateFrom)));
   if (dateTo) conditions.push(lte(sales.sale_date, new Date(dateTo)));
 
-  const filterConditions = and(
-    ...conditions,
-    search
-      ? sql`(${customers.name} ILIKE ${"%" + search + "%"} OR COALESCE(${sales.note}, '') ILIKE ${"%" + search + "%"})`
-      : undefined,
-  );
+  if (search) {
+    conditions.push(
+      sql`(${customers.name} ILIKE ${"%" + search + "%"} OR COALESCE(${sales.note}, '') ILIKE ${"%" + search + "%"})`,
+    );
+  }
+
+  const filterConditions = and(...conditions);
 
   const weightSubquery = db
     .select({
@@ -107,14 +108,14 @@ export async function GET(request: Request) {
     .offset(offset);
 
   const now = new Date();
-  const firstOfMonthStr = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
+  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
   const summaryResult = await db
     .select({
       total_sales: sql<number>`COUNT(*)::int`,
       total_paid: sql<string>`COALESCE(SUM((${sales.paid_amount})::numeric), 0)`,
       total_amount: sql<string>`COALESCE(SUM((${sales.total_amount})::numeric), 0)`,
-      this_month: sql<string>`COALESCE(SUM((${sales.total_amount})::numeric) FILTER (WHERE ${sales.sale_date} >= ${firstOfMonthStr}), 0)`,
+      this_month: sql<string>`COALESCE(SUM((${sales.total_amount})::numeric) FILTER (WHERE ${sales.sale_date} >= ${firstOfMonth}), 0)`,
     })
     .from(sales)
     .leftJoin(
