@@ -348,6 +348,40 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
   2. `Date` object in `sql`\`...\` template literal throws TypeError — changed to `.toISOString()` string
   3. GET handler lacked try-catch — any error produced empty 500 body; wrapped in try-catch with JSON error response
 
+## Session: 2026-05-20 — Bug Fixes + DB Cleanup
+
+### Bug Fix — Payroll page crash
+- **Root cause**: API returns `{ workers: [...] }` but client interface expected `{ rows: [...] }` — `payroll.rows` was undefined, `.length` crashed
+- **Fix**: Changed `PayrollData.rows` → `PayrollData.workers` to match API response shape
+- Commit: `9c79dc5`
+
+### CONTEXT.md update
+- Status changed from "Ready for Development" → "V1 Complete — Ready for Deployment"
+- Section 3.3 V1 Scope: all 9 modules marked ✅ Built
+- Section 8 Development Roadmap: all 6 weeks marked ✅
+- Section 11 Definition of Done: all functional checks ✅, deployment items ⏸️
+
+### TESTING.md created
+- Full testing checklist with all 34 page routes + 34 API endpoints mapped to 9 modules
+- Commit: `385106a`
+
+### DB Cleanup
+- Created `scripts/cleanup.ts` — wipes all transactional data while preserving user login
+- Ran cleanup → DB state: 1 org ("Bagdad Trading Corporation"), 1 user (`noorefty1@gmail.com`, owner), 0 rows in all 19 transactional tables
+- Sessions cleared — user must login again
+- Cleanup script committed for future use
+
+### Quality Gates (all passed)
+- `npx tsc --noEmit` — zero errors
+- `npx next build` — succeeded
+
+### Remaining
+- **4.2 Walkthrough** — requires deployed instance
+- **4.3 Multi-tenant test** — requires deployed instance
+- **Batch 5** — Deploy to Vercel + Supabase production (user will handle)
+
+---
+
 ### Bug Fix — Workers page crash + Inventory 500
 - **Workers page**: API returns `monthly_payroll` but interface expected `total_monthly_payroll` — fixed field name. Added `(n ?? 0)` to `formatMoney` across all HR pages.
 - **Inventory page**: Server component used hardcoded `http://localhost:3000` to fetch stock data — replaced with direct DB queries.
