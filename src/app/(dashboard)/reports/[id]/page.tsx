@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { generateReportPdf } from "@/lib/pdf/reports";
 
 interface ReportDetail {
   id: string;
@@ -145,11 +146,11 @@ export default function ReportDetailPage() {
         </div>
         <div className="md:ml-auto flex gap-3">
           <button
-            onClick={() => window.print()}
+            onClick={() => generateReportPdf(report)}
             className="flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white font-bold text-sm rounded-lg hover:bg-[#0F172A]/90 transition-all active:scale-95 shadow-sm"
           >
             <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
-            Print / PDF
+            Download PDF
           </button>
         </div>
       </div>
