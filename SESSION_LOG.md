@@ -338,6 +338,28 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 | 4 | Seed + E2E | Seed data, walkthrough, multi-tenant test |
 | 5 | Deploy | Vercel + Supabase production |
 
+## Session: 2026-05-20 — Batch 1 Tasks 1.1-1.3 (Other Expenses)
+
+### Task 1.1 — Other Expenses field in generate form
+- Added `totalOtherExpenses` state (default 0) to `reports/generate/page.tsx`
+- Added number input "Other Expenses (tk)" with hint text between conditional selectors and summary div
+- Included `total_other_expenses` in POST body
+
+### Task 1.2 — Wire through profit calculation
+- Added `totalOtherExpenses: number = 0` 4th parameter to `calculatePeriodProfit()`
+- Replaced hardcoded `const total_other_expenses = 0` with `const total_other_expenses = totalOtherExpenses`
+
+### Task 1.3 — Zod schema + API route update
+- Added `generateReportSchema` and `GenerateReportInput` type to `schemas.ts`
+- Replaced inline schema in `/api/reports/route.ts` with import from schemas
+- Passed `parsed.data.total_other_expenses` to `calculatePeriodProfit()`
+- Fixed pre-existing ESLint `no-explicit-any` in `pdf/reports.ts` (2 occurrences) using `JsPdfWithTable` type
+
+### Quality Gates (all passed)
+- `npx tsc --noEmit` — zero errors
+- `npx eslint src/` — zero errors (fixed pre-existing issues)
+- `npx next build` — succeeded
+
 ## Quality Gates
 - `npx tsc --noEmit` — zero errors required
 - `npx eslint src/` — zero errors required
