@@ -107,15 +107,15 @@ Verify every module works end-to-end with realistic sample data before deploymen
 
 ### Tasks
 
-**4.1 Verify & run seed script** ✅ (verified + fixed imports)
+**4.1 Run seed script against live DB** ✅ (migrations + seed executed)
 - Review and fix `scripts/seed.ts` or `scripts/seed.mjs` (fixed unused imports in seed.ts)
 - Script creates: 2 categories, 8 subtypes, 2 vendors, 2 customers, 2 accounts, 2 purchases, 3 sales
 - **Needs:** Database access (Supabase) to execute
 
-**4.2 Walkthrough every module** ⏸️ (requires live DB)
+**4.2 Walkthrough every module** ⏸️ (requires deployed instance)
 - Manual testing on deployed instance
 
-**4.3 Multi-tenant isolation test** ⏸️ (requires live DB)
+**4.3 Multi-tenant isolation test** ⏸️ (requires deployed instance)
 - Manual testing on deployed instance
 
 ---
@@ -154,7 +154,7 @@ All 5 batches are complete when:
 - [x] Settings page shows org profile and allows edits
 - [x] Settings/team page lists users and allows invite/deactivate
 - [x] Role-based middleware protects sensitive routes
-- [ ] Seed data loads without errors
+- [x] Seed data loads without errors
 - [ ] End-to-end walkthrough passes for all 7 modules
 - [ ] Multi-tenant isolation confirmed
 - [ ] App deployed on Vercel with HTTPS

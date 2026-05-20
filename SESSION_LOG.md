@@ -326,109 +326,26 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 ### Quality Gates (all passed)
 - `npx tsc --noEmit` — zero errors
 - `npx eslint src/` — zero errors
-- `npx next build` — succeeded
-
-## Remaining Work (per PLAN.md)
-
-| Batch | Module | Tasks |
-|-------|--------|-------|
-| 1 | Reports | PDF export, other expenses field, Zod schema |
-| 2 | HR | Zod schemas, negative net_payable warning |
-| 3 | Settings | Org profile, Team page, Role middleware |
-| 4 | Seed + E2E | Seed data, walkthrough, multi-tenant test |
-| 5 | Deploy | Vercel + Supabase production |
-
-## Session: 2026-05-20 — Batch 1 Tasks 1.1-1.3 (Other Expenses)
-
-### Task 1.1 — Other Expenses field in generate form
-- Added `totalOtherExpenses` state (default 0) to `reports/generate/page.tsx`
-- Added number input "Other Expenses (tk)" with hint text between conditional selectors and summary div
-- Included `total_other_expenses` in POST body
-
-### Task 1.2 — Wire through profit calculation
-- Added `totalOtherExpenses: number = 0` 4th parameter to `calculatePeriodProfit()`
-- Replaced hardcoded `const total_other_expenses = 0` with `const total_other_expenses = totalOtherExpenses`
-
-### Task 1.3 — Zod schema + API route update
-- Added `generateReportSchema` and `GenerateReportInput` type to `schemas.ts`
-- Replaced inline schema in `/api/reports/route.ts` with import from schemas
-- Passed `parsed.data.total_other_expenses` to `calculatePeriodProfit()`
-- Fixed pre-existing ESLint `no-explicit-any` in `pdf/reports.ts` (2 occurrences) using `JsPdfWithTable` type
-
-### Quality Gates (all passed)
-- `npx tsc --noEmit` — zero errors
-- `npx eslint src/` — zero errors (fixed pre-existing issues)
-- `npx next build` — succeeded
-
-### Task 1.4 — PDF export library
-- Created `src/lib/pdf/reports.ts` with `generateReportPdf(report)` function
-- Uses jsPDF + jspdf-autotable
-- Generates: header, result banner (PROFIT/LOSS), Volume Analysis table, Financial Analysis table, footer
-- Money: `৳1,25,000` (en-IN locale), Weight: `1,250.500 kg` (3 decimals)
-
-### Task 1.5 — PDF download button on report detail page
-- Replaced `window.print()` with `generateReportPdf(report)` call
-- Changed button text from "Print / PDF" to "Download PDF"
-- Imported `generateReportPdf` from `@/lib/pdf/reports`
-
-### Batch 1 — Complete
-
-## Session: 2026-05-20 — Batch 2 (HR Zod Schemas + Negative net_payable)
-
-### Task 2.1 — Add Zod schemas for HR module
-- Added `workerSchema`, `advanceSchema`, `salaryPaymentSchema` to `src/lib/validations/schemas.ts`
-- Exported `WorkerInput`, `AdvanceInput`, `SalaryPaymentInput` types
-- Refactored `advances/route.ts` to import shared `advanceSchema`
-- Refactored `workers/route.ts` to import shared `workerSchema`
-- Refactored `payroll/pay/route.ts` to import shared `salaryPaymentSchema` (renamed field `amount` → `paid_amount`)
-
-### Task 2.2 — Negative net_payable UI warning
-- Desktop table: amber `#EAB308` text + "Over-advanced" badge + subtitle note
-- Mobile cards: amber text + "Over-advanced — carry forward" badge
-- Pay modal: warning banner + disabled "Confirm Payment" button when over-advanced
-- Default pay amount clamped to `Math.max(0, ...)` for over-advanced workers
-
-### Quality Gates (all passed)
-- `npx tsc --noEmit` — zero errors
-- `npx eslint src/` — zero errors
-- `npx next build` — succeeded
-
-### Batch 2 — Complete
-
-## Session: 2026-05-20 — Batch 3 (Settings Module)
-
-### Task 3.1 — Org Profile Settings Page
-- Created `src/app/api/settings/route.ts` — GET/PUT for organization profile with Zod validation
-- Created `src/app/(dashboard)/settings/page.tsx` — Org profile form (name, address, phone, email) with loading/error/save states
-
-### Task 3.2 — Team Management Page
-- Created `src/app/api/settings/team/route.ts` — GET list + POST invite (bcryptjs password hashing, duplicate email check)
-- Created `src/app/api/settings/team/[id]/route.ts` — PUT toggle active + DELETE (soft-delete, blocks owner deletion)
-- Created `src/app/(dashboard)/settings/team/page.tsx` — Team table with search, invite modal, activate/deactivate toggle, delete confirmation, mobile card view
-
-### Task 3.3 — Role-based Middleware
-- Created `src/lib/auth/middleware.ts` — `requireRole(...roles)` returns 403 on insufficient permissions
-
-### Fixes
-- Fixed `params` type in `team/[id]/route.ts` — Next.js 15 requires `params: Promise<{id: string}>` and `await params`
-
-### Batch 3 — Complete
-
-## Session: 2026-05-20 — Batch 4 (Seed Verification + Bug Fix)
-
-### Seed Script
-- Fixed unused imports (`eq`, `sql`) in `scripts/seed.ts`
-- Verified script structure is correct (creates 2 categories, 8 subtypes, 2 vendors, 2 customers, 2 accounts, 2 purchases, 3 sales)
-- Execution deferred — requires live Supabase database
-
-### Bug Fix — Sales API 500 Error
-- **Root cause 1**: `and()` received `undefined` when search param was null — Moved search condition into the `conditions` array with `if (search)` guard
-- **Root cause 2**: `firstOfMonthStr` (raw ISO string `"2026-05-01"`) compared against timestamp column — Changed to `firstOfMonth` Date object
-
-### Quality Gates (all passed)
-- `npx tsc --noEmit` — zero errors
 - `npx next build` — succeeded (55 pages, all routes functional)
 - Dev server verified: `/api/sales` compiles and serves correctly
+
+## Session: 2026-05-20 — Batch 4 (Seed)
+
+### Task 4.1 — Migrations + Seed
+- Ran `npx drizzle-kit migrate` — 1 migration applied successfully
+- Ran `npx tsx scripts/seed.ts` — seed complete:
+  - Accounts: Cash, Dutch Bangla Bank
+  - Categories: Iron Plates, Angle Iron (8 subtypes)
+  - Vendors: Bashundhara Steel, Rahim Shipyard
+  - Customers: Akbar Traders, Kamal Fabrication
+  - Purchases: 2 (1 paid, 1 partial)
+  - Sales: 3 (1 fabricated paid, 1 raw partial, 1 quick cash)
+  - Scrap pool: 150 kg
+
+### Remaining
+- **4.2 Walkthrough** — requires deployed instance
+- **4.3 Multi-tenant test** — requires deployed instance
+- **Batch 5** — Deploy to Vercel + Supabase production (user will handle)
 
 ## Quality Gates
 - `npx tsc --noEmit` — zero errors required
