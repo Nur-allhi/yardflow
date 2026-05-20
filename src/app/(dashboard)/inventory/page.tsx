@@ -2,6 +2,7 @@ import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { InventoryClient } from "./InventoryClient";
+import { InventoryNav } from "@/components/InventoryNav";
 
 export default async function InventoryPage() {
   const session = await getSession();
@@ -18,7 +19,7 @@ export default async function InventoryPage() {
   return (
     <div className="p-4 md:p-8">
       {/* Breadcrumbs and Header */}
-      <div className="hidden md:flex justify-between items-end mb-8">
+      <div className="hidden md:flex justify-between items-end mb-6">
         <div>
           <nav className="flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
             <Link href="/" className="hover:text-[#0F172A]">
@@ -62,6 +63,8 @@ export default async function InventoryPage() {
           Stock Overview
         </h1>
       </div>
+
+      <InventoryNav active="overview" />
 
       <InventoryClient data={data} />
     </div>

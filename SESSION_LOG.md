@@ -283,8 +283,26 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 ### AGENTS.md Update
 - Added rule to check `designs/{page_name}_desktop/` and `designs/{page_name}_mobile/` before building any UI page
 
+## Session: 2026-05-20 — Inventory Gap Closure
+
+### New API Routes
+- `GET/PUT/DELETE /api/inventory/categories/[id]` — single category CRUD (was missing)
+- `GET/PUT/DELETE /api/inventory/subtypes/[id]` — single subtype CRUD (was missing)
+- `GET/POST /api/inventory/consumables` — consumables log CRUD with account_transactions debit
+- `GET /api/inventory/ledger` — stock movement history with subtype/category names, filters, summary
+- `GET /api/inventory/scrap` — scrap pool movement history with running balance, summary stats
+
+### New Pages
+- `/inventory/scrap` — Scrap Pool page (desktop: KPIs + movement table + link to scrap sale; mobile: scroll KPIs + card list + FAB)
+- `/inventory/consumables` — Consumables Log page (desktop: stats + table + form sidebar; mobile: stats scroll + entries + bottom-sheet form)
+- `/inventory/ledger` — Stock Ledger page (desktop: filter bar + summary + table; mobile: filter chips + scroll stats + card list)
+
+### Navigation
+- Created `src/components/InventoryNav.tsx` — shared sub-navigation component for all 6 inventory pages
+- Added sub-nav tabs to all inventory pages (Stock Overview, Categories, Sub-types, Ledger, Scrap Pool, Consumables)
+
 ## Upcoming Work (in priority order)
-1. Consumables log (API + page)
+1. Purchase/Sale PUT/DELETE — edit/void purchase and sale records
 2. Settings / Team management pages
 3. Seed & Test — run seed script, walk through every module end-to-end, fix bugs
 

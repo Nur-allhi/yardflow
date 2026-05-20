@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { InventoryNav } from "@/components/InventoryNav";
 
 interface Category {
   id: string;
@@ -111,40 +112,8 @@ export default function SubtypesPage() {
         </h1>
       </div>
 
-      {/* Tab Sub-navigation (desktop) */}
-      <div className="hidden md:block px-8 border-b border-[#c6c6cd]">
-        <div className="flex gap-8">
-          <Link href="/inventory" className="text-[#505f76] hover:text-[#0F172A] pb-4 pt-4 text-sm transition-colors border-b-2 border-transparent">
-            Stock Overview
-          </Link>
-          <Link href="/inventory/categories" className="text-[#505f76] hover:text-[#0F172A] pb-4 pt-4 text-sm transition-colors border-b-2 border-transparent">
-            Categories
-          </Link>
-          <span className="text-[#059669] font-semibold border-b-2 border-[#059669] pb-4 pt-4 text-sm cursor-default">
-            Sub-types
-          </span>
-          <span className="text-[#505f76] pb-4 pt-4 text-sm border-b-2 border-transparent cursor-default">
-            Scrap Pool
-          </span>
-          <span className="text-[#505f76] pb-4 pt-4 text-sm border-b-2 border-transparent cursor-default">
-            Consumables
-          </span>
-        </div>
-      </div>
-
-      {/* Mobile: Tab Navigation */}
-      <div className="md:hidden px-4 pt-4 pb-2">
-        <nav className="flex border-b border-[#c6c6cd]">
-          <Link href="/inventory" className="flex-1 py-3 text-sm font-medium text-[#505f76] text-center">
-            Stock Overview
-          </Link>
-          <Link href="/inventory/categories" className="flex-1 py-3 text-sm font-medium text-[#505f76] text-center">
-            Categories
-          </Link>
-          <span className="flex-1 py-3 text-sm font-bold text-[#0F172A] text-center border-b-2 border-[#0F172A] cursor-default">
-            Sub-types
-          </span>
-        </nav>
+      <div className="px-8">
+        <InventoryNav active="subtypes" />
       </div>
 
       {/* Mobile: Horizontal Category Chips */}
