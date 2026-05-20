@@ -1,6 +1,6 @@
 # YardFlow ERP — Development TODO
 
-> Last updated: 2026-05-19  
+> Last updated: 2026-05-20  
 > See `REPORT.md` for full per-module completion analysis.
 
 ---
@@ -39,8 +39,13 @@
 ## ✅ Phase 5 — Inventory Module
 ### API Routes
 - [x] `GET/POST /api/inventory/categories`
+- [x] `GET/PUT/DELETE /api/inventory/categories/[id]` — single category CRUD
 - [x] `GET/POST /api/inventory/subtypes` (with `?category_id=` filter, stock/WAC enrichment)
+- [x] `GET/PUT/DELETE /api/inventory/subtypes/[id]` — single subtype CRUD
 - [x] `GET /api/inventory/stock` (full overview: categories + subtypes + scrap pool)
+- [x] `GET /api/inventory/ledger` — stock movement history with filters
+- [x] `GET /api/inventory/scrap` — scrap pool movement history with running balance
+- [x] `GET/POST /api/inventory/consumables` — consumables log CRUD
 
 ### Calculations
 - [x] `calculateWAC(orgId, subtypeId)` — Weighted Average Cost per kg
@@ -48,8 +53,11 @@
 
 ### Pages
 - [x] Stock Overview (desktop + mobile)
-- [x] Sub-types (desktop 2-panel + mobile cards)
 - [x] Categories (responsive form + list)
+- [x] Sub-types (desktop 2-panel + mobile cards)
+- [x] Stock Ledger (desktop filters + table + summary; mobile card list)
+- [x] Scrap Pool (desktop KPIs + movement table; mobile scroll KPIs + FAB)
+- [x] Consumables Log (desktop stats + table + form sidebar; mobile bottom-sheet form)
 
 ## ✅ Phase 6 — Purchases Module
 ### API Routes
@@ -125,17 +133,6 @@
 - [x] `/reports/[id]` — Full report view (volume + financial analysis, print button)
 
 ## 🔴 Phase 11 — Remaining Work (Gaps)
-
-### Inventory — Missing Pages & Routes
-- [ ] `GET/PUT/DELETE /api/inventory/categories/[id]` — update/delete single category
-- [ ] `GET/PUT/DELETE /api/inventory/subtypes/[id]` — update/delete single subtype
-- [ ] `GET/POST /api/inventory/consumables` — consumables log CRUD API
-- [ ] `GET /api/inventory/ledger` — stock movement history API
-- [ ] `GET /api/inventory/scrap` — scrap pool movement history API
-- [ ] `/inventory/ledger` page — full stock movement history
-- [ ] `/inventory/scrap` page — scrap pool current total + movement history
-- [ ] `/inventory/consumables` page — log daily consumable purchases
-- [ ] Zod schemas for categories, subtypes, consumables
 
 ### Purchases — Missing CRUD
 - [ ] `PUT/DELETE /api/purchases/[id]` — edit/void a purchase

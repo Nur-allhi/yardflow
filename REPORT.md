@@ -1,23 +1,23 @@
 # YardFlow ERP — Module Completion Report
 
-> Generated: 2026-05-19  
+> Generated: 2026-05-20  
 > Based on audit of all source code vs. `CONTEXT.md`, `TODO.md`, and `AGENTS.md`
 
 ---
 
-## Overall Progress: ~78%
+## Overall Progress: ~85%
 
 | Module | Pages Done | API Routes Done | Calc/Logic Done | Completion |
 |--------|-----------|----------------|----------------|------------|
 | Auth & Organization | 2/3 | 3/3 | ✅ | **70%** |
 | Dashboard | 1/1 | — | — | **85%** |
 | Bank & Cash Accounts | 4/4 | 6/6 | ✅ | **95%** |
-| Inventory | 3/6 | 3/4 | 2/2 | **60%** |
+| Inventory | 6/6 | 8/8 | 2/2 | **95%** |
 | Purchases | 4/6 | 5/5 | ✅ (WAC) | **80%** |
 | Sales | 6/8 | 6/6 | ✅ (WAC) | **80%** |
 | HR & Payroll | 5/6 | 5/5 | ✅ | **75%** |
 | Reports | 3/3 | 2/2 | 1/2 | **85%** |
-| **Total** | **28/37** | **30/31** | **4/5** | **78%** |
+| **Total** | **31/37** | **36/38** | **4/5** | **85%** |
 
 ---
 
@@ -85,7 +85,7 @@
 
 ---
 
-## Module 4 — Inventory — 60%
+## Module 4 — Inventory — 95%
 
 ### ✅ Done
 - `GET/POST /api/inventory/categories`
@@ -96,21 +96,26 @@
 - `/inventory` — Stock overview (desktop: 4-col stats, collapsible categories; mobile: bento cards)
 - `/inventory/categories` — Category CRUD
 - `/inventory/subtypes` — Sub-types page (desktop 2-panel, mobile cards)
+- `/inventory/ledger` — Stock movement history with filters + summary cards
+- `/inventory/scrap` — Scrap pool (desktop: KPIs + movement table + link to scrap sale; mobile: scroll KPIs + card list + FAB)
+- `/inventory/consumables` — Consumables log (desktop: stats + table + form sidebar; mobile: bottom-sheet form)
+
+### API Routes
+- [x] `GET/PUT/DELETE /api/inventory/categories/[id]` — single category CRUD
+- [x] `GET/PUT/DELETE /api/inventory/subtypes/[id]` — single subtype CRUD
+- [x] `GET /api/inventory/ledger` — stock movement history with subtype/category names, filters, summary
+- [x] `GET /api/inventory/scrap` — scrap pool movement history with running balance, estimated value
+- [x] `GET/POST /api/inventory/consumables` — consumables log with account_transaction debit
+
+### Navigation
+- [x] Shared `InventoryNav` component with sub-nav tabs on all 6 inventory pages
 
 ### ❌ Missing
-- `/inventory/ledger` — Full movement history page (all stock ins/outs with dates and references)
-- `/inventory/scrap` — Scrap pool page (current total kg + movement history)
-- `/inventory/consumables` — Consumables log page (welding rods, grinding paper, etc.)
-- `PUT`/`DELETE` on categories (no `[id]` route)
-- `PUT`/`DELETE` on subtypes (no `[id]` route)
-- API route for consumables CRUD (`/api/inventory/consumables`)
-- API route for scrap pool ledger (`/api/inventory/scrap`)
-- Zod schemas for categories, subtypes, consumables
+- Zod schemas for categories, subtypes, consumables (inline validation used instead)
 
 ### Notes
-- Largest gap in pages: 3 of 6 spec'd pages missing
-- Stock ledger and scrap pool queries already exist (used internally by purchases/sales)
-- Consumables table exists in schema but no API or page
+- All 6 spec'd pages are now built
+- Stock ledger and scrap pool queries enriched with joined names and running totals
 
 ---
 
@@ -237,10 +242,6 @@
 ### Missing API Routes
 | Route | Needed For |
 |-------|-----------|
-| `GET/PUT/DELETE /api/inventory/categories/[id]` | Update/delete single category |
-| `GET/PUT/DELETE /api/inventory/subtypes/[id]` | Update/delete single subtype |
-| `GET/POST /api/inventory/consumables` | Consumables log CRUD |
-| `GET /api/inventory/scrap` | Scrap pool movement history |
 | `PUT/DELETE /api/purchases/[id]` | Edit/void purchase |
 | `PUT/DELETE /api/sales/[id]` | Edit/void sale |
 | `GET/PUT/DELETE /api/hr/advances/[id]` | Single advance view/edit/void |
@@ -248,9 +249,6 @@
 ### Missing Pages
 | Page | Module | Priority |
 |------|--------|----------|
-| `/inventory/ledger` | Inventory | Medium |
-| `/inventory/scrap` | Inventory | Medium |
-| `/inventory/consumables` | Inventory | Medium |
 | `/settings/team` | Auth/Org | Low |
 | `/settings` (general) | Auth/Org | Low |
 
