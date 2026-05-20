@@ -375,11 +375,6 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 - `npx tsc --noEmit` — zero errors
 - `npx next build` — succeeded
 
-### Remaining
-- **4.2 Walkthrough** — requires deployed instance
-- **4.3 Multi-tenant test** — requires deployed instance
-- **Batch 5** — Deploy to Vercel + Supabase production (user will handle)
-
 ---
 
 ### Bug Fix — Workers page crash + Inventory 500
@@ -412,3 +407,18 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 - Every multi-table write uses `db.transaction()`
 - Never delete/rename existing columns — add new ones instead
 - Never run `drizzle push` — use `drizzle-kit generate` + `drizzle-kit migrate`
+
+## Session: 2026-05-21 — User Testing Feedback + Fix Plan
+
+### User tested the app (logged 36 findings)
+- User created two test businesses and walked through all modules
+- **Finding_after_testing.md** — raw findings file with 36 issues across all modules
+- Key issues: HR module completely broken (errors 3-6), quick sale shows [object Object], dashboard blank, account balances not updating, opening balance not flowing into due calculations, missing navigation everywhere
+
+### Fixes_implementation.md created
+- 36-item plan organized by priority: P0 (6 crashes) → P1 (7 bugs) → P2 (10 missing features) → P3 (13 polish)
+- Committed as `d5f1944` — user will say "proceed" when ready for implementation
+
+### Database state after testing
+- 1 org (Bagdad Trading Corporation), 1 user (`noorefty1@gmail.com`)
+- Test data present: 2 accounts, 2 vendors, 1 customer, 2 workers, 4 purchases, 2 sales, 17 account transactions, 1 period report
