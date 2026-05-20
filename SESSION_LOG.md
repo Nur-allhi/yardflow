@@ -348,10 +348,22 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
   2. `Date` object in `sql`\`...\` template literal throws TypeError — changed to `.toISOString()` string
   3. GET handler lacked try-catch — any error produced empty 500 body; wrapped in try-catch with JSON error response
 
+### Bug Fix — Workers page crash + Inventory 500
+- **Workers page**: API returns `monthly_payroll` but interface expected `total_monthly_payroll` — fixed field name. Added `(n ?? 0)` to `formatMoney` across all HR pages.
+- **Inventory page**: Server component used hardcoded `http://localhost:3000` to fetch stock data — replaced with direct DB queries.
+- **HR landing page**: Created `/hr/page.tsx` with redirect to `/hr/workers` (was 404).
+
+### Full API test — All 20 endpoints return 200
+- Auth, Inventory (6), HR (3), Sales (2), Purchases (2), Accounts (2), Reports (2), Settings (2)
+- Report generation POST → 201, Worker creation POST → 201
+
+### Full page test — All 21 pages return 200
+- Dashboard, Inventory (6 sub-pages), Purchases (2), Sales (2), HR (4), Accounts (2), Reports (2), Settings (2)
+
 ### Quality Gates (all passed)
 - `npx tsc --noEmit` — zero errors
+- `npx eslint src/` — zero errors
 - `npx next build` — succeeded
-- Tested `GET /api/sales?page=1&limit=15` → 200 OK
 
 ### Remaining
 - **4.2 Walkthrough** — requires deployed instance

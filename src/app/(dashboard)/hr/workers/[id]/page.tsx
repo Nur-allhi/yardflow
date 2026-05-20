@@ -35,7 +35,7 @@ function formatDate(dateStr: string) {
 }
 
 function formatMoney(n: number) {
-  return "\u09F3" + n.toLocaleString("en-IN");
+  return "\u09F3" + (n ?? 0).toLocaleString("en-IN");
 }
 
 function getInitials(name: string) {

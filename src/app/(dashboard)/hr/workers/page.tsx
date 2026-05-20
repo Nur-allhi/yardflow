@@ -16,13 +16,12 @@ interface Worker {
 
 interface Summary {
   total_workers: number;
-  total_monthly_payroll: number;
+  monthly_payroll: number;
   pending_advances: number;
-  active_workers: number;
 }
 
 function formatMoney(n: number) {
-  return "\u09F3" + n.toLocaleString("en-IN");
+  return "\u09F3" + (n ?? 0).toLocaleString("en-IN");
 }
 
 function getInitials(name: string) {
@@ -145,7 +144,7 @@ export default function WorkersPage() {
             Total Monthly Payroll
           </p>
           <p className="font-mono text-lg md:text-2xl font-bold text-[#059669]">
-            {summary ? formatMoney(summary.total_monthly_payroll) : "—"}
+            {summary ? formatMoney(summary.monthly_payroll) : "—"}
           </p>
         </div>
         <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-[#c6c6cd]/30 md:border-[#c6c6cd] shadow-sm">
@@ -161,7 +160,7 @@ export default function WorkersPage() {
             Active Workers
           </p>
           <p className="font-mono text-lg md:text-2xl font-bold text-[#0F172A]">
-            {summary ? `${summary.active_workers}/${summary.total_workers}` : "—"}
+            {summary ? `${summary.total_workers}` : "—"}
           </p>
         </div>
       </div>
