@@ -342,6 +342,17 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
   - Sales: 3 (1 fabricated paid, 1 raw partial, 1 quick cash)
   - Scrap pool: 150 kg
 
+### Bug Fix — Sales API 500 Error
+- **3 bugs found and fixed in `src/app/api/sales/route.ts`**:
+  1. Raw SQL field `total_kg` in subquery missing `.as('total_kg')` — drizzle requires explicit alias
+  2. `Date` object in `sql`\`...\` template literal throws TypeError — changed to `.toISOString()` string
+  3. GET handler lacked try-catch — any error produced empty 500 body; wrapped in try-catch with JSON error response
+
+### Quality Gates (all passed)
+- `npx tsc --noEmit` — zero errors
+- `npx next build` — succeeded
+- Tested `GET /api/sales?page=1&limit=15` → 200 OK
+
 ### Remaining
 - **4.2 Walkthrough** — requires deployed instance
 - **4.3 Multi-tenant test** — requires deployed instance
