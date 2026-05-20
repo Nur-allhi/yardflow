@@ -395,6 +395,41 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 
 ### Batch 2 — Complete
 
+## Session: 2026-05-20 — Batch 3 (Settings Module)
+
+### Task 3.1 — Org Profile Settings Page
+- Created `src/app/api/settings/route.ts` — GET/PUT for organization profile with Zod validation
+- Created `src/app/(dashboard)/settings/page.tsx` — Org profile form (name, address, phone, email) with loading/error/save states
+
+### Task 3.2 — Team Management Page
+- Created `src/app/api/settings/team/route.ts` — GET list + POST invite (bcryptjs password hashing, duplicate email check)
+- Created `src/app/api/settings/team/[id]/route.ts` — PUT toggle active + DELETE (soft-delete, blocks owner deletion)
+- Created `src/app/(dashboard)/settings/team/page.tsx` — Team table with search, invite modal, activate/deactivate toggle, delete confirmation, mobile card view
+
+### Task 3.3 — Role-based Middleware
+- Created `src/lib/auth/middleware.ts` — `requireRole(...roles)` returns 403 on insufficient permissions
+
+### Fixes
+- Fixed `params` type in `team/[id]/route.ts` — Next.js 15 requires `params: Promise<{id: string}>` and `await params`
+
+### Batch 3 — Complete
+
+## Session: 2026-05-20 — Batch 4 (Seed Verification + Bug Fix)
+
+### Seed Script
+- Fixed unused imports (`eq`, `sql`) in `scripts/seed.ts`
+- Verified script structure is correct (creates 2 categories, 8 subtypes, 2 vendors, 2 customers, 2 accounts, 2 purchases, 3 sales)
+- Execution deferred — requires live Supabase database
+
+### Bug Fix — Sales API 500 Error
+- **Root cause 1**: `and()` received `undefined` when search param was null — Moved search condition into the `conditions` array with `if (search)` guard
+- **Root cause 2**: `firstOfMonthStr` (raw ISO string `"2026-05-01"`) compared against timestamp column — Changed to `firstOfMonth` Date object
+
+### Quality Gates (all passed)
+- `npx tsc --noEmit` — zero errors
+- `npx next build` — succeeded (55 pages, all routes functional)
+- Dev server verified: `/api/sales` compiles and serves correctly
+
 ## Quality Gates
 - `npx tsc --noEmit` — zero errors required
 - `npx eslint src/` — zero errors required

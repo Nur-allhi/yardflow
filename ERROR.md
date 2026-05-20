@@ -1,14 +1,11 @@
 content.js:236 Hello content.
-main-app.js?v=1779287950974:1181 Download the React DevTools for a better development experience: https://react.dev/link/react-devtools
+main-app.js?v=1779288390672:1181 Download the React DevTools for a better development experience: https://react.dev/link/react-devtools
 content.js:236 Is Medium site: false
 content.js:236 Is Medium site: false
 hot-reloader-app.js:197 [Fast Refresh] rebuilding
-report-hmr-latency.js:14 [Fast Refresh] done in 448ms
-content.js:236 Is Medium site: false
+report-hmr-latency.js:14 [Fast Refresh] done in 836ms
 hot-reloader-app.js:197 [Fast Refresh] rebuilding
-report-hmr-latency.js:14 [Fast Refresh] done in 322ms
-hot-reloader-app.js:197 [Fast Refresh] rebuilding
-report-hmr-latency.js:14 [Fast Refresh] done in 352ms
+report-hmr-latency.js:14 [Fast Refresh] done in 537ms
 page.tsx:197  GET http://localhost:3000/api/sales?page=1&limit=15 net::ERR_ABORTED 500 (Internal Server Error)
 (anonymous) @ page.tsx:197
 (anonymous) @ page.tsx:214
@@ -200,102 +197,14 @@ performWorkOnRoot @ react-dom-client.development.js:14990
 performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16816
 performWorkUntilDeadline @ scheduler.development.js:45
 "use client"
-Function.all @ VM3675 <anonymous>:1
+Function.all @ VM4713 <anonymous>:1
+Function.all @ VM4713 <anonymous>:1
+Function.all @ VM4713 <anonymous>:1
 initializeElement @ react-server-dom-webpack-client.browser.development.js:1376
-"use server"
-ResponseInstance @ react-server-dom-webpack-client.browser.development.js:2091
-createResponseFromOptions @ react-server-dom-webpack-client.browser.development.js:3155
-exports.createFromReadableStream @ react-server-dom-webpack-client.browser.development.js:3540
-createFromNextReadableStream @ fetch-server-response.js:209
-fetchServerResponse @ fetch-server-response.js:116
-await in fetchServerResponse
-eval @ prefetch-cache-utils.js:197
-task @ promise-queue.js:30
-processNext @ promise-queue.js:81
-enqueue @ promise-queue.js:45
-createLazyPrefetchEntry @ prefetch-cache-utils.js:197
-getOrCreatePrefetchCacheEntry @ prefetch-cache-utils.js:144
-navigateReducer @ navigate-reducer.js:166
-clientReducer @ router-reducer.js:25
-action @ app-router-instance.js:156
-runAction @ app-router-instance.js:66
-dispatchAction @ app-router-instance.js:120
-dispatch @ app-router-instance.js:154
-eval @ use-action-queue.js:55
-startTransition @ react-dom-client.development.js:7968
-dispatch @ use-action-queue.js:54
-dispatchAppRouterAction @ use-action-queue.js:37
-dispatchNavigateAction @ app-router-instance.js:207
-eval @ link.js:82
-exports.startTransition @ react.development.js:1150
-linkClicked @ link.js:81
-onClick @ link.js:316
-executeDispatch @ react-dom-client.development.js:16971
-runWithFiberInDEV @ react-dom-client.development.js:872
-processDispatchQueue @ react-dom-client.development.js:17021
-eval @ react-dom-client.development.js:17622
-batchedUpdates$1 @ react-dom-client.development.js:3312
-dispatchEventForPluginEventSystem @ react-dom-client.development.js:17175
-dispatchEvent @ react-dom-client.development.js:21358
-dispatchDiscreteEvent @ react-dom-client.development.js:21326
-<a>
-exports.jsx @ react-jsx-runtime.development.js:323
-LinkComponent @ link.js:366
-react_stack_bottom_frame @ react-dom-client.development.js:23584
-renderWithHooksAgain @ react-dom-client.development.js:6893
-renderWithHooks @ react-dom-client.development.js:6805
-updateFunctionComponent @ react-dom-client.development.js:9247
-beginWork @ react-dom-client.development.js:10858
-runWithFiberInDEV @ react-dom-client.development.js:872
-performUnitOfWork @ react-dom-client.development.js:15727
-workLoopConcurrentByScheduler @ react-dom-client.development.js:15721
-renderRootConcurrent @ react-dom-client.development.js:15696
-performWorkOnRoot @ react-dom-client.development.js:14990
-performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16816
-performWorkUntilDeadline @ scheduler.development.js:45
-<LinkComponent>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:323
-(anonymous) @ Sidebar.tsx:41
-Sidebar @ Sidebar.tsx:38
-react_stack_bottom_frame @ react-dom-client.development.js:23584
-renderWithHooksAgain @ react-dom-client.development.js:6893
-renderWithHooks @ react-dom-client.development.js:6805
-updateFunctionComponent @ react-dom-client.development.js:9247
-beginWork @ react-dom-client.development.js:10807
-runWithFiberInDEV @ react-dom-client.development.js:872
-performUnitOfWork @ react-dom-client.development.js:15727
-workLoopConcurrentByScheduler @ react-dom-client.development.js:15721
-renderRootConcurrent @ react-dom-client.development.js:15696
-performWorkOnRoot @ react-dom-client.development.js:14990
-performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16816
-performWorkUntilDeadline @ scheduler.development.js:45
-"use client"
-(anonymous) @ layout.tsx:18
-initializeElement @ react-server-dom-webpack-client.browser.development.js:1377
 eval @ react-server-dom-webpack-client.browser.development.js:3126
 initializeModelChunk @ react-server-dom-webpack-client.browser.development.js:1273
-readChunk @ react-server-dom-webpack-client.browser.development.js:950
-react_stack_bottom_frame @ react-dom-client.development.js:23691
-resolveLazy @ react-dom-client.development.js:5177
-createChild @ react-dom-client.development.js:5494
-reconcileChildrenArray @ react-dom-client.development.js:5801
-reconcileChildFibersImpl @ react-dom-client.development.js:6124
-eval @ react-dom-client.development.js:6229
-reconcileChildren @ react-dom-client.development.js:8783
-beginWork @ react-dom-client.development.js:11206
-runWithFiberInDEV @ react-dom-client.development.js:872
-performUnitOfWork @ react-dom-client.development.js:15727
-workLoopConcurrentByScheduler @ react-dom-client.development.js:15721
-renderRootConcurrent @ react-dom-client.development.js:15696
-performWorkOnRoot @ react-dom-client.development.js:14990
-performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16816
-performWorkUntilDeadline @ scheduler.development.js:45
-<DashboardLayout>
-Function.all @ VM3675 <anonymous>:1
-initializeFakeTask @ react-server-dom-webpack-client.browser.development.js:2588
-initializeDebugInfo @ react-server-dom-webpack-client.browser.development.js:2613
-initializeDebugChunk @ react-server-dom-webpack-client.browser.development.js:1220
-processFullStringRow @ react-server-dom-webpack-client.browser.development.js:2909
+resolveModelChunk @ react-server-dom-webpack-client.browser.development.js:1127
+processFullStringRow @ react-server-dom-webpack-client.browser.development.js:2958
 processFullBinaryRow @ react-server-dom-webpack-client.browser.development.js:2825
 processBinaryChunk @ react-server-dom-webpack-client.browser.development.js:3028
 progress @ react-server-dom-webpack-client.browser.development.js:3294
@@ -304,7 +213,7 @@ ResponseInstance @ react-server-dom-webpack-client.browser.development.js:2091
 createResponseFromOptions @ react-server-dom-webpack-client.browser.development.js:3155
 exports.createFromReadableStream @ react-server-dom-webpack-client.browser.development.js:3540
 eval @ app-index.js:130
-(app-pages-browser)/./node_modules/next/dist/client/app-index.js @ main-app.js?v=1779287950974:160
+(app-pages-browser)/./node_modules/next/dist/client/app-index.js @ main-app.js?v=1779288390672:160
 (anonymous) @ webpack.js:1
 __webpack_require__ @ webpack.js:1
 (anonymous) @ webpack.js:1
@@ -313,140 +222,37 @@ eval @ app-bootstrap.js:59
 loadScriptsInSequence @ app-bootstrap.js:24
 appBootstrap @ app-bootstrap.js:53
 eval @ app-next-dev.js:13
-(app-pages-browser)/./node_modules/next/dist/client/app-next-dev.js @ main-app.js?v=1779287950974:182
+(app-pages-browser)/./node_modules/next/dist/client/app-next-dev.js @ main-app.js?v=1779288390672:182
 (anonymous) @ webpack.js:1
 __webpack_require__ @ webpack.js:1
-__webpack_exec__ @ main-app.js?v=1779287950974:1889
-(anonymous) @ main-app.js?v=1779287950974:1890
+__webpack_exec__ @ main-app.js?v=1779288390672:1889
+(anonymous) @ main-app.js?v=1779288390672:1890
 (anonymous) @ webpack.js:1
-(anonymous) @ main-app.js?v=1779287950974:9
+(anonymous) @ main-app.js?v=1779288390672:9
 page.tsx:197  GET http://localhost:3000/api/sales?page=1&limit=15 net::ERR_ABORTED 500 (Internal Server Error)
 (anonymous) @ page.tsx:197
-(anonymous) @ page.tsx:214
-react_stack_bottom_frame @ react-dom-client.development.js:23669
+executeDispatch @ react-dom-client.development.js:16971
 runWithFiberInDEV @ react-dom-client.development.js:872
-commitHookEffectListMount @ react-dom-client.development.js:12345
-commitHookPassiveMountEffects @ react-dom-client.development.js:12466
-reconnectPassiveEffects @ react-dom-client.development.js:14563
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14610
-recursivelyTraverseReconnectPassiveEffects @ react-dom-client.development.js:14534
-reconnectPassiveEffects @ react-dom-client.development.js:14556
-doubleInvokeEffectsOnFiber @ react-dom-client.development.js:16566
+processDispatchQueue @ react-dom-client.development.js:17021
+eval @ react-dom-client.development.js:17622
+batchedUpdates$1 @ react-dom-client.development.js:3312
+dispatchEventForPluginEventSystem @ react-dom-client.development.js:17175
+dispatchEvent @ react-dom-client.development.js:21358
+dispatchDiscreteEvent @ react-dom-client.development.js:21326
+<button>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:323
+SalesPage @ page.tsx:481
+react_stack_bottom_frame @ react-dom-client.development.js:23584
+renderWithHooksAgain @ react-dom-client.development.js:6893
+renderWithHooks @ react-dom-client.development.js:6805
+updateFunctionComponent @ react-dom-client.development.js:9247
+beginWork @ react-dom-client.development.js:10858
 runWithFiberInDEV @ react-dom-client.development.js:872
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16530
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-recursivelyTraverseAndDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16536
-commitDoubleInvokeEffectsInDEV @ react-dom-client.development.js:16575
-flushPassiveEffects @ react-dom-client.development.js:16348
-eval @ react-dom-client.development.js:15974
+performUnitOfWork @ react-dom-client.development.js:15727
+workLoopSync @ react-dom-client.development.js:15547
+renderRootSync @ react-dom-client.development.js:15527
+performWorkOnRoot @ react-dom-client.development.js:14991
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16816
 performWorkUntilDeadline @ scheduler.development.js:45
 <SalesPage>
 exports.jsx @ react-jsx-runtime.development.js:323
@@ -464,102 +270,14 @@ performWorkOnRoot @ react-dom-client.development.js:14990
 performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16816
 performWorkUntilDeadline @ scheduler.development.js:45
 "use client"
-Function.all @ VM3675 <anonymous>:1
+Function.all @ VM4713 <anonymous>:1
+Function.all @ VM4713 <anonymous>:1
+Function.all @ VM4713 <anonymous>:1
 initializeElement @ react-server-dom-webpack-client.browser.development.js:1376
-"use server"
-ResponseInstance @ react-server-dom-webpack-client.browser.development.js:2091
-createResponseFromOptions @ react-server-dom-webpack-client.browser.development.js:3155
-exports.createFromReadableStream @ react-server-dom-webpack-client.browser.development.js:3540
-createFromNextReadableStream @ fetch-server-response.js:209
-fetchServerResponse @ fetch-server-response.js:116
-await in fetchServerResponse
-eval @ prefetch-cache-utils.js:197
-task @ promise-queue.js:30
-processNext @ promise-queue.js:81
-enqueue @ promise-queue.js:45
-createLazyPrefetchEntry @ prefetch-cache-utils.js:197
-getOrCreatePrefetchCacheEntry @ prefetch-cache-utils.js:144
-navigateReducer @ navigate-reducer.js:166
-clientReducer @ router-reducer.js:25
-action @ app-router-instance.js:156
-runAction @ app-router-instance.js:66
-dispatchAction @ app-router-instance.js:120
-dispatch @ app-router-instance.js:154
-eval @ use-action-queue.js:55
-startTransition @ react-dom-client.development.js:7968
-dispatch @ use-action-queue.js:54
-dispatchAppRouterAction @ use-action-queue.js:37
-dispatchNavigateAction @ app-router-instance.js:207
-eval @ link.js:82
-exports.startTransition @ react.development.js:1150
-linkClicked @ link.js:81
-onClick @ link.js:316
-executeDispatch @ react-dom-client.development.js:16971
-runWithFiberInDEV @ react-dom-client.development.js:872
-processDispatchQueue @ react-dom-client.development.js:17021
-eval @ react-dom-client.development.js:17622
-batchedUpdates$1 @ react-dom-client.development.js:3312
-dispatchEventForPluginEventSystem @ react-dom-client.development.js:17175
-dispatchEvent @ react-dom-client.development.js:21358
-dispatchDiscreteEvent @ react-dom-client.development.js:21326
-<a>
-exports.jsx @ react-jsx-runtime.development.js:323
-LinkComponent @ link.js:366
-react_stack_bottom_frame @ react-dom-client.development.js:23584
-renderWithHooksAgain @ react-dom-client.development.js:6893
-renderWithHooks @ react-dom-client.development.js:6805
-updateFunctionComponent @ react-dom-client.development.js:9247
-beginWork @ react-dom-client.development.js:10858
-runWithFiberInDEV @ react-dom-client.development.js:872
-performUnitOfWork @ react-dom-client.development.js:15727
-workLoopConcurrentByScheduler @ react-dom-client.development.js:15721
-renderRootConcurrent @ react-dom-client.development.js:15696
-performWorkOnRoot @ react-dom-client.development.js:14990
-performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16816
-performWorkUntilDeadline @ scheduler.development.js:45
-<LinkComponent>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:323
-(anonymous) @ Sidebar.tsx:41
-Sidebar @ Sidebar.tsx:38
-react_stack_bottom_frame @ react-dom-client.development.js:23584
-renderWithHooksAgain @ react-dom-client.development.js:6893
-renderWithHooks @ react-dom-client.development.js:6805
-updateFunctionComponent @ react-dom-client.development.js:9247
-beginWork @ react-dom-client.development.js:10807
-runWithFiberInDEV @ react-dom-client.development.js:872
-performUnitOfWork @ react-dom-client.development.js:15727
-workLoopConcurrentByScheduler @ react-dom-client.development.js:15721
-renderRootConcurrent @ react-dom-client.development.js:15696
-performWorkOnRoot @ react-dom-client.development.js:14990
-performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16816
-performWorkUntilDeadline @ scheduler.development.js:45
-"use client"
-(anonymous) @ layout.tsx:18
-initializeElement @ react-server-dom-webpack-client.browser.development.js:1377
 eval @ react-server-dom-webpack-client.browser.development.js:3126
 initializeModelChunk @ react-server-dom-webpack-client.browser.development.js:1273
-readChunk @ react-server-dom-webpack-client.browser.development.js:950
-react_stack_bottom_frame @ react-dom-client.development.js:23691
-resolveLazy @ react-dom-client.development.js:5177
-createChild @ react-dom-client.development.js:5494
-reconcileChildrenArray @ react-dom-client.development.js:5801
-reconcileChildFibersImpl @ react-dom-client.development.js:6124
-eval @ react-dom-client.development.js:6229
-reconcileChildren @ react-dom-client.development.js:8783
-beginWork @ react-dom-client.development.js:11206
-runWithFiberInDEV @ react-dom-client.development.js:872
-performUnitOfWork @ react-dom-client.development.js:15727
-workLoopConcurrentByScheduler @ react-dom-client.development.js:15721
-renderRootConcurrent @ react-dom-client.development.js:15696
-performWorkOnRoot @ react-dom-client.development.js:14990
-performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16816
-performWorkUntilDeadline @ scheduler.development.js:45
-<DashboardLayout>
-Function.all @ VM3675 <anonymous>:1
-initializeFakeTask @ react-server-dom-webpack-client.browser.development.js:2588
-initializeDebugInfo @ react-server-dom-webpack-client.browser.development.js:2613
-initializeDebugChunk @ react-server-dom-webpack-client.browser.development.js:1220
-processFullStringRow @ react-server-dom-webpack-client.browser.development.js:2909
+resolveModelChunk @ react-server-dom-webpack-client.browser.development.js:1127
+processFullStringRow @ react-server-dom-webpack-client.browser.development.js:2958
 processFullBinaryRow @ react-server-dom-webpack-client.browser.development.js:2825
 processBinaryChunk @ react-server-dom-webpack-client.browser.development.js:3028
 progress @ react-server-dom-webpack-client.browser.development.js:3294
@@ -568,7 +286,7 @@ ResponseInstance @ react-server-dom-webpack-client.browser.development.js:2091
 createResponseFromOptions @ react-server-dom-webpack-client.browser.development.js:3155
 exports.createFromReadableStream @ react-server-dom-webpack-client.browser.development.js:3540
 eval @ app-index.js:130
-(app-pages-browser)/./node_modules/next/dist/client/app-index.js @ main-app.js?v=1779287950974:160
+(app-pages-browser)/./node_modules/next/dist/client/app-index.js @ main-app.js?v=1779288390672:160
 (anonymous) @ webpack.js:1
 __webpack_require__ @ webpack.js:1
 (anonymous) @ webpack.js:1
@@ -577,10 +295,10 @@ eval @ app-bootstrap.js:59
 loadScriptsInSequence @ app-bootstrap.js:24
 appBootstrap @ app-bootstrap.js:53
 eval @ app-next-dev.js:13
-(app-pages-browser)/./node_modules/next/dist/client/app-next-dev.js @ main-app.js?v=1779287950974:182
+(app-pages-browser)/./node_modules/next/dist/client/app-next-dev.js @ main-app.js?v=1779288390672:182
 (anonymous) @ webpack.js:1
 __webpack_require__ @ webpack.js:1
-__webpack_exec__ @ main-app.js?v=1779287950974:1889
-(anonymous) @ main-app.js?v=1779287950974:1890
+__webpack_exec__ @ main-app.js?v=1779288390672:1889
+(anonymous) @ main-app.js?v=1779288390672:1890
 (anonymous) @ webpack.js:1
-(anonymous) @ main-app.js?v=1779287950974:9
+(anonymous) @ main-app.js?v=1779288390672:9
