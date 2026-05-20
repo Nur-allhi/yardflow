@@ -15,7 +15,7 @@ interface PayrollRow {
 }
 
 interface PayrollData {
-  rows: PayrollRow[];
+  workers: PayrollRow[];
   summary: {
     total_salary: number;
     total_advances: number;
@@ -295,7 +295,7 @@ export default function PayrollPage() {
       )}
 
       {/* Empty */}
-      {!loading && !error && payroll && payroll.rows.length === 0 && (
+      {!loading && !error && payroll && payroll.workers.length === 0 && (
         <div className="bg-white rounded-xl border border-[#c6c6cd]/30 p-12 text-center">
           <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">
             payroll
@@ -317,7 +317,7 @@ export default function PayrollPage() {
       )}
 
       {/* Desktop Table */}
-      {!loading && !error && payroll && payroll.rows.length > 0 && (
+      {!loading && !error && payroll && payroll.workers.length > 0 && (
         <div className="hidden md:block bg-white rounded-xl border border-[#c6c6cd] overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
             <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
@@ -346,7 +346,7 @@ export default function PayrollPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#c6c6cd]/50">
-              {payroll.rows.map((row) => (
+              {payroll.workers.map((row) => (
                 <tr
                   key={row.worker_id}
                   className="hover:bg-[#F8FAFC] transition-colors"
@@ -410,12 +410,12 @@ export default function PayrollPage() {
       )}
 
       {/* Mobile Cards */}
-      {!loading && !error && payroll && payroll.rows.length > 0 && (
+      {!loading && !error && payroll && payroll.workers.length > 0 && (
         <div className="md:hidden space-y-3">
           <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-[#505f76]">
             {MONTH_NAMES[selectedMonth - 1]} {selectedYear}
           </h2>
-          {payroll.rows.map((row) => (
+          {payroll.workers.map((row) => (
             <div
               key={row.worker_id}
               className="bg-white rounded-lg p-4 shadow-sm border border-[#c6c6cd]/20"
