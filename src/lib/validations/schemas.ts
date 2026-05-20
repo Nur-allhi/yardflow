@@ -122,9 +122,39 @@ export const generateReportSchema = z.object({
   total_other_expenses: z.number().optional().default(0),
 });
 
+export const workerSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  phone: z.string().optional(),
+  designation: z.string().optional(),
+  monthly_salary: z.number().positive("Salary must be positive"),
+  join_date: z.string().optional(),
+});
+
+export const advanceSchema = z.object({
+  worker_id: z.string().uuid(),
+  amount: z.number().positive("Amount must be positive"),
+  account_id: z.string().uuid(),
+  advance_date: z.string().min(1),
+  month: z.number().min(1).max(12),
+  year: z.number(),
+  note: z.string().optional(),
+});
+
+export const salaryPaymentSchema = z.object({
+  worker_id: z.string().uuid(),
+  month: z.number().min(1).max(12),
+  year: z.number(),
+  paid_amount: z.number().positive(),
+  account_id: z.string().uuid(),
+  payment_date: z.string().min(1),
+});
+
 export type GenerateReportInput = z.infer<typeof generateReportSchema>;
 export type AccountInput = z.infer<typeof accountSchema>;
 export type AccountTransferInput = z.infer<typeof accountTransferSchema>;
+export type AdvanceInput = z.infer<typeof advanceSchema>;
 export type CustomerInput = z.infer<typeof customerSchema>;
 export type SaleInput = z.infer<typeof saleSchema>;
 export type SalePaymentInput = z.infer<typeof salePaymentSchema>;
+export type SalaryPaymentInput = z.infer<typeof salaryPaymentSchema>;
+export type WorkerInput = z.infer<typeof workerSchema>;

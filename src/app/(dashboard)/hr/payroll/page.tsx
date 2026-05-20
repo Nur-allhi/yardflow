@@ -117,7 +117,8 @@ export default function PayrollPage() {
   function openPayModal(row: PayrollRow) {
     loadAccounts();
     setPayTarget(row);
-    setPayAmount(String(Math.ceil(row.net_payable - row.paid_amount)));
+    const defaultAmount = Math.max(0, Math.ceil(row.net_payable - row.paid_amount));
+    setPayAmount(String(defaultAmount));
     setPayError(null);
     setShowPayModal(true);
   }
@@ -369,8 +370,24 @@ export default function PayrollPage() {
                   <td className="px-6 py-4 font-mono text-sm text-right text-[#EAB308]">
                     {formatMoney(row.advances_taken)}
                   </td>
-                  <td className="px-6 py-4 font-mono text-sm font-bold text-right text-[#0F172A]">
-                    {formatMoney(row.net_payable)}
+                  <td className="px-6 py-4 text-right">
+                    {row.net_payable < 0 ? (
+                      <div className="flex flex-col items-end gap-1">
+                        <span className="font-mono text-sm font-bold text-[#EAB308]">
+                          {formatMoney(row.net_payable)}
+                        </span>
+                        <span className="px-1.5 py-0.5 bg-[#FEF3C7] text-[#92400E] text-[9px] font-bold rounded uppercase tracking-wider whitespace-nowrap">
+                          Over-advanced
+                        </span>
+                        <span className="text-[10px] text-[#505f76] leading-tight max-w-[200px] text-right">
+                          Advances exceed base salary. Net payable will carry to next month.
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="font-mono text-sm font-bold text-[#0F172A]">
+                        {formatMoney(row.net_payable)}
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-4">
                     <StatusChip status={row.status} />
@@ -432,9 +449,20 @@ export default function PayrollPage() {
                 </div>
                 <div>
                   <p className="text-[11px] text-[#505f76] font-medium">Payable</p>
-                  <p className="font-mono text-sm font-bold text-[#059669]">
-                    {formatMoney(row.net_payable)}
-                  </p>
+                  {row.net_payable < 0 ? (
+                    <div className="flex flex-col gap-0.5">
+                      <span className="font-mono text-sm font-bold text-[#EAB308]">
+                        {formatMoney(row.net_payable)}
+                      </span>
+                      <span className="self-start px-1.5 py-0.5 bg-[#FEF3C7] text-[#92400E] text-[9px] font-bold rounded uppercase tracking-wider whitespace-nowrap">
+                        Over-advanced — carry forward
+                      </span>
+                    </div>
+                  ) : (
+                    <p className="font-mono text-sm font-bold text-[#059669]">
+                      {formatMoney(row.net_payable)}
+                    </p>
+                  )}
                 </div>
               </div>
               {row.status !== "paid" && (
@@ -442,7 +470,7 @@ export default function PayrollPage() {
                   onClick={() => openPayModal(row)}
                   className="w-full mt-3 py-2.5 bg-[#0F172A] text-white font-bold text-sm rounded-lg active:scale-95 transition-transform"
                 >
-                  Pay {formatMoney(row.net_payable - row.paid_amount)}
+                  Pay {Math.max(0, row.net_payable - row.paid_amount) > 0 ? formatMoney(row.net_payable - row.paid_amount) : formatMoney(0)}
                 </button>
               )}
             </div>
@@ -480,10 +508,17 @@ export default function PayrollPage() {
                     {payTarget.designation || ""}
                   </p>
                 </div>
-                <span className="font-mono font-bold text-[#059669] text-lg">
+                <span className={`font-mono font-bold text-lg ${payTarget.net_payable < 0 ? "text-[#EAB308]" : "text-[#059669]"}`}>
                   {formatMoney(payTarget.net_payable)}
                 </span>
               </div>
+              {payTarget.net_payable < 0 && (
+                <div className="mt-3 px-3 py-2 bg-[#FEF3C7] border border-[#FCD34D]/50 rounded-lg">
+                  <p className="text-xs font-bold text-[#92400E]">
+                    This worker has been over-advanced. Net payable is negative.
+                  </p>
+                </div>
+              )}
             </div>
 
             <form onSubmit={handlePay} className="p-6 space-y-5">
@@ -499,7 +534,7 @@ export default function PayrollPage() {
                     type="number"
                     step="0.01"
                     min="0"
-                    max={payTarget.net_payable - payTarget.paid_amount}
+                    max={Math.max(0, payTarget.net_payable - payTarget.paid_amount)}
                     value={payAmount}
                     onChange={(e) => setPayAmount(e.target.value)}
                     required
@@ -555,10 +590,10 @@ export default function PayrollPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={paying}
+                  disabled={paying || payTarget.net_payable < 0}
                   className="flex-1 h-[42px] bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
                 >
-                  {paying ? "Processing..." : "Confirm Payment"}
+                  {paying ? "Processing..." : payTarget.net_payable < 0 ? "Cannot Pay — Negative Balance" : "Confirm Payment"}
                 </button>
               </div>
             </form>

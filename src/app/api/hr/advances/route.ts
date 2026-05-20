@@ -7,17 +7,7 @@ import {
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
-import { z } from "zod";
-
-const advanceSchema = z.object({
-  worker_id: z.string().uuid(),
-  amount: z.number().positive("Amount must be positive"),
-  account_id: z.string().uuid(),
-  advance_date: z.string().min(1),
-  month: z.number().min(1).max(12),
-  year: z.number(),
-  note: z.string().optional(),
-});
+import { advanceSchema } from "@/lib/validations/schemas";
 
 export async function GET(request: Request) {
   const orgId = await requireOrg();

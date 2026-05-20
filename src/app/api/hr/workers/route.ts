@@ -3,14 +3,7 @@ import { db } from "@/lib/db";
 import { workers, salaryAdvances } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
-import { z } from "zod";
-
-const workerSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  phone: z.string().optional(),
-  designation: z.string().optional(),
-  monthly_salary: z.number().positive("Salary must be positive"),
-});
+import { workerSchema } from "@/lib/validations/schemas";
 
 export async function GET() {
   const orgId = await requireOrg();

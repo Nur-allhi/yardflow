@@ -8,23 +8,14 @@ import {
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
-import { z } from "zod";
-
-const payrollPaySchema = z.object({
-  worker_id: z.string().uuid(),
-  month: z.number().min(1).max(12),
-  year: z.number(),
-  amount: z.number().positive(),
-  account_id: z.string().uuid(),
-  payment_date: z.string().min(1),
-});
+import { salaryPaymentSchema } from "@/lib/validations/schemas";
 
 export async function POST(request: Request) {
   const orgId = await requireOrg();
 
   try {
     const body = await request.json();
-    const parsed = payrollPaySchema.safeParse(body);
+    const parsed = salaryPaymentSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
         { error: parsed.error.flatten().fieldErrors },
@@ -86,7 +77,7 @@ export async function POST(request: Request) {
 
       if (existingPayment) {
         const newPaidAmount =
-          Number(existingPayment.paid_amount) + parsed.data.amount;
+          Number(existingPayment.paid_amount) + parsed.data.paid_amount;
         const newStatus =
           newPaidAmount >= netPayable ? "paid" : newPaidAmount > 0 ? "partial" : "pending";
 
@@ -108,7 +99,7 @@ export async function POST(request: Request) {
           .returning();
       } else {
         const status =
-          parsed.data.amount >= netPayable ? "paid" : "partial";
+          parsed.data.paid_amount >= netPayable ? "paid" : "partial";
 
         [payment] = await tx
           .insert(salaryPayments)
@@ -119,7 +110,7 @@ export async function POST(request: Request) {
             year: parsed.data.year,
             base_salary: baseSalary.toFixed(2),
             total_advances: totalAdvances.toFixed(2),
-            paid_amount: parsed.data.amount.toFixed(2),
+            paid_amount: parsed.data.paid_amount.toFixed(2),
             account_id: parsed.data.account_id,
             payment_date: new Date(parsed.data.payment_date),
             status,
@@ -131,7 +122,7 @@ export async function POST(request: Request) {
         organization_id: orgId,
         account_id: parsed.data.account_id,
         type: "debit",
-        amount: parsed.data.amount.toFixed(2),
+        amount: parsed.data.paid_amount.toFixed(2),
         reference_type: "salary",
         reference_id: payment.id,
         transaction_date: new Date(parsed.data.payment_date),
