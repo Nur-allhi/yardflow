@@ -360,6 +360,19 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 - `npx eslint src/` — zero errors (fixed pre-existing issues)
 - `npx next build` — succeeded
 
+### Task 1.4 — PDF export library
+- Created `src/lib/pdf/reports.ts` with `generateReportPdf(report)` function
+- Uses jsPDF + jspdf-autotable
+- Generates: header, result banner (PROFIT/LOSS), Volume Analysis table, Financial Analysis table, footer
+- Money: `৳1,25,000` (en-IN locale), Weight: `1,250.500 kg` (3 decimals)
+
+### Task 1.5 — PDF download button on report detail page
+- Replaced `window.print()` with `generateReportPdf(report)` call
+- Changed button text from "Print / PDF" to "Download PDF"
+- Imported `generateReportPdf` from `@/lib/pdf/reports`
+
+### Batch 1 — Complete
+
 ## Quality Gates
 - `npx tsc --noEmit` — zero errors required
 - `npx eslint src/` — zero errors required

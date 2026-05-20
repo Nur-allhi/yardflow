@@ -25,35 +25,11 @@
 Make the period report production-ready: allow the owner to input other expenses, view them in the calculation, and download a printable PDF for the accountant.
 
 ### Tasks
-
-**1.1 Add `total_other_expenses` to generate form**
-- Add a number input field labeled "Other Expenses (tk)" to `reports/generate/page.tsx`
-- Pass `total_other_expenses` in the POST body to `/api/reports`
-- Show hint text: "Rent, electricity, transportation, etc."
-
-**1.2 Wire `total_other_expenses` through profit calculation**
-- Accept `total_other_expenses` as a parameter to `calculatePeriodProfit()` in `profit.ts`
-- Remove the hardcoded `const total_other_expenses = 0` on line 198
-- Include it in `total_cost` sum
-
-**1.3 Add Zod schema for report generation**
-- Export `generateReportSchema` from `src/lib/validations/schemas.ts`
-- Include fields: `period_type`, `start_date`, `end_date`, `total_other_expenses`
-
-**1.4 Create PDF export library**
-- New file: `src/lib/pdf/reports.ts`
-- Use jsPDF + jspdf-autotable (both already in `package.json`)
-- Generate a full printable report including:
-  - Header: Business name, report period
-  - Volume Analysis table (purchased kg, sold fabricated, sold raw, scrap sold, current stock, burnout)
-  - Financial Analysis table (income breakdown, cost breakdown, net profit, profit per kg)
-  - Result banner (PROFIT/LOSS with color)
-  - Footer: Generated date
-
-**1.5 Wire PDF download button on report detail page**
-- Add "Download PDF" button to `reports/[id]/page.tsx`
-- Call PDF generation with report data on click
-- Use browser download (Blob + URL.createObjectURL)
+- [x] **1.1** Add `total_other_expenses` to generate form
+- [x] **1.2** Wire `total_other_expenses` through profit calculation
+- [x] **1.3** Add Zod schema for report generation
+- [x] **1.4** Create PDF export library
+- [x] **1.5** Wire PDF download button on report detail page
 
 ### Files affected
 - `src/app/(dashboard)/reports/generate/page.tsx`
@@ -196,8 +172,8 @@ Make the app accessible via public URL with production database.
 ## Definition of Done
 
 All 5 batches are complete when:
-- [ ] PDF reports generate and download correctly
-- [ ] Other expenses field works in report generation
+- [x] PDF reports generate and download correctly
+- [x] Other expenses field works in report generation
 - [ ] HR has proper Zod validation on all inputs
 - [ ] Negative net_payable shows warning in UI
 - [ ] Settings page shows org profile and allows edits
