@@ -48,18 +48,12 @@ Complete HR input validation and handle the edge case where advances exceed base
 
 ### Tasks
 
-**2.1 Add Zod schemas for HR module**
-- `workerSchema` — name, phone, designation, monthly_salary, join_date
-- `advanceSchema` — worker_id, amount, account_id, advance_date, month, year, note
-- `salaryPaymentSchema` — worker_id, month, year, paid_amount, account_id, payment_date
-- Export types from each schema
-- Refactor `src/app/api/hr/advances/route.ts` to use shared `advanceSchema` instead of inline
-
-**2.2 Negative net_payable UI warning**
-- In `hr/payroll/page.tsx`, detect rows where `net_payable < 0`
-- Show amber warning badge: "Over-advanced — carry forward"
-- Add subtitle note: "Advances exceed base salary. Net payable is negative and will carry to next month."
-- Use the existing status badge color convention (amber = warning)
+- [x] **2.1 Add Zod schemas for HR module**
+- [x] **2.2 Negative net_payable UI warning**
+  - Desktop table: amber `#EAB308` text + "Over-advanced" badge + subtitle note
+  - Mobile cards: amber text + "Over-advanced — carry forward" badge
+  - Pay modal: warning banner + disabled "Confirm Payment" button
+  - Default pay amount clamped to `Math.max(0, ...)` for over-advanced workers
 
 ### Files affected
 - `src/lib/validations/schemas.ts` (new schemas)
@@ -174,8 +168,8 @@ Make the app accessible via public URL with production database.
 All 5 batches are complete when:
 - [x] PDF reports generate and download correctly
 - [x] Other expenses field works in report generation
-- [ ] HR has proper Zod validation on all inputs
-- [ ] Negative net_payable shows warning in UI
+- [x] HR has proper Zod validation on all inputs
+- [x] Negative net_payable shows warning in UI
 - [ ] Settings page shows org profile and allows edits
 - [ ] Settings/team page lists users and allows invite/deactivate
 - [ ] Role-based middleware protects sensitive routes

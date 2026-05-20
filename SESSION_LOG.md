@@ -373,6 +373,28 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 
 ### Batch 1 — Complete
 
+## Session: 2026-05-20 — Batch 2 (HR Zod Schemas + Negative net_payable)
+
+### Task 2.1 — Add Zod schemas for HR module
+- Added `workerSchema`, `advanceSchema`, `salaryPaymentSchema` to `src/lib/validations/schemas.ts`
+- Exported `WorkerInput`, `AdvanceInput`, `SalaryPaymentInput` types
+- Refactored `advances/route.ts` to import shared `advanceSchema`
+- Refactored `workers/route.ts` to import shared `workerSchema`
+- Refactored `payroll/pay/route.ts` to import shared `salaryPaymentSchema` (renamed field `amount` → `paid_amount`)
+
+### Task 2.2 — Negative net_payable UI warning
+- Desktop table: amber `#EAB308` text + "Over-advanced" badge + subtitle note
+- Mobile cards: amber text + "Over-advanced — carry forward" badge
+- Pay modal: warning banner + disabled "Confirm Payment" button when over-advanced
+- Default pay amount clamped to `Math.max(0, ...)` for over-advanced workers
+
+### Quality Gates (all passed)
+- `npx tsc --noEmit` — zero errors
+- `npx eslint src/` — zero errors
+- `npx next build` — succeeded
+
+### Batch 2 — Complete
+
 ## Quality Gates
 - `npx tsc --noEmit` — zero errors required
 - `npx eslint src/` — zero errors required
