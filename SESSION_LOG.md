@@ -301,10 +301,42 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 - Created `src/components/InventoryNav.tsx` — shared sub-navigation component for all 6 inventory pages
 - Added sub-nav tabs to all inventory pages (Stock Overview, Categories, Sub-types, Ledger, Scrap Pool, Consumables)
 
-## Upcoming Work (in priority order)
-1. Purchase/Sale PUT/DELETE — edit/void purchase and sale records
-2. Settings / Team management pages
-3. Seed & Test — run seed script, walk through every module end-to-end, fix bugs
+## Session: 2026-05-20 — PUT/DELETE API Routes + Plan
+
+### PUT/DELETE for Purchases and Sales
+- Added `PUT` (edit) and `DELETE` (void) handlers to `/api/purchases/[id]/route.ts`
+  - PUT: replaces items, reverses/re-creates stock ledger, resets to `due`, recalculates WAC
+  - DELETE: soft-deletes purchase + items + payments, removes stock ledger entries, recalculates WAC
+- Added `PUT` (edit) and `DELETE` (void) handlers to `/api/sales/[id]/route.ts`
+  - PUT: replaces items, reverses stock ledger/scrap pool, resets to `due`, recalculates WAC
+  - DELETE: soft-deletes sale + items + payments, removes stock ledger/scrap pool entries, recalculates WAC
+
+### HR Advances `[id]` Route
+- Created `/api/hr/advances/[id]/route.ts` with:
+  - `GET` — single advance view with worker name
+  - `PUT` — update `note` and `advance_date` (safe fields only)
+  - `DELETE` — soft-delete advance, remove associated account transaction
+
+### Implementation Plan
+- Created `PLAN.md` — comprehensive 5-batch plan for all remaining work
+- Updated `AGENTS.md` with autonomous batch-by-batch workflow:
+  - Agent reads `PLAN.md` → implements tasks → runs quality gates → commits → proceeds automatically
+  - No permission needed between batches
+
+### Quality Gates (all passed)
+- `npx tsc --noEmit` — zero errors
+- `npx eslint src/` — zero errors
+- `npx next build` — succeeded
+
+## Remaining Work (per PLAN.md)
+
+| Batch | Module | Tasks |
+|-------|--------|-------|
+| 1 | Reports | PDF export, other expenses field, Zod schema |
+| 2 | HR | Zod schemas, negative net_payable warning |
+| 3 | Settings | Org profile, Team page, Role middleware |
+| 4 | Seed + E2E | Seed data, walkthrough, multi-tenant test |
+| 5 | Deploy | Vercel + Supabase production |
 
 ## Quality Gates
 - `npx tsc --noEmit` — zero errors required

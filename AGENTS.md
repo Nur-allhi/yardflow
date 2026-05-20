@@ -96,3 +96,51 @@ npx drizzle-kit migrate
 - Money format: `1,25,000 tk` (Bengali lakh format, tk suffix)
 - Weight format: `1,250.500 kg` (3 decimal places, kg suffix)
 - Every page must handle 3 states: **loading**, **empty**, and **error**
+
+---
+
+## REMAINING WORK — IMPLEMENTATION PLAN
+
+All remaining work is defined in `PLAN.md`. The plan is organized into **5 batches** executed sequentially:
+
+| Batch | Module | Priority |
+|-------|--------|----------|
+| 1 | Reports — PDF export + other expenses field | High |
+| 2 | HR — Zod schemas + negative net_payable warning | Medium |
+| 3 | Settings — Org profile + Team + Role middleware | Medium |
+| 4 | Seed + End-to-end walkthrough | High |
+| 5 | Deploy to Vercel + Supabase production | High |
+
+---
+
+## AUTONOMOUS WORKFLOW
+
+The agent works **autonomously, batch by batch** without being asked for each step.
+
+### Per-Batch Process
+
+1. **Read `PLAN.md`** to get the current batch's task list
+2. **Read all files listed** in the batch's "Files affected" section before making changes
+3. **Implement each task** in the batch using sub-agents for parallel work where possible
+4. **After each task** (not after the entire batch), run:
+   ```bash
+   npx tsc --noEmit        # TypeScript — zero errors required
+   npx eslint .            # Lint — zero errors required
+   npx next build          # Build — must succeed
+   ```
+5. **After each task**, commit the changes with a descriptive message:
+   ```bash
+   git add -A && git commit -m "[batch N] task description"
+   ```
+6. **Update the session log** after each commit
+7. **When a batch is complete**, update `PLAN.md` by marking completed items with `[x]`
+8. **Proceed to the next batch** automatically — do not wait for confirmation
+9. **If blocked** (e.g., missing dependency, unexpected error), fix the blocker and continue. If unable to resolve, stop and report to user.
+
+### Key Rules
+
+- Never ask the user for permission to proceed between batches — work autonomously
+- Each commit should represent one complete, tested task
+- If a task is too large, break it into sub-tasks and commit each one
+- `PLAN.md` is the source of truth for what's left — keep it updated
+- After all 5 batches are done, run the full test suite once more and report completion
