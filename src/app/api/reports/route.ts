@@ -2,15 +2,9 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { periodReports } from "@/lib/db/schema";
 import { eq, and, sql, desc } from "drizzle-orm";
-import { z } from "zod";
 import { requireOrg } from "@/lib/auth/session";
 import { calculatePeriodProfit } from "@/lib/calculations/profit";
-
-const generateReportSchema = z.object({
-  period_type: z.enum(["monthly", "yearly", "custom"]),
-  start_date: z.string().min(1, "Start date is required"),
-  end_date: z.string().min(1, "End date is required"),
-});
+import { generateReportSchema } from "@/lib/validations/schemas";
 
 export async function GET() {
   const orgId = await requireOrg();
@@ -64,7 +58,7 @@ export async function POST(request: Request) {
     const startDate = new Date(parsed.data.start_date);
     const endDate = new Date(parsed.data.end_date);
 
-    const data = await calculatePeriodProfit(orgId, startDate, endDate);
+    const data = await calculatePeriodProfit(orgId, startDate, endDate, parsed.data.total_other_expenses);
 
     const [report] = await db
       .insert(periodReports)

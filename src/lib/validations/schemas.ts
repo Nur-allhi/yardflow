@@ -115,6 +115,14 @@ export const accountTransferSchema = z.object({
   note: z.string().optional(),
 });
 
+export const generateReportSchema = z.object({
+  period_type: z.enum(["monthly", "yearly", "custom"]),
+  start_date: z.string().min(1, "Start date is required"),
+  end_date: z.string().min(1, "End date is required"),
+  total_other_expenses: z.number().optional().default(0),
+});
+
+export type GenerateReportInput = z.infer<typeof generateReportSchema>;
 export type AccountInput = z.infer<typeof accountSchema>;
 export type AccountTransferInput = z.infer<typeof accountTransferSchema>;
 export type CustomerInput = z.infer<typeof customerSchema>;

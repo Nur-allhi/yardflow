@@ -36,6 +36,7 @@ export async function calculatePeriodProfit(
   orgId: string,
   startDate: Date,
   endDate: Date,
+  totalOtherExpenses: number = 0,
 ): Promise<PeriodProfitData> {
   const dateFilter = [
     eq(purchases.organization_id, orgId),
@@ -195,7 +196,7 @@ export async function calculatePeriodProfit(
   const total_income = Number(income.total);
   const total_consumables_cost = Number(consumables.total);
   const total_salary_cost = Number(salary.total);
-  const total_other_expenses = 0;
+  const total_other_expenses = totalOtherExpenses;
   const total_cost =
     total_purchase_cost +
     total_consumables_cost +
