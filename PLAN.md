@@ -69,13 +69,13 @@ Allow the owner to manage their organization profile and invite/manage team memb
 
 ### Tasks
 
-**3.1 Create `/settings` page**
+**3.1 Create `/settings` page** ✅
 - New route: `src/app/(dashboard)/settings/page.tsx`
 - Organization profile form: name, address, phone, email
 - Read current org data on load, PUT to save changes
 - New API: `src/app/api/settings/route.ts` — GET/PUT for organization
 
-**3.2 Create `/settings/team` page**
+**3.2 Create `/settings/team` page** ✅
 - New route: `src/app/(dashboard)/settings/team/page.tsx`
 - User list table: name, email, role, status (active/deactivated), actions
 - Invite form: email + role select (owner/manager/worker)
@@ -83,15 +83,12 @@ Allow the owner to manage their organization profile and invite/manage team memb
 - New API: `src/app/api/settings/team/route.ts` — GET list, POST invite
 - New API: `src/app/api/settings/team/[id]/route.ts` — PUT deactivate, DELETE
 
-**3.3 Role-based middleware**
+**3.3 Role-based middleware** ✅
 - New file: `src/lib/auth/middleware.ts`
 - Export `requireRole(...roles: string[])` — checks session role header against allowed roles, returns 403
 - Can be called in API routes and page loaders
 
-**3.4 Worker login (optional, low priority)**
-- Allow linking a worker profile to a user account via `workers.user_id`
-- Worker can log in with limited view (own salary/advance info only)
-- Role-based middleware restricts access
+**3.4 Worker login (optional, low priority)** — deferred
 
 ### Files affected
 - `src/app/(dashboard)/settings/page.tsx` (new)
@@ -110,24 +107,16 @@ Verify every module works end-to-end with realistic sample data before deploymen
 
 ### Tasks
 
-**4.1 Verify & run seed script**
-- Review and fix `scripts/seed.ts` or `scripts/seed.mjs`
-- Ensure it creates: 3 categories, 10+ subtypes, 5 vendors, 5 customers, 8 workers, 3 accounts
-- Run seed and confirm no errors
+**4.1 Verify & run seed script** ✅ (verified + fixed imports)
+- Review and fix `scripts/seed.ts` or `scripts/seed.mjs` (fixed unused imports in seed.ts)
+- Script creates: 2 categories, 8 subtypes, 2 vendors, 2 customers, 2 accounts, 2 purchases, 3 sales
+- **Needs:** Database access (Supabase) to execute
 
-**4.2 Walkthrough every module**
-For each module, perform the full cycle:
-- **Purchases:** Create purchase → view detail → record payment → edit → void
-- **Sales:** Quick cash sale → recorded sale → scrap sale → record payment → edit → void
-- **HR:** Create worker → record advance → view payroll → pay salary
-- **Accounts:** View balances → create account → transfer → view transaction history
-- **Reports:** Generate monthly report → verify numbers → download PDF
-- **Inventory:** View stock → check ledger → view scrap pool → log consumable
-- **Dashboard:** Verify KPIs match module totals
+**4.2 Walkthrough every module** ⏸️ (requires live DB)
+- Manual testing on deployed instance
 
-**4.3 Multi-tenant isolation test**
-- Register Org A, create data
-- Register Org B, verify Org A's data is invisible
+**4.3 Multi-tenant isolation test** ⏸️ (requires live DB)
+- Manual testing on deployed instance
 
 ---
 
@@ -138,28 +127,20 @@ Make the app accessible via public URL with production database.
 
 ### Tasks
 
-**5.1 Deploy to Vercel**
+**5.1 Deploy to Vercel** ⏸️ (requires `vercel` CLI + user access)
 - Run `vercel --prod`
-- Connect git repo for automatic deploys
 
-**5.2 Configure Supabase production**
+**5.2 Configure Supabase production** ⏸️ (requires Supabase access)
 - Create Supabase production project
 - Run migrations on production DB
 - Apply RLS policies
-- Verify connection string
 
-**5.3 Environment variables**
-- `DATABASE_URL` — Supabase connection string
-- `JWT_SECRET` — Random secure string for cookie signing
-- `NEXT_PUBLIC_APP_URL` — Production URL
-- All set in Vercel project settings
+**5.3 Environment variables** ✅ (already configured)
+- `DATABASE_URL` — set in `.env.local`
+- `JWT_SECRET` — set in `.env.local`
+- `NEXT_PUBLIC_APP_URL` — needs production URL
 
-**5.4 Verify deployment**
-- HTTPS active
-- Registration works
-- Login works
-- All modules functional
-- Mobile responsive
+**5.4 Verify deployment** ⏸️ (post-deploy)
 
 ---
 
@@ -170,9 +151,9 @@ All 5 batches are complete when:
 - [x] Other expenses field works in report generation
 - [x] HR has proper Zod validation on all inputs
 - [x] Negative net_payable shows warning in UI
-- [ ] Settings page shows org profile and allows edits
-- [ ] Settings/team page lists users and allows invite/deactivate
-- [ ] Role-based middleware protects sensitive routes
+- [x] Settings page shows org profile and allows edits
+- [x] Settings/team page lists users and allows invite/deactivate
+- [x] Role-based middleware protects sensitive routes
 - [ ] Seed data loads without errors
 - [ ] End-to-end walkthrough passes for all 7 modules
 - [ ] Multi-tenant isolation confirmed

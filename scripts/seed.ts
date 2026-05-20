@@ -1,6 +1,21 @@
 import { db } from "../src/lib/db";
-import { users, accounts, materialCategories, materialSubtypes, vendors, customers, purchases, purchaseItems, stockLedger, purchasePayments, accountTransactions, sales, saleItems, salePayments, scrapPool } from "../src/lib/db/schema";
-import { eq, sql } from "drizzle-orm";
+import {
+  users,
+  accounts,
+  materialCategories,
+  materialSubtypes,
+  vendors,
+  customers,
+  purchases,
+  purchaseItems,
+  stockLedger,
+  purchasePayments,
+  accountTransactions,
+  sales,
+  saleItems,
+  salePayments,
+  scrapPool,
+} from "../src/lib/db/schema";
 
 async function seed() {
   const [user] = await db
