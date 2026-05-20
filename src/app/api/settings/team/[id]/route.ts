@@ -6,8 +6,9 @@ import { requireOrg } from "@/lib/auth/session";
 
 export async function PUT(
   _request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id } = await params;
   const orgId = await requireOrg();
 
   const [existing] = await db
@@ -15,7 +16,7 @@ export async function PUT(
     .from(users)
     .where(
       and(
-        eq(users.id, params.id),
+        eq(users.id, id),
         eq(users.organization_id, orgId),
         sql`${users.deleted_at} IS NULL`,
       ),
@@ -40,7 +41,7 @@ export async function PUT(
     const [user] = await db
       .update(users)
       .set({ is_active, updated_at: sql`NOW()` })
-      .where(eq(users.id, params.id))
+      .where(eq(users.id, id))
       .returning();
 
     return NextResponse.json({
@@ -61,8 +62,9 @@ export async function PUT(
 
 export async function DELETE(
   _request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id } = await params;
   const orgId = await requireOrg();
 
   const [existing] = await db
@@ -70,7 +72,7 @@ export async function DELETE(
     .from(users)
     .where(
       and(
-        eq(users.id, params.id),
+        eq(users.id, id),
         eq(users.organization_id, orgId),
         sql`${users.deleted_at} IS NULL`,
       ),
@@ -91,7 +93,7 @@ export async function DELETE(
   await db
     .update(users)
     .set({ deleted_at: sql`NOW()`, updated_at: sql`NOW()` })
-    .where(eq(users.id, params.id));
+    .where(eq(users.id, id));
 
   return NextResponse.json({ success: true });
 }
