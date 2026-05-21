@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 interface PeriodReport {
@@ -60,28 +60,15 @@ function DateRangeLabel(row: PeriodReport) {
 }
 
 export default function ReportsPage() {
-  const [reports, setReports] = useState<PeriodReport[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const loadReports = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data: reports = [], isLoading, error, refetch } = useQuery<PeriodReport[]>({
+    queryKey: ["reports"],
+    queryFn: async () => {
       const res = await fetch("/api/reports");
       if (!res.ok) throw new Error("Failed to load reports");
       const data = await res.json();
-      setReports(Array.isArray(data) ? data : data.reports || []);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadReports();
-  }, [loadReports]);
+      return Array.isArray(data) ? data : data.reports || [];
+    },
+  });
 
   const typeLabel: Record<string, string> = {
     monthly: "Monthly",
@@ -118,7 +105,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Loading */}
-      {loading && (
+      {isLoading && (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="bg-white rounded-xl border border-[#c6c6cd]/30 p-6 animate-pulse">
@@ -132,9 +119,9 @@ export default function ReportsPage() {
       {/* Error */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <p className="text-[#EF4444] font-medium text-sm">{error}</p>
+          <p className="text-[#EF4444] font-medium text-sm">{error?.message}</p>
           <button
-            onClick={loadReports}
+            onClick={() => refetch()}
             className="mt-3 px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
           >
             Retry
@@ -143,7 +130,7 @@ export default function ReportsPage() {
       )}
 
       {/* Empty State */}
-      {!loading && !error && reports.length === 0 && (
+      {!isLoading && !error && reports.length === 0 && (
         <div className="bg-white rounded-xl border border-[#c6c6cd]/30 p-12 text-center">
           <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">
             analytics
@@ -165,7 +152,7 @@ export default function ReportsPage() {
       )}
 
       {/* Desktop Table */}
-      {!loading && !error && reports.length > 0 && (
+      {!isLoading && !error && reports.length > 0 && (
         <div className="hidden md:block bg-white rounded-xl border border-[#c6c6cd] overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
             <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
@@ -225,7 +212,7 @@ export default function ReportsPage() {
       )}
 
       {/* Mobile Cards */}
-      {!loading && !error && reports.length > 0 && (
+      {!isLoading && !error && reports.length > 0 && (
         <div className="md:hidden space-y-3">
           {reports.map((r) => (
             <div key={r.id} className="bg-white rounded-lg p-4 shadow-sm border border-[#c6c6cd]/20">

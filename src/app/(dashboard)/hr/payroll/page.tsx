@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useAccounts } from "@/hooks/useAccounts";
 import Link from "next/link";
 
 interface PayrollRow {
@@ -68,14 +70,9 @@ export default function PayrollPage() {
   const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(now.getFullYear());
 
-  const [payroll, setPayroll] = useState<PayrollData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   // Pay modal state
   const [showPayModal, setShowPayModal] = useState(false);
   const [payTarget, setPayTarget] = useState<PayrollRow | null>(null);
-  const [accounts, setAccounts] = useState<Account[]>([]);
   const [payAmount, setPayAmount] = useState("");
   const [payAccountId, setPayAccountId] = useState("");
   const [payDate, setPayDate] = useState(
@@ -84,39 +81,22 @@ export default function PayrollPage() {
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
 
-  const loadPayroll = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(
-        `/api/hr/payroll?month=${selectedMonth}&year=${selectedYear}`,
-      );
+  const { data: payroll, isLoading, error, refetch } = useQuery<PayrollData>({
+    queryKey: ["payroll", selectedMonth, selectedYear],
+    queryFn: async () => {
+      const res = await fetch(`/api/hr/payroll?month=${selectedMonth}&year=${selectedYear}`);
       if (!res.ok) throw new Error("Failed to load payroll data");
-      const data = await res.json();
-      setPayroll(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, [selectedMonth, selectedYear]);
+      return res.json();
+    },
+  });
 
-  const loadAccounts = useCallback(async () => {
-    const res = await fetch("/api/accounts");
-    if (res.ok) {
-      const data = await res.json();
-      setAccounts(data);
-      if (data.length > 0) setPayAccountId(data[0].id);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadPayroll();
-  }, [loadPayroll]);
+  const { data: accounts = [] } = useAccounts();
 
   function openPayModal(row: PayrollRow) {
-    loadAccounts();
     setPayTarget(row);
+    if (accounts.length > 0 && !payAccountId) {
+      setPayAccountId(accounts[0].id);
+    }
     const defaultAmount = Math.max(0, Math.ceil(row.net_payable - row.paid_amount));
     setPayAmount(String(defaultAmount));
     setPayError(null);
@@ -157,7 +137,7 @@ export default function PayrollPage() {
 
       setShowPayModal(false);
       setPayTarget(null);
-      await loadPayroll();
+      await refetch();
     } catch (e) {
       setPayError(e instanceof Error ? e.message : "Something went wrong");
     } finally {
@@ -267,7 +247,7 @@ export default function PayrollPage() {
       </div>
 
       {/* Loading */}
-      {loading && (
+      {isLoading && (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div
@@ -284,9 +264,9 @@ export default function PayrollPage() {
       {/* Error */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <p className="text-[#EF4444] font-medium text-sm">{error}</p>
+          <p className="text-[#EF4444] font-medium text-sm">{error?.message}</p>
           <button
-            onClick={loadPayroll}
+            onClick={() => refetch()}
             className="mt-3 px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
           >
             Retry
@@ -295,7 +275,7 @@ export default function PayrollPage() {
       )}
 
       {/* Empty */}
-      {!loading && !error && payroll && payroll.workers.length === 0 && (
+      {!isLoading && !error && payroll && payroll.workers.length === 0 && (
         <div className="bg-white rounded-xl border border-[#c6c6cd]/30 p-12 text-center">
           <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">
             payroll
@@ -317,7 +297,7 @@ export default function PayrollPage() {
       )}
 
       {/* Desktop Table */}
-      {!loading && !error && payroll && payroll.workers.length > 0 && (
+      {!isLoading && !error && payroll && payroll.workers.length > 0 && (
         <div className="hidden md:block bg-white rounded-xl border border-[#c6c6cd] overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
             <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
@@ -410,7 +390,7 @@ export default function PayrollPage() {
       )}
 
       {/* Mobile Cards */}
-      {!loading && !error && payroll && payroll.workers.length > 0 && (
+      {!isLoading && !error && payroll && payroll.workers.length > 0 && (
         <div className="md:hidden space-y-3">
           <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-[#505f76]">
             {MONTH_NAMES[selectedMonth - 1]} {selectedYear}

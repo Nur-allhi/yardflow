@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { InventoryNav } from "@/components/InventoryNav";
+import { useQuery } from "@tanstack/react-query";
 
 interface ScrapMovement {
   id: string;
@@ -48,32 +49,23 @@ function formatDate(dateStr: string): string {
 }
 
 export default function ScrapPoolPage() {
-  const [data, setData] = useState<ScrapData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [addScrapKg, setAddScrapKg] = useState("");
   const [addScrapDate, setAddScrapDate] = useState(new Date().toISOString().split("T")[0]);
   const [addScrapNote, setAddScrapNote] = useState("");
   const [addingScrap, setAddingScrap] = useState(false);
   const [addScrapMsg, setAddScrapMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data, isLoading, error, refetch } = useQuery<ScrapData>({
+    queryKey: ["scrap"],
+    queryFn: async () => {
       const res = await fetch("/api/inventory/scrap");
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.error || "Failed to load scrap pool");
       }
-      const json = await res.json();
-      setData(json);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      return res.json();
+    },
+  });
 
   async function handleAddScrap(e: React.FormEvent) {
     e.preventDefault();
@@ -97,7 +89,7 @@ export default function ScrapPoolPage() {
       setAddScrapMsg({ type: "success", text: "Scrap added successfully!" });
       setAddScrapKg("");
       setAddScrapNote("");
-      load();
+      refetch();
       setTimeout(() => setAddScrapMsg(null), 3000);
     } catch (err) {
       setAddScrapMsg({ type: "error", text: err instanceof Error ? err.message : "Failed to add scrap" });
@@ -106,11 +98,7 @@ export default function ScrapPoolPage() {
     }
   }
 
-  useEffect(() => {
-    load();
-  }, [load]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-4 md:p-8">
         <div className="animate-pulse space-y-6">
@@ -134,9 +122,9 @@ export default function ScrapPoolPage() {
             error
           </span>
           <p className="text-[#ba1a1a] font-medium mb-2">Failed to load scrap pool</p>
-          <p className="text-sm text-[#505f76] mb-4">{error}</p>
+          <p className="text-sm text-[#505f76] mb-4">{error?.message}</p>
           <button
-            onClick={load}
+            onClick={() => refetch()}
             className="px-5 py-2 bg-[#0F172A] text-white font-semibold rounded-md hover:bg-[#0F172A]/90 transition-colors text-sm"
           >
             Try Again

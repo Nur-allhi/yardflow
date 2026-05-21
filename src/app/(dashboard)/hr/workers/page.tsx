@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 interface Worker {
@@ -46,31 +47,22 @@ function StatusBadge({ active }: { active: boolean }) {
 }
 
 export default function WorkersPage() {
-  const [workers, setWorkers] = useState<Worker[]>([]);
-  const [summary, setSummary] = useState<Summary | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
-  const loadData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data, isLoading, error, refetch } = useQuery<{
+    workers: Worker[];
+    summary: Summary;
+  }>({
+    queryKey: ["workers"],
+    queryFn: async () => {
       const res = await fetch("/api/hr/workers");
       if (!res.ok) throw new Error("Failed to load workers");
-      const data = await res.json();
-      setWorkers(data.workers || data);
-      setSummary(data.summary || null);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      return res.json();
+    },
+  });
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+  const workers: Worker[] = data?.workers ?? [];
+  const summary: Summary | null = data?.summary ?? null;
 
   const filtered = workers.filter((w) =>
     w.name.toLowerCase().includes(search.toLowerCase()),
@@ -181,7 +173,7 @@ export default function WorkersPage() {
       </div>
 
       {/* Loading */}
-      {loading && (
+      {isLoading && (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div
@@ -198,9 +190,9 @@ export default function WorkersPage() {
       {/* Error */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <p className="text-[#EF4444] font-medium text-sm">{error}</p>
+          <p className="text-[#EF4444] font-medium text-sm">{error?.message}</p>
           <button
-            onClick={loadData}
+            onClick={() => refetch()}
             className="mt-3 px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
           >
             Retry
@@ -209,7 +201,7 @@ export default function WorkersPage() {
       )}
 
       {/* Empty State */}
-      {!loading && !error && filtered.length === 0 && (
+      {!isLoading && !error && filtered.length === 0 && (
         <div className="bg-white rounded-xl border border-[#c6c6cd]/30 p-12 text-center">
           <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">
             groups
@@ -231,7 +223,7 @@ export default function WorkersPage() {
       )}
 
       {/* Desktop Table */}
-      {!loading && !error && filtered.length > 0 && (
+      {!isLoading && !error && filtered.length > 0 && (
         <div className="hidden md:block bg-white rounded-xl border border-[#c6c6cd] overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
             <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
@@ -309,7 +301,7 @@ export default function WorkersPage() {
       )}
 
       {/* Mobile Card List */}
-      {!loading && !error && filtered.length > 0 && (
+      {!isLoading && !error && filtered.length > 0 && (
         <div className="md:hidden space-y-3">
           <div className="flex justify-between items-center">
             <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-[#505f76]">

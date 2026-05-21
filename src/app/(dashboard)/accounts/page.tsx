@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 interface Account {
@@ -35,29 +35,30 @@ function formatMoney(n: number) {
 }
 
 export default function AccountsPage() {
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
+const { data: accountsData, isLoading: accountsLoading } = useQuery<Account[]>({
+  queryKey: ["accounts"],
+  queryFn: async () => {
+    const res = await fetch("/api/accounts");
+    if (!res.ok) throw new Error("Failed to load accounts");
+    return res.json();
+  },
+});
 
-  useEffect(() => {
-    Promise.all([
-      fetch("/api/accounts").then((r) => r.json()),
-      fetch("/api/accounts/transactions?limit=10").then((r) => r.json()),
-    ])
-      .then(([accts, txns]) => {
-        setAccounts(accts);
-        setTransactions(txns);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+const { data: transactionsData, isLoading: txLoading } = useQuery<Transaction[]>({
+  queryKey: ["recent-transactions"],
+  queryFn: async () => {
+    const res = await fetch("/api/accounts/transactions?limit=10");
+    if (!res.ok) throw new Error("Failed to load transactions");
+    return res.json();
+  },
+});
 
-  const totalBalance = accounts.reduce(
+  const totalBalance = (accountsData ?? []).reduce(
     (s, a) => s + (a.is_active ? a.current_balance : 0),
     0,
   );
 
-  if (loading) {
+  if (accountsLoading) {
     return (
       <div className="p-8 max-w-7xl mx-auto w-full">
         <div className="animate-pulse space-y-6">
@@ -112,7 +113,7 @@ export default function AccountsPage() {
 
       {/* Account Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-        {accounts.length === 0 && (
+        {(accountsData ?? []).length === 0 && (
           <div className="col-span-full text-center py-12 text-[#505f76]">
             <span className="material-symbols-outlined text-5xl block mb-4">
               account_balance
@@ -120,7 +121,7 @@ export default function AccountsPage() {
             <p>No accounts yet. Add your first account to get started.</p>
           </div>
         )}
-        {accounts.map((acc) => {
+        {(accountsData ?? []).map((acc) => {
           const isCash = acc.type === "cash";
           return (
             <Link
@@ -162,7 +163,7 @@ export default function AccountsPage() {
       </div>
 
       {/* Total Bar */}
-      {accounts.length > 0 && (
+      {(accountsData ?? []).length > 0 && (
         <div className="bg-[#131B2E] p-4 md:p-6 rounded-lg flex justify-center items-center gap-2 md:gap-4 text-center border-l-4 border-[#85f8c4] shadow-lg">
           <span className="text-[#7c839b] font-headline font-semibold text-sm md:text-lg">
             Total Across All Accounts:
@@ -180,7 +181,7 @@ export default function AccountsPage() {
             Recent Transactions — All Accounts
           </h2>
         </div>
-        {transactions.length === 0 ? (
+        {(transactionsData ?? []).length === 0 ? (
           <div className="p-8 text-center text-[#505f76] text-sm">
             No transactions yet.
           </div>
@@ -207,7 +208,7 @@ export default function AccountsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#c6c6cd]/10 text-sm">
-                {transactions.map((tx) => {
+                {(transactionsData ?? []).map((tx) => {
                   const isCredit = tx.type === "credit";
                   return (
                     <tr

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { generateReportPdf } from "@/lib/pdf/reports";
@@ -65,29 +65,16 @@ export default function ReportDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [report, setReport] = useState<ReportDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const loadReport = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data: report, isLoading, error } = useQuery<ReportDetail>({
+    queryKey: ["report", id],
+    queryFn: async () => {
       const res = await fetch(`/api/reports/${id}`);
       if (!res.ok) throw new Error("Report not found");
-      setReport(await res.json());
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
+      return res.json();
+    },
+  });
 
-  useEffect(() => {
-    loadReport();
-  }, [loadReport]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-4 md:p-8 space-y-6 animate-pulse">
         <div className="h-6 bg-[#e6e8ea] rounded w-1/3" />
@@ -102,7 +89,7 @@ export default function ReportDetailPage() {
       <div className="p-4 md:p-8">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
           <p className="text-[#ba1a1a] font-medium text-lg mb-2">
-            {error || "Report not found"}
+            {error?.message || "Report not found"}
           </p>
           <Link
             href="/reports"

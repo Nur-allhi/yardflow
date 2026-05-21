@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 interface Vendor {
@@ -48,9 +49,6 @@ function getStatusChip(due: number) {
 }
 
 export default function VendorsPage() {
-  const [vendors, setVendors] = useState<Vendor[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [formSubmitting, setFormSubmitting] = useState(false);
@@ -62,24 +60,14 @@ export default function VendorsPage() {
   const [formType, setFormType] = useState<"shipyard" | "consumable" | "other">("shipyard");
   const [formOpeningBalance, setFormOpeningBalance] = useState("");
 
-  const loadVendors = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data: vendors = [], isLoading, error, refetch } = useQuery<Vendor[]>({
+    queryKey: ["vendors"],
+    queryFn: async () => {
       const res = await fetch("/api/purchases/vendors");
       if (!res.ok) throw new Error("Failed to load vendors");
-      const data = await res.json();
-      setVendors(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadVendors();
-  }, [loadVendors]);
+      return res.json();
+    },
+  });
 
   const totalVendors = vendors.length;
   const totalPayable = vendors.reduce((sum, v) => sum + v.due_balance, 0);
@@ -123,7 +111,7 @@ export default function VendorsPage() {
       resetForm();
       setShowModal(false);
       setCurrentPage(1);
-      await loadVendors();
+      await refetch();
     } catch (err) {
       setFormError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -131,7 +119,7 @@ export default function VendorsPage() {
     }
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-4 md:p-8">
         <div className="h-4 w-64 bg-[#c6c6cd]/30 rounded mb-2 animate-pulse" />
@@ -164,9 +152,9 @@ export default function VendorsPage() {
         <div className="bg-[#ffdad6] border border-[#ba1a1a]/20 rounded-lg p-8 text-center max-w-md mx-auto">
           <span className="material-symbols-outlined text-5xl text-[#ba1a1a] block mb-4">error_outline</span>
           <p className="text-[#ba1a1a] font-bold mb-2">Failed to Load Vendors</p>
-          <p className="text-[#93000a] text-sm mb-6">{error}</p>
+          <p className="text-[#93000a] text-sm mb-6">{error?.message}</p>
           <button
-            onClick={loadVendors}
+            onClick={() => refetch()}
             className="px-6 py-2.5 bg-[#ba1a1a] text-white rounded-lg text-sm font-bold hover:bg-[#ba1a1a]/90 transition-all"
           >
             Try Again

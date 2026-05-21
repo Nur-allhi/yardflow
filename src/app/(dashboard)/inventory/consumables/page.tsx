@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { InventoryNav } from "@/components/InventoryNav";
+import { useQuery } from "@tanstack/react-query";
+import { useAccounts } from "@/hooks/useAccounts";
 
 interface Account {
   id: string;
@@ -61,10 +63,6 @@ const COMMON_ITEMS = [
 ];
 
 export default function ConsumablesPage() {
-  const [data, setData] = useState<ConsumablesData | null>(null);
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [showMobileForm, setShowMobileForm] = useState(false);
@@ -84,37 +82,22 @@ export default function ConsumablesPage() {
   const price = parseFloat(unitPrice) || 0;
   const totalAmount = qty * price;
 
-  const loadData = useCallback(async () => {
-    try {
+  const { data, isLoading, error, refetch } = useQuery<ConsumablesData>({
+    queryKey: ["consumables", page],
+    queryFn: async () => {
       const res = await fetch(`/api/inventory/consumables?page=${page}&limit=20`);
       if (!res.ok) throw new Error("Failed to load");
-      const json = await res.json();
-      setData(json);
-      setError(null);
-    } catch {
-      setError("Could not load consumables data");
-    } finally {
-      setLoading(false);
-    }
-  }, [page]);
+      return res.json();
+    },
+  });
 
-  const loadAccounts = useCallback(async () => {
-    try {
-      const res = await fetch("/api/accounts");
-      if (res.ok) {
-        const json = await res.json();
-        setAccounts(json);
-        if (json.length > 0) setAccountId(json[0].id);
-      }
-    } catch {
-      /* ignore */
-    }
-  }, []);
+  const { data: accountsData } = useAccounts();
 
   useEffect(() => {
-    loadData();
-    loadAccounts();
-  }, [loadData, loadAccounts]);
+    if (accountsData && accountsData.length > 0) {
+      setAccountId(accountsData[0].id);
+    }
+  }, [accountsData]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -144,7 +127,7 @@ export default function ConsumablesPage() {
         setNote("");
         setPurchaseDate(new Date().toISOString().split("T")[0]);
         setShowMobileForm(false);
-        await loadData();
+        await refetch();
       }
     } catch {
       /* ignore */
@@ -256,10 +239,10 @@ export default function ConsumablesPage() {
           onChange={(e) => setAccountId(e.target.value)}
           className="w-full h-[42px] border border-[#c6c6cd] rounded px-4 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
         >
-          {accounts.length === 0 && (
-            <option value="">No accounts available</option>
-          )}
-          {accounts.map((acct) => (
+            {(!accountsData || accountsData.length === 0) && (
+              <option value="">No accounts available</option>
+            )}
+            {accountsData?.map((acct) => (
             <option key={acct.id} value={acct.id}>
               {acct.name} ({formatTk(acct.current_balance)})
             </option>
@@ -301,7 +284,7 @@ export default function ConsumablesPage() {
     </form>
   );
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-4 md:p-8">
         <div className="flex items-center justify-center py-20">
@@ -319,9 +302,9 @@ export default function ConsumablesPage() {
             error_outline
           </span>
           <p className="text-lg font-medium mb-2">Error</p>
-          <p className="text-sm">{error}</p>
+          <p className="text-sm">{error?.message}</p>
           <button
-            onClick={() => { setLoading(true); loadData(); }}
+            onClick={() => refetch()}
             className="mt-4 px-5 py-2 bg-[#0F172A] text-white rounded-md text-sm"
           >
             Retry

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 interface Customer {
@@ -47,9 +48,6 @@ function getStatusChip(due: number) {
 }
 
 export default function CustomersPage() {
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [formSubmitting, setFormSubmitting] = useState(false);
@@ -61,24 +59,14 @@ export default function CustomersPage() {
   const [formType, setFormType] = useState<"regular" | "walk_in">("regular");
   const [formOpeningBalance, setFormOpeningBalance] = useState("");
 
-  const loadCustomers = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data: customers = [], isLoading, error, refetch } = useQuery<Customer[]>({
+    queryKey: ["customers"],
+    queryFn: async () => {
       const res = await fetch("/api/sales/customers");
       if (!res.ok) throw new Error("Failed to load customers");
-      const data = await res.json();
-      setCustomers(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadCustomers();
-  }, [loadCustomers]);
+      return res.json();
+    },
+  });
 
   const totalCustomers = customers.length;
   const totalReceivable = customers.reduce((sum, c) => sum + c.due_balance, 0);
@@ -122,7 +110,7 @@ export default function CustomersPage() {
       resetForm();
       setShowModal(false);
       setCurrentPage(1);
-      await loadCustomers();
+      await refetch();
     } catch (err) {
       setFormError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -130,7 +118,7 @@ export default function CustomersPage() {
     }
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-4 md:p-8">
         <div className="h-4 w-64 bg-[#c6c6cd]/30 rounded mb-2 animate-pulse" />
@@ -163,9 +151,9 @@ export default function CustomersPage() {
         <div className="bg-[#ffdad6] border border-[#ba1a1a]/20 rounded-lg p-8 text-center max-w-md mx-auto">
           <span className="material-symbols-outlined text-5xl text-[#ba1a1a] block mb-4">error_outline</span>
           <p className="text-[#ba1a1a] font-bold mb-2">Failed to Load Customers</p>
-          <p className="text-[#93000a] text-sm mb-6">{error}</p>
+          <p className="text-[#93000a] text-sm mb-6">{error?.message}</p>
           <button
-            onClick={loadCustomers}
+            onClick={() => refetch()}
             className="px-6 py-2.5 bg-[#ba1a1a] text-white rounded-lg text-sm font-bold hover:bg-[#ba1a1a]/90 transition-all"
           >
             Try Again

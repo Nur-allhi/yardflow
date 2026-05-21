@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 interface Vendor {
@@ -61,22 +62,15 @@ function StatusChip({ status }: { status: string }) {
 
 export default function PurchasesPage() {
   const searchParams = useSearchParams();
-  const [purchases, setPurchases] = useState<Purchase[]>([]);
-  const [summary, setSummary] = useState<Summary | null>(null);
-  const [vendors, setVendors] = useState<Vendor[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   const [vendorFilter, setVendorFilter] = useState(searchParams.get("vendor_id") || "");
   const [statusFilter, setStatusFilter] = useState(searchParams.get("status") || "all");
   const [search, setSearch] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
   const perPage = 10;
 
-  const buildUrl = useCallback(() => {
+  const buildUrl = useMemo(() => {
     const params = new URLSearchParams();
     if (vendorFilter) params.set("vendor_id", vendorFilter);
     if (statusFilter !== "all") params.set("status", statusFilter);
@@ -88,36 +82,31 @@ export default function PurchasesPage() {
     return `/api/purchases?${params.toString()}`;
   }, [vendorFilter, statusFilter, search, dateFrom, dateTo, page]);
 
-  const loadData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data, isLoading, error, refetch } = useQuery<{
+    purchases: Purchase[];
+    summary: Summary | null;
+    totalCount: number;
+    vendors: Vendor[];
+  }>({
+    queryKey: ["purchases", buildUrl],
+    queryFn: async () => {
       const [purchasesRes, vendorsRes] = await Promise.all([
-        fetch(buildUrl()),
+        fetch(buildUrl),
         fetch("/api/purchases/vendors"),
       ]);
       if (!purchasesRes.ok) throw new Error("Failed to load purchases");
       const purchasesData = await purchasesRes.json();
-      setPurchases(purchasesData.purchases || purchasesData);
-      setSummary(purchasesData.summary || null);
-      if (purchasesData.total_count !== undefined) {
-        setTotalCount(purchasesData.total_count);
-      } else {
-        setTotalCount((purchasesData.purchases || purchasesData).length);
-      }
-      if (vendorsRes.ok) setVendors(await vendorsRes.json());
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, [buildUrl]);
+      const vendorsList = vendorsRes.ok ? await vendorsRes.json() : [];
+      return {
+        purchases: purchasesData.purchases ?? [],
+        summary: purchasesData.summary ?? null,
+        totalCount: purchasesData.total_count ?? 0,
+        vendors: vendorsList,
+      };
+    },
+  });
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  const totalPages = Math.max(1, Math.ceil(totalCount / perPage));
+  const totalPages = Math.max(1, Math.ceil((data?.totalCount ?? 0) / perPage));
 
   return (
     <div className="p-4 md:p-8">
@@ -165,7 +154,7 @@ export default function PurchasesPage() {
             Total Purchases
           </p>
           <p className="font-mono text-lg md:text-2xl font-bold text-[#0F172A]">
-            {summary ? summary.total_purchases.toLocaleString("en-IN") : "—"}
+            {data?.summary ? data.summary.total_purchases.toLocaleString("en-IN") : "—"}
           </p>
         </div>
         <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-[#c6c6cd]/30 md:border-[#c6c6cd] shadow-sm">
@@ -173,7 +162,7 @@ export default function PurchasesPage() {
             Total Paid
           </p>
           <p className="font-mono text-lg md:text-2xl font-bold text-[#059669]">
-            {summary ? formatMoney(summary.total_paid) : "—"}
+            {data?.summary ? formatMoney(data.summary.total_paid) : "—"}
           </p>
         </div>
         <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-[#c6c6cd]/30 md:border-[#c6c6cd] shadow-sm">
@@ -181,7 +170,7 @@ export default function PurchasesPage() {
             Total Due
           </p>
           <p className="font-mono text-lg md:text-2xl font-bold text-[#EF4444]">
-            {summary ? formatMoney(summary.total_due) : "—"}
+            {data?.summary ? formatMoney(data.summary.total_due) : "—"}
           </p>
         </div>
         <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-[#c6c6cd]/30 md:border-[#c6c6cd] shadow-sm">
@@ -189,7 +178,7 @@ export default function PurchasesPage() {
             This Month
           </p>
           <p className="font-mono text-lg md:text-2xl font-bold text-[#505f76]">
-            {summary ? summary.this_month.toLocaleString("en-IN") : "—"}
+            {data?.summary ? data.summary.this_month.toLocaleString("en-IN") : "—"}
           </p>
         </div>
       </div>
@@ -227,7 +216,7 @@ export default function PurchasesPage() {
           className="bg-white border border-[#c6c6cd] rounded-lg py-2 pl-3 pr-8 text-sm focus:ring-0 outline-none"
         >
           <option value="">All Vendors</option>
-          {vendors.map((v) => (
+          {(data?.vendors ?? []).map((v) => (
             <option key={v.id} value={v.id}>
               {v.name}
             </option>
@@ -262,7 +251,7 @@ export default function PurchasesPage() {
       </div>
 
       {/* Loading */}
-      {loading && (
+      {isLoading && (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div
@@ -279,9 +268,9 @@ export default function PurchasesPage() {
       {/* Error */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <p className="text-[#EF4444] font-medium text-sm">{error}</p>
+          <p className="text-[#EF4444] font-medium text-sm">{error?.message ?? "Something went wrong"}</p>
           <button
-            onClick={loadData}
+            onClick={() => refetch()}
             className="mt-3 px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
           >
             Retry
@@ -290,7 +279,7 @@ export default function PurchasesPage() {
       )}
 
       {/* Empty State */}
-      {!loading && !error && purchases.length === 0 && (
+      {!isLoading && !error && (data?.purchases ?? []).length === 0 && (
         <div className="bg-white rounded-xl border border-[#c6c6cd]/30 p-12 text-center">
           <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">
             shopping_cart
@@ -312,7 +301,7 @@ export default function PurchasesPage() {
       )}
 
       {/* Desktop Table */}
-      {!loading && !error && purchases.length > 0 && (
+      {!isLoading && !error && (data?.purchases ?? []).length > 0 && (
         <div className="hidden md:block bg-white rounded-xl border border-[#c6c6cd] overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
             <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
@@ -344,7 +333,7 @@ export default function PurchasesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#c6c6cd]/50">
-              {purchases.map((p) => (
+              {(data?.purchases ?? []).map((p) => (
                 <tr
                   key={p.id}
                   className="hover:bg-[#F8FAFC] transition-colors group"
@@ -418,7 +407,7 @@ export default function PurchasesPage() {
           <div className="px-6 py-4 bg-[#f2f4f6] border-t border-[#c6c6cd] flex items-center justify-between">
             <span className="text-sm text-[#505f76]">
               Showing {(page - 1) * perPage + 1}–
-              {Math.min(page * perPage, totalCount)} of {totalCount}
+              {Math.min(page * perPage, data?.totalCount ?? 0)} of {data?.totalCount ?? 0}
             </span>
             <div className="flex gap-2">
               <button
@@ -469,7 +458,7 @@ export default function PurchasesPage() {
       )}
 
       {/* Mobile Card List */}
-      {!loading && !error && purchases.length > 0 && (
+      {!isLoading && !error && (data?.purchases ?? []).length > 0 && (
         <div className="md:hidden space-y-3">
           <div className="flex justify-between items-center">
             <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-[#505f76]">
@@ -483,7 +472,7 @@ export default function PurchasesPage() {
               New
             </Link>
           </div>
-          {purchases.map((p) => (
+          {(data?.purchases ?? []).map((p) => (
             <div
               key={p.id}
               className="bg-white rounded-lg p-4 shadow-sm border border-[#c6c6cd]/20"

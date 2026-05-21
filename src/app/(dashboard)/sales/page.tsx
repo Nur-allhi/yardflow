@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
@@ -166,12 +167,6 @@ function SkeletonTable() {
 
 export default function SalesPage() {
   const searchParams = useSearchParams();
-  const [sales, setSales] = useState<Sale[]>([]);
-  const [summary, setSummary] = useState<Summary | null>(null);
-  const [customers, setCustomers] = useState<CustomerOption[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   const [customerFilter, setCustomerFilter] = useState(searchParams.get("customer_id") || "");
   const [saleTypeFilter, setSaleTypeFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState(searchParams.get("status") || "");
@@ -179,9 +174,8 @@ export default function SalesPage() {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
 
-  const buildUrl = useCallback(() => {
+  const buildUrl = useMemo(() => {
     const params = new URLSearchParams();
     if (customerFilter) params.set("customer_id", customerFilter);
     if (saleTypeFilter) params.set("sale_type", saleTypeFilter);
@@ -194,32 +188,26 @@ export default function SalesPage() {
     return `/api/sales?${params.toString()}`;
   }, [customerFilter, saleTypeFilter, statusFilter, searchQuery, dateFrom, dateTo, page]);
 
-  const loadData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["sales", buildUrl],
+    queryFn: async () => {
       const [salesRes, customersRes] = await Promise.all([
-        fetch(buildUrl()),
+        fetch(buildUrl),
         fetch("/api/sales/customers"),
       ]);
       if (!salesRes.ok) throw new Error("Failed to load sales");
-      const data = await salesRes.json();
-      setSales(data.sales || []);
-      setSummary(data.summary || null);
-      setTotalCount(data.total_count ?? 0);
-      if (customersRes.ok) setCustomers(await customersRes.json());
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, [buildUrl]);
+      const salesData = await salesRes.json();
+      const customersList = customersRes.ok ? await customersRes.json() : [];
+      return {
+        sales: salesData.sales ?? [],
+        summary: salesData.summary ?? null,
+        totalCount: salesData.total_count ?? 0,
+        customers: customersList,
+      };
+    },
+  });
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  const totalPages = Math.max(1, Math.ceil(totalCount / PER_PAGE));
+  const totalPages = Math.max(1, Math.ceil((data?.totalCount ?? 0) / PER_PAGE));
 
   function getSaleIdDisplay(s: Sale) {
     if (s.id.startsWith("ob-")) return "Opening Balance";
@@ -287,7 +275,7 @@ export default function SalesPage() {
               Total Sales
             </p>
             <p className="text-xl font-mono font-bold text-[#191c1e]">
-              {summary ? summary.total_sales.toLocaleString("en-IN") : "—"}
+              {data?.summary ? data.summary.total_sales.toLocaleString("en-IN") : "—"}
             </p>
           </div>
         </div>
@@ -300,7 +288,7 @@ export default function SalesPage() {
               Total Received
             </p>
             <p className="text-xl font-mono font-bold text-[#22C55E]">
-              {summary ? formatMoney(summary.total_paid) : "—"}
+              {data?.summary ? formatMoney(data.summary.total_paid) : "—"}
             </p>
           </div>
         </div>
@@ -313,7 +301,7 @@ export default function SalesPage() {
               Total Due
             </p>
             <p className="text-xl font-mono font-bold text-[#EAB308]">
-              {summary ? formatMoney(summary.total_due) : "—"}
+              {data?.summary ? formatMoney(data.summary.total_due) : "—"}
             </p>
           </div>
         </div>
@@ -326,7 +314,7 @@ export default function SalesPage() {
               Today&apos;s Sales
             </p>
             <p className="text-xl font-mono font-bold text-[#191c1e]">
-              {summary ? formatMoney(summary.this_month) : "—"}
+              {data?.summary ? formatMoney(data.summary.this_month) : "—"}
             </p>
           </div>
         </div>
@@ -361,7 +349,7 @@ export default function SalesPage() {
             className="bg-white border border-[#c6c6cd] rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
           >
             <option value="">All Customers</option>
-            {customers.map((c) => (
+            {(data?.customers ?? []).map((c: CustomerOption) => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
           </select>
@@ -391,7 +379,7 @@ export default function SalesPage() {
           </select>
         </div>
         <button
-          onClick={loadData}
+          onClick={() => refetch()}
           className="p-2 hover:bg-white border border-transparent hover:border-[#c6c6cd] rounded-lg transition-colors text-[#505f76]"
           title="Apply filters"
         >
@@ -402,7 +390,7 @@ export default function SalesPage() {
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") { setPage(1); loadData(); } }}
+            onKeyDown={(e) => { if (e.key === "Enter") { setPage(1); refetch(); } }}
             className="bg-transparent border-none text-sm focus:ring-0 p-0 w-full outline-none"
             placeholder="Search..."
           />
@@ -410,18 +398,18 @@ export default function SalesPage() {
       </div>
 
       {/* Loading State */}
-      {loading && <SkeletonTable />}
+      {isLoading && <SkeletonTable />}
 
       {/* Error State */}
-      {!loading && error && (
+      {!isLoading && error && (
         <div className="bg-[#ffdad6] border border-[#ba1a1a]/20 rounded-lg p-8 text-center max-w-md mx-auto">
           <span className="material-symbols-outlined text-5xl text-[#ba1a1a] block mb-4">
             error_outline
           </span>
           <p className="text-[#ba1a1a] font-bold mb-2">Failed to Load Sales</p>
-          <p className="text-[#93000a] text-sm mb-6">{error}</p>
+          <p className="text-[#93000a] text-sm mb-6">{error instanceof Error ? error.message : error}</p>
           <button
-            onClick={loadData}
+            onClick={() => refetch()}
             className="px-6 py-2.5 bg-[#ba1a1a] text-white rounded-lg text-sm font-bold hover:bg-[#ba1a1a]/90 transition-all"
           >
             Try Again
@@ -430,7 +418,7 @@ export default function SalesPage() {
       )}
 
       {/* Empty State */}
-      {!loading && !error && sales.length === 0 && (
+      {!isLoading && !error && (data?.sales ?? []).length === 0 && (
         <div className="bg-white rounded-xl border border-[#c6c6cd]/30 py-20 text-center">
           <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">
             payments
@@ -450,7 +438,7 @@ export default function SalesPage() {
       )}
 
       {/* Data */}
-      {!loading && !error && sales.length > 0 && (
+      {!isLoading && !error && (data?.sales ?? []).length > 0 && (
         <>
           {/* Desktop Table */}
           <div className="hidden md:block bg-white border border-[#c6c6cd] rounded-lg overflow-hidden shadow-sm">
@@ -488,7 +476,7 @@ export default function SalesPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#c6c6cd]/30">
-                  {sales.map((s) => (
+                  {(data?.sales ?? []).map((s: Sale) => (
                     <tr
                       key={s.id}
                       className="hover:bg-[#f7f9fb] transition-colors group"
@@ -567,11 +555,11 @@ export default function SalesPage() {
                 Showing{" "}
                 <span className="font-bold text-[#191c1e]">
                   {(page - 1) * PER_PAGE + 1} -{" "}
-                  {Math.min(page * PER_PAGE, totalCount)}
+                  {Math.min(page * PER_PAGE, data?.totalCount ?? 0)}
                 </span>{" "}
                 of{" "}
                 <span className="font-bold text-[#191c1e]">
-                  {totalCount.toLocaleString("en-IN")}
+                  {(data?.totalCount ?? 0).toLocaleString("en-IN")}
                 </span>{" "}
                 records
               </p>
@@ -626,7 +614,7 @@ export default function SalesPage() {
 
           {/* Mobile Cards */}
           <div className="md:hidden space-y-3">
-            {sales.map((s) => (
+            {(data?.sales ?? []).map((s: Sale) => (
               <div
                 key={s.id}
                 className="bg-white p-4 rounded-xl border border-[#c6c6cd]/30 shadow-sm space-y-3"

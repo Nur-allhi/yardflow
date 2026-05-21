@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { InventoryNav } from "@/components/InventoryNav";
+import { useQuery } from "@tanstack/react-query";
+import { useSubtypes } from "@/hooks/useCategories";
 
 interface LedgerEntry {
   id: string;
@@ -22,11 +24,6 @@ interface LedgerSummary {
   total_in_kg: number;
   total_out_kg: number;
   net_stock: number;
-}
-
-interface Subtype {
-  id: string;
-  name: string;
 }
 
 function formatWeight(kg: number): string {
@@ -62,12 +59,6 @@ function formatReference(ref: string): string {
 }
 
 export default function StockLedgerPage() {
-  const [entries, setEntries] = useState<LedgerEntry[]>([]);
-  const [summary, setSummary] = useState<LedgerSummary | null>(null);
-  const [subtypes, setSubtypes] = useState<Subtype[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   const [filterSubtypeId, setFilterSubtypeId] = useState("");
   const [filterDateFrom, setFilterDateFrom] = useState("");
   const [filterDateTo, setFilterDateTo] = useState("");
@@ -84,20 +75,9 @@ export default function StockLedgerPage() {
   const [adjusting, setAdjusting] = useState(false);
   const [adjMsg, setAdjMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const loadSubtypes = useCallback(async () => {
-    try {
-      const res = await fetch("/api/inventory/subtypes");
-      if (res.ok) {
-        const data = await res.json();
-        setSubtypes(data);
-      }
-    } catch {}
-  }, []);
-
-  const loadLedger = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data: ledgerData, isLoading, error, refetch } = useQuery<{ entries: LedgerEntry[]; summary: LedgerSummary }>({
+    queryKey: ["ledger", appliedSubtypeId, appliedDateFrom, appliedDateTo],
+    queryFn: async () => {
       const params = new URLSearchParams();
       if (appliedSubtypeId) params.set("subtype_id", appliedSubtypeId);
       if (appliedDateFrom) params.set("date_from", appliedDateFrom);
@@ -105,23 +85,14 @@ export default function StockLedgerPage() {
       const qs = params.toString();
       const res = await fetch(`/api/inventory/ledger${qs ? `?${qs}` : ""}`);
       if (!res.ok) throw new Error("Failed to load ledger");
-      const data = await res.json();
-      setEntries(data.entries);
-      setSummary(data.summary);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load");
-    } finally {
-      setLoading(false);
-    }
-  }, [appliedSubtypeId, appliedDateFrom, appliedDateTo]);
+      return res.json();
+    },
+  });
 
-  useEffect(() => {
-    loadSubtypes();
-  }, [loadSubtypes]);
+  const { data: subtypes } = useSubtypes();
 
-  useEffect(() => {
-    loadLedger();
-  }, [loadLedger]);
+  const entries = ledgerData?.entries ?? [];
+  const summary = ledgerData?.summary ?? null;
 
   function handleApply() {
     setAppliedSubtypeId(filterSubtypeId);
@@ -164,7 +135,7 @@ export default function StockLedgerPage() {
       setAdjSubtypeId("");
       setAdjQuantity("");
       setAdjNote("");
-      loadLedger();
+      refetch();
       setTimeout(() => setAdjMsg(null), 3000);
     } catch (err) {
       setAdjMsg({ type: "error", text: err instanceof Error ? err.message : "Adjustment failed" });
@@ -250,7 +221,7 @@ export default function StockLedgerPage() {
               className="h-[42px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white"
             >
               <option value="">All Sub-types</option>
-              {subtypes.map((st) => (
+              {subtypes?.map((st) => (
                 <option key={st.id} value={st.id}>{st.name}</option>
               ))}
             </select>
@@ -309,7 +280,7 @@ export default function StockLedgerPage() {
             >
               All
             </button>
-            {subtypes.map((st) => (
+            {subtypes?.map((st) => (
               <button
                 key={st.id}
                 onClick={() => setFilterSubtypeId(st.id)}
@@ -355,7 +326,7 @@ export default function StockLedgerPage() {
                 <select value={adjSubtypeId} onChange={(e) => setAdjSubtypeId(e.target.value)} required
                   className="h-[42px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white w-full">
                   <option value="">Select sub-type</option>
-                  {subtypes.map((st) => (
+                  {subtypes?.map((st) => (
                     <option key={st.id} value={st.id}>{st.name}</option>
                   ))}
                 </select>
@@ -451,13 +422,13 @@ export default function StockLedgerPage() {
       )}
 
       {/* Error */}
-      {error && !loading && (
+      {error && !isLoading && (
         <div className="text-center py-16 text-[#ba1a1a]">
           <span className="material-symbols-outlined text-5xl block mb-4">error</span>
           <p className="text-lg font-medium mb-2">Failed to load ledger</p>
-          <p className="text-sm">{error}</p>
+          <p className="text-sm">{error?.message}</p>
           <button
-            onClick={loadLedger}
+            onClick={() => refetch()}
             className="mt-4 px-5 py-2 bg-[#0F172A] text-white rounded-md text-sm font-semibold"
           >
             Retry
@@ -467,7 +438,7 @@ export default function StockLedgerPage() {
 
       {/* Desktop: Table */}
       <div className="hidden md:block bg-white rounded-lg border border-[#c6c6cd]/30 shadow-sm overflow-hidden">
-        {loading ? (
+        {isLoading ? (
           <table className="w-full">
             <thead className="bg-[#f2f4f6] border-b border-[#c6c6cd]/30">
               <tr>
@@ -556,7 +527,7 @@ export default function StockLedgerPage() {
 
       {/* Mobile: Card List */}
       <div className="md:hidden space-y-3">
-        {loading ? (
+        {isLoading ? (
           <>
             <SkeletonCard />
             <SkeletonCard />
