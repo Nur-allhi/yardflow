@@ -15,6 +15,13 @@
       "when": 1779332899171,
       "tag": "0001_illegal_dust",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1779375012065,
+      "tag": "0002_dizzy_epoch",
+      "breakpoints": true
     }
   ]
 }

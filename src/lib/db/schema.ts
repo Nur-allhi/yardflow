@@ -230,6 +230,9 @@ export const consumablesLog = pgTable("consumables_log", {
     .references(() => organizations.id),
   item_name: text("item_name").notNull(),
   quantity: decimal("quantity", { precision: 10, scale: 3 }),
+  stock_quantity: decimal("stock_quantity", { precision: 12, scale: 3 })
+    .default("0")
+    .notNull(),
   unit: text("unit"),
   unit_price: decimal("unit_price", { precision: 10, scale: 2 }),
   total_price: decimal("total_price", { precision: 12, scale: 2 }).notNull(),
@@ -239,6 +242,21 @@ export const consumablesLog = pgTable("consumables_log", {
   note: text("note"),
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at", { withTimezone: true }),
+});
+
+export const consumptionLogs = pgTable("consumption_logs", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organization_id: uuid("organization_id")
+    .notNull()
+    .references(() => organizations.id),
+  consumable_id: uuid("consumable_id")
+    .notNull()
+    .references(() => consumablesLog.id),
+  quantity: decimal("quantity", { precision: 12, scale: 3 }).notNull(),
+  used_at: timestamp("used_at", { withTimezone: true }).notNull(),
+  note: text("note"),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
 });
 
@@ -561,6 +579,7 @@ export const organizationsRelations = relations(organizations, ({ many }) => ({
   stockLedgers: many(stockLedger),
   scrapPools: many(scrapPool),
   consumablesLogs: many(consumablesLog),
+  consumptionLogs: many(consumptionLogs),
   vendors: many(vendors),
   purchases: many(purchases),
   purchaseItems: many(purchaseItems),
@@ -664,7 +683,7 @@ export const scrapPoolRelations = relations(scrapPool, ({ one }) => ({
   }),
 }));
 
-export const consumablesLogRelations = relations(consumablesLog, ({ one }) => ({
+export const consumablesLogRelations = relations(consumablesLog, ({ one, many }) => ({
   organization: one(organizations, {
     fields: [consumablesLog.organization_id],
     references: [organizations.id],
@@ -672,6 +691,18 @@ export const consumablesLogRelations = relations(consumablesLog, ({ one }) => ({
   account: one(accounts, {
     fields: [consumablesLog.account_id],
     references: [accounts.id],
+  }),
+  consumptionLogs: many(consumptionLogs),
+}));
+
+export const consumptionLogsRelations = relations(consumptionLogs, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [consumptionLogs.organization_id],
+    references: [organizations.id],
+  }),
+  consumable: one(consumablesLog, {
+    fields: [consumptionLogs.consumable_id],
+    references: [consumablesLog.id],
   }),
 }));
 
@@ -871,6 +902,9 @@ export type NewScrapPoolEntry = InferInsertModel<typeof scrapPool>;
 
 export type ConsumablesLogEntry = InferSelectModel<typeof consumablesLog>;
 export type NewConsumablesLogEntry = InferInsertModel<typeof consumablesLog>;
+
+export type ConsumptionLogEntry = InferSelectModel<typeof consumptionLogs>;
+export type NewConsumptionLogEntry = InferInsertModel<typeof consumptionLogs>;
 
 export type Vendor = InferSelectModel<typeof vendors>;
 export type NewVendor = InferInsertModel<typeof vendors>;

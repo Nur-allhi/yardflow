@@ -15,6 +15,7 @@ interface ConsumableEntry {
   id: string;
   item_name: string;
   quantity: number | null;
+  stock_quantity: number;
   unit: string | null;
   unit_price: number | null;
   total_price: number;
@@ -344,7 +345,16 @@ export default function ConsumablesPage() {
         Consumables Log
       </h1>
 
-      <InventoryNav active="consumables" />
+      <div className="flex items-center justify-between gap-4">
+        <InventoryNav active="consumables" />
+        <Link
+          href="/inventory/consumables/use"
+          className="flex items-center gap-1.5 px-4 h-[38px] bg-[#DC2626] text-white text-sm font-bold rounded-lg hover:bg-[#DC2626]/90 transition-all flex-shrink-0 shadow-sm active:scale-[0.98]"
+        >
+          <span className="material-symbols-outlined text-[18px]">remove</span>
+          Use Item
+        </Link>
+      </div>
 
       {/* Top Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 md:mb-8">
@@ -408,6 +418,7 @@ export default function ConsumablesPage() {
                     <tr>
                       <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Date</th>
                       <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Item</th>
+                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Stock</th>
                       <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Qty</th>
                       <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Unit Price</th>
                       <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Total</th>
@@ -424,6 +435,11 @@ export default function ConsumablesPage() {
                         </td>
                         <td className="px-4 py-4 text-sm font-medium text-[#0F172A]">
                           {entry.item_name}
+                        </td>
+                        <td className="px-4 py-4 text-sm font-mono">
+                          <span className={entry.stock_quantity > 0 ? "text-[#059669]" : "text-[#DC2626]"}>
+                            {entry.stock_quantity} {entry.unit || ""}
+                          </span>
                         </td>
                         <td className="px-4 py-4 text-sm font-mono text-[#505f76]">
                           {entry.quantity != null
@@ -459,7 +475,7 @@ export default function ConsumablesPage() {
                   <tfoot className="bg-[#e6e8ea] border-t-2 border-[#76777d]">
                     <tr>
                       <td
-                        colSpan={4}
+                        colSpan={5}
                         className="px-4 py-4 text-right text-sm font-bold text-[#505f76] uppercase tracking-wider"
                       >
                         Monthly Total:

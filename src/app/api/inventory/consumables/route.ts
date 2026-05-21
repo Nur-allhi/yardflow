@@ -46,6 +46,7 @@ export async function GET(request: Request) {
       id: consumablesLog.id,
       item_name: consumablesLog.item_name,
       quantity: consumablesLog.quantity,
+      stock_quantity: consumablesLog.stock_quantity,
       unit: consumablesLog.unit,
       unit_price: consumablesLog.unit_price,
       total_price: consumablesLog.total_price,
@@ -104,6 +105,7 @@ export async function GET(request: Request) {
     entries: entries.map((e) => ({
       ...e,
       quantity: e.quantity ? Number(e.quantity) : null,
+      stock_quantity: Number(e.stock_quantity),
       unit_price: e.unit_price ? Number(e.unit_price) : null,
       total_price: Number(e.total_price),
     })),
@@ -135,23 +137,54 @@ export async function POST(request: Request) {
     }
 
     const entry = await db.transaction(async (tx) => {
-      const [log] = await tx
-        .insert(consumablesLog)
-        .values({
-          organization_id: orgId,
-          item_name: parsed.data.item_name,
-          quantity: parsed.data.quantity ? String(parsed.data.quantity) : null,
-          unit: parsed.data.unit || null,
-          unit_price: parsed.data.unit_price
-            ? String(parsed.data.unit_price)
-            : null,
-          total_price: String(parsed.data.total_price),
-          vendor_name: parsed.data.vendor_name || null,
-          account_id: parsed.data.account_id,
-          purchase_date: new Date(parsed.data.purchase_date),
-          note: parsed.data.note || null,
-        })
-        .returning();
+      const qty = parsed.data.quantity ? String(parsed.data.quantity) : "0";
+
+      const existing = await tx
+        .select({ id: consumablesLog.id, stock_quantity: consumablesLog.stock_quantity })
+        .from(consumablesLog)
+        .where(
+          and(
+            eq(consumablesLog.organization_id, orgId),
+            eq(consumablesLog.item_name, parsed.data.item_name),
+            sql`${consumablesLog.deleted_at} IS NULL`,
+          ),
+        )
+        .limit(1);
+
+      let log;
+      if (existing.length > 0) {
+        [log] = await tx
+          .update(consumablesLog)
+          .set({
+            stock_quantity: sql`${consumablesLog.stock_quantity} + ${qty}`,
+            unit: parsed.data.unit || undefined,
+            vendor_name: parsed.data.vendor_name || undefined,
+            purchase_date: new Date(parsed.data.purchase_date),
+            note: parsed.data.note || undefined,
+            updated_at: new Date(),
+          })
+          .where(eq(consumablesLog.id, existing[0].id))
+          .returning();
+      } else {
+        [log] = await tx
+          .insert(consumablesLog)
+          .values({
+            organization_id: orgId,
+            item_name: parsed.data.item_name,
+            quantity: qty,
+            stock_quantity: qty,
+            unit: parsed.data.unit || null,
+            unit_price: parsed.data.unit_price
+              ? String(parsed.data.unit_price)
+              : null,
+            total_price: String(parsed.data.total_price),
+            vendor_name: parsed.data.vendor_name || null,
+            account_id: parsed.data.account_id,
+            purchase_date: new Date(parsed.data.purchase_date),
+            note: parsed.data.note || null,
+          })
+          .returning();
+      }
 
       await tx.insert(accountTransactions).values({
         organization_id: orgId,
@@ -171,6 +204,7 @@ export async function POST(request: Request) {
       {
         ...entry,
         quantity: entry.quantity ? Number(entry.quantity) : null,
+        stock_quantity: Number(entry.stock_quantity),
         unit_price: entry.unit_price ? Number(entry.unit_price) : null,
         total_price: Number(entry.total_price),
       },
