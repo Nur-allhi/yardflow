@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import MobileSidebar from "@/components/MobileSidebar";
+import QueryProvider from "@/components/QueryProvider";
 
 export default async function DashboardLayout({
   children,
@@ -13,6 +14,7 @@ export default async function DashboardLayout({
   if (!session) redirect("/login");
 
   return (
+    <QueryProvider>
     <div className="min-h-screen bg-[#F8FAFC]">
       {/* Desktop Sidebar */}
       <Sidebar />
@@ -79,5 +81,6 @@ export default async function DashboardLayout({
         </nav>
       </div>
     </div>
+    </QueryProvider>
   );
 }
