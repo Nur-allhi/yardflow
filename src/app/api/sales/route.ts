@@ -92,7 +92,7 @@ export async function GET(request: Request) {
         status: sales.status,
         note: sales.note,
         created_at: sales.created_at,
-        customer_name: customers.name,
+        customer_name: sql`COALESCE(${sales.customer_name}, ${customers.name})`,
         total_kg: weightSubquery.total_kg,
       })
       .from(sales)
@@ -158,7 +158,7 @@ export async function GET(request: Request) {
       total_kg: number;
     }> = [];
 
-    if (status === "due") {
+    if (!status || status === "due") {
       const openingConditions: (ReturnType<typeof eq> | ReturnType<typeof sql>)[] = [
         eq(customers.organization_id, orgId),
         sql`${customers.deleted_at} IS NULL`,
@@ -295,6 +295,7 @@ export async function POST(request: Request) {
         .values({
           organization_id: orgId,
           customer_id: isQuickCash ? null : (parsed.data.customer_id || null),
+          customer_name: parsed.data.customer_name || null,
           sale_type: saleType,
           is_quick_cash_sale: isQuickCash,
           sale_date: new Date(parsed.data.sale_date),

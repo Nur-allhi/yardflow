@@ -35,7 +35,7 @@ export async function GET(
       status: sales.status,
       note: sales.note,
       created_at: sales.created_at,
-      customer_name: customers.name,
+      customer_name: sql`COALESCE(${sales.customer_name}, ${customers.name})`,
       customer_phone: customers.phone,
     })
     .from(sales)

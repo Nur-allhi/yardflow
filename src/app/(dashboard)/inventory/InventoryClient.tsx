@@ -48,14 +48,6 @@ function formatKg(kg: number | null | undefined): string {
   return `${(kg ?? 0).toLocaleString("en-IN")} kg`;
 }
 
-const tabs = [
-  { key: "stock", label: "Stock Overview" },
-  { key: "categories", label: "Categories" },
-  { key: "subtypes", label: "Sub-types" },
-  { key: "scrap", label: "Scrap Pool" },
-  { key: "consumables", label: "Consumables" },
-];
-
 function CategorySection({
   category,
   defaultOpen,
@@ -200,8 +192,6 @@ function CategorySection({
 }
 
 export function InventoryClient({ data }: { data: StockData | null }) {
-  const [activeTab, setActiveTab] = useState("stock");
-
   if (!data) {
     return (
       <div className="text-center py-16 text-[#505f76]">
@@ -270,107 +260,25 @@ export function InventoryClient({ data }: { data: StockData | null }) {
         </div>
       </div>
 
-      {/* Desktop: Text Tabs Sub-navigation */}
-      <div className="hidden md:flex border-b border-[#c6c6cd] mb-8 gap-8 overflow-x-auto">
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={`pb-3 border-b-2 text-sm whitespace-nowrap transition-colors ${
-              activeTab === tab.key
-                ? "border-[#059669] text-[#059669] font-bold"
-                : "border-transparent text-[#505f76] hover:text-[#0F172A] font-medium"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Mobile: Horizontal Scrollable Pill Tabs */}
-      <div className="md:hidden flex gap-2 overflow-x-auto py-4 -mx-4 px-4 sticky top-0 bg-[#F8FAFC] z-30 hide-scrollbar">
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              activeTab === tab.key
-                ? "bg-[#002114] text-[#059669] font-bold shadow-sm border border-[#059669]"
-                : "bg-[#eceef0] text-[#505f76] hover:bg-[#e0e3e5]"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Tab Content */}
-      {activeTab === "stock" && (
-        <>
-          {data.categories.length === 0 ? (
-            <div className="text-center py-16 text-[#505f76]">
-              <span className="material-symbols-outlined text-5xl block mb-4">
-                category
-              </span>
-              <p className="text-lg font-medium mb-2">No inventory yet</p>
-              <p className="text-sm">
-                Start by adding a category and sub-type above
-              </p>
-            </div>
-          ) : (
-            data.categories.map((cat, i) => (
-              <CategorySection
-                key={cat.id}
-                category={cat}
-                defaultOpen={i === 0}
-              />
-            ))
-          )}
-        </>
-      )}
-
-      {activeTab === "categories" && (
-        <div className="text-center py-16 text-[#505f76]">
-          <p className="text-lg font-medium mb-2">Category Management</p>
-          <Link
-            href="/inventory/categories"
-            className="text-[#059669] hover:underline text-sm"
-          >
-            Go to Categories
-          </Link>
-        </div>
-      )}
-
-      {activeTab === "subtypes" && (
-        <div className="text-center py-16 text-[#505f76]">
-          <p className="text-lg font-medium mb-2">Sub-type Management</p>
-          <Link
-            href="/inventory/subtypes"
-            className="text-[#059669] hover:underline text-sm"
-          >
-            Go to Sub-types
-          </Link>
-        </div>
-      )}
-
-      {activeTab === "scrap" && (
+      {/* Stock Content */}
+      {data.categories.length === 0 ? (
         <div className="text-center py-16 text-[#505f76]">
           <span className="material-symbols-outlined text-5xl block mb-4">
-            recycling
+            category
           </span>
-          <p className="text-lg font-medium mb-2">Scrap Pool</p>
-          <p className="text-sm">{(data.scrap_pool_kg ?? 0).toLocaleString("en-IN")} kg accumulated</p>
+          <p className="text-lg font-medium mb-2">No inventory yet</p>
+          <p className="text-sm">
+            Start by adding a category and sub-type above
+          </p>
         </div>
-      )}
-
-      {activeTab === "consumables" && (
-        <div className="text-center py-16 text-[#505f76]">
-          <span className="material-symbols-outlined text-5xl block mb-4">
-            inventory
-          </span>
-          <p className="text-lg font-medium mb-2">Consumables</p>
-          <p className="text-sm">Coming soon</p>
-        </div>
+      ) : (
+        data.categories.map((cat, i) => (
+          <CategorySection
+            key={cat.id}
+            category={cat}
+            defaultOpen={i === 0}
+          />
+        ))
       )}
     </>
   );

@@ -81,6 +81,7 @@ export const quickSaleSchema = z.object({
 
 export const saleSchema = z.object({
   customer_id: z.string().uuid("Invalid customer").nullable().optional(),
+  customer_name: z.string().optional(),
   sale_type: z.enum(["fabricated", "raw_passthrough", "scrap"]),
   is_quick_cash_sale: z.boolean().optional(),
   sale_date: z.string().min(1, "Date is required"),

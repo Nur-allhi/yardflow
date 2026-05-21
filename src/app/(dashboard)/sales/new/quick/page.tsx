@@ -49,6 +49,7 @@ export default function QuickCashSalePage() {
   const [saleDate, setSaleDate] = useState(
     new Date().toISOString().split("T")[0],
   );
+  const [customerName, setCustomerName] = useState("");
   const [accountId, setAccountId] = useState("");
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -156,6 +157,7 @@ export default function QuickCashSalePage() {
           sale_date: saleDate,
           sale_type: "fabricated",
           is_quick_cash_sale: true,
+          customer_name: customerName || undefined,
           items: validItems.map((item) => ({
             subtype_id: item.subtype_id,
             quantity_kg: parseFloat(item.quantity_kg),
@@ -196,15 +198,16 @@ export default function QuickCashSalePage() {
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="max-w-[600px] mx-auto space-y-6">
-          {/* Sale Details */}
-          <section className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm p-5 md:p-6">
-            <div className="flex items-center gap-2 mb-5">
-              <span className="material-symbols-outlined text-[#0F172A]">bolt</span>
-              <h2 className="font-display text-lg font-semibold">Sale Details</h2>
-            </div>
-            <p className="text-sm text-[#505f76] mb-4">No customer record. Payment received in full.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="max-w-5xl mx-auto space-y-6">
+          {/* Top Row: Sale Details + Payment */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Sale Details */}
+            <section className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm p-5 md:p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <span className="material-symbols-outlined text-[#0F172A]">bolt</span>
+                <h2 className="font-display text-lg font-semibold">Sale Details</h2>
+              </div>
+              <p className="text-sm text-[#505f76] mb-4">No customer record. Payment received in full.</p>
               <div className="space-y-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
                   Sale Date
@@ -217,8 +220,74 @@ export default function QuickCashSalePage() {
                   className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
                 />
               </div>
-            </div>
-          </section>
+              <div className="space-y-1.5 mt-4">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                  Customer Name (optional)
+                </label>
+                <input
+                  type="text"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                  placeholder="Walk-in customer"
+                />
+              </div>
+            </section>
+
+            {/* Payment */}
+            <section className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm p-5 md:p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <span className="material-symbols-outlined text-[#0F172A]">account_balance_wallet</span>
+                <h2 className="font-display text-lg font-semibold">Payment</h2>
+              </div>
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                    Amount Received
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#505f76] font-mono">৳</span>
+                    <input
+                      type="text"
+                      value={formatMoney(amountReceived)}
+                      readOnly
+                      className="w-full h-[42px] pl-8 pr-3 border border-[#c6c6cd] rounded bg-[#f2f4f6] text-sm font-mono font-bold text-[#059669] outline-none cursor-default"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                    Pay Into Account
+                  </label>
+                  <select
+                    value={accountId}
+                    onChange={(e) => setAccountId(e.target.value)}
+                    required
+                    className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
+                  >
+                    <option value="">Select account</option>
+                    {accounts.map((a) => (
+                      <option key={a.id} value={a.id}>
+                        {a.name} ({formatMoney(a.current_balance)})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                    Note (optional)
+                  </label>
+                  <textarea
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    rows={2}
+                    className="w-full border border-[#c6c6cd] rounded bg-white p-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all resize-none"
+                    placeholder="Internal note..."
+                  />
+                </div>
+              </div>
+            </section>
+          </div>
 
           {/* Items */}
           <section className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm overflow-hidden">
@@ -240,24 +309,32 @@ export default function QuickCashSalePage() {
             {/* Desktop Table */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse">
+                <colgroup>
+                  <col className="w-[22%]" />
+                  <col className="w-[22%]" />
+                  <col className="w-[14%]" />
+                  <col className="w-[16%]" />
+                  <col className="w-[16%]" />
+                  <col className="w-[10%]" />
+                </colgroup>
                 <thead className="bg-[#f2f4f6] border-b border-[#c6c6cd]/50">
                   <tr>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Category</th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Sub-type</th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76] text-right">Qty (kg)</th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76] text-right">Price/kg</th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76] text-right">Total</th>
-                    <th className="px-6 py-4" />
+                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Category</th>
+                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Sub-type</th>
+                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-[#505f76] text-right">Qty (kg)</th>
+                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-[#505f76] text-right">Price/kg</th>
+                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-[#505f76] text-right">Total</th>
+                    <th className="px-8 py-5" />
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#c6c6cd]/30">
                   {items.map((item) => (
                     <tr key={item.key} className="hover:bg-[#F8FAFC]">
-                      <td className="px-6 py-3">
+                      <td className="px-8 py-4">
                         <select
                           value={item.category_id}
                           onChange={(e) => handleCategoryChange(item.key, e.target.value)}
-                          className="w-full h-[38px] border border-[#c6c6cd] rounded px-2 text-sm focus:border-[#0F172A] outline-none bg-white"
+                          className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm focus:border-[#0F172A] outline-none bg-white"
                         >
                           <option value="">Category</option>
                           {categories.map((cat) => (
@@ -265,12 +342,12 @@ export default function QuickCashSalePage() {
                           ))}
                         </select>
                       </td>
-                      <td className="px-6 py-3">
+                      <td className="px-8 py-4">
                         <select
                           value={item.subtype_id}
                           onChange={(e) => handleItemChange(item.key, "subtype_id", e.target.value)}
                           disabled={!item.category_id}
-                          className="w-full h-[38px] border border-[#c6c6cd] rounded px-2 text-sm focus:border-[#0F172A] outline-none bg-white disabled:opacity-40"
+                          className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm focus:border-[#0F172A] outline-none bg-white disabled:opacity-40"
                         >
                           <option value="">Sub-type</option>
                           {getSubtypesFor(item).map((st) => (
@@ -278,40 +355,40 @@ export default function QuickCashSalePage() {
                           ))}
                         </select>
                       </td>
-                      <td className="px-6 py-3">
+                      <td className="px-8 py-4">
                         <input
                           type="number"
                           step="0.001"
                           min="0"
                           value={item.quantity_kg}
                           onChange={(e) => handleItemChange(item.key, "quantity_kg", e.target.value)}
-                          className="w-full h-[38px] border border-[#c6c6cd] rounded px-2 text-sm text-right font-mono focus:border-[#0F172A] outline-none"
+                          className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm text-right font-mono focus:border-[#0F172A] outline-none"
                           placeholder="0"
                         />
                       </td>
-                      <td className="px-6 py-3">
+                      <td className="px-8 py-4">
                         <div className="relative">
-                          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-[#505f76]">৳</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#505f76]">৳</span>
                           <input
                             type="number"
                             step="0.01"
                             min="0"
                             value={item.price_per_kg}
                             onChange={(e) => handleItemChange(item.key, "price_per_kg", e.target.value)}
-                            className="w-full h-[38px] pl-5 border border-[#c6c6cd] rounded px-2 text-sm text-right font-mono focus:border-[#0F172A] outline-none"
+                            className="w-full h-[42px] pl-6 border border-[#c6c6cd] rounded px-3 text-sm text-right font-mono focus:border-[#0F172A] outline-none"
                             placeholder="0"
                           />
                         </div>
                       </td>
-                      <td className="px-6 py-3 text-right font-mono text-sm font-semibold">
+                      <td className="px-8 py-4 text-right font-mono text-base font-semibold text-[#0F172A]">
                         ৳{calcLineTotal(item).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
-                      <td className="px-6 py-3 text-center">
+                      <td className="px-8 py-4 text-center">
                         {items.length > 1 && (
                           <button
                             type="button"
                             onClick={() => removeItem(item.key)}
-                            className="text-[#EF4444] hover:bg-red-50 p-1 rounded transition-colors"
+                            className="text-[#EF4444] hover:bg-red-50 p-1.5 rounded-lg transition-colors"
                           >
                             <span className="material-symbols-outlined text-lg">delete</span>
                           </button>
@@ -324,14 +401,14 @@ export default function QuickCashSalePage() {
             </div>
 
             {/* Mobile Items */}
-            <div className="md:hidden space-y-3 p-4">
+            <div className="md:hidden space-y-4 p-4">
               {items.map((item) => (
-                <div key={item.key} className="border border-[#c6c6cd]/50 rounded-lg p-3 space-y-3">
+                <div key={item.key} className="border border-[#c6c6cd]/50 rounded-xl p-4 space-y-4 bg-white">
                   <div className="grid grid-cols-2 gap-3">
                     <select
                       value={item.category_id}
                       onChange={(e) => handleCategoryChange(item.key, e.target.value)}
-                      className="h-[38px] border border-[#c6c6cd] rounded px-2 text-sm outline-none bg-white"
+                      className="h-[42px] border border-[#c6c6cd] rounded-lg px-3 text-sm outline-none bg-white"
                     >
                       <option value="">Category</option>
                       {categories.map((cat) => (
@@ -342,7 +419,7 @@ export default function QuickCashSalePage() {
                       value={item.subtype_id}
                       onChange={(e) => handleItemChange(item.key, "subtype_id", e.target.value)}
                       disabled={!item.category_id}
-                      className="h-[38px] border border-[#c6c6cd] rounded px-2 text-sm outline-none bg-white disabled:opacity-40"
+                      className="h-[42px] border border-[#c6c6cd] rounded-lg px-3 text-sm outline-none bg-white disabled:opacity-40"
                     >
                       <option value="">Sub-type</option>
                       {getSubtypesFor(item).map((st) => (
@@ -352,39 +429,39 @@ export default function QuickCashSalePage() {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] uppercase font-bold text-[#505f76] block mb-1">Qty (kg)</label>
+                      <label className="text-[10px] uppercase font-bold text-[#505f76] block mb-1.5">Qty (kg)</label>
                       <input
                         type="number"
                         step="0.001"
                         min="0"
                         value={item.quantity_kg}
                         onChange={(e) => handleItemChange(item.key, "quantity_kg", e.target.value)}
-                        className="w-full h-[38px] border border-[#c6c6cd] rounded px-2 text-sm font-mono outline-none"
+                        className="w-full h-[42px] border border-[#c6c6cd] rounded-lg px-3 text-sm font-mono outline-none"
                         placeholder="0"
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] uppercase font-bold text-[#505f76] block mb-1">Price/kg</label>
+                      <label className="text-[10px] uppercase font-bold text-[#505f76] block mb-1.5">Price/kg</label>
                       <div className="relative">
-                        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-[#505f76]">৳</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#505f76]">৳</span>
                         <input
                           type="number"
                           step="0.01"
                           min="0"
                           value={item.price_per_kg}
                           onChange={(e) => handleItemChange(item.key, "price_per_kg", e.target.value)}
-                          className="w-full h-[38px] pl-5 border border-[#c6c6cd] rounded px-2 text-sm font-mono outline-none"
+                          className="w-full h-[42px] pl-6 border border-[#c6c6cd] rounded-lg px-3 text-sm font-mono outline-none"
                           placeholder="0"
                         />
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center pt-2 border-t border-dashed border-[#c6c6cd]/50">
-                    <span className="text-sm font-mono font-bold">
+                  <div className="flex justify-between items-center pt-3 border-t border-dashed border-[#c6c6cd]/50">
+                    <span className="text-base font-mono font-bold text-[#0F172A]">
                       ৳{calcLineTotal(item).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                     {items.length > 1 && (
-                      <button type="button" onClick={() => removeItem(item.key)} className="text-[#EF4444] text-xs font-bold">
+                      <button type="button" onClick={() => removeItem(item.key)} className="text-[#EF4444] text-xs font-bold hover:bg-red-50 px-2 py-1 rounded">
                         Remove
                       </button>
                     )}
@@ -394,67 +471,13 @@ export default function QuickCashSalePage() {
             </div>
 
             {/* Grand Total */}
-            <div className="p-5 md:p-6 bg-[#f2f4f6]/50 border-t border-[#c6c6cd]/50 flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-[#505f76]">{totalWeight.toFixed(3)} kg</span>
+            <div className="px-8 py-5 bg-[#f2f4f6]/50 border-t border-[#c6c6cd]/50 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-[#505f76]">{totalWeight.toFixed(3)} kg total weight</span>
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-sm font-medium text-[#505f76] uppercase tracking-wider">Total:</span>
-                <span className="text-xl font-bold font-mono text-[#0F172A]">{formatMoney(grandTotal)}</span>
-              </div>
-            </div>
-          </section>
-
-          {/* Payment */}
-          <section className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm p-5 md:p-6">
-            <div className="flex items-center gap-2 mb-5">
-              <span className="material-symbols-outlined text-[#0F172A]">account_balance_wallet</span>
-              <h2 className="font-display text-lg font-semibold">Payment</h2>
-            </div>
-            <div className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                  Amount Received
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#505f76] font-mono">৳</span>
-                  <input
-                    type="text"
-                    value={formatMoney(amountReceived)}
-                    readOnly
-                    className="w-full h-[42px] pl-8 pr-3 border border-[#c6c6cd] rounded bg-[#f2f4f6] text-sm font-mono font-bold text-[#059669] outline-none cursor-default"
-                  />
-                </div>
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                  Pay Into Account
-                </label>
-                <select
-                  value={accountId}
-                  onChange={(e) => setAccountId(e.target.value)}
-                  required
-                  className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
-                >
-                  <option value="">Select account</option>
-                  {accounts.map((a) => (
-                    <option key={a.id} value={a.id}>
-                      {a.name} ({formatMoney(a.current_balance)})
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                  Note (optional)
-                </label>
-                <textarea
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  rows={2}
-                  className="w-full border border-[#c6c6cd] rounded bg-white p-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all resize-none"
-                  placeholder="Internal note..."
-                />
+                <span className="text-sm font-bold text-[#505f76] uppercase tracking-wider">Grand Total:</span>
+                <span className="text-2xl font-bold font-mono text-[#0F172A]">{formatMoney(grandTotal)}</span>
               </div>
             </div>
           </section>

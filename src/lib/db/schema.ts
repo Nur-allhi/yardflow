@@ -376,6 +376,7 @@ export const sales = pgTable("sales", {
     .notNull()
     .references(() => organizations.id),
   customer_id: uuid("customer_id").references(() => customers.id),
+  customer_name: text("customer_name"),
   sale_type: saleTypeEnum("sale_type").notNull(),
   is_quick_cash_sale: boolean("is_quick_cash_sale").default(false).notNull(),
   sale_date: timestamp("sale_date", { withTimezone: true }).notNull(),

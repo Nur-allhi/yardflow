@@ -175,6 +175,7 @@ export default function SalesPage() {
   const [customerFilter, setCustomerFilter] = useState(searchParams.get("customer_id") || "");
   const [saleTypeFilter, setSaleTypeFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState(searchParams.get("status") || "");
+  const [searchQuery, setSearchQuery] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [page, setPage] = useState(1);
@@ -185,12 +186,13 @@ export default function SalesPage() {
     if (customerFilter) params.set("customer_id", customerFilter);
     if (saleTypeFilter) params.set("sale_type", saleTypeFilter);
     if (statusFilter) params.set("status", statusFilter);
+    if (searchQuery) params.set("search", searchQuery);
     if (dateFrom) params.set("date_from", dateFrom);
     if (dateTo) params.set("date_to", dateTo);
     params.set("page", String(page));
     params.set("limit", String(PER_PAGE));
     return `/api/sales?${params.toString()}`;
-  }, [customerFilter, saleTypeFilter, statusFilter, dateFrom, dateTo, page]);
+  }, [customerFilter, saleTypeFilter, statusFilter, searchQuery, dateFrom, dateTo, page]);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -330,160 +332,82 @@ export default function SalesPage() {
         </div>
       </section>
 
-      {/* Filters Section */}
-      <section className="bg-white border border-[#c6c6cd] rounded-lg p-4 md:p-6 mb-6 shadow-sm">
-        <div className="flex flex-wrap items-center gap-4">
-          {/* Date Range */}
-          <div className="flex items-center gap-2">
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1">
-                Date Range
-              </label>
-              <div className="flex items-center gap-2 border border-[#c6c6cd] px-3 py-2 rounded bg-[#f7f9fb]">
-                <span className="material-symbols-outlined text-sm text-[#505f76]">calendar_today</span>
-                <input
-                  type="date"
-                  value={dateFrom}
-                  onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
-                  className="text-xs bg-transparent border-none focus:ring-0 w-32 md:w-36 font-body outline-none p-0"
-                />
-              </div>
-            </div>
-            <span className="text-[#505f76] text-xs mt-5">—</span>
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1 opacity-0 pointer-events-none">
-                To
-              </label>
-              <div className="flex items-center gap-2 border border-[#c6c6cd] px-3 py-2 rounded bg-[#f7f9fb]">
-                <span className="material-symbols-outlined text-sm text-[#505f76]">calendar_today</span>
-                <input
-                  type="date"
-                  value={dateTo}
-                  onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
-                  className="text-xs bg-transparent border-none focus:ring-0 w-32 md:w-36 font-body outline-none p-0"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Customer */}
-          <div className="space-y-1">
-            <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1">
-              Customer
-            </label>
-            <select
-              value={customerFilter}
-              onChange={(e) => { setCustomerFilter(e.target.value); setPage(1); }}
-              className="text-xs bg-[#f7f9fb] border border-[#c6c6cd] px-3 py-2 rounded focus:ring-0 w-40 font-body outline-none"
-            >
-              <option value="">All Customers</option>
-              {customers.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="hidden md:block h-10 w-px bg-[#c6c6cd]" />
-
-          {/* Sale Type Chips */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1">
-              Sale Type
-            </label>
-            <div className="flex gap-2">
-              {SALE_TYPES.map((st) => (
-                <button
-                  key={st.value}
-                  onClick={() => { setSaleTypeFilter(st.value); setPage(1); }}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                    saleTypeFilter === st.value
-                      ? "bg-[#0F172A] text-white"
-                      : "border border-[#c6c6cd] text-[#505f76] hover:bg-[#f2f4f6]"
-                  }`}
-                >
-                  {st.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="hidden md:block h-10 w-px bg-[#c6c6cd]" />
-
-          {/* Status Chips */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1">
-              Status
-            </label>
-            <div className="flex gap-2">
-              {STATUSES.map((st) => (
-                <button
-                  key={st.value}
-                  onClick={() => { setStatusFilter(st.value); setPage(1); }}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                    statusFilter === st.value
-                      ? "bg-[#0F172A] text-white"
-                      : "border border-[#c6c6cd] text-[#505f76] hover:bg-[#f2f4f6]"
-                  }`}
-                >
-                  {st.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Filter Button */}
-          <button
-            onClick={loadData}
-            className="ml-auto p-2 hover:bg-[#e6e8ea] rounded transition-colors text-[#505f76] mt-5"
-            title="Apply filters"
+      {/* Filter Bar */}
+      <div className="bg-[#f2f4f6] p-3 md:p-4 rounded-xl border border-[#c6c6cd]/50 mb-6 flex flex-wrap items-center gap-5">
+        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-[#c6c6cd] rounded-lg">
+          <span className="material-symbols-outlined text-[#505f76] text-sm">calendar_today</span>
+          <input
+            type="date"
+            value={dateFrom}
+            onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
+            className="bg-transparent border-none text-sm focus:ring-0 p-0 w-28 outline-none"
+          />
+        </div>
+        <span className="text-[#505f76] text-xs">—</span>
+        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-[#c6c6cd] rounded-lg">
+          <span className="material-symbols-outlined text-[#505f76] text-sm">calendar_today</span>
+          <input
+            type="date"
+            value={dateTo}
+            onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
+            className="bg-transparent border-none text-sm focus:ring-0 p-0 w-28 outline-none"
+          />
+        </div>
+        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-[#c6c6cd] rounded-lg">
+          <span className="material-symbols-outlined text-[#505f76] text-sm">search</span>
+          <input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") { setPage(1); loadData(); } }}
+            className="bg-transparent border-none text-sm focus:ring-0 p-0 w-32 outline-none"
+            placeholder="Search..."
+          />
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1 px-1.5">Customer</label>
+          <select
+            value={customerFilter}
+            onChange={(e) => { setCustomerFilter(e.target.value); setPage(1); }}
+            className="bg-white border border-[#c6c6cd] rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
           >
-            <span className="material-symbols-outlined">filter_list</span>
-          </button>
+            <option value="">All Customers</option>
+            {customers.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
         </div>
-
-        {/* Mobile filter row: customer + sale type */}
-        <div className="md:hidden flex flex-wrap items-center gap-3 mt-3 pt-3 border-t border-[#c6c6cd]/50">
-          <div className="space-y-1">
-            <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1">
-              Customer
-            </label>
-            <select
-              value={customerFilter}
-              onChange={(e) => { setCustomerFilter(e.target.value); setPage(1); }}
-              className="text-xs bg-[#f7f9fb] border border-[#c6c6cd] px-3 py-2 rounded focus:ring-0 w-40 font-body outline-none"
-            >
-              <option value="">All Customers</option>
-              {customers.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="space-y-1">
-            <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1">
-              Sale Type
-            </label>
-            <div className="flex gap-1">
-              {SALE_TYPES.map((st) => (
-                <button
-                  key={st.value}
-                  onClick={() => { setSaleTypeFilter(st.value); setPage(1); }}
-                  className={`px-2 py-1 rounded-full text-[10px] font-bold transition-all ${
-                    saleTypeFilter === st.value
-                      ? "bg-[#0F172A] text-white"
-                      : "border border-[#c6c6cd] text-[#505f76]"
-                  }`}
-                >
-                  {st.label}
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1 px-1.5">Sale Type</label>
+          <select
+            value={saleTypeFilter}
+            onChange={(e) => { setSaleTypeFilter(e.target.value); setPage(1); }}
+            className="bg-white border border-[#c6c6cd] rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
+          >
+            {SALE_TYPES.map((st) => (
+              <option key={st.value} value={st.value}>{st.label}</option>
+            ))}
+          </select>
         </div>
-      </section>
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1 px-1.5">Status</label>
+          <select
+            value={statusFilter}
+            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+            className="bg-white border border-[#c6c6cd] rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
+          >
+            {STATUSES.map((st) => (
+              <option key={st.value} value={st.value}>{st.label}</option>
+            ))}
+          </select>
+        </div>
+        <button
+          onClick={loadData}
+          className="p-2 hover:bg-white border border-transparent hover:border-[#c6c6cd] rounded-lg transition-colors text-[#505f76]"
+          title="Apply filters"
+        >
+          <span className="material-symbols-outlined">filter_list</span>
+        </button>
+      </div>
 
       {/* Loading State */}
       {loading && <SkeletonTable />}
