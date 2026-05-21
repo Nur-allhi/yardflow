@@ -5,6 +5,8 @@ import {
   vendors,
   purchaseItems,
   stockLedger,
+  purchaseOtherExpenses,
+  accountTransactions,
 } from "@/lib/db/schema";
 import {
   eq,
@@ -68,6 +70,54 @@ export async function GET(request: Request) {
     )
     .orderBy(sql`${purchases.purchase_date} DESC`);
 
+  const openingEntries: Array<{
+    id: string;
+    vendor_id: string;
+    purchase_date: null;
+    total_amount: number;
+    paid_amount: number;
+    due_amount: number;
+    status: string;
+    note: null;
+    created_at: null;
+    vendor_name: string | null;
+  }> = [];
+
+  if (status === "due") {
+    const openingConditions: (ReturnType<typeof eq> | ReturnType<typeof sql>)[] = [
+      eq(vendors.organization_id, orgId),
+      sql`${vendors.deleted_at} IS NULL`,
+      sql`${vendors.opening_balance}::numeric > 0`,
+      sql`NOT EXISTS (SELECT 1 FROM ${purchases} WHERE ${purchases.vendor_id} = ${vendors.id} AND ${purchases.organization_id} = ${orgId} AND ${purchases.deleted_at} IS NULL AND ${purchases.status} = 'due')`,
+    ];
+    if (vendorId) openingConditions.push(eq(vendors.id, vendorId));
+    if (search) openingConditions.push(sql`${vendors.name} ILIKE ${"%" + search + "%"}`);
+
+    const openingVendors = await db
+      .select({
+        id: vendors.id,
+        name: vendors.name,
+        opening_balance: sql<string>`${vendors.opening_balance}::numeric`,
+      })
+      .from(vendors)
+      .where(and(...openingConditions));
+
+    for (const v of openingVendors) {
+      openingEntries.push({
+        id: `ob-${v.id}`,
+        vendor_id: v.id,
+        purchase_date: null,
+        total_amount: Number(v.opening_balance),
+        paid_amount: 0,
+        due_amount: Number(v.opening_balance),
+        status: "due",
+        note: null,
+        created_at: null,
+        vendor_name: v.name,
+      });
+    }
+  }
+
   const now = new Date();
   const firstOfMonthStr = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
 
@@ -105,12 +155,15 @@ export async function GET(request: Request) {
   const openingBalanceTotal = Number(openingResult.total);
 
   return NextResponse.json({
-    purchases: purchaseList.map((p) => ({
-      ...p,
-      total_amount: Number(p.total_amount),
-      paid_amount: Number(p.paid_amount),
-      due_amount: Number(p.due_amount),
-    })),
+    purchases: [
+      ...purchaseList.map((p) => ({
+        ...p,
+        total_amount: Number(p.total_amount),
+        paid_amount: Number(p.paid_amount),
+        due_amount: Number(p.due_amount),
+      })),
+      ...openingEntries,
+    ],
     summary: {
       total_purchases: summary.total_purchases,
       total_paid: totalPaid,
@@ -133,10 +186,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const totalAmount = parsed.data.items.reduce(
+    const itemsTotal = parsed.data.items.reduce(
       (sum, item) => sum + item.quantity_kg * item.price_per_kg,
       0,
     );
+
+    const otherExpenses = parsed.data.other_expenses ?? [];
+    const vendorTotalAdditions = otherExpenses
+      .filter((e) => e.add_to_vendor_total)
+      .reduce((sum, e) => sum + e.amount, 0);
+    const totalAmount = itemsTotal + vendorTotalAdditions;
 
     const result = await db.transaction(async (tx) => {
       const [purchase] = await tx
@@ -149,9 +208,6 @@ export async function POST(request: Request) {
           paid_amount: "0",
           status: "due",
           note: parsed.data.note || null,
-          truck_fare: parsed.data.truck_fare ? parsed.data.truck_fare.toFixed(2) : "0",
-          labour_cost: parsed.data.labour_cost ? parsed.data.labour_cost.toFixed(2) : "0",
-          food_cost: parsed.data.food_cost ? parsed.data.food_cost.toFixed(2) : "0",
         })
         .returning();
 
@@ -177,6 +233,30 @@ export async function POST(request: Request) {
           reference_id: purchase.id,
           movement_date: new Date(parsed.data.purchase_date),
         });
+      }
+
+      for (const expense of otherExpenses) {
+        await tx.insert(purchaseOtherExpenses).values({
+          organization_id: orgId,
+          purchase_id: purchase.id,
+          description: expense.description,
+          amount: expense.amount.toFixed(2),
+          account_id: expense.account_id || null,
+          add_to_vendor_total: expense.add_to_vendor_total,
+        });
+
+        if (!expense.add_to_vendor_total && expense.account_id) {
+          await tx.insert(accountTransactions).values({
+            organization_id: orgId,
+            account_id: expense.account_id,
+            type: "debit",
+            amount: expense.amount.toFixed(2),
+            reference_type: "other",
+            reference_id: purchase.id,
+            transaction_date: new Date(parsed.data.purchase_date),
+            note: `Other expense: ${expense.description}`,
+          });
+        }
       }
 
       return purchase;

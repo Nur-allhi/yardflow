@@ -23,6 +23,21 @@ interface Subtype {
   default_price_per_kg: number | null;
 }
 
+interface OtherExpense {
+  key: number;
+  description: string;
+  amount: string;
+  account_id: string;
+  add_to_vendor_total: boolean;
+}
+
+interface Account {
+  id: string;
+  name: string;
+  type: string;
+  current_balance: number;
+}
+
 interface LineItem {
   key: number;
   category_id: string;
@@ -43,14 +58,14 @@ export default function NewPurchasePage() {
   const [subtypesMap, setSubtypesMap] = useState<Record<string, Subtype[]>>(
     {},
   );
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [vendorId, setVendorId] = useState("");
   const [purchaseDate, setPurchaseDate] = useState(
     new Date().toISOString().split("T")[0],
   );
   const [note, setNote] = useState("");
-  const [truckFare, setTruckFare] = useState("");
-  const [labourCost, setLabourCost] = useState("");
-  const [foodCost, setFoodCost] = useState("");
+  const [otherExpenses, setOtherExpenses] = useState<OtherExpense[]>([]);
+  let nextExpenseKey = 1;
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -71,10 +86,16 @@ export default function NewPurchasePage() {
     if (res.ok) setCategories(await res.json());
   }, []);
 
+  const loadAccounts = useCallback(async () => {
+    const res = await fetch("/api/accounts");
+    if (res.ok) setAccounts(await res.json());
+  }, []);
+
   useEffect(() => {
     loadVendors();
     loadCategories();
-  }, [loadVendors, loadCategories]);
+    loadAccounts();
+  }, [loadVendors, loadCategories, loadAccounts]);
 
   async function loadSubtypes(categoryId: string) {
     if (subtypesMap[categoryId]) return;
@@ -120,13 +141,45 @@ export default function NewPurchasePage() {
     setItems((prev) => prev.filter((item) => item.key !== key));
   }
 
+  function addOtherExpense() {
+    setOtherExpenses((prev) => [
+      ...prev,
+      {
+        key: nextExpenseKey++,
+        description: "",
+        amount: "",
+        account_id: "",
+        add_to_vendor_total: false,
+      },
+    ]);
+  }
+
+  function handleOtherExpenseChange(
+    key: number,
+    field: keyof OtherExpense,
+    value: string | boolean,
+  ) {
+    setOtherExpenses((prev) =>
+      prev.map((exp) => (exp.key === key ? { ...exp, [field]: value } : exp)),
+    );
+  }
+
+  function removeOtherExpense(key: number) {
+    setOtherExpenses((prev) => prev.filter((exp) => exp.key !== key));
+  }
+
   function calcLineTotal(item: LineItem) {
     const qty = parseFloat(item.quantity_kg) || 0;
     const price = parseFloat(item.price_per_kg) || 0;
     return qty * price;
   }
 
-  const grandTotal = items.reduce((sum, item) => sum + calcLineTotal(item), 0);
+  const expenseVendorTotal = otherExpenses
+    .filter((e) => e.add_to_vendor_total)
+    .reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+  const grandTotal =
+    items.reduce((sum, item) => sum + calcLineTotal(item), 0) +
+    expenseVendorTotal;
   const totalWeight = items.reduce(
     (sum, item) => sum + (parseFloat(item.quantity_kg) || 0),
     0,
@@ -162,9 +215,12 @@ export default function NewPurchasePage() {
           vendor_id: vendorId,
           purchase_date: purchaseDate,
           note: note || undefined,
-          truck_fare: truckFare ? Number(truckFare) : undefined,
-          labour_cost: labourCost ? Number(labourCost) : undefined,
-          food_cost: foodCost ? Number(foodCost) : undefined,
+          other_expenses: otherExpenses.map((exp) => ({
+            description: exp.description,
+            amount: parseFloat(exp.amount),
+            account_id: exp.account_id || null,
+            add_to_vendor_total: exp.add_to_vendor_total,
+          })),
           items: validItems.map((item) => ({
             subtype_id: item.subtype_id,
             quantity_kg: parseFloat(item.quantity_kg),
@@ -272,31 +328,99 @@ export default function NewPurchasePage() {
                 </div>
                 {/* Other Expenses */}
                 <div className="md:col-span-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#505f76] mb-2 block">
-                    Additional Expenses
-                  </label>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] text-[#505f76] font-medium">Truck Fare (৳)</label>
-                      <input type="number" min="0" step="0.01" value={truckFare}
-                        onChange={(e) => setTruckFare(e.target.value)}
-                        className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
-                        placeholder="0.00" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] text-[#505f76] font-medium">Labour Cost (৳)</label>
-                      <input type="number" min="0" step="0.01" value={labourCost}
-                        onChange={(e) => setLabourCost(e.target.value)}
-                        className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
-                        placeholder="0.00" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] text-[#505f76] font-medium">Food Cost (৳)</label>
-                      <input type="number" min="0" step="0.01" value={foodCost}
-                        onChange={(e) => setFoodCost(e.target.value)}
-                        className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
-                        placeholder="0.00" />
-                    </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                      Other Expenses
+                    </label>
+                    <button
+                      type="button"
+                      onClick={addOtherExpense}
+                      className="flex items-center gap-1 text-[#059669] hover:bg-[#059669]/5 px-2 py-1 rounded transition-all text-xs font-bold"
+                    >
+                      <span className="material-symbols-outlined text-sm">add</span>
+                      Add Expense
+                    </button>
+                  </div>
+                  {otherExpenses.length === 0 && (
+                    <p className="text-xs text-[#505f76] italic">
+                      No other expenses added. Click &ldquo;Add Expense&rdquo; to add one.
+                    </p>
+                  )}
+                  <div className="space-y-3">
+                    {otherExpenses.map((exp) => (
+                      <div
+                        key={exp.key}
+                        className="grid grid-cols-1 md:grid-cols-12 gap-3 p-3 border border-[#c6c6cd]/50 rounded-lg bg-[#f2f4f6]/30"
+                      >
+                        <div className="md:col-span-4 space-y-1">
+                          <label className="text-[10px] text-[#505f76] font-medium">Description</label>
+                          <input
+                            type="text"
+                            value={exp.description}
+                            onChange={(e) =>
+                              handleOtherExpenseChange(exp.key, "description", e.target.value)
+                            }
+                            className="w-full h-[38px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                            placeholder="e.g. Truck fare"
+                          />
+                        </div>
+                        <div className="md:col-span-2 space-y-1">
+                          <label className="text-[10px] text-[#505f76] font-medium">Amount (৳)</label>
+                          <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={exp.amount}
+                            onChange={(e) =>
+                              handleOtherExpenseChange(exp.key, "amount", e.target.value)
+                            }
+                            className="w-full h-[38px] border border-[#c6c6cd] rounded bg-white px-3 text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                            placeholder="0.00"
+                          />
+                        </div>
+                        <div className="md:col-span-3 space-y-1">
+                          <label className="text-[10px] text-[#505f76] font-medium">Account</label>
+                          <select
+                            value={exp.account_id}
+                            onChange={(e) =>
+                              handleOtherExpenseChange(exp.key, "account_id", e.target.value)
+                            }
+                            className="w-full h-[38px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                          >
+                            <option value="">Select account</option>
+                            {accounts.map((a) => (
+                              <option key={a.id} value={a.id}>
+                                {a.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="md:col-span-2 space-y-1 flex items-end pb-1">
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={exp.add_to_vendor_total}
+                              onChange={(e) =>
+                                handleOtherExpenseChange(exp.key, "add_to_vendor_total", e.target.checked)
+                              }
+                              className="w-4 h-4 accent-[#059669]"
+                            />
+                            <span className="text-[10px] text-[#505f76] font-medium leading-tight">
+                              Add to<br />vendor total
+                            </span>
+                          </label>
+                        </div>
+                        <div className="md:col-span-1 space-y-1 flex items-end pb-1 justify-end">
+                          <button
+                            type="button"
+                            onClick={() => removeOtherExpense(exp.key)}
+                            className="text-[#EF4444] hover:bg-red-50 p-1.5 rounded transition-colors"
+                          >
+                            <span className="material-symbols-outlined text-lg">delete</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

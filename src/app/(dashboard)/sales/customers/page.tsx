@@ -270,7 +270,11 @@ export default function CustomersPage() {
                     const statusChip = getStatusChip(c.due_balance);
                     return (
                       <tr key={c.id} className="hover:bg-[#f7f9fb] transition-colors">
-                        <td className="px-6 py-5 text-sm font-bold text-[#0F172A]">{c.name}</td>
+                        <td className="px-6 py-5 text-sm font-bold text-[#0F172A]">
+                          <Link href={`/sales/customers/${c.id}`} className="hover:text-[#059669] hover:underline transition-colors">
+                            {c.name}
+                          </Link>
+                        </td>
                         <td className="px-6 py-5 text-sm text-[#505f76]">{c.phone || "—"}</td>
                         <td className="px-6 py-5">
                           <span className={`inline-flex px-2 py-1 rounded text-[11px] font-semibold ${typeChip.bg} ${typeChip.text}`}>
@@ -290,7 +294,7 @@ export default function CustomersPage() {
                         </td>
                         <td className="px-6 py-5 text-right">
                           <div className="flex justify-end items-center gap-4">
-                            <Link href={`/sales?customer_id=${c.id}`} className="text-[#059669] font-bold hover:underline decoration-2 text-sm">
+                            <Link href={`/sales/customers/${c.id}`} className="text-[#059669] font-bold hover:underline decoration-2 text-sm">
                               View
                             </Link>
                             {c.due_balance > 0 ? (
@@ -377,8 +381,10 @@ export default function CustomersPage() {
               return (
                 <div key={c.id} className="bg-white p-4 rounded-xl border border-[#c6c6cd]/30 shadow-sm space-y-3">
                   <div className="flex justify-between items-start">
-                    <div className="space-y-1.5">
-                      <h3 className="font-display font-bold text-base text-[#0F172A]">{c.name}</h3>
+                      <div className="space-y-1.5">
+                        <Link href={`/sales/customers/${c.id}`} className="font-display font-bold text-base text-[#0F172A] hover:text-[#059669] transition-colors">
+                          {c.name}
+                        </Link>
                       <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase ${typeChip.bg} ${typeChip.text}`}>
                         {typeChip.label}
                       </span>
@@ -401,7 +407,7 @@ export default function CustomersPage() {
                     </div>
                   </div>
                   <div className="flex gap-2 pt-1">
-                    <Link href={`/sales?customer_id=${c.id}`} className="block flex-1 py-2.5 rounded-lg border border-[#0F172A] text-[#0F172A] font-bold text-sm transition-colors hover:bg-[#f2f4f6] active:scale-[0.98] text-center">
+                    <Link href={`/sales/customers/${c.id}`} className="block flex-1 py-2.5 rounded-lg border border-[#0F172A] text-[#0F172A] font-bold text-sm transition-colors hover:bg-[#f2f4f6] active:scale-[0.98] text-center">
                       View
                     </Link>
                     {c.due_balance > 0 ? (

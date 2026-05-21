@@ -31,14 +31,19 @@ export const purchaseItemSchema = z.object({
   price_per_kg: z.number().positive("Price must be positive"),
 });
 
+export const otherExpenseSchema = z.object({
+  description: z.string().min(1, "Description is required"),
+  amount: z.number().positive("Amount must be positive"),
+  account_id: z.string().uuid("Invalid account").nullable().optional(),
+  add_to_vendor_total: z.boolean().default(false),
+});
+
 export const purchaseSchema = z.object({
   vendor_id: z.string().uuid("Invalid vendor"),
   purchase_date: z.string().min(1, "Date is required"),
   items: z.array(purchaseItemSchema).min(1, "At least one item required"),
   note: z.string().optional(),
-  truck_fare: z.number().positive().optional(),
-  labour_cost: z.number().positive().optional(),
-  food_cost: z.number().positive().optional(),
+  other_expenses: z.array(otherExpenseSchema).optional().default([]),
 });
 
 export const purchasePaymentSchema = z.object({

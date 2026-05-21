@@ -22,6 +22,13 @@
       "when": 1779375012065,
       "tag": "0002_dizzy_epoch",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1779377427122,
+      "tag": "0003_magical_rocket_racer",
+      "breakpoints": true
     }
   ]
 }

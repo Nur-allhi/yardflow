@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { vendors, purchases } from "@/lib/db/schema";
-import { eq, and, sql } from "drizzle-orm";
-import { vendorSchema } from "@/lib/validations/schemas";
+import { vendors, purchases, purchasePayments, accounts } from "@/lib/db/schema";
+import { eq, and, sql, inArray } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
@@ -28,16 +27,8 @@ export async function GET(
     return NextResponse.json({ error: "Vendor not found" }, { status: 404 });
   }
 
-  const purchaseHistory = await db
-    .select({
-      id: purchases.id,
-      purchase_date: purchases.purchase_date,
-      total_amount: purchases.total_amount,
-      paid_amount: purchases.paid_amount,
-      due_amount: purchases.due_amount,
-      status: purchases.status,
-      note: purchases.note,
-    })
+  const purchaseList = await db
+    .select()
     .from(purchases)
     .where(
       and(
@@ -48,107 +39,76 @@ export async function GET(
     )
     .orderBy(sql`${purchases.purchase_date} DESC`);
 
-  return NextResponse.json({
-    ...vendor,
-    purchase_history: purchaseHistory,
-  });
-}
-
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  const { id } = await params;
-  const orgId = await requireOrg();
-
-  try {
-    const body = await request.json();
-    const parsed = vendorSchema.safeParse(body);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: parsed.error.flatten().fieldErrors },
-        { status: 400 },
-      );
-    }
-
-    const [existing] = await db
-      .select({ id: vendors.id })
-      .from(vendors)
-      .where(
-        and(
-          eq(vendors.id, id),
-          eq(vendors.organization_id, orgId),
-          sql`${vendors.deleted_at} IS NULL`,
-        ),
-      )
-      .limit(1);
-
-    if (!existing) {
-      return NextResponse.json({ error: "Vendor not found" }, { status: 404 });
-    }
-
-    const [updated] = await db
-      .update(vendors)
-      .set({
-        name: parsed.data.name,
-        phone: parsed.data.phone || null,
-        address: parsed.data.address || null,
-        type: parsed.data.type,
-        opening_balance: parsed.data.opening_balance
-          ? String(parsed.data.opening_balance)
-          : "0",
-        updated_at: sql`NOW()`,
+  const purchaseIds = purchaseList.map((p) => p.id);
+  let payments: {
+    id: string;
+    purchase_id: string;
+    amount: string;
+    payment_date: Date;
+    note: string | null;
+    account_id: string;
+    account_name: string | null;
+  }[] = [];
+  if (purchaseIds.length > 0) {
+    payments = await db
+      .select({
+        id: purchasePayments.id,
+        purchase_id: purchasePayments.purchase_id,
+        amount: purchasePayments.amount,
+        payment_date: purchasePayments.payment_date,
+        note: purchasePayments.note,
+        account_id: purchasePayments.account_id,
+        account_name: accounts.name,
       })
-      .where(
+      .from(purchasePayments)
+      .leftJoin(
+        accounts,
         and(
-          eq(vendors.id, id),
-          eq(vendors.organization_id, orgId),
+          eq(purchasePayments.account_id, accounts.id),
+          sql`${accounts.deleted_at} IS NULL`,
         ),
       )
-      .returning();
-
-    return NextResponse.json(updated);
-  } catch (error) {
-    console.error("Error updating vendor:", error);
-    return NextResponse.json(
-      { error: "Failed to update vendor" },
-      { status: 500 },
-    );
-  }
-}
-
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  const { id } = await params;
-  const orgId = await requireOrg();
-
-  const [existing] = await db
-    .select({ id: vendors.id })
-    .from(vendors)
-    .where(
-      and(
-        eq(vendors.id, id),
-        eq(vendors.organization_id, orgId),
-        sql`${vendors.deleted_at} IS NULL`,
-      ),
-    )
-    .limit(1);
-
-  if (!existing) {
-    return NextResponse.json({ error: "Vendor not found" }, { status: 404 });
+      .where(
+        and(
+          inArray(purchasePayments.purchase_id, purchaseIds),
+          eq(purchasePayments.organization_id, orgId),
+          sql`${purchasePayments.deleted_at} IS NULL`,
+        ),
+      )
+      .orderBy(purchasePayments.payment_date);
   }
 
-  await db
-    .update(vendors)
-    .set({ deleted_at: sql`NOW()` })
-    .where(
-      and(
-        eq(vendors.id, id),
-        eq(vendors.organization_id, orgId),
-      ),
-    );
+  const openingBalance = Number(vendor.opening_balance);
+  const totalPurchaseAmount = purchaseList.reduce((s, p) => s + Number(p.total_amount), 0);
+  const totalPaid = purchaseList.reduce((s, p) => s + Number(p.paid_amount), 0);
+  const totalDue = openingBalance + totalPurchaseAmount - totalPaid;
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({
+    id: vendor.id,
+    name: vendor.name,
+    phone: vendor.phone,
+    address: vendor.address,
+    type: vendor.type,
+    opening_balance: openingBalance,
+    is_active: vendor.is_active,
+    purchases: purchaseList.map((p) => ({
+      id: p.id,
+      purchase_date: p.purchase_date,
+      total_amount: Number(p.total_amount),
+      paid_amount: Number(p.paid_amount),
+      due_amount: Number(p.due_amount),
+      status: p.status,
+      note: p.note,
+    })),
+    payments: payments.map((p) => ({
+      ...p,
+      amount: Number(p.amount),
+    })),
+    summary: {
+      total_purchases: purchaseList.length,
+      total_purchase_amount: totalPurchaseAmount,
+      total_paid: totalPaid,
+      total_due: totalDue,
+    },
+  });
 }

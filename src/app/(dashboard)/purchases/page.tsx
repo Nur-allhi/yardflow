@@ -12,13 +12,13 @@ interface Vendor {
 interface Purchase {
   id: string;
   vendor_id: string;
-  purchase_date: string;
+  purchase_date: string | null;
   total_amount: number;
   paid_amount: number;
   due_amount: number;
   status: "paid" | "partial" | "due";
   note: string | null;
-  created_at: string;
+  created_at: string | null;
   vendor_name: string | null;
 }
 
@@ -29,7 +29,8 @@ interface Summary {
   this_month: number;
 }
 
-function formatDate(dateStr: string) {
+function formatDate(dateStr: string | null) {
+  if (!dateStr) return "—";
   const d = new Date(dateStr);
   return d.toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -352,12 +353,16 @@ export default function PurchasesPage() {
                     {formatDate(p.purchase_date)}
                   </td>
                   <td className="px-6 py-4 text-sm font-bold text-[#0F172A]">
-                    <Link
-                      href={`/purchases/${p.id}`}
-                      className="hover:underline"
-                    >
-                      PUR-{p.id.slice(0, 4).toUpperCase()}
-                    </Link>
+                    {p.id.startsWith("ob-") ? (
+                      <span className="text-[#505f76]">Opening Balance</span>
+                    ) : (
+                      <Link
+                        href={`/purchases/${p.id}`}
+                        className="hover:underline"
+                      >
+                        PUR-{p.id.slice(0, 4).toUpperCase()}
+                      </Link>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-sm">
                     {p.vendor_name || "—"}
@@ -379,19 +384,23 @@ export default function PurchasesPage() {
                     <StatusChip status={p.status} />
                   </td>
                   <td className="px-6 py-4 text-right space-x-3">
-                    <Link
-                      href={`/purchases/${p.id}`}
-                      className="text-[#059669] font-bold text-sm hover:underline"
-                    >
-                      View
-                    </Link>
-                    {p.status !== "paid" && (
-                      <Link
-                        href={`/purchases/${p.id}`}
-                        className="text-[#0F172A] font-bold text-sm hover:underline"
-                      >
-                        Pay
-                      </Link>
+                    {!p.id.startsWith("ob-") && (
+                      <>
+                        <Link
+                          href={`/purchases/${p.id}`}
+                          className="text-[#059669] font-bold text-sm hover:underline"
+                        >
+                          View
+                        </Link>
+                        {p.status !== "paid" && (
+                          <Link
+                            href={`/purchases/${p.id}`}
+                            className="text-[#0F172A] font-bold text-sm hover:underline"
+                          >
+                            Pay
+                          </Link>
+                        )}
+                      </>
                     )}
                   </td>
                 </tr>
@@ -478,7 +487,7 @@ export default function PurchasesPage() {
                     {p.vendor_name || "Unknown Vendor"}
                   </h3>
                   <p className="text-xs text-[#505f76] font-medium">
-                    {formatDate(p.purchase_date)}
+                    {p.id.startsWith("ob-") ? "Opening Balance" : formatDate(p.purchase_date)}
                   </p>
                 </div>
                 <StatusChip status={p.status} />
@@ -503,22 +512,24 @@ export default function PurchasesPage() {
                   </div>
                 )}
               </div>
-              <div className="flex gap-2 pt-3 border-t border-[#c6c6cd]/30">
-                <Link
-                  href={`/purchases/${p.id}`}
-                  className="flex-1 py-2 text-[#059669] font-bold text-sm bg-[#059669]/5 rounded-lg text-center"
-                >
-                  View
-                </Link>
-                {p.status !== "paid" && (
+              {!p.id.startsWith("ob-") && (
+                <div className="flex gap-2 pt-3 border-t border-[#c6c6cd]/30">
                   <Link
                     href={`/purchases/${p.id}`}
-                    className="flex-1 py-2 bg-[#0F172A] text-white font-bold text-sm rounded-lg text-center"
+                    className="flex-1 py-2 text-[#059669] font-bold text-sm bg-[#059669]/5 rounded-lg text-center"
                   >
-                    Pay
+                    View
                   </Link>
-                )}
-              </div>
+                  {p.status !== "paid" && (
+                    <Link
+                      href={`/purchases/${p.id}`}
+                      className="flex-1 py-2 bg-[#0F172A] text-white font-bold text-sm rounded-lg text-center"
+                    >
+                      Pay
+                    </Link>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

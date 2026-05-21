@@ -584,6 +584,7 @@ export const organizationsRelations = relations(organizations, ({ many }) => ({
   purchases: many(purchases),
   purchaseItems: many(purchaseItems),
   purchasePayments: many(purchasePayments),
+  purchaseOtherExpenses: many(purchaseOtherExpenses),
   customers: many(customers),
   sales: many(sales),
   saleItems: many(saleItems),
@@ -714,6 +715,22 @@ export const vendorsRelations = relations(vendors, ({ one, many }) => ({
   purchases: many(purchases),
 }));
 
+export const purchaseOtherExpenses = pgTable("purchase_other_expenses", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organization_id: uuid("organization_id")
+    .notNull()
+    .references(() => organizations.id),
+  purchase_id: uuid("purchase_id")
+    .notNull()
+    .references(() => purchases.id),
+  description: text("description").notNull(),
+  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
+  account_id: uuid("account_id").references(() => accounts.id),
+  add_to_vendor_total: boolean("add_to_vendor_total").default(false).notNull(),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at", { withTimezone: true }),
+});
+
 export const purchasesRelations = relations(purchases, ({ one, many }) => ({
   organization: one(organizations, {
     fields: [purchases.organization_id],
@@ -725,6 +742,7 @@ export const purchasesRelations = relations(purchases, ({ one, many }) => ({
   }),
   items: many(purchaseItems),
   payments: many(purchasePayments),
+  otherExpenses: many(purchaseOtherExpenses),
 }));
 
 export const purchaseItemsRelations = relations(purchaseItems, ({ one }) => ({
@@ -755,6 +773,24 @@ export const purchasePaymentsRelations = relations(
     }),
     account: one(accounts, {
       fields: [purchasePayments.account_id],
+      references: [accounts.id],
+    }),
+  }),
+);
+
+export const purchaseOtherExpensesRelations = relations(
+  purchaseOtherExpenses,
+  ({ one }) => ({
+    organization: one(organizations, {
+      fields: [purchaseOtherExpenses.organization_id],
+      references: [organizations.id],
+    }),
+    purchase: one(purchases, {
+      fields: [purchaseOtherExpenses.purchase_id],
+      references: [purchases.id],
+    }),
+    account: one(accounts, {
+      fields: [purchaseOtherExpenses.account_id],
       references: [accounts.id],
     }),
   }),
@@ -917,6 +953,9 @@ export type NewPurchaseItem = InferInsertModel<typeof purchaseItems>;
 
 export type PurchasePayment = InferSelectModel<typeof purchasePayments>;
 export type NewPurchasePayment = InferInsertModel<typeof purchasePayments>;
+
+export type PurchaseOtherExpense = InferSelectModel<typeof purchaseOtherExpenses>;
+export type NewPurchaseOtherExpense = InferInsertModel<typeof purchaseOtherExpenses>;
 
 export type Customer = InferSelectModel<typeof customers>;
 export type NewCustomer = InferInsertModel<typeof customers>;
