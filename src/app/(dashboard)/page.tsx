@@ -1,10 +1,128 @@
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { db } from "@/lib/db";
+import {
+  accounts,
+  sales,
+  purchases,
+  stockLedger,
+  workers,
+  salaryPayments,
+  customers,
+  vendors,
+  materialCategories,
+  materialSubtypes,
+  accountTransactions,
+} from "@/lib/db/schema";
+import { eq, and, sql, gte } from "drizzle-orm";
+
+function formatMoney(n: number) {
+  return "৳" + n.toLocaleString("en-IN");
+}
 
 export default async function DashboardPage() {
   const session = await getSession();
   if (!session) redirect("/login");
+  const orgId = session.org_id;
+
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const orgConditions = [
+    eq(sales.organization_id, orgId),
+    sql`${sales.deleted_at} IS NULL`,
+  ];
+
+  const [[stockResult], [todaySalesResult], [arResult], [apResult], [salaryResult], accountList, categoryList] = await Promise.all([
+    db.select({
+      total_kg: sql<string>`COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'in' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'out' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0)`,
+    }).from(stockLedger)
+      .where(and(eq(stockLedger.organization_id, orgId), sql`${stockLedger.deleted_at} IS NULL`)),
+
+    db.select({
+      total: sql<string>`COALESCE(SUM(${sales.total_amount}::numeric), 0)`,
+    }).from(sales)
+      .where(and(...orgConditions, gte(sales.sale_date, todayStart))),
+
+    db.select({
+      total: sql<string>`COALESCE(SUM(${sales.due_amount}::numeric), 0)`,
+    }).from(sales)
+      .where(and(eq(sales.organization_id, orgId), sql`${sales.deleted_at} IS NULL`)),
+
+    db.select({
+      total: sql<string>`COALESCE(SUM(${purchases.due_amount}::numeric), 0)`,
+    }).from(purchases)
+      .where(and(eq(purchases.organization_id, orgId), sql`${purchases.deleted_at} IS NULL`)),
+
+    db.select({
+      pending: sql<number>`COUNT(*)::int`,
+    }).from(workers)
+      .leftJoin(salaryPayments, and(
+        eq(workers.id, salaryPayments.worker_id),
+        eq(salaryPayments.month, now.getMonth() + 1),
+        eq(salaryPayments.year, now.getFullYear()),
+        sql`${salaryPayments.deleted_at} IS NULL`,
+      ))
+      .where(and(
+        eq(workers.organization_id, orgId),
+        eq(workers.is_active, true),
+        sql`${workers.deleted_at} IS NULL`,
+        sql`${salaryPayments.id} IS NULL`,
+      )),
+
+    db.select({
+      id: accounts.id, name: accounts.name, type: accounts.type, current_balance: accounts.current_balance,
+    }).from(accounts)
+      .where(and(eq(accounts.organization_id, orgId), eq(accounts.is_active, true), sql`${accounts.deleted_at} IS NULL`))
+      .orderBy(accounts.name),
+
+    db.select({
+      id: materialCategories.id,
+      name: materialCategories.name,
+    }).from(materialCategories)
+      .where(and(eq(materialCategories.organization_id, orgId), sql`${materialCategories.deleted_at} IS NULL`))
+      .orderBy(materialCategories.name),
+  ]);
+
+  const todaySales = Number(todaySalesResult.total);
+  const stockKg = Number(stockResult.total_kg);
+  const arTotal = Number(arResult.total);
+  const apTotal = Number(apResult.total);
+  const pendingSalaryCount = salaryResult.pending;
+
+  const recentSales = await db.select({
+    id: sales.id,
+    total_amount: sales.total_amount,
+    sale_date: sales.sale_date,
+    status: sales.status,
+    customer_name: customers.name,
+  }).from(sales)
+    .leftJoin(customers, and(eq(sales.customer_id, customers.id), sql`${customers.deleted_at} IS NULL`))
+    .where(and(eq(sales.organization_id, orgId), sql`${sales.deleted_at} IS NULL`))
+    .orderBy(sql`${sales.sale_date} DESC`)
+    .limit(5);
+
+  const categoryStock = await Promise.all(
+    categoryList.map(async (cat) => {
+      const [row] = await db.select({
+        kg: sql<string>`COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'in' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'out' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0)`,
+      }).from(stockLedger)
+        .innerJoin(materialSubtypes, eq(stockLedger.subtype_id, materialSubtypes.id))
+        .where(and(
+          eq(materialSubtypes.category_id, cat.id),
+          eq(stockLedger.organization_id, orgId),
+          sql`${stockLedger.deleted_at} IS NULL`,
+          sql`${materialSubtypes.deleted_at} IS NULL`,
+        ));
+      return { name: cat.name, kg: Number(row.kg) };
+    })
+  );
+
+  const cashTotal = accountList.filter(a => a.type === "cash").reduce((s, a) => s + Number(a.current_balance), 0);
+  const bankTotal = accountList.filter(a => a.type === "bank").reduce((s, a) => s + Number(a.current_balance), 0);
+  const grandTotal = cashTotal + bankTotal;
 
   return (
     <div className="p-4 md:p-6 space-y-6 md:space-y-8">
@@ -82,7 +200,7 @@ export default async function DashboardPage() {
             </span>
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-xl md:text-2xl font-mono font-bold text-[#0F172A]">0</span>
+            <span className="text-xl md:text-2xl font-mono font-bold text-[#0F172A]">{stockKg.toFixed(1)}</span>
             <span className="text-xs md:text-sm text-[#475569]">kg</span>
           </div>
         </div>
@@ -97,10 +215,12 @@ export default async function DashboardPage() {
             </span>
           </div>
           <div className="flex items-baseline gap-1 text-[#059669]">
-            <span className="text-xl md:text-2xl font-mono font-bold">৳0</span>
+            <span className="text-xl md:text-2xl font-mono font-bold">{
+              todaySales > 0 ? formatMoney(todaySales) : "৳0"
+            }</span>
           </div>
           <div className="mt-1 md:mt-2 text-[10px] md:text-xs text-[#475569]">
-            <span>No transactions yet</span>
+            <span>{todaySales > 0 ? "Today's revenue" : "No transactions yet"}</span>
           </div>
         </div>
 
@@ -114,7 +234,7 @@ export default async function DashboardPage() {
             </span>
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-xl md:text-2xl font-mono font-bold text-[#EAB308]">৳0</span>
+            <span className="text-xl md:text-2xl font-mono font-bold text-[#EAB308]">{formatMoney(arTotal)}</span>
           </div>
         </div>
 
@@ -128,7 +248,7 @@ export default async function DashboardPage() {
             </span>
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-xl md:text-2xl font-mono font-bold text-[#EAB308]">৳0</span>
+            <span className="text-xl md:text-2xl font-mono font-bold text-[#EAB308]">{formatMoney(apTotal)}</span>
           </div>
         </div>
       </div>
@@ -147,26 +267,53 @@ export default async function DashboardPage() {
               View All
             </Link>
           </div>
-          <div className="p-10 text-center text-[#475569] text-sm">
-            <span className="material-symbols-outlined text-4xl block mb-2">
-              shopping_cart
-            </span>
-            No sales recorded yet
-          </div>
+          {recentSales.length === 0 ? (
+            <div className="p-10 text-center text-[#475569] text-sm">
+              <span className="material-symbols-outlined text-4xl block mb-2">
+                shopping_cart
+              </span>
+              No sales recorded yet
+            </div>
+          ) : (
+            <div className="divide-y divide-[#c6c6cd]/30">
+              {recentSales.map((s) => (
+                <Link key={s.id} href={`/sales/${s.id}`} className="flex items-center justify-between px-5 py-4 hover:bg-[#f2f4f6] transition-colors">
+                  <div>
+                    <p className="text-sm font-bold text-[#0F172A]">{s.customer_name || "Cash Sale"}</p>
+                    <p className="text-[11px] text-[#475569]">{new Date(s.sale_date).toLocaleDateString("en-IN")}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-mono font-bold">{formatMoney(Number(s.total_amount))}</p>
+                    <span className={`text-[10px] font-bold uppercase ${s.status === "paid" ? "text-[#16A34A]" : s.status === "partial" ? "text-[#CA8A04]" : "text-[#DC2626]"}`}>{s.status}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="lg:col-span-4 bg-white border border-[#c6c6cd] rounded-lg p-5 shadow-sm">
           <h3 className="font-display font-bold text-[#0F172A] mb-6">
             Stock Overview
           </h3>
-          <div className="space-y-5">
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs font-bold">
-                <span className="uppercase tracking-wider text-[#0F172A]">
-                  No Categories Added
-                </span>
+          <div className="space-y-3">
+            {categoryStock.length === 0 ? (
+              <div className="text-xs text-[#475569] text-center py-2">
+                No categories added
               </div>
-            </div>
+            ) : (
+              categoryStock.slice(0, 5).map((c) => (
+                <div key={c.name} className="space-y-1">
+                  <div className="flex justify-between text-xs">
+                    <span className="font-bold text-[#0F172A]">{c.name}</span>
+                    <span className="font-mono text-[#475569]">{c.kg.toFixed(1)} kg</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-[#e6e8ea] rounded-full overflow-hidden">
+                    <div className="h-full bg-[#059669] rounded-full" style={{ width: `${Math.min(100, (c.kg / (stockKg || 1)) * 100)}%` }} />
+                  </div>
+                </div>
+              ))
+            )}
             <Link
               href="/inventory"
               className="block w-full py-2 bg-[#f2f4f6] text-[#0F172A] text-xs font-bold rounded border border-[#c6c6cd] hover:bg-[#e6e8ea] transition-colors text-center"
@@ -189,7 +336,7 @@ export default async function DashboardPage() {
               <p className="text-[10px] uppercase text-white/80 mb-1 font-medium">
                 Available Balance
               </p>
-              <p className="font-mono text-2xl font-bold text-white">৳0</p>
+              <p className="font-mono text-2xl font-bold text-white">{formatMoney(grandTotal)}</p>
             </div>
             <span className="material-symbols-outlined text-white/40 text-4xl">
               account_balance_wallet
@@ -198,11 +345,11 @@ export default async function DashboardPage() {
           <div className="flex gap-4 border-t border-white/20 pt-4">
             <div>
               <p className="text-[10px] uppercase text-white/60">Cash in hand</p>
-              <p className="font-mono text-sm font-semibold text-white">৳0</p>
+              <p className="font-mono text-sm font-semibold text-white">{formatMoney(cashTotal)}</p>
             </div>
             <div className="border-l border-white/20 pl-4">
               <p className="text-[10px] uppercase text-white/60">Bank Assets</p>
-              <p className="font-mono text-sm font-semibold text-white">৳0</p>
+              <p className="font-mono text-sm font-semibold text-white">{formatMoney(bankTotal)}</p>
             </div>
           </div>
         </div>
@@ -216,8 +363,8 @@ export default async function DashboardPage() {
                 Pending Dues
               </p>
             </div>
-            <p className="font-mono text-lg font-bold text-[#0F172A]">৳0</p>
-            <p className="text-[10px] text-[#505f76] mt-1">No outstanding dues</p>
+            <p className="font-mono text-lg font-bold text-[#0F172A]">{formatMoney(arTotal)}</p>
+            <p className="text-[10px] text-[#505f76] mt-1">{arTotal > 0 ? "Outstanding customer dues" : "No outstanding dues"}</p>
           </div>
           <div className="p-4 bg-white border border-[#c6c6cd]/30 rounded-xl">
             <div className="flex items-center gap-2 mb-2">
@@ -228,8 +375,8 @@ export default async function DashboardPage() {
                 Salaries
               </p>
             </div>
-            <p className="font-mono text-lg font-bold text-[#0F172A]">৳0</p>
-            <p className="text-[10px] text-[#505f76] mt-1">No pending salaries</p>
+            <p className="font-mono text-lg font-bold text-[#0F172A]">{pendingSalaryCount}</p>
+            <p className="text-[10px] text-[#505f76] mt-1">{pendingSalaryCount > 0 ? `${pendingSalaryCount} worker${pendingSalaryCount > 1 ? "s" : ""} unpaid` : "No pending salaries"}</p>
           </div>
         </div>
       </section>
@@ -250,12 +397,31 @@ export default async function DashboardPage() {
             </span>
           </Link>
         </div>
-        <div className="p-10 text-center text-[#475569] text-sm bg-white rounded-xl border border-[#c6c6cd]/30">
-          <span className="material-symbols-outlined text-4xl block mb-2 text-[#c6c6cd]">
-            shopping_cart
-          </span>
-          No sales recorded yet
-        </div>
+        {recentSales.length === 0 ? (
+          <div className="p-10 text-center text-[#475569] text-sm bg-white rounded-xl border border-[#c6c6cd]/30">
+            <span className="material-symbols-outlined text-4xl block mb-2 text-[#c6c6cd]">
+              shopping_cart
+            </span>
+            No sales recorded yet
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {recentSales.slice(0, 3).map((s) => (
+              <Link key={s.id} href={`/sales/${s.id}`} className="block bg-white p-4 rounded-xl border border-[#c6c6cd]/30">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm font-bold text-[#0F172A]">{s.customer_name || "Cash Sale"}</p>
+                    <p className="text-xs text-[#475569]">{new Date(s.sale_date).toLocaleDateString("en-IN")}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-mono font-bold">{formatMoney(Number(s.total_amount))}</p>
+                    <span className={`text-[10px] font-bold uppercase ${s.status === "paid" ? "text-[#16A34A]" : s.status === "partial" ? "text-[#CA8A04]" : "text-[#DC2626]"}`}>{s.status}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* ── Desktop: Account Balances, Pending Dues, Pending Salaries ── */}
@@ -269,12 +435,30 @@ export default async function DashboardPage() {
               account_balance
             </span>
           </div>
+          {accountList.length === 0 ? (
           <div className="text-center text-[#475569] text-sm py-6">
             <span className="material-symbols-outlined text-3xl block mb-2">
               account_balance
             </span>
             No accounts added yet
           </div>
+        ) : (
+          <div className="space-y-3">
+            {accountList.map((a) => (
+              <div key={a.id} className="flex justify-between items-center py-2 border-b border-[#c6c6cd]/20 last:border-0">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${a.type === "cash" ? "bg-[#059669]" : "bg-[#0F172A]"}`} />
+                  <span className="text-sm font-medium text-[#0F172A]">{a.name}</span>
+                </div>
+                <span className="text-sm font-mono font-bold">{formatMoney(Number(a.current_balance))}</span>
+              </div>
+            ))}
+            <div className="flex justify-between items-center pt-2 border-t border-[#0F172A]/20">
+              <span className="text-sm font-bold text-[#0F172A]">Total</span>
+              <span className="text-sm font-mono font-bold text-[#059669]">{formatMoney(grandTotal)}</span>
+            </div>
+          </div>
+        )}
         </div>
 
         <div className="bg-white border border-[#c6c6cd] rounded-lg p-5 shadow-sm">
@@ -286,8 +470,18 @@ export default async function DashboardPage() {
               pending_actions
             </span>
           </div>
-          <div className="text-center text-[#475569] text-sm py-6">
-            No pending dues
+          <div className="space-y-3">
+            <div className="flex justify-between items-center py-2">
+              <span className="text-sm text-[#475569]">Customers owe us</span>
+              <span className="text-sm font-mono font-bold text-[#EAB308]">{formatMoney(arTotal)}</span>
+            </div>
+            <div className="flex justify-between items-center py-2 border-t border-[#c6c6cd]/20">
+              <span className="text-sm text-[#475569]">We owe vendors</span>
+              <span className="text-sm font-mono font-bold text-[#EAB308]">{formatMoney(apTotal)}</span>
+            </div>
+            {arTotal === 0 && apTotal === 0 && (
+              <div className="text-center text-[#475569] text-sm py-4">No pending dues</div>
+            )}
           </div>
         </div>
 
@@ -300,9 +494,14 @@ export default async function DashboardPage() {
               groups
             </span>
           </div>
-          <div className="text-center text-[#475569] text-sm py-6">
-            No pending salaries
-          </div>
+          {pendingSalaryCount > 0 ? (
+            <div className="text-center py-6">
+              <p className="text-3xl font-mono font-bold text-[#DC2626]">{pendingSalaryCount}</p>
+              <p className="text-sm text-[#475569] mt-1">worker{pendingSalaryCount > 1 ? "s" : ""} not yet paid</p>
+            </div>
+          ) : (
+            <div className="text-center text-[#475569] text-sm py-6">No pending salaries</div>
+          )}
         </div>
       </div>
 
