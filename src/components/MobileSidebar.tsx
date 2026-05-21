@@ -113,6 +113,18 @@ export default function MobileSidebar() {
               </Link>
             );
           })}
+          <button
+            onClick={() => {
+              setOpen(false);
+              fetch("/api/auth/logout", { method: "POST" }).finally(() => {
+                window.location.href = "/login";
+              });
+            }}
+            className="flex items-center gap-3 px-4 py-3 rounded-md transition-all text-[#7c839b] hover:bg-[#3f465c] hover:text-white w-full text-left"
+          >
+            <span className="material-symbols-outlined">logout</span>
+            <span className="text-sm font-medium">Logout</span>
+          </button>
         </div>
       </aside>
     </>

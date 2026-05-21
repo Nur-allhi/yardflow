@@ -51,6 +51,11 @@ export default function ScrapPoolPage() {
   const [data, setData] = useState<ScrapData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [addScrapKg, setAddScrapKg] = useState("");
+  const [addScrapDate, setAddScrapDate] = useState(new Date().toISOString().split("T")[0]);
+  const [addScrapNote, setAddScrapNote] = useState("");
+  const [addingScrap, setAddingScrap] = useState(false);
+  const [addScrapMsg, setAddScrapMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -69,6 +74,37 @@ export default function ScrapPoolPage() {
       setLoading(false);
     }
   }, []);
+
+  async function handleAddScrap(e: React.FormEvent) {
+    e.preventDefault();
+    if (!addScrapKg || Number(addScrapKg) <= 0) return;
+    setAddingScrap(true);
+    setAddScrapMsg(null);
+    try {
+      const res = await fetch("/api/inventory/scrap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          quantity_kg: Number(addScrapKg),
+          movement_date: addScrapDate,
+          note: addScrapNote || undefined,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to add scrap");
+      }
+      setAddScrapMsg({ type: "success", text: "Scrap added successfully!" });
+      setAddScrapKg("");
+      setAddScrapNote("");
+      load();
+      setTimeout(() => setAddScrapMsg(null), 3000);
+    } catch (err) {
+      setAddScrapMsg({ type: "error", text: err instanceof Error ? err.message : "Failed to add scrap" });
+    } finally {
+      setAddingScrap(false);
+    }
+  }
 
   useEffect(() => {
     load();
@@ -420,6 +456,45 @@ export default function ScrapPoolPage() {
                 </div>
               </>
             )}
+          </div>
+
+          {/* Right: Add Scrap Card */}
+          <div className="lg:col-span-4 space-y-4">
+            <h3 className="font-display text-lg md:text-xl font-bold text-[#0F172A]">Add Scrap</h3>
+            <div className="bg-white p-6 rounded-lg border border-[#c6c6cd]/30 shadow-sm">
+              <form onSubmit={handleAddScrap} className="space-y-5">
+                {addScrapMsg && (
+                  <div className={`p-3 rounded-md text-sm font-medium ${
+                    addScrapMsg.type === "success" ? "bg-[#22C55E]/10 text-[#16A34A]" : "bg-[#ffdad6] text-[#93000a]"
+                  }`}>
+                    {addScrapMsg.text}
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Quantity (kg)</label>
+                  <input type="number" min="0" step="0.001" value={addScrapKg}
+                    onChange={(e) => setAddScrapKg(e.target.value)} required placeholder="0.000"
+                    className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md font-mono text-sm py-2.5 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Date</label>
+                  <input type="date" value={addScrapDate}
+                    onChange={(e) => setAddScrapDate(e.target.value)} required
+                    className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md text-sm py-2 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Note</label>
+                  <textarea value={addScrapNote} onChange={(e) => setAddScrapNote(e.target.value)}
+                    placeholder="Source of scrap..." rows={2}
+                    className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md text-sm py-2.5 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all resize-none" />
+                </div>
+                <button type="submit" disabled={addingScrap}
+                  className="w-full py-3 bg-[#059669] text-white font-bold rounded-md hover:bg-[#059669]/90 transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2 disabled:opacity-50">
+                  <span className="material-symbols-outlined text-sm">add_circle</span>
+                  {addingScrap ? "Adding..." : "Add Scrap"}
+                </button>
+              </form>
+            </div>
           </div>
 
           {/* Right: New Scrap Sale Card (40%) */}

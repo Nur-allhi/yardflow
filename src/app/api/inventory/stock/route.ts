@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { materialCategories, materialSubtypes, scrapPool } from "@/lib/db/schema";
+import { materialCategories, materialSubtypes, scrapPool, stockLedger } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { getStockQuantity, calculateWAC } from "@/lib/calculations/wac";
 import { getSession } from "@/lib/auth/session";
@@ -101,4 +101,56 @@ export async function GET(request: Request) {
     total_stock_value: totalStockValue,
     scrap_pool_kg: scrapResult[0]?.net || 0,
   });
+}
+
+export async function POST(request: Request) {
+  const headerOrg = request.headers.get("x-org-id");
+  let orgId: string;
+  if (headerOrg) {
+    orgId = headerOrg;
+  } else {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    orgId = session.org_id;
+  }
+
+  try {
+    const body = await request.json();
+    const { subtype_id, movement_type, quantity_kg, note } = body;
+
+    if (!subtype_id || !movement_type || !quantity_kg || quantity_kg <= 0) {
+      return NextResponse.json({ error: "subtype_id, movement_type, and positive quantity_kg required" }, { status: 400 });
+    }
+
+    if (!["in", "out"].includes(movement_type)) {
+      return NextResponse.json({ error: "movement_type must be 'in' or 'out'" }, { status: 400 });
+    }
+
+    const result = await db.transaction(async (tx) => {
+      const [entry] = await tx
+        .insert(stockLedger)
+        .values({
+          organization_id: orgId,
+          subtype_id,
+          movement_type,
+          quantity_kg: String(quantity_kg),
+          reference_type: "adjustment",
+          movement_date: new Date(),
+          note: note || `Physical adjustment (${movement_type})`,
+        })
+        .returning();
+
+      return entry;
+    });
+
+    return NextResponse.json(result, { status: 201 });
+  } catch (error) {
+    console.error("Error creating stock adjustment:", error);
+    return NextResponse.json(
+      { error: "Failed to create stock adjustment" },
+      { status: 500 },
+    );
+  }
 }

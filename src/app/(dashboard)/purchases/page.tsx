@@ -139,6 +139,13 @@ export default function PurchasesPage() {
         </div>
         <div className="flex gap-3">
           <Link
+            href="/purchases/vendors"
+            className="flex items-center gap-2 px-4 py-2 border border-[#0F172A] text-[#0F172A] font-semibold rounded-lg hover:bg-[#0F172A]/5 transition-all text-sm"
+          >
+            <span className="material-symbols-outlined text-lg">people</span>
+            Vendors
+          </Link>
+          <Link
             href="/purchases/new"
             className="flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white font-semibold rounded-lg hover:bg-[#0F172A]/90 transition-all text-sm shadow-sm active:scale-95"
           >

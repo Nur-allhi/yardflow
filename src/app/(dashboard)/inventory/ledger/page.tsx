@@ -76,6 +76,14 @@ export default function StockLedgerPage() {
   const [appliedDateFrom, setAppliedDateFrom] = useState("");
   const [appliedDateTo, setAppliedDateTo] = useState("");
 
+  const [adjustmentOpen, setAdjustmentOpen] = useState(false);
+  const [adjSubtypeId, setAdjSubtypeId] = useState("");
+  const [adjType, setAdjType] = useState<"in" | "out">("in");
+  const [adjQuantity, setAdjQuantity] = useState("");
+  const [adjNote, setAdjNote] = useState("");
+  const [adjusting, setAdjusting] = useState(false);
+  const [adjMsg, setAdjMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
   const loadSubtypes = useCallback(async () => {
     try {
       const res = await fetch("/api/inventory/subtypes");
@@ -131,6 +139,39 @@ export default function StockLedgerPage() {
   }
 
   const activeFilters = appliedSubtypeId || appliedDateFrom || appliedDateTo;
+
+  async function handleAdjustment(e: React.FormEvent) {
+    e.preventDefault();
+    if (!adjSubtypeId || !adjQuantity || Number(adjQuantity) <= 0) return;
+    setAdjusting(true);
+    setAdjMsg(null);
+    try {
+      const res = await fetch("/api/inventory/stock", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subtype_id: adjSubtypeId,
+          movement_type: adjType,
+          quantity_kg: Number(adjQuantity),
+          note: adjNote || undefined,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Adjustment failed");
+      }
+      setAdjMsg({ type: "success", text: "Stock adjusted successfully!" });
+      setAdjSubtypeId("");
+      setAdjQuantity("");
+      setAdjNote("");
+      loadLedger();
+      setTimeout(() => setAdjMsg(null), 3000);
+    } catch (err) {
+      setAdjMsg({ type: "error", text: err instanceof Error ? err.message : "Adjustment failed" });
+    } finally {
+      setAdjusting(false);
+    }
+  }
 
   function SkeletonRow() {
     return (
@@ -283,6 +324,76 @@ export default function StockLedgerPage() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Stock Adjustment */}
+      <div className="bg-white rounded-lg border border-[#c6c6cd]/30 shadow-sm mb-6">
+        <button
+          onClick={() => setAdjustmentOpen(!adjustmentOpen)}
+          className="w-full flex items-center justify-between p-4 md:p-5 text-left"
+        >
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-[#505f76]">tune</span>
+            <h3 className="font-display font-semibold text-[#0F172A]">Physical Stock Adjustment</h3>
+          </div>
+          <span className={`material-symbols-outlined text-[#505f76] transition-transform ${adjustmentOpen ? "rotate-180" : ""}`}>
+            expand_more
+          </span>
+        </button>
+        {adjustmentOpen && (
+          <form onSubmit={handleAdjustment} className="px-4 md:px-5 pb-5 space-y-4 border-t border-[#c6c6cd]/20 pt-4">
+            {adjMsg && (
+              <div className={`p-3 rounded-md text-sm font-medium ${
+                adjMsg.type === "success" ? "bg-[#22C55E]/10 text-[#16A34A]" : "bg-[#ffdad6] text-[#93000a]"
+              }`}>
+                {adjMsg.text}
+              </div>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Sub-type</label>
+                <select value={adjSubtypeId} onChange={(e) => setAdjSubtypeId(e.target.value)} required
+                  className="h-[42px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white w-full">
+                  <option value="">Select sub-type</option>
+                  {subtypes.map((st) => (
+                    <option key={st.id} value={st.id}>{st.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Type</label>
+                <div className="flex gap-2 h-[42px]">
+                  <button type="button" onClick={() => setAdjType("in")}
+                    className={`flex-1 rounded text-sm font-bold transition-all ${
+                      adjType === "in" ? "bg-[#059669] text-white" : "bg-[#f2f4f6] text-[#505f76] border border-[#c6c6cd]"
+                    }`}>IN</button>
+                  <button type="button" onClick={() => setAdjType("out")}
+                    className={`flex-1 rounded text-sm font-bold transition-all ${
+                      adjType === "out" ? "bg-[#ba1a1a] text-white" : "bg-[#f2f4f6] text-[#505f76] border border-[#c6c6cd]"
+                    }`}>OUT</button>
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Quantity (kg)</label>
+                <input type="number" min="0" step="0.001" value={adjQuantity}
+                  onChange={(e) => setAdjQuantity(e.target.value)} required placeholder="0.000"
+                  className="h-[42px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white font-mono w-full" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Note</label>
+                <div className="flex gap-2">
+                  <input value={adjNote} onChange={(e) => setAdjNote(e.target.value)}
+                    placeholder="Reason for adjustment..."
+                    className="h-[42px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white flex-1" />
+                  <button type="submit" disabled={adjusting}
+                    className="h-[42px] px-5 bg-[#0F172A] text-white font-semibold rounded-md hover:bg-[#0F172A]/90 transition-all text-sm disabled:opacity-50 whitespace-nowrap">
+                    {adjusting ? "..." : "Adjust"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        )}
       </div>
 
       {/* Summary */}

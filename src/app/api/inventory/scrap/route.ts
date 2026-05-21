@@ -4,6 +4,35 @@ import { scrapPool, sales, saleItems } from "@/lib/db/schema";
 import { eq, and, desc, isNull } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
 
+export async function POST(request: Request) {
+  const orgId = await requireOrg();
+
+  try {
+    const body = await request.json();
+    const { quantity_kg, movement_date, note } = body;
+
+    if (!quantity_kg || quantity_kg <= 0) {
+      return NextResponse.json({ error: "Quantity must be positive" }, { status: 400 });
+    }
+
+    const [entry] = await db
+      .insert(scrapPool)
+      .values({
+        organization_id: orgId,
+        movement_type: "in",
+        quantity_kg: String(quantity_kg),
+        movement_date: movement_date ? new Date(movement_date) : new Date(),
+        note: note || "Manual addition",
+      })
+      .returning();
+
+    return NextResponse.json(entry, { status: 201 });
+  } catch (error) {
+    console.error("Error adding scrap:", error);
+    return NextResponse.json({ error: "Failed to add scrap" }, { status: 500 });
+  }
+}
+
 export async function GET() {
   const orgId = await requireOrg();
 

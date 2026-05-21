@@ -20,15 +20,15 @@
 
 ## P1 — FUNCTIONALITY BUGS
 
-| # | Finding | Action | Files |
-|---|---------|--------|-------|
-| 7 | **Account balances not updating on pay/receive** | Debug transaction logic for balance updates | `api/accounts/route.ts`, `api/purchases/[id]/payments/route.ts`, `api/sales/[id]/payments/route.ts` |
-| 8 | **Dashboard blank — no data shown** | Debug dashboard KPI widgets | `(dashboard)/page.tsx` |
-| 9 | **Vendor opening balance not affecting Accounts Payable** | Add opening balance to vendor due calculation | `api/purchases/vendors/route.ts`, `api/purchases/route.ts` |
-| 10 | **Customer opening balance not affecting Accounts Receivable** | Add opening balance to customer due calculation | `api/sales/customers/route.ts`, `api/sales/route.ts` |
-| 11 | **Customer opening balance not showing in customer list** | Include opening balance in customer list response | `api/sales/customers/route.ts` |
-| 12 | **Vendor page action buttons not working** | Wire up edit/delete buttons | `purchases/vendors/page.tsx` |
-| 13 | **Customer page action buttons not working** | Wire up edit/delete buttons | `sales/customers/page.tsx` |
+| # | Finding | Action | Files | Status |
+|---|---------|--------|-------|--------|
+| 7 | **Account balances not updating on pay/receive** | Debug transaction logic for balance updates | `api/accounts/route.ts`, `api/purchases/[id]/payments/route.ts`, `api/sales/[id]/payments/route.ts` | ✅ |
+| 8 | **Dashboard blank — no data shown** | Debug dashboard KPI widgets | `(dashboard)/page.tsx` | ✅ |
+| 9 | **Vendor opening balance not affecting Accounts Payable** | Add opening balance to vendor due calculation | `api/purchases/vendors/route.ts`, `api/purchases/route.ts` | ✅ |
+| 10 | **Customer opening balance not affecting Accounts Receivable** | Add opening balance to customer due calculation | `api/sales/customers/route.ts`, `api/sales/route.ts` | ✅ |
+| 11 | **Customer opening balance not showing in customer list** | Include opening balance in customer list response | `api/sales/customers/route.ts` | ✅ |
+| 12 | **Vendor page action buttons not working** | Wire up edit/delete buttons | `purchases/vendors/page.tsx` | ✅ |
+| 13 | **Customer page action buttons not working** | Wire up edit/delete buttons | `sales/customers/page.tsx` | ✅ |
 
 ---
 

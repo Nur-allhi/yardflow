@@ -102,6 +102,12 @@ export default function SettingsPage() {
         )}
       </div>
 
+      {/* Tab Navigation */}
+      <div className="flex gap-4 mb-6 border-b border-[#c6c6cd]/30">
+        <span className="px-4 py-2 border-b-2 border-[#0F172A] text-[#0F172A] font-bold text-sm">General</span>
+        <Link href="/settings/team" className="px-4 py-2 text-[#505f76] font-medium text-sm hover:text-[#0F172A]">Team</Link>
+      </div>
+
       {/* Loading */}
       {loading && (
         <div className="max-w-2xl space-y-6">

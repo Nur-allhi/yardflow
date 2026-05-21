@@ -240,6 +240,20 @@ export default function SalesPage() {
         </h1>
         <div className="flex gap-3">
           <Link
+            href="/sales/customers"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#191c1e] text-[#191c1e] font-bold hover:bg-[#f2f4f6] transition-all active:scale-95"
+          >
+            <span className="material-symbols-outlined text-lg">people</span>
+            Customers
+          </Link>
+          <Link
+            href="/sales/scrap/new"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#069669] text-[#069669] font-bold hover:bg-[#069669]/5 transition-all active:scale-95"
+          >
+            <span className="material-symbols-outlined text-lg">recycling</span>
+            Scrap Sale
+          </Link>
+          <Link
             href="/sales/new/quick"
             className="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-[#191c1e] text-[#191c1e] font-bold hover:bg-[#f2f4f6] transition-all active:scale-95"
           >

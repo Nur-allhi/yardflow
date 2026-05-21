@@ -15,6 +15,10 @@ export default function CategoriesPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [saving, setSaving] = useState(false);
 
   async function loadCategories() {
     const res = await fetch("/api/inventory/categories");
@@ -24,6 +28,34 @@ export default function CategoriesPage() {
   useEffect(() => {
     loadCategories();
   }, []);
+
+  function startEdit(cat: Category) {
+    setEditingId(cat.id);
+    setEditName(cat.name);
+    setEditDescription(cat.description || "");
+  }
+
+  async function handleSave(id: string) {
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/inventory/categories/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: editName, description: editDescription || undefined }),
+      });
+      if (res.ok) {
+        setEditingId(null);
+        await loadCategories();
+      }
+    } catch {}
+    setSaving(false);
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm("Delete this category?")) return;
+    await fetch(`/api/inventory/categories/${id}`, { method: "DELETE" });
+    await loadCategories();
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -108,16 +140,59 @@ export default function CategoriesPage() {
           ) : (
             <div className="divide-y divide-[#c6c6cd]/20">
               {categories.map((cat) => (
-                <div key={cat.id} className="px-5 md:px-6 py-4 flex justify-between items-center">
-                  <div>
-                    <p className="font-medium text-[#0F172A]">{cat.name}</p>
-                    {cat.description && (
-                      <p className="text-xs text-[#505f76]">{cat.description}</p>
-                    )}
-                  </div>
-                  <span className="text-[10px] md:text-xs text-[#505f76] font-mono">
-                    {cat.id.slice(0, 8)}
-                  </span>
+                <div key={cat.id} className="px-5 md:px-6 py-4 flex justify-between items-center group">
+                  {editingId === cat.id ? (
+                    <div className="w-full space-y-2">
+                      <input
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        className="w-full h-[42px] px-4 border border-[#c6c6cd] rounded bg-white text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+                        placeholder="Category name"
+                      />
+                      <textarea
+                        value={editDescription}
+                        onChange={(e) => setEditDescription(e.target.value)}
+                        rows={2}
+                        className="w-full p-4 border border-[#c6c6cd] rounded bg-white text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none resize-none"
+                        placeholder="Description"
+                      />
+                      <div className="flex gap-2">
+                        <button onClick={() => handleSave(cat.id)}
+                          disabled={saving}
+                          className="px-4 py-2 bg-[#059669] text-white font-semibold rounded-md hover:bg-[#059669]/90 transition-all text-sm disabled:opacity-40">
+                          {saving ? "Saving..." : "Save"}
+                        </button>
+                        <button onClick={() => setEditingId(null)}
+                          className="px-4 py-2 border border-[#c6c6cd] text-[#505f76] font-semibold rounded-md hover:bg-[#f2f4f6] transition-all text-sm">
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div>
+                        <p className="font-medium text-[#0F172A]">{cat.name}</p>
+                        {cat.description && (
+                          <p className="text-xs text-[#505f76]">{cat.description}</p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => startEdit(cat)}
+                          className="opacity-0 group-hover:opacity-100 text-[#505f76] hover:text-[#0F172A] transition-all p-1"
+                          title="Edit">
+                          <span className="material-symbols-outlined text-sm">edit</span>
+                        </button>
+                        <button onClick={() => handleDelete(cat.id)}
+                          className="opacity-0 group-hover:opacity-100 text-[#ba1a1a] hover:text-[#93000a] transition-all p-1"
+                          title="Delete">
+                          <span className="material-symbols-outlined text-sm">delete</span>
+                        </button>
+                        <span className="text-[10px] md:text-xs text-[#505f76] font-mono ml-2">
+                          {cat.id.slice(0, 8)}
+                        </span>
+                      </div>
+                    </>
+                  )}
                 </div>
               ))}
             </div>
