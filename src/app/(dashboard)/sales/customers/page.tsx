@@ -294,7 +294,7 @@ export default function CustomersPage() {
                               View
                             </Link>
                             {c.due_balance > 0 ? (
-                              <Link href={`/sales?customer_id=${c.id}`} className="bg-[#0F172A] text-white px-4 py-1.5 rounded-lg text-[12px] font-bold hover:bg-[#0F172A]/90 transition-all active:scale-95">
+                              <Link href={`/sales?customer_id=${c.id}&status=due`} className="bg-[#0F172A] text-white px-4 py-1.5 rounded-lg text-[12px] font-bold hover:bg-[#0F172A]/90 transition-all active:scale-95">
                                 Receive Payment
                               </Link>
                             ) : (
@@ -405,7 +405,7 @@ export default function CustomersPage() {
                       View
                     </Link>
                     {c.due_balance > 0 ? (
-                      <Link href={`/sales?customer_id=${c.id}`} className="block flex-1 py-2.5 rounded-lg bg-[#0F172A] text-white font-bold text-sm transition-colors hover:bg-[#0F172A]/90 active:scale-[0.98] text-center">
+                      <Link href={`/sales?customer_id=${c.id}&status=due`} className="block flex-1 py-2.5 rounded-lg bg-[#0F172A] text-white font-bold text-sm transition-colors hover:bg-[#0F172A]/90 active:scale-[0.98] text-center">
                         Receive Payment
                       </Link>
                     ) : (

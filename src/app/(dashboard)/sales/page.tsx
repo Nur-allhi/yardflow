@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 interface Sale {
   id: string;
@@ -163,15 +164,16 @@ function SkeletonTable() {
 }
 
 export default function SalesPage() {
+  const searchParams = useSearchParams();
   const [sales, setSales] = useState<Sale[]>([]);
   const [summary, setSummary] = useState<Summary | null>(null);
   const [customers, setCustomers] = useState<CustomerOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [customerFilter, setCustomerFilter] = useState("");
+  const [customerFilter, setCustomerFilter] = useState(searchParams.get("customer_id") || "");
   const [saleTypeFilter, setSaleTypeFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState(searchParams.get("status") || "");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [page, setPage] = useState(1);

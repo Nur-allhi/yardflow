@@ -471,3 +471,30 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 ### Files modified or created
 - 14 files modified, 2 created (deposit API, migration)
 - New migration: `0001_illegal_dust.sql` (adds truck_fare, labour_cost, food_cost to purchases)
+
+## Session: 2026-05-21 — P1 Fixes Phase 2 (4 remaining bugs)
+
+### P1-4: Account balance not updating on sale creation
+- **Root cause**: `POST /api/sales` inserted `accountTransactions` for payment but never updated `accounts.current_balance`
+- **Fix**: Added `accounts` import + `UPDATE accounts SET current_balance = (subquery)` after the `accountTransactions` insert in the sale creation transaction
+
+### P1-5: Dashboard AR/AP excluding opening balances
+- **Root cause**: Dashboard queried only `SUM(sales.due_amount)` and `SUM(purchases.due_amount)` without adding customer/vendor opening balances
+- **Fix**: Added `COALESCE(SUM(customers.opening_balance), 0)` and `COALESCE(SUM(vendors.opening_balance), 0)` queries to `Promise.all`, added results to `arTotal` and `apTotal`
+
+### P1-8: Vendor opening balance not in purchases summary
+- **Root cause**: `GET /api/purchases` summary `total_due` was `total_amount - total_paid` — excluded vendor opening balances
+- **Fix**: Added vendor opening balance query filtered by `vendor_id` (if present), added to `total_due`
+
+### P1-9: Customer opening balance not in sales summary
+- **Root cause**: `GET /api/sales` summary `total_due` was `total_amount - total_paid` — excluded customer opening balances
+- **Fix**: Added customer opening balance query filtered by `customer_id` (if present), added to `total_due`
+
+### Files modified
+- `src/app/api/sales/route.ts` — P1-4 (account balance update) + P1-9 (customer opening in summary)
+- `src/app/api/purchases/route.ts` — P1-8 (vendor opening in summary)
+- `src/app/(dashboard)/page.tsx` — P1-5 (opening balances in dashboard AR/AP KPI)
+
+### Quality Gates
+- `npx tsc --noEmit` — zero errors
+- `npx next build` — succeeded
