@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { workers, salaryAdvances } from "@/lib/db/schema";
+import { workers, salaryAdvances, accounts } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
+
 import { requireOrg } from "@/lib/auth/session";
 import { z } from "zod";
 
@@ -49,12 +50,14 @@ export async function GET(
       id: salaryAdvances.id,
       amount: salaryAdvances.amount,
       account_id: salaryAdvances.account_id,
+      account_name: accounts.name,
       advance_date: salaryAdvances.advance_date,
       month: salaryAdvances.month,
       year: salaryAdvances.year,
       note: salaryAdvances.note,
     })
     .from(salaryAdvances)
+    .leftJoin(accounts, eq(salaryAdvances.account_id, accounts.id))
     .where(
       and(
         eq(salaryAdvances.worker_id, id),

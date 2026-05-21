@@ -9,9 +9,9 @@
 
 | # | Finding | Action | Files | Status |
 |---|---------|--------|-------|--------|
-| 1 | **HR: Nested `<a>` tag** (Error NO: 1) | Fix nested `<Link>` in workers page mobile cards; audit ALL pages for same pattern | `hr/workers/page.tsx` + global audit | ❌ |
-| 2 | **HR: Payroll [Object object] on Confirm Payment** | Debug `api/hr/payroll/pay` — 400 error, wrong object serialization | `hr/payroll/page.tsx`, `api/hr/payroll/pay/route.ts` | ❌ |
-| 3 | **Consumables: fields inactive after 1 character** | Fix form re-render causing inputs to lose focus/state | `inventory/consumables/page.tsx` | ❌ |
+| 1 | **HR: Nested `<a>` tag** (Error NO: 1) | Fix nested `<Link>` in workers page mobile cards; audit ALL pages for same pattern | `hr/workers/page.tsx` + global audit | ✅ |
+| 2 | **HR: Payroll [Object object] on Confirm Payment** | Debug `api/hr/payroll/pay` — 400 error, wrong object serialization | `hr/payroll/page.tsx`, `api/hr/payroll/pay/route.ts` | ✅ |
+| 3 | **Consumables: fields inactive after 1 character** | Fix form re-render causing inputs to lose focus/state | `inventory/consumables/page.tsx` | ✅ |
 
 ---
 

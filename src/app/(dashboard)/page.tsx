@@ -34,7 +34,7 @@ export default async function DashboardPage() {
     sql`${sales.deleted_at} IS NULL`,
   ];
 
-  const [[stockResult], [todaySalesResult], [arResult], [apResult], [salaryResult], accountList, categoryList] = await Promise.all([
+  const [[stockResult], [todaySalesResult], [arResult], [apResult], [salaryResult], [arOpeningResult], [apOpeningResult], accountList, categoryList] = await Promise.all([
     db.select({
       total_kg: sql<string>`COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'in' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'out' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0)`,
     }).from(stockLedger)
@@ -72,6 +72,16 @@ export default async function DashboardPage() {
       )),
 
     db.select({
+      total: sql<string>`COALESCE(SUM(${customers.opening_balance}::numeric), 0)`,
+    }).from(customers)
+      .where(and(eq(customers.organization_id, orgId), sql`${customers.deleted_at} IS NULL`)),
+
+    db.select({
+      total: sql<string>`COALESCE(SUM(${vendors.opening_balance}::numeric), 0)`,
+    }).from(vendors)
+      .where(and(eq(vendors.organization_id, orgId), sql`${vendors.deleted_at} IS NULL`)),
+
+    db.select({
       id: accounts.id, name: accounts.name, type: accounts.type, current_balance: accounts.current_balance,
     }).from(accounts)
       .where(and(eq(accounts.organization_id, orgId), eq(accounts.is_active, true), sql`${accounts.deleted_at} IS NULL`))
@@ -87,8 +97,8 @@ export default async function DashboardPage() {
 
   const todaySales = Number(todaySalesResult.total);
   const stockKg = Number(stockResult.total_kg);
-  const arTotal = Number(arResult.total);
-  const apTotal = Number(apResult.total);
+  const arTotal = Number(arResult.total) + Number(arOpeningResult.total);
+  const apTotal = Number(apResult.total) + Number(apOpeningResult.total);
   const pendingSalaryCount = salaryResult.pending;
 
   const recentSales = await db.select({

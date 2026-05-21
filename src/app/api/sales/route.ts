@@ -8,6 +8,7 @@ import {
   scrapPool,
   salePayments,
   accountTransactions,
+  accounts,
 } from "@/lib/db/schema";
 import {
   eq,
@@ -128,9 +129,23 @@ export async function GET(request: Request) {
       )
       .where(filterConditions);
 
+    const customerOpeningConditions: (ReturnType<typeof eq> | ReturnType<typeof sql>)[] = [
+      eq(customers.organization_id, orgId),
+      sql`${customers.deleted_at} IS NULL`,
+    ];
+    if (customerId) customerOpeningConditions.push(eq(customers.id, customerId));
+
+    const [openingResult] = await db
+      .select({
+        total: sql<string>`COALESCE(SUM(${customers.opening_balance}::numeric), 0)`,
+      })
+      .from(customers)
+      .where(and(...customerOpeningConditions));
+
     const summary = summaryResult[0];
     const totalAmount = Number(summary.total_amount);
     const totalPaid = Number(summary.total_paid);
+    const openingBalanceTotal = Number(openingResult.total);
 
     return NextResponse.json({
       sales: saleList.map((s) => ({
@@ -144,7 +159,7 @@ export async function GET(request: Request) {
       summary: {
         total_sales: summary.total_sales,
         total_paid: totalPaid,
-        total_due: totalAmount - totalPaid,
+        total_due: totalAmount - totalPaid + openingBalanceTotal,
         this_month: Number(summary.this_month),
       },
       total_count: count,
@@ -291,6 +306,16 @@ export async function POST(request: Request) {
           transaction_date: new Date(parsed.data.sale_date),
           note: parsed.data.note || null,
         });
+
+        await tx.execute(
+          sql`UPDATE ${accounts} SET current_balance = (
+            SELECT COALESCE(SUM(CASE WHEN type = 'credit' THEN amount::numeric ELSE 0 END), 0) -
+                   COALESCE(SUM(CASE WHEN type = 'debit' THEN amount::numeric ELSE 0 END), 0)
+            FROM ${accountTransactions}
+            WHERE account_id = ${parsed.data.account_id}
+            AND deleted_at IS NULL
+          ) WHERE id = ${parsed.data.account_id}`
+        );
       }
 
       return sale;

@@ -64,7 +64,7 @@ export async function GET() {
     workers: workersList.map((w) => ({
       ...w,
       monthly_salary: Number(w.monthly_salary),
-      advances_this_month: advanceMap.get(w.id) ?? 0,
+      this_month_advances: advanceMap.get(w.id) ?? 0,
     })),
     summary: {
       total_workers: totalWorkers,

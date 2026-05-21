@@ -86,9 +86,23 @@ export async function GET(request: Request) {
       ),
     );
 
+  const vendorOpeningConditions: (ReturnType<typeof eq> | ReturnType<typeof sql>)[] = [
+    eq(vendors.organization_id, orgId),
+    sql`${vendors.deleted_at} IS NULL`,
+  ];
+  if (vendorId) vendorOpeningConditions.push(eq(vendors.id, vendorId));
+
+  const [openingResult] = await db
+    .select({
+      total: sql<string>`COALESCE(SUM(${vendors.opening_balance}::numeric), 0)`,
+    })
+    .from(vendors)
+    .where(and(...vendorOpeningConditions));
+
   const summary = summaryResult[0];
   const totalAmount = Number(summary.total_amount);
   const totalPaid = Number(summary.total_paid);
+  const openingBalanceTotal = Number(openingResult.total);
 
   return NextResponse.json({
     purchases: purchaseList.map((p) => ({
@@ -100,7 +114,7 @@ export async function GET(request: Request) {
     summary: {
       total_purchases: summary.total_purchases,
       total_paid: totalPaid,
-      total_due: totalAmount - totalPaid,
+      total_due: totalAmount - totalPaid + openingBalanceTotal,
       this_month: Number(summary.this_month),
     },
   });
