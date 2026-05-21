@@ -27,9 +27,9 @@
 | # | Finding | Action | Files | Status |
 |---|---------|--------|-------|--------|
 | 4 | **Vendors with old payable not in Due list** | Ensure vendors with opening balance but no recent purchases appear in Due filter | `api/purchases/route.ts`, `purchases/vendors/page.tsx` | ✅ |
-| 5 | **Vendor profile page with payment support** | Create vendor detail page; add "Add Payment" button that records payment against vendor | `purchases/vendors/[id]/page.tsx`, `api/purchases/vendors/[id]/route.ts` | ❌ |
-| 6 | **Customer profile page with receive support** | Create customer detail page; add "Receive Payment" button | `sales/customers/[id]/page.tsx`, `api/sales/customers/[id]/route.ts` | ❌ |
-| 7 | **Purchase form: dynamic other expenses with account debit** | Replace fixed truck/labour/food fields with dynamic add/remove rows; each row has description, amount, account_id dropdown; expenses either debit from account or add to vendor total | `purchases/new/page.tsx`, `api/purchases/route.ts`, `lib/db/schema.ts` | ❌ |
+| 5 | **Vendor profile page with payment support** | Create vendor detail page; add "Add Payment" button that records payment against vendor | `purchases/vendors/[id]/page.tsx`, `api/purchases/vendors/[id]/route.ts` | ✅ |
+| 6 | **Customer profile page with receive support** | Create customer detail page; add "Receive Payment" button | `sales/customers/[id]/page.tsx`, `api/sales/customers/[id]/route.ts` | ✅ |
+| 7 | **Purchase form: dynamic other expenses with account debit** | Replace fixed truck/labour/food fields with dynamic add/remove rows; each row has description, amount, account_id dropdown; expenses either debit from account or add to vendor total | `purchases/new/page.tsx`, `api/purchases/route.ts`, `lib/db/schema.ts` | ✅ |
 
 ---
 
@@ -41,4 +41,4 @@
 
 ---
 
-**Total: 7 items** · P0: 1 ✅ · P1: 2 ❌ · P2: 3 ✅ 1 ❌ · P3: 0
+**Total: 7 items** · P0: 1 ✅ · P1: 2 ❌ · P2: 4 ✅ · P3: 0
