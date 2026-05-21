@@ -199,14 +199,14 @@ export default function SubtypesPage() {
 
         {/* Right Panel: Sub-types Table */}
         <section className="col-span-8 flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-display font-bold text-lg text-[#0F172A]">
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="font-display font-bold text-lg text-[#0F172A] min-w-0 flex-shrink">
               {selectedCategory ? (
                 <>{selectedCategory.name} — <span className="text-[#505f76]">Sub-types</span></>
               ) : "Select a category"}
             </h3>
             {selectedCategory && (
-              <button onClick={() => setShowModal(true)} className="flex items-center gap-2 bg-[#0F172A] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#0F172A]/90 transition-all active:scale-95 shadow-sm text-sm">
+              <button onClick={() => setShowModal(true)} className="flex-shrink-0 flex items-center gap-2 bg-[#0F172A] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#0F172A]/90 transition-all active:scale-95 shadow-sm text-sm">
                 <span className="material-symbols-outlined text-[20px]">add</span>
                 Add Sub-type
               </button>

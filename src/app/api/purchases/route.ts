@@ -135,6 +135,9 @@ export async function POST(request: Request) {
           paid_amount: "0",
           status: "due",
           note: parsed.data.note || null,
+          truck_fare: parsed.data.truck_fare ? parsed.data.truck_fare.toFixed(2) : "0",
+          labour_cost: parsed.data.labour_cost ? parsed.data.labour_cost.toFixed(2) : "0",
+          food_cost: parsed.data.food_cost ? parsed.data.food_cost.toFixed(2) : "0",
         })
         .returning();
 

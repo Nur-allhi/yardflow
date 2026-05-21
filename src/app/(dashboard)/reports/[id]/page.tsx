@@ -40,11 +40,13 @@ function formatDate(dateStr: string) {
 
 function formatMoney(n: number | string) {
   const val = typeof n === "string" ? parseFloat(n) : n;
+  if (isNaN(val)) return "৳0";
   return "৳" + val.toLocaleString("en-IN");
 }
 
 function formatKg(n: number | string) {
   const val = typeof n === "string" ? parseFloat(n) : n;
+  if (isNaN(val)) return "0 kg";
   return val.toLocaleString("en-IN") + " kg";
 }
 

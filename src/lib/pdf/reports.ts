@@ -29,11 +29,13 @@ interface ReportData {
 
 function fmtMoney(n: number | string): string {
   const val = typeof n === "string" ? parseFloat(n) : n;
+  if (isNaN(val)) return "৳0";
   return "৳" + val.toLocaleString("en-IN");
 }
 
 function fmtKg(n: number | string): string {
   const val = typeof n === "string" ? parseFloat(n) : n;
+  if (isNaN(val)) return "0.000 kg";
   return (
     val.toLocaleString("en-IN", {
       minimumFractionDigits: 3,

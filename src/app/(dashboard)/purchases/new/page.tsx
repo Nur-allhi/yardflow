@@ -48,6 +48,9 @@ export default function NewPurchasePage() {
     new Date().toISOString().split("T")[0],
   );
   const [note, setNote] = useState("");
+  const [truckFare, setTruckFare] = useState("");
+  const [labourCost, setLabourCost] = useState("");
+  const [foodCost, setFoodCost] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -159,6 +162,9 @@ export default function NewPurchasePage() {
           vendor_id: vendorId,
           purchase_date: purchaseDate,
           note: note || undefined,
+          truck_fare: truckFare ? Number(truckFare) : undefined,
+          labour_cost: labourCost ? Number(labourCost) : undefined,
+          food_cost: foodCost ? Number(foodCost) : undefined,
           items: validItems.map((item) => ({
             subtype_id: item.subtype_id,
             quantity_kg: parseFloat(item.quantity_kg),
@@ -263,6 +269,35 @@ export default function NewPurchasePage() {
                     className="w-full border border-[#c6c6cd] rounded bg-white p-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all resize-none"
                     placeholder="Enter purchase terms, transportation notes, or loading bay numbers..."
                   />
+                </div>
+                {/* Other Expenses */}
+                <div className="md:col-span-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#505f76] mb-2 block">
+                    Additional Expenses
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] text-[#505f76] font-medium">Truck Fare (৳)</label>
+                      <input type="number" min="0" step="0.01" value={truckFare}
+                        onChange={(e) => setTruckFare(e.target.value)}
+                        className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                        placeholder="0.00" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] text-[#505f76] font-medium">Labour Cost (৳)</label>
+                      <input type="number" min="0" step="0.01" value={labourCost}
+                        onChange={(e) => setLabourCost(e.target.value)}
+                        className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                        placeholder="0.00" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] text-[#505f76] font-medium">Food Cost (৳)</label>
+                      <input type="number" min="0" step="0.01" value={foodCost}
+                        onChange={(e) => setFoodCost(e.target.value)}
+                        className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                        placeholder="0.00" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </section>

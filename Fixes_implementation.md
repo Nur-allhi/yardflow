@@ -34,18 +34,18 @@
 
 ## P2 — MISSING UI & NAVIGATION
 
-| # | Finding | Action | Files |
-|---|---------|--------|-------|
-| 14 | **No logout button** | Add logout to dashboard sidebar | `components/Sidebar.tsx`, `components/MobileSidebar.tsx` |
-| 15 | **No nav to `/accounts/transfer`** | Add transfer link to accounts page | `accounts/page.tsx` |
-| 16 | **No nav to `/purchases/vendors`** | Add vendors link to purchases page | `purchases/page.tsx` |
-| 17 | **No nav to `/sales/customers`** | Add customers link to sales page | `sales/page.tsx` |
-| 18 | **No nav to `/sales/scrap/new`** | Add scrap sale link to sales + scrap pages | `sales/page.tsx`, `inventory/scrap/page.tsx` |
-| 19 | **No nav to `/settings/team`** | Add team link to settings page | `settings/page.tsx` |
-| 20 | **No way to add money to cash/bank (owner deposit)** | Add deposit form to accounts | `accounts/page.tsx`, `api/accounts/route.ts` |
-| 21 | **No category edit option** | Add edit button/modal to categories | `inventory/categories/page.tsx` |
-| 22 | **No manual "Add Scrap" option** | Add add-scrap form to scrap pool page | `inventory/scrap/page.tsx`, `api/inventory/scrap/route.ts` |
-| 23 | **No physical inventory adjustment system** | Create stock adjustment API + UI | `api/inventory/stock/route.ts`, `inventory/ledger/page.tsx` |
+| # | Finding | Action | Files | Status |
+|---|---------|--------|-------|--------|
+| 14 | **No logout button** | Add logout to dashboard sidebar | `components/Sidebar.tsx`, `components/MobileSidebar.tsx` | ✅ |
+| 15 | **No nav to `/accounts/transfer`** | Add transfer link to accounts page | `accounts/page.tsx` | ✅ |
+| 16 | **No nav to `/purchases/vendors`** | Add vendors link to purchases page | `purchases/page.tsx` | ✅ |
+| 17 | **No nav to `/sales/customers`** | Add customers link to sales page | `sales/page.tsx` | ✅ |
+| 18 | **No nav to `/sales/scrap/new`** | Add scrap sale link to sales + scrap pages | `sales/page.tsx`, `inventory/scrap/page.tsx` | ✅ |
+| 19 | **No nav to `/settings/team`** | Add team link to settings page | `settings/page.tsx` | ✅ |
+| 20 | **No way to add money to cash/bank (owner deposit)** | Add deposit form to accounts | `accounts/page.tsx`, `api/accounts/deposit/route.ts` | ✅ |
+| 21 | **No category edit option** | Add edit button/modal to categories | `inventory/categories/page.tsx` | ✅ |
+| 22 | **No manual "Add Scrap" option** | Add add-scrap form to scrap pool page | `inventory/scrap/page.tsx`, `api/inventory/scrap/route.ts` | ✅ |
+| 23 | **No physical inventory adjustment system** | Create stock adjustment API + UI | `api/inventory/stock/route.ts`, `inventory/ledger/page.tsx` | ✅ |
 
 ---
 

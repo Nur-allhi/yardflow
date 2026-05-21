@@ -286,7 +286,7 @@ export default function NewSalePage() {
                 <h2 className="font-display text-lg font-semibold">Sale Info</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 relative z-10">
                   <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
                     Customer
                   </label>

@@ -20,7 +20,7 @@ export default function GenerateReportPage() {
   const [year, setYear] = useState(currentYear);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [totalOtherExpenses, setTotalOtherExpenses] = useState(0);
+  const [totalOtherExpenses, setTotalOtherExpenses] = useState<number | string>("");
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -62,7 +62,7 @@ export default function GenerateReportPage() {
           period_type: periodType,
           start_date,
           end_date,
-          total_other_expenses: totalOtherExpenses,
+          total_other_expenses: totalOtherExpenses === "" ? 0 : Number(totalOtherExpenses),
         }),
       });
 
@@ -251,7 +251,7 @@ export default function GenerateReportPage() {
                 min="0"
                 step="0.01"
                 value={totalOtherExpenses}
-                onChange={(e) => setTotalOtherExpenses(Number(e.target.value))}
+                onChange={(e) => setTotalOtherExpenses(e.target.value === "" ? "" : Number(e.target.value))}
                 className="w-full h-[42px] bg-white border border-[#c6c6cd] rounded px-3 text-sm outline-none focus:border-[#0F172A]"
               />
               <p className="text-xs text-[#505f76] mt-1">Rent, electricity, transportation, etc.</p>

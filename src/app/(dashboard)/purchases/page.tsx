@@ -162,7 +162,7 @@ export default function PurchasesPage() {
             Total Purchases
           </p>
           <p className="font-mono text-lg md:text-2xl font-bold text-[#0F172A]">
-            {summary ? formatMoney(summary.total_purchases) : "—"}
+            {summary ? summary.total_purchases.toLocaleString("en-IN") : "—"}
           </p>
         </div>
         <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-[#c6c6cd]/30 md:border-[#c6c6cd] shadow-sm">
@@ -186,7 +186,7 @@ export default function PurchasesPage() {
             This Month
           </p>
           <p className="font-mono text-lg md:text-2xl font-bold text-[#505f76]">
-            {summary ? formatMoney(summary.this_month) : "—"}
+            {summary ? summary.this_month.toLocaleString("en-IN") : "—"}
           </p>
         </div>
       </div>

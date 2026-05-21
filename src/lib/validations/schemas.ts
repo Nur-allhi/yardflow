@@ -36,6 +36,9 @@ export const purchaseSchema = z.object({
   purchase_date: z.string().min(1, "Date is required"),
   items: z.array(purchaseItemSchema).min(1, "At least one item required"),
   note: z.string().optional(),
+  truck_fare: z.number().positive().optional(),
+  labour_cost: z.number().positive().optional(),
+  food_cost: z.number().positive().optional(),
 });
 
 export const purchasePaymentSchema = z.object({
