@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAccounts } from "@/hooks/useAccounts";
 
 interface CustomerSale {
   id: string;
@@ -42,13 +44,6 @@ interface CustomerDetail {
     total_received: number;
     total_due: number;
   };
-}
-
-interface Account {
-  id: string;
-  name: string;
-  type: string;
-  current_balance: number;
 }
 
 function formatDate(dateStr: string) {
@@ -103,55 +98,77 @@ export default function CustomerProfilePage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [customer, setCustomer] = useState<CustomerDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [accounts, setAccounts] = useState<Account[]>([]);
   const [payAmount, setPayAmount] = useState("");
   const [paySaleId, setPaySaleId] = useState("");
   const [payAccountId, setPayAccountId] = useState("");
   const [payDate, setPayDate] = useState(new Date().toISOString().split("T")[0]);
   const [payNote, setPayNote] = useState("");
-  const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
 
-  const loadCustomer = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data: customer, isLoading, error } = useQuery<CustomerDetail>({
+    queryKey: ["customer", id],
+    queryFn: async () => {
       const res = await fetch(`/api/sales/customers/${id}`);
-      if (!res.ok) throw new Error("Customer not found");
-      const data = await res.json();
-      setCustomer(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
+      if (!res.ok) throw new Error("Failed to load customer");
+      return res.json();
+    },
+  });
 
-  const loadAccounts = useCallback(async () => {
-    const res = await fetch("/api/accounts");
-    if (res.ok) {
-      const data = await res.json();
-      setAccounts(data);
-      if (data.length > 0) setPayAccountId(data[0].id);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadCustomer();
-  }, [loadCustomer]);
+  const { data: accountsData } = useAccounts();
 
   function openPaymentModal() {
-    loadAccounts();
+    if (accountsData && accountsData.length > 0) {
+      setPayAccountId(accountsData[0].id);
+    }
     setPayAmount("");
     setPaySaleId("");
     setPayError(null);
     setShowPaymentModal(true);
   }
+
+  const paymentMutation = useMutation({
+    mutationFn: async (data: {
+      paySaleId: string;
+      amount: number;
+      account_id: string;
+      payment_date: string;
+      note: string;
+      customerId: string;
+      customerName: string;
+    }) => {
+      const { paySaleId: saleId, amount, account_id, payment_date, note, customerId, customerName } = data;
+      const url = saleId === "opening-balance"
+        ? `/api/sales/customers/${customerId}/receive-opening-balance`
+        : `/api/sales/${saleId}/payments`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount,
+          account_id,
+          payment_date,
+          note: note || `Payment received from customer: ${customerName}`,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to record payment");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["customer", id] });
+      setShowPaymentModal(false);
+      setPayAmount("");
+      setPaySaleId("");
+      setPayNote("");
+    },
+    onError: (e) => {
+      setPayError(e instanceof Error ? e.message : "Something went wrong");
+    },
+  });
 
   async function handlePayment(e: React.FormEvent) {
     e.preventDefault();
@@ -180,54 +197,18 @@ export default function CustomerProfilePage() {
       }
     }
 
-    setPaying(true);
-    setPayError(null);
-
-    try {
-      let res: Response;
-
-      if (paySaleId === "opening-balance") {
-        res = await fetch(`/api/sales/customers/${customer.id}/receive-opening-balance`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount,
-            account_id: payAccountId,
-            payment_date: payDate,
-            note: payNote || `Opening balance received from customer: ${customer.name}`,
-          }),
-        });
-      } else {
-        res = await fetch(`/api/sales/${paySaleId}/payments`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount,
-            account_id: payAccountId,
-            payment_date: payDate,
-            note: payNote || `Payment received from customer: ${customer.name}`,
-          }),
-        });
-      }
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to record payment");
-      }
-
-      setShowPaymentModal(false);
-      setPayAmount("");
-      setPaySaleId("");
-      setPayNote("");
-      await loadCustomer();
-    } catch (e) {
-      setPayError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setPaying(false);
-    }
+    paymentMutation.mutate({
+      paySaleId,
+      amount,
+      account_id: payAccountId,
+      payment_date: payDate,
+      note: payNote || "",
+      customerId: customer.id,
+      customerName: customer.name,
+    });
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-4 md:p-8 space-y-6 animate-pulse">
         <div className="h-6 bg-[#e6e8ea] rounded w-1/3" />
@@ -242,7 +223,7 @@ export default function CustomerProfilePage() {
       <div className="p-4 md:p-8">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
           <p className="text-[#EF4444] font-medium text-lg mb-2">
-            {error || "Customer not found"}
+            {error?.message || "Customer not found"}
           </p>
           <Link
             href="/sales/customers"
@@ -537,7 +518,7 @@ export default function CustomerProfilePage() {
                   className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
                 >
                   <option value="">Select account</option>
-                  {accounts.map((a) => (
+                  {accountsData?.map((a) => (
                     <option key={a.id} value={a.id}>
                       {a.name} ({formatMoney(a.current_balance)})
                     </option>
@@ -579,10 +560,10 @@ export default function CustomerProfilePage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={paying}
+                    disabled={paymentMutation.isPending}
                   className="flex-1 h-[42px] bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
                 >
-                  {paying ? "Processing..." : "Confirm Receive"}
+                    {paymentMutation.isPending ? "Processing..." : "Confirm Receive"}
                 </button>
               </div>
             </form>

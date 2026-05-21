@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 
 interface AccountDetail {
   id: string;
@@ -42,30 +42,16 @@ export default function AccountDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [account, setAccount] = useState<AccountDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const loadAccount = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data: account, isLoading, error } = useQuery<AccountDetail>({
+    queryKey: ["account", id],
+    queryFn: async () => {
       const res = await fetch(`/api/accounts/${id}`);
-      if (!res.ok) throw new Error("Account not found");
-      const data = await res.json();
-      setAccount(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
+      if (!res.ok) throw new Error("Failed to load account");
+      return res.json();
+    },
+  });
 
-  useEffect(() => {
-    loadAccount();
-  }, [loadAccount]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-4 md:p-8 space-y-6 animate-pulse">
         <div className="h-6 bg-[#e6e8ea] rounded w-1/3" />
@@ -80,7 +66,7 @@ export default function AccountDetailPage() {
       <div className="p-4 md:p-8">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
           <p className="text-[#EF4444] font-medium text-lg mb-2">
-            {error || "Account not found"}
+            {error?.message || "Account not found"}
           </p>
           <Link
             href="/accounts"

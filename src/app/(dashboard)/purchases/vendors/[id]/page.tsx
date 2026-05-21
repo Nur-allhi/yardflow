@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAccounts } from "@/hooks/useAccounts";
 
 interface VendorPurchase {
   id: string;
@@ -40,13 +42,6 @@ interface VendorDetail {
     total_paid: number;
     total_due: number;
   };
-}
-
-interface Account {
-  id: string;
-  name: string;
-  type: string;
-  current_balance: number;
 }
 
 function formatDate(dateStr: string) {
@@ -88,55 +83,77 @@ export default function VendorProfilePage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [vendor, setVendor] = useState<VendorDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [accounts, setAccounts] = useState<Account[]>([]);
   const [payAmount, setPayAmount] = useState("");
   const [payPurchaseId, setPayPurchaseId] = useState("");
   const [payAccountId, setPayAccountId] = useState("");
   const [payDate, setPayDate] = useState(new Date().toISOString().split("T")[0]);
   const [payNote, setPayNote] = useState("");
-  const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
 
-  const loadVendor = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data: vendor, isLoading, error } = useQuery<VendorDetail>({
+    queryKey: ["vendor", id],
+    queryFn: async () => {
       const res = await fetch(`/api/purchases/vendors/${id}`);
-      if (!res.ok) throw new Error("Vendor not found");
-      const data = await res.json();
-      setVendor(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
+      if (!res.ok) throw new Error("Failed to load vendor");
+      return res.json();
+    },
+  });
 
-  const loadAccounts = useCallback(async () => {
-    const res = await fetch("/api/accounts");
-    if (res.ok) {
-      const data = await res.json();
-      setAccounts(data);
-      if (data.length > 0) setPayAccountId(data[0].id);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadVendor();
-  }, [loadVendor]);
+  const { data: accountsData } = useAccounts();
 
   function openPaymentModal() {
-    loadAccounts();
+    if (accountsData && accountsData.length > 0) {
+      setPayAccountId(accountsData[0].id);
+    }
     setPayAmount("");
     setPayPurchaseId("");
     setPayError(null);
     setShowPaymentModal(true);
   }
+
+  const paymentMutation = useMutation({
+    mutationFn: async (data: {
+      payPurchaseId: string;
+      amount: number;
+      account_id: string;
+      payment_date: string;
+      note: string;
+      vendorId: string;
+      vendorName: string;
+    }) => {
+      const { payPurchaseId: purchaseId, amount, account_id, payment_date, note, vendorId, vendorName } = data;
+      const url = purchaseId === "opening-balance"
+        ? `/api/purchases/vendors/${vendorId}/pay-opening-balance`
+        : `/api/purchases/${purchaseId}/payments`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount,
+          account_id,
+          payment_date,
+          note: note || `Payment against vendor: ${vendorName}`,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to record payment");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["vendor", id] });
+      setShowPaymentModal(false);
+      setPayAmount("");
+      setPayPurchaseId("");
+      setPayNote("");
+    },
+    onError: (e) => {
+      setPayError(e instanceof Error ? e.message : "Something went wrong");
+    },
+  });
 
   async function handlePayment(e: React.FormEvent) {
     e.preventDefault();
@@ -165,54 +182,18 @@ export default function VendorProfilePage() {
       }
     }
 
-    setPaying(true);
-    setPayError(null);
-
-    try {
-      let res: Response;
-
-      if (payPurchaseId === "opening-balance") {
-        res = await fetch(`/api/purchases/vendors/${vendor.id}/pay-opening-balance`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount,
-            account_id: payAccountId,
-            payment_date: payDate,
-            note: payNote || `Opening balance payment against vendor: ${vendor.name}`,
-          }),
-        });
-      } else {
-        res = await fetch(`/api/purchases/${payPurchaseId}/payments`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount,
-            account_id: payAccountId,
-            payment_date: payDate,
-            note: payNote || `Payment against vendor: ${vendor.name}`,
-          }),
-        });
-      }
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to record payment");
-      }
-
-      setShowPaymentModal(false);
-      setPayAmount("");
-      setPayPurchaseId("");
-      setPayNote("");
-      await loadVendor();
-    } catch (e) {
-      setPayError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setPaying(false);
-    }
+    paymentMutation.mutate({
+      payPurchaseId,
+      amount,
+      account_id: payAccountId,
+      payment_date: payDate,
+      note: payNote || "",
+      vendorId: vendor.id,
+      vendorName: vendor.name,
+    });
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-4 md:p-8 space-y-6 animate-pulse">
         <div className="h-6 bg-[#e6e8ea] rounded w-1/3" />
@@ -227,7 +208,7 @@ export default function VendorProfilePage() {
       <div className="p-4 md:p-8">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
           <p className="text-[#EF4444] font-medium text-lg mb-2">
-            {error || "Vendor not found"}
+            {error?.message || "Vendor not found"}
           </p>
           <Link
             href="/purchases/vendors"
@@ -518,7 +499,7 @@ export default function VendorProfilePage() {
                   className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
                 >
                   <option value="">Select account</option>
-                  {accounts.map((a) => (
+                  {accountsData?.map((a) => (
                     <option key={a.id} value={a.id}>
                       {a.name} ({formatMoney(a.current_balance)})
                     </option>
@@ -560,10 +541,10 @@ export default function VendorProfilePage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={paying}
+                    disabled={paymentMutation.isPending}
                   className="flex-1 h-[42px] bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
                 >
-                  {paying ? "Processing..." : "Confirm Payment"}
+                    {paymentMutation.isPending ? "Processing..." : "Confirm Payment"}
                 </button>
               </div>
             </form>

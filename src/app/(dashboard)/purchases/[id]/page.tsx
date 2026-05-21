@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAccounts } from "@/hooks/useAccounts";
 
 interface PurchaseItem {
   id: string;
@@ -38,13 +40,6 @@ interface PurchaseDetail {
   payments: Payment[];
 }
 
-interface Account {
-  id: string;
-  name: string;
-  type: string;
-  current_balance: number;
-}
-
 function formatDate(dateStr: string) {
   const d = new Date(dateStr);
   return d.toLocaleDateString("en-GB", {
@@ -78,52 +73,56 @@ export default function PurchaseDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [purchase, setPurchase] = useState<PurchaseDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   // Payment modal state
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [accounts, setAccounts] = useState<Account[]>([]);
   const [payAmount, setPayAmount] = useState("");
   const [payAccountId, setPayAccountId] = useState("");
   const [payDate, setPayDate] = useState(
     new Date().toISOString().split("T")[0],
   );
   const [payNote, setPayNote] = useState("");
-  const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
 
-  const loadPurchase = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data: purchase, isLoading, error } = useQuery<PurchaseDetail>({
+    queryKey: ["purchase", id],
+    queryFn: async () => {
       const res = await fetch(`/api/purchases/${id}`);
-      if (!res.ok) throw new Error("Purchase not found");
-      const data = await res.json();
-      setPurchase(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
+      if (!res.ok) throw new Error("Failed to load purchase");
+      return res.json();
+    },
+  });
 
-  const loadAccounts = useCallback(async () => {
-    const res = await fetch("/api/accounts");
-    if (res.ok) {
-      const data = await res.json();
-      setAccounts(data);
-      if (data.length > 0) setPayAccountId(data[0].id);
-    }
-  }, []);
+  const { data: accountsData } = useAccounts();
 
-  useEffect(() => {
-    loadPurchase();
-  }, [loadPurchase]);
+  const paymentMutation = useMutation({
+    mutationFn: async (data: { amount: number; account_id: string; payment_date: string; note?: string }) => {
+      const res = await fetch(`/api/purchases/${id}/payments`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to record payment");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["purchase", id] });
+      setShowPaymentModal(false);
+      setPayAmount("");
+      setPayNote("");
+    },
+    onError: (e) => {
+      setPayError(e instanceof Error ? e.message : "Something went wrong");
+    },
+  });
 
   function openPaymentModal() {
-    loadAccounts();
+    if (accountsData && accountsData.length > 0) {
+      setPayAccountId(accountsData[0].id);
+    }
     setPayAmount(
       purchase ? String(Math.ceil(purchase.due_amount)) : "",
     );
@@ -145,39 +144,16 @@ export default function PurchaseDetailPage() {
       return;
     }
 
-    setPaying(true);
-    setPayError(null);
-
-    try {
-      const res = await fetch(`/api/purchases/${id}/payments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount,
-          account_id: payAccountId,
-          payment_date: payDate,
-          note: payNote || undefined,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to record payment");
-      }
-
-      setShowPaymentModal(false);
-      setPayAmount("");
-      setPayNote("");
-      await loadPurchase();
-    } catch (e) {
-      setPayError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setPaying(false);
-    }
+    paymentMutation.mutate({
+      amount,
+      account_id: payAccountId,
+      payment_date: payDate,
+      note: payNote || undefined,
+    });
   }
 
   // Loading
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-4 md:p-8 space-y-6 animate-pulse">
         <div className="h-6 bg-[#e6e8ea] rounded w-1/3" />
@@ -193,7 +169,7 @@ export default function PurchaseDetailPage() {
       <div className="p-4 md:p-8">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
           <p className="text-[#EF4444] font-medium text-lg mb-2">
-            {error || "Purchase not found"}
+            {error?.message || "Purchase not found"}
           </p>
           <Link
             href="/purchases"
@@ -584,7 +560,7 @@ export default function PurchaseDetailPage() {
                   className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
                 >
                   <option value="">Select account</option>
-                  {accounts.map((a) => (
+                  {accountsData?.map((a) => (
                     <option key={a.id} value={a.id}>
                       {a.name} ({formatMoney(a.current_balance)})
                     </option>
@@ -656,10 +632,10 @@ export default function PurchaseDetailPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={paying}
+                    disabled={paymentMutation.isPending}
                   className="flex-1 h-[42px] bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
                 >
-                  {paying ? "Processing..." : "Confirm Payment"}
+                    {paymentMutation.isPending ? "Processing..." : "Confirm Payment"}
                 </button>
               </div>
             </form>

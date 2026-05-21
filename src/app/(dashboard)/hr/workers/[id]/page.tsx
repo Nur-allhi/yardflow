@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 
 interface Advance {
   id: string;
@@ -56,31 +56,21 @@ export default function WorkerDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [worker, setWorker] = useState<WorkerDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const loadWorker = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data: workerRaw, isLoading, error } = useQuery<{ worker: WorkerDetail; advances: Advance[] }>({
+    queryKey: ["worker", id],
+    queryFn: async () => {
       const res = await fetch(`/api/hr/workers/${id}`);
-      if (!res.ok) throw new Error("Worker not found");
-      const data = await res.json();
-      setWorker({ ...data.worker, advances: data.advances });
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
+      if (!res.ok) throw new Error("Failed to load worker");
+      return res.json();
+    },
+  });
 
-  useEffect(() => {
-    loadWorker();
-  }, [loadWorker]);
+  const worker: WorkerDetail | null = workerRaw
+    ? { ...workerRaw.worker, advances: workerRaw.advances }
+    : null;
 
   // Loading
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-4 md:p-8 space-y-6 animate-pulse">
         <div className="h-6 bg-[#e6e8ea] rounded w-1/3" />
@@ -96,7 +86,7 @@ export default function WorkerDetailPage() {
       <div className="p-4 md:p-8">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
           <p className="text-[#EF4444] font-medium text-lg mb-2">
-            {error || "Worker not found"}
+            {error?.message || "Worker not found"}
           </p>
           <Link
             href="/hr/workers"
