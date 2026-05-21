@@ -152,26 +152,48 @@ export default function VendorProfilePage() {
       return;
     }
 
-    const selectedPurchase = vendor.purchases.find((p) => p.id === payPurchaseId);
-    if (selectedPurchase && amount > selectedPurchase.due_amount) {
-      setPayError("Amount cannot exceed the selected purchase's due balance");
-      return;
+    if (payPurchaseId === "opening-balance") {
+      if (amount > vendor.opening_balance) {
+        setPayError("Amount cannot exceed the opening balance");
+        return;
+      }
+    } else {
+      const selectedPurchase = vendor.purchases.find((p) => p.id === payPurchaseId);
+      if (selectedPurchase && amount > selectedPurchase.due_amount) {
+        setPayError("Amount cannot exceed the selected purchase's due balance");
+        return;
+      }
     }
 
     setPaying(true);
     setPayError(null);
 
     try {
-      const res = await fetch(`/api/purchases/${payPurchaseId}/payments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount,
-          account_id: payAccountId,
-          payment_date: payDate,
-          note: payNote || `Payment against vendor: ${vendor.name}`,
-        }),
-      });
+      let res: Response;
+
+      if (payPurchaseId === "opening-balance") {
+        res = await fetch(`/api/purchases/vendors/${vendor.id}/pay-opening-balance`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount,
+            account_id: payAccountId,
+            payment_date: payDate,
+            note: payNote || `Opening balance payment against vendor: ${vendor.name}`,
+          }),
+        });
+      } else {
+        res = await fetch(`/api/purchases/${payPurchaseId}/payments`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount,
+            account_id: payAccountId,
+            payment_date: payDate,
+            note: payNote || `Payment against vendor: ${vendor.name}`,
+          }),
+        });
+      }
 
       if (!res.ok) {
         const err = await res.json();
@@ -446,13 +468,22 @@ export default function VendorProfilePage() {
                   value={payPurchaseId}
                   onChange={(e) => {
                     setPayPurchaseId(e.target.value);
-                    const p = vendor.purchases.find((pp) => pp.id === e.target.value);
-                    if (p) setPayAmount(String(Math.ceil(p.due_amount)));
+                    if (e.target.value === "opening-balance") {
+                      setPayAmount(String(Math.ceil(vendor.opening_balance)));
+                    } else {
+                      const p = vendor.purchases.find((pp) => pp.id === e.target.value);
+                      if (p) setPayAmount(String(Math.ceil(p.due_amount)));
+                    }
                   }}
                   required
                   className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
                 >
                   <option value="">Select a purchase</option>
+                  {vendor.opening_balance > 0 && (
+                    <option value="opening-balance">
+                      Opening Balance — Due: {formatMoney(vendor.opening_balance)}
+                    </option>
+                  )}
                   {duePurchases.map((p) => (
                     <option key={p.id} value={p.id}>
                       {formatDate(p.purchase_date)} — Due: {formatMoney(p.due_amount)}

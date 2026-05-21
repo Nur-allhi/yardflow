@@ -142,20 +142,76 @@ export async function GET(request: Request) {
       .from(customers)
       .where(and(...customerOpeningConditions));
 
+    const openingEntries: Array<{
+      id: string;
+      customer_id: string | null;
+      sale_type: string;
+      is_quick_cash_sale: boolean;
+      sale_date: null;
+      total_amount: number;
+      paid_amount: number;
+      due_amount: number;
+      status: string;
+      note: null;
+      created_at: null;
+      customer_name: string | null;
+      total_kg: number;
+    }> = [];
+
+    if (status === "due") {
+      const openingConditions: (ReturnType<typeof eq> | ReturnType<typeof sql>)[] = [
+        eq(customers.organization_id, orgId),
+        sql`${customers.deleted_at} IS NULL`,
+        sql`${customers.opening_balance}::numeric > 0`,
+        sql`NOT EXISTS (SELECT 1 FROM ${sales} WHERE ${sales.customer_id} = ${customers.id} AND ${sales.organization_id} = ${orgId} AND ${sales.deleted_at} IS NULL AND ${sales.status} = 'due')`,
+      ];
+      if (customerId) openingConditions.push(eq(customers.id, customerId));
+
+      const openingCustomers = await db
+        .select({
+          id: customers.id,
+          name: customers.name,
+          opening_balance: sql<string>`${customers.opening_balance}::numeric`,
+        })
+        .from(customers)
+        .where(and(...openingConditions));
+
+      for (const c of openingCustomers) {
+        openingEntries.push({
+          id: `ob-${c.id}`,
+          customer_id: c.id,
+          sale_type: "fabricated",
+          is_quick_cash_sale: false,
+          sale_date: null,
+          total_amount: Number(c.opening_balance),
+          paid_amount: 0,
+          due_amount: Number(c.opening_balance),
+          status: "due",
+          note: null,
+          created_at: null,
+          customer_name: c.name,
+          total_kg: 0,
+        });
+      }
+    }
+
     const summary = summaryResult[0];
     const totalAmount = Number(summary.total_amount);
     const totalPaid = Number(summary.total_paid);
     const openingBalanceTotal = Number(openingResult.total);
 
     return NextResponse.json({
-      sales: saleList.map((s) => ({
-        ...s,
-        total_amount: Number(s.total_amount),
-        paid_amount: Number(s.paid_amount),
-        due_amount: Number(s.due_amount),
-        total_kg: Number(s.total_kg),
-        customer_name: s.customer_name || "Cash Sale",
-      })),
+      sales: [
+        ...saleList.map((s) => ({
+          ...s,
+          total_amount: Number(s.total_amount),
+          paid_amount: Number(s.paid_amount),
+          due_amount: Number(s.due_amount),
+          total_kg: Number(s.total_kg),
+          customer_name: s.customer_name || "Cash Sale",
+        })),
+        ...openingEntries,
+      ],
       summary: {
         total_sales: summary.total_sales,
         total_paid: totalPaid,

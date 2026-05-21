@@ -9,13 +9,13 @@ interface Sale {
   customer_id: string | null;
   sale_type: "fabricated" | "raw_passthrough" | "scrap";
   is_quick_cash_sale: boolean;
-  sale_date: string;
+  sale_date: string | null;
   total_amount: number;
   paid_amount: number;
   due_amount: number;
   status: "paid" | "partial" | "due";
   note: string | null;
-  created_at: string;
+  created_at: string | null;
   customer_name: string;
   total_kg: number;
 }
@@ -48,7 +48,8 @@ const STATUSES = [
   { value: "due", label: "Due" },
 ] as const;
 
-function formatDate(dateStr: string): string {
+function formatDate(dateStr: string | null): string {
+  if (!dateStr) return "—";
   const d = new Date(dateStr);
   return d.toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -219,6 +220,7 @@ export default function SalesPage() {
   const totalPages = Math.max(1, Math.ceil(totalCount / PER_PAGE));
 
   function getSaleIdDisplay(s: Sale) {
+    if (s.id.startsWith("ob-")) return "Opening Balance";
     return `SAL-${s.id.slice(0, 4).toUpperCase()}`;
   }
 
@@ -602,19 +604,30 @@ export default function SalesPage() {
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end items-center gap-3">
-                          <Link
-                            href={`/sales/${s.id}`}
-                            className="text-[#069669] font-bold text-[10px] uppercase tracking-tighter hover:underline"
-                          >
-                            View
-                          </Link>
-                          {s.due_amount > 0 && (
+                          {s.id.startsWith("ob-") ? (
                             <Link
-                              href={`/sales/${s.id}`}
-                              className="text-[#069669] font-bold text-[10px] uppercase tracking-tighter border-b border-[#069669] hover:bg-[#069669] hover:text-white transition-colors px-1"
+                              href={`/sales/customers/${s.customer_id}`}
+                              className="text-[#0F172A] font-bold text-[10px] uppercase tracking-tighter hover:underline"
                             >
-                              Collect
+                              View Customer
                             </Link>
+                          ) : (
+                            <>
+                              <Link
+                                href={`/sales/${s.id}`}
+                                className="text-[#069669] font-bold text-[10px] uppercase tracking-tighter hover:underline"
+                              >
+                                View
+                              </Link>
+                              {s.due_amount > 0 && (
+                                <Link
+                                  href={`/sales/${s.id}`}
+                                  className="text-[#069669] font-bold text-[10px] uppercase tracking-tighter border-b border-[#069669] hover:bg-[#069669] hover:text-white transition-colors px-1"
+                                >
+                                  Collect
+                                </Link>
+                              )}
+                            </>
                           )}
                         </div>
                       </td>
@@ -735,19 +748,30 @@ export default function SalesPage() {
 
                 {/* Actions */}
                 <div className="pt-2 flex gap-2">
-                  <Link
-                    href={`/sales/${s.id}`}
-                    className="flex-1 py-2 text-xs font-bold rounded-lg bg-[#e0e3e5] text-[#191c1e] hover:bg-[#c6c6cd] transition-colors text-center"
-                  >
-                    View Details
-                  </Link>
-                  {s.due_amount > 0 && (
+                  {s.id.startsWith("ob-") ? (
                     <Link
-                      href={`/sales/${s.id}`}
-                      className="flex-1 py-2 text-xs font-bold rounded-lg bg-[#069669] text-white hover:bg-[#069669]/90 transition-colors text-center"
+                      href={`/sales/customers/${s.customer_id}`}
+                      className="flex-1 py-2 text-xs font-bold rounded-lg bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-colors text-center"
                     >
-                      Collect
+                      View Customer
                     </Link>
+                  ) : (
+                    <>
+                      <Link
+                        href={`/sales/${s.id}`}
+                        className="flex-1 py-2 text-xs font-bold rounded-lg bg-[#e0e3e5] text-[#191c1e] hover:bg-[#c6c6cd] transition-colors text-center"
+                      >
+                        View Details
+                      </Link>
+                      {s.due_amount > 0 && (
+                        <Link
+                          href={`/sales/${s.id}`}
+                          className="flex-1 py-2 text-xs font-bold rounded-lg bg-[#069669] text-white hover:bg-[#069669]/90 transition-colors text-center"
+                        >
+                          Collect
+                        </Link>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

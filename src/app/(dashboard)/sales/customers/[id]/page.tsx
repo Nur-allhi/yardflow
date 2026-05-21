@@ -167,26 +167,48 @@ export default function CustomerProfilePage() {
       return;
     }
 
-    const selectedSale = customer.sales.find((s) => s.id === paySaleId);
-    if (selectedSale && amount > selectedSale.due_amount) {
-      setPayError("Amount cannot exceed the selected sale's due balance");
-      return;
+    if (paySaleId === "opening-balance") {
+      if (amount > customer.opening_balance) {
+        setPayError("Amount cannot exceed the opening balance");
+        return;
+      }
+    } else {
+      const selectedSale = customer.sales.find((s) => s.id === paySaleId);
+      if (selectedSale && amount > selectedSale.due_amount) {
+        setPayError("Amount cannot exceed the selected sale's due balance");
+        return;
+      }
     }
 
     setPaying(true);
     setPayError(null);
 
     try {
-      const res = await fetch(`/api/sales/${paySaleId}/payments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount,
-          account_id: payAccountId,
-          payment_date: payDate,
-          note: payNote || `Payment received from customer: ${customer.name}`,
-        }),
-      });
+      let res: Response;
+
+      if (paySaleId === "opening-balance") {
+        res = await fetch(`/api/sales/customers/${customer.id}/receive-opening-balance`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount,
+            account_id: payAccountId,
+            payment_date: payDate,
+            note: payNote || `Opening balance received from customer: ${customer.name}`,
+          }),
+        });
+      } else {
+        res = await fetch(`/api/sales/${paySaleId}/payments`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount,
+            account_id: payAccountId,
+            payment_date: payDate,
+            note: payNote || `Payment received from customer: ${customer.name}`,
+          }),
+        });
+      }
 
       if (!res.ok) {
         const err = await res.json();
@@ -465,13 +487,22 @@ export default function CustomerProfilePage() {
                   value={paySaleId}
                   onChange={(e) => {
                     setPaySaleId(e.target.value);
-                    const s = customer.sales.find((ss) => ss.id === e.target.value);
-                    if (s) setPayAmount(String(Math.ceil(s.due_amount)));
+                    if (e.target.value === "opening-balance") {
+                      setPayAmount(String(Math.ceil(customer.opening_balance)));
+                    } else {
+                      const s = customer.sales.find((ss) => ss.id === e.target.value);
+                      if (s) setPayAmount(String(Math.ceil(s.due_amount)));
+                    }
                   }}
                   required
                   className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
                 >
                   <option value="">Select a sale</option>
+                  {customer.opening_balance > 0 && (
+                    <option value="opening-balance">
+                      Opening Balance — Due: {formatMoney(customer.opening_balance)}
+                    </option>
+                  )}
                   {dueSales.map((s) => (
                     <option key={s.id} value={s.id}>
                       {formatDate(s.sale_date)} — Due: {formatMoney(s.due_amount)}

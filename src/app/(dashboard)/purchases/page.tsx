@@ -384,7 +384,14 @@ export default function PurchasesPage() {
                     <StatusChip status={p.status} />
                   </td>
                   <td className="px-6 py-4 text-right space-x-3">
-                    {!p.id.startsWith("ob-") && (
+                    {p.id.startsWith("ob-") ? (
+                      <Link
+                        href={`/purchases/vendors/${p.vendor_id}`}
+                        className="text-[#0F172A] font-bold text-sm hover:underline"
+                      >
+                        View Vendor
+                      </Link>
+                    ) : (
                       <>
                         <Link
                           href={`/purchases/${p.id}`}
@@ -512,7 +519,16 @@ export default function PurchasesPage() {
                   </div>
                 )}
               </div>
-              {!p.id.startsWith("ob-") && (
+              {p.id.startsWith("ob-") ? (
+                <div className="flex gap-2 pt-3 border-t border-[#c6c6cd]/30">
+                  <Link
+                    href={`/purchases/vendors/${p.vendor_id}`}
+                    className="flex-1 py-2 bg-[#0F172A] text-white font-bold text-sm rounded-lg text-center"
+                  >
+                    View Vendor
+                  </Link>
+                </div>
+              ) : (
                 <div className="flex gap-2 pt-3 border-t border-[#c6c6cd]/30">
                   <Link
                     href={`/purchases/${p.id}`}
