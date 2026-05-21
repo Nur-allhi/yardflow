@@ -509,3 +509,23 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 - `npx tsc --noEmit` — zero errors
 - `npx eslint src/app/(dashboard)/accounts/` — zero new errors
 - `npx next build` — succeeded
+
+## Session: 2026-05-21 — P2-7 Purchase Dynamic Other Expenses
+
+### Changes
+- **P2-7**: Replaced fixed `truck_fare`, `labour_cost`, `food_cost` fields with dynamic add/remove expense rows
+- Each row has: description (text), amount (number), account_id (dropdown), "Add to vendor total" toggle
+- New `purchase_other_expenses` table in DB with columns: `organization_id`, `purchase_id`, `description`, `amount`, `account_id`, `add_to_vendor_total`
+- API POST handler: expenses with `add_to_vendor_total=true` added to `total_amount`; others create `account_transactions` debit from selected account
+
+### Files modified
+- `src/lib/db/schema.ts` — Added `purchaseOtherExpenses` table, relations, types
+- `src/lib/db/migrations/0003_magical_rocket_racer.sql` — Auto-generated migration
+- `src/lib/validations/schemas.ts` — Added `otherExpenseSchema`, updated `purchaseSchema`
+- `src/app/api/purchases/route.ts` — POST handler processes other_expenses (vendor total addition + account debits)
+- `src/app/(dashboard)/purchases/new/page.tsx` — Replaced 3 fixed fields with dynamic add/remove expense rows
+- `Fixes_implementation.md` — Marked item 7 as ✅
+
+### Quality Gates
+- `npx tsc --noEmit` — zero errors
+- `npx next build` — succeeded
