@@ -37,8 +37,7 @@ export function useCategories() {
 
 export function useSubtypes(categoryId?: string) {
   return useQuery({
-    queryKey: ["subtypes", categoryId],
+    queryKey: ["subtypes", categoryId ?? "all"],
     queryFn: () => fetchSubtypes(categoryId),
-    enabled: !!categoryId,
   });
 }
