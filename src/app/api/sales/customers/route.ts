@@ -42,7 +42,7 @@ export async function GET(_request: Request) {
       total_purchases: c.total_sales,
       total_paid: totalPaid,
       total_amount: totalAmount,
-      due_balance: totalAmount - totalPaid,
+      due_balance: Number(c.opening_balance) + totalAmount - totalPaid,
     };
   });
 

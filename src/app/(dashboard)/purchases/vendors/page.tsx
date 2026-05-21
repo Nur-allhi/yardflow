@@ -291,13 +291,13 @@ export default function VendorsPage() {
                         </td>
                         <td className="px-6 py-5 text-right">
                           <div className="flex justify-end items-center gap-4">
-                            <button className="text-[#059669] font-bold hover:underline decoration-2 text-sm">
+                            <Link href={`/purchases?vendor_id=${v.id}`} className="text-[#059669] font-bold hover:underline decoration-2 text-sm">
                               View
-                            </button>
+                            </Link>
                             {v.due_balance > 0 ? (
-                              <button className="bg-[#0F172A] text-white px-4 py-1.5 rounded-lg text-[12px] font-bold hover:bg-[#0F172A]/90 transition-all active:scale-95">
+                              <Link href={`/purchases?vendor_id=${v.id}`} className="bg-[#0F172A] text-white px-4 py-1.5 rounded-lg text-[12px] font-bold hover:bg-[#0F172A]/90 transition-all active:scale-95">
                                 Pay
-                              </button>
+                              </Link>
                             ) : (
                               <div className="w-[45px]" />
                             )}
@@ -402,13 +402,13 @@ export default function VendorsPage() {
                     </div>
                   </div>
                   <div className="flex gap-2 pt-1">
-                    <button className="flex-1 py-2.5 rounded-lg border border-[#0F172A] text-[#0F172A] font-bold text-sm transition-colors hover:bg-[#f2f4f6] active:scale-[0.98]">
+                    <Link href={`/purchases?vendor_id=${v.id}`} className="block flex-1 py-2.5 rounded-lg border border-[#0F172A] text-[#0F172A] font-bold text-sm transition-colors hover:bg-[#f2f4f6] active:scale-[0.98] text-center">
                       View
-                    </button>
+                    </Link>
                     {v.due_balance > 0 ? (
-                      <button className="flex-1 py-2.5 rounded-lg bg-[#0F172A] text-white font-bold text-sm transition-colors hover:bg-[#0F172A]/90 active:scale-[0.98]">
+                      <Link href={`/purchases?vendor_id=${v.id}`} className="block flex-1 py-2.5 rounded-lg bg-[#0F172A] text-white font-bold text-sm transition-colors hover:bg-[#0F172A]/90 active:scale-[0.98] text-center">
                         Pay
-                      </button>
+                      </Link>
                     ) : (
                       <button disabled className="flex-1 py-2.5 rounded-lg bg-[#e0e3e5] text-[#505f76] font-bold text-sm cursor-not-allowed">
                         Paid

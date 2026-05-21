@@ -422,3 +422,15 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 ### Database state after testing
 - 1 org (Bagdad Trading Corporation), 1 user (`noorefty1@gmail.com`)
 - Test data present: 2 accounts, 2 vendors, 1 customer, 2 workers, 4 purchases, 2 sales, 17 account transactions, 1 period report
+
+## Session: 2026-05-21 — P0 fixes + planet
+
+### Completed
+- Updated AGENTS.md to reference Fixes_implementation.md instead of PLAN.md
+- Deleted PLAN.md
+- Fixed tsconfig to exclude scripts/ (cleanup.ts build error)
+- P0-1: Consumables API — added pagination, fixed field name mismatch (total_items_logged → total_items)
+- P0-2: Quick sale — added sale_type: "fabricated" to request body (was missing, causing Zod validation error → [object Object])
+- P0-3: Workers list field name — advance API reference_type fixed (salary → advance)
+- P0-4: Worker detail page — fixed to destructure { worker, advances } from API response
+- P0-6: Payroll API — fixed field name mismatches (name → worker_name, total_advances → advances_taken, total_advances_sum → total_advances)

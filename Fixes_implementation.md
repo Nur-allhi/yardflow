@@ -7,14 +7,14 @@
 
 ## P0 — CRASHES (Fix immediately)
 
-| # | Finding | Action | Files |
-|---|---------|--------|-------|
-| 1 | **Consumable page error** (Error 1) | Debug and fix consumables page/API | `inventory/consumables/page.tsx`, `api/inventory/consumables/route.ts` |
-| 2 | **Sales: Quick sale shows [object Object]** (Error 2) | Fix form submission — wrong object serialization | `sales/new/quick/page.tsx` |
-| 3 | **HR: Add worker error** (Error 3) | Debug and fix worker creation API | `api/hr/workers/route.ts` |
-| 4 | **HR: Worker detail page crash** (Error 4) | Debug and fix worker detail page | `hr/workers/[id]/page.tsx`, `api/hr/workers/[id]/route.ts` |
-| 5 | **HR: Record advance error** (Error 5) | Debug and fix advance creation | `api/hr/advances/route.ts`, `hr/advances/new/page.tsx` |
-| 6 | **HR: Payroll page crash** (Error 6) | Debug and fix payroll page | `hr/payroll/page.tsx`, `api/hr/payroll/route.ts` |
+| # | Finding | Action | Files | Status |
+|---|---------|--------|-------|--------|
+| 1 | **Consumable page error** (Error 1) | Debug and fix consumables page/API | `inventory/consumables/page.tsx`, `api/inventory/consumables/route.ts` | ✅ |
+| 2 | **Sales: Quick sale shows [object Object]** (Error 2) | Fix form submission — wrong object serialization | `sales/new/quick/page.tsx` | ✅ |
+| 3 | **HR: Add worker error** (Error 3) | Debug and fix worker creation API | `api/hr/workers/route.ts` | ✅ |
+| 4 | **HR: Worker detail page crash** (Error 4) | Debug and fix worker detail page | `hr/workers/[id]/page.tsx`, `api/hr/workers/[id]/route.ts` | ✅ |
+| 5 | **HR: Record advance error** (Error 5) | Debug and fix advance creation | `api/hr/advances/route.ts`, `hr/advances/new/page.tsx` | ✅ |
+| 6 | **HR: Payroll page crash** (Error 6) | Debug and fix payroll page | `hr/payroll/page.tsx`, `api/hr/payroll/route.ts` | ✅ |
 
 ---
 

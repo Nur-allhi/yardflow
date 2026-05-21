@@ -41,7 +41,7 @@ export async function GET(_request: Request) {
       total_purchases: v.total_purchases,
       total_paid: totalPaid,
       total_amount: totalAmount,
-      due_balance: totalAmount - totalPaid,
+      due_balance: Number(v.opening_balance) + totalAmount - totalPaid,
     };
   });
 
