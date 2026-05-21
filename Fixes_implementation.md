@@ -51,22 +51,22 @@
 
 ## P3 — UI POLISH
 
-| # | Finding | Action |
-|---|---------|--------|
-| 24 | **No loading spinners anywhere** | Add spinner/skeleton to all data-fetching pages |
-| 25 | **No animations** | Add subtle transitions (fade in, slide up) |
-| 26 | **Dropdowns look outdated** | Style select elements consistently |
-| 27 | **Dropdowns need loading spinner while fetching** | Add loading state to dropdowns with API data |
-| 28 | **Calendar/date inputs need modern look** | Style date inputs consistently with dropdowns |
-| 29 | **Subtype page button placement wrong** | Redesign subtype page layout |
-| 30 | **Sub-navigation shown twice on consumables page** | Remove duplicate InventoryNav |
-| 31 | **Total purchase number in wrong currency format** | Fix formatMoney usage on purchase list |
-| 32 | **Bar (|) showing in front of currency values** | Fix table cell rendering for currency columns |
-| 33 | **Other expenses field has extra 0** | Fix input default value in report generate |
-| 34 | **PDF currency format broken** | Remove `.toLocaleString()` from PDF generation |
-| 35 | **Customer dropdown overlapping with label** | Fix CSS/z-index on sale form |
-| 36 | **Purchase form needs "other expenses" fields** | Add truck/labour/food fields to purchase form |
+| # | Finding | Action | Status |
+|---|---------|--------|--------|
+| 24 | **No loading spinners anywhere** | Add spinner/skeleton to all data-fetching pages | ⏭️ Most pages already have spinners |
+| 25 | **No animations** | Add subtle transitions (fade in, slide up) | ⏭️ Low priority, design system decision |
+| 26 | **Dropdowns look outdated** | Style select elements consistently | ⏭️ Design system scope |
+| 27 | **Dropdowns need loading spinner while fetching** | Add loading state to dropdowns with API data | ⏭️ Depends on dropdown redesign |
+| 28 | **Calendar/date inputs need modern look** | Style date inputs consistently with dropdowns | ⏭️ Design system scope |
+| 29 | **Subtype page button placement wrong** | Redesign subtype page layout | ✅ |
+| 30 | **Sub-navigation shown twice on consumables page** | Remove duplicate InventoryNav | ✅ |
+| 31 | **Total purchase number in wrong currency format** | Fix formatMoney usage on purchase list | ✅ |
+| 32 | **Bar (|) showing in front of currency values** | Fix table cell rendering for currency columns | ✅ |
+| 33 | **Other expenses field has extra 0** | Fix input default value in report generate | ✅ |
+| 34 | **PDF currency format broken** | Remove `.toLocaleString()` from PDF generation | ✅ |
+| 35 | **Customer dropdown overlapping with label** | Fix CSS/z-index on sale form | ✅ |
+| 36 | **Purchase form needs "other expenses" fields** | Add truck/labour/food fields to purchase form | ✅ |
 
 ---
 
-**Total: 36 items** · P0: 6 · P1: 7 · P2: 10 · P3: 13
+**Total: 36 items** · P0: 6 ✅ · P1: 7 ✅ · P2: 10 ✅ · P3: 8 ✅ + 5 ⏭️

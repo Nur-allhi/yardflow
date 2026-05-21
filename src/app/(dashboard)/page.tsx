@@ -28,7 +28,6 @@ export default async function DashboardPage() {
 
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
   const orgConditions = [
     eq(sales.organization_id, orgId),
