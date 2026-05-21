@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
 import { useWorkers } from "@/hooks/useWorkers";
 
@@ -18,11 +19,11 @@ const MONTH_NAMES = [
 export default function NewAdvancePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
 
   const { data: workersData, isLoading: workersLoading } = useWorkers();
   const { data: accountsData, isLoading: accountsLoading } = useAccounts();
   const loading = workersLoading || accountsLoading;
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [workerId, setWorkerId] = useState(searchParams.get("worker_id") || "");
@@ -41,7 +42,30 @@ export default function NewAdvancePage() {
   const workers = workersData?.workers ?? [];
   const accounts = accountsData ?? [];
 
-  async function handleSubmit(e: React.FormEvent) {
+  const mutation = useMutation({
+    mutationFn: async (formData: Record<string, unknown>) => {
+      const res = await fetch("/api/hr/advances", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to record advance");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workers"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      router.push(`/hr/workers/${workerId}`);
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+    },
+  });
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     const advanceAmount = parseFloat(amount);
@@ -58,35 +82,17 @@ export default function NewAdvancePage() {
       return;
     }
 
-    setSubmitting(true);
     setError(null);
 
-    try {
-      const res = await fetch("/api/hr/advances", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          worker_id: workerId,
-          amount: advanceAmount,
-          account_id: accountId,
-          advance_date: advanceDate,
-          month,
-          year,
-          note: note.trim() || undefined,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to record advance");
-      }
-
-      router.push(`/hr/workers/${workerId}`);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
+    mutation.mutate({
+      worker_id: workerId,
+      amount: advanceAmount,
+      account_id: accountId,
+      advance_date: advanceDate,
+      month,
+      year,
+      note: note.trim() || undefined,
+    });
   }
 
   if (loading) {
@@ -230,10 +236,10 @@ export default function NewAdvancePage() {
             </Link>
             <button
               type="submit"
-              disabled={submitting}
+              disabled={mutation.isPending}
               className="px-5 py-2.5 bg-[#0F172A] text-white font-bold text-sm rounded-lg hover:bg-[#0F172A]/90 transition-all active:scale-95 shadow-sm disabled:opacity-40"
             >
-              {submitting ? "Recording..." : "Record Advance"}
+              {mutation.isPending ? "Recording..." : "Record Advance"}
             </button>
           </div>
         </div>
@@ -248,10 +254,10 @@ export default function NewAdvancePage() {
           </Link>
           <button
             type="submit"
-            disabled={submitting}
+            disabled={mutation.isPending}
             className="flex-1 h-12 flex items-center justify-center bg-[#0F172A] text-white font-bold text-sm rounded-lg active:scale-95 transition-all shadow-md disabled:opacity-40"
           >
-            {submitting ? "Recording..." : "Record Advance"}
+            {mutation.isPending ? "Recording..." : "Record Advance"}
           </button>
         </div>
       </form>

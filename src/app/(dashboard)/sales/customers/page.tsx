@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 
 interface Customer {
@@ -48,6 +48,7 @@ function getStatusChip(due: number) {
 }
 
 export default function CustomersPage() {
+  const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [formSubmitting, setFormSubmitting] = useState(false);
@@ -59,7 +60,7 @@ export default function CustomersPage() {
   const [formType, setFormType] = useState<"regular" | "walk_in">("regular");
   const [formOpeningBalance, setFormOpeningBalance] = useState("");
 
-  const { data: customers = [], isLoading, error, refetch } = useQuery<Customer[]>({
+  const { data: customers = [], isLoading, error } = useQuery<Customer[]>({
     queryKey: ["customers"],
     queryFn: async () => {
       const res = await fetch("/api/sales/customers");
@@ -87,35 +88,43 @@ export default function CustomersPage() {
     setFormError(null);
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setFormSubmitting(true);
-    setFormError(null);
-    try {
+  const createCustomerMutation = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
       const res = await fetch("/api/sales/customers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formName,
-          phone: formPhone || undefined,
-          address: formAddress || undefined,
-          type: formType,
-          opening_balance: formOpeningBalance ? Number(formOpeningBalance) : undefined,
-        }),
+        body: JSON.stringify(data),
       });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         throw new Error(errData.message || "Failed to create customer");
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
       resetForm();
       setShowModal(false);
       setCurrentPage(1);
-      await refetch();
-    } catch (err) {
+    },
+    onError: (err) => {
       setFormError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
+    },
+    onSettled: () => {
       setFormSubmitting(false);
-    }
+    },
+  });
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setFormSubmitting(true);
+    setFormError(null);
+    createCustomerMutation.mutate({
+      name: formName,
+      phone: formPhone || undefined,
+      address: formAddress || undefined,
+      type: formType,
+      opening_balance: formOpeningBalance ? Number(formOpeningBalance) : undefined,
+    });
   }
 
   if (isLoading) {
@@ -153,7 +162,7 @@ export default function CustomersPage() {
           <p className="text-[#ba1a1a] font-bold mb-2">Failed to Load Customers</p>
           <p className="text-[#93000a] text-sm mb-6">{error?.message}</p>
           <button
-            onClick={() => refetch()}
+            onClick={() => queryClient.invalidateQueries({ queryKey: ["customers"] })}
             className="px-6 py-2.5 bg-[#ba1a1a] text-white rounded-lg text-sm font-bold hover:bg-[#ba1a1a]/90 transition-all"
           >
             Try Again

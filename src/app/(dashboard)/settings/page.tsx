@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface OrgData {
   id: string;
@@ -14,9 +14,10 @@ interface OrgData {
 }
 
 export default function SettingsPage() {
+  const queryClient = useQueryClient();
+
   const [form, setForm] = useState({ name: "", address: "", phone: "", email: "" });
   const [org, setOrg] = useState<OrgData | null>(null);
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
@@ -46,27 +47,32 @@ export default function SettingsPage() {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
-    setSaved(false);
-    setError(null);
-    try {
+  const mutation = useMutation({
+    mutationFn: async (formData: Record<string, unknown>) => {
       const res = await fetch("/api/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(formData),
       });
       if (!res.ok) throw new Error("Failed to save settings");
-      const data: OrgData = await res.json();
+      return res.json() as Promise<OrgData>;
+    },
+    onSuccess: (data) => {
       setOrg(data);
       setSaved(true);
+      queryClient.invalidateQueries({ queryKey: ["settings"] });
       setTimeout(() => setSaved(false), 2500);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setSaving(false);
-    }
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaved(false);
+    setError(null);
+    mutation.mutate(form);
   };
 
   return (
@@ -205,10 +211,10 @@ export default function SettingsPage() {
               </div>
               <button
                 type="submit"
-                disabled={saving}
+                disabled={mutation.isPending}
                 className="flex items-center gap-2 px-6 py-3 bg-[#0F172A] text-white font-semibold rounded-lg hover:bg-[#0F172A]/90 transition-all text-sm shadow-sm active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? (
+                {mutation.isPending ? (
                   <>
                     <span className="material-symbols-outlined text-lg animate-spin">
                       progress_activity

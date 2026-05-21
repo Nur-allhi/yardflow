@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { InventoryNav } from "@/components/InventoryNav";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
 
 interface Account {
@@ -63,6 +63,7 @@ const COMMON_ITEMS = [
 ];
 
 export default function ConsumablesPage() {
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [showMobileForm, setShowMobileForm] = useState(false);
@@ -99,41 +100,46 @@ export default function ConsumablesPage() {
     }
   }, [accountsData]);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
+  const createConsumableMutation = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
       const res = await fetch("/api/inventory/consumables", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          item_name: itemName,
-          quantity: qty || undefined,
-          unit: unit || undefined,
-          unit_price: price || undefined,
-          total_price: totalAmount,
-          vendor_name: vendorName || undefined,
-          account_id: accountId || undefined,
-          purchase_date: purchaseDate,
-          note: note || undefined,
-        }),
+        body: JSON.stringify(data),
       });
-      if (res.ok) {
-        setItemName("");
-        setQuantity("");
-        setUnit("pcs");
-        setUnitPrice("");
-        setVendorName("");
-        setNote("");
-        setPurchaseDate(new Date().toISOString().split("T")[0]);
-        setShowMobileForm(false);
-        await refetch();
-      }
-    } catch {
-      /* ignore */
-    } finally {
+      if (!res.ok) throw new Error("Failed to create consumable");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["consumables"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      setItemName("");
+      setQuantity("");
+      setUnit("pcs");
+      setUnitPrice("");
+      setVendorName("");
+      setNote("");
+      setPurchaseDate(new Date().toISOString().split("T")[0]);
+      setShowMobileForm(false);
+    },
+    onSettled: () => {
       setSubmitting(false);
-    }
+    },
+  });
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+    createConsumableMutation.mutate({
+      item_name: itemName,
+      quantity: qty || undefined,
+      unit: unit || undefined,
+      unit_price: price || undefined,
+      total_price: totalAmount,
+      vendor_name: vendorName || undefined,
+      account_id: accountId || undefined,
+      purchase_date: purchaseDate,
+      note: note || undefined,
+    });
   }
 
   const formatDateFull = (dateStr: string) => {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InventoryNav } from "@/components/InventoryNav";
 
 interface Category {
@@ -22,6 +23,7 @@ interface Subtype {
 }
 
 export default function SubtypesPage() {
+  const queryClient = useQueryClient();
   const [categories, setCategories] = useState<Category[]>([]);
   const [subtypes, setSubtypes] = useState<Subtype[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
@@ -58,27 +60,37 @@ export default function SubtypesPage() {
 
   const selectedCategory = categories.find((c) => c.id === selectedCategoryId);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    const res = await fetch("/api/inventory/subtypes", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        category_id: selectedCategoryId,
-        default_price_per_kg: price ? Number(price) : undefined,
-        unit,
-      }),
-    });
-    if (res.ok) {
+  const createSubtypeMutation = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
+      const res = await fetch("/api/inventory/subtypes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Failed to create subtype");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["subtypes"] });
       setName("");
       setPrice("");
       setUnit("kg");
       setShowModal(false);
-      await loadSubtypes();
-    }
-    setLoading(false);
+      loadSubtypes();
+    },
+    onSettled: () => {
+      setLoading(false);
+    },
+  });
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    createSubtypeMutation.mutate({
+      name,
+      category_id: selectedCategoryId,
+      default_price_per_kg: price ? Number(price) : undefined,
+      unit,
+    });
   }
 
   const subtypeCount = (catId: string) =>

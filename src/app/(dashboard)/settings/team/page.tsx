@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface TeamMember {
   id: string;
@@ -49,11 +49,11 @@ function StatusBadge({ active }: { active: boolean }) {
 }
 
 export default function TeamPage() {
+  const queryClient = useQueryClient();
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [inviteOpen, setInviteOpen] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [inviteForm, setInviteForm] = useState<InviteForm>({
     name: "",
     email: "",
@@ -63,8 +63,73 @@ export default function TeamPage() {
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState(false);
-  const [toggling, setToggling] = useState<string | null>(null);
+
+  const inviteMutation = useMutation({
+    mutationFn: async (formData: InviteForm) => {
+      const res = await fetch("/api/settings/team", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        if (data.error && typeof data.error === "string") {
+          throw new Error(data.error);
+        }
+        if (data.error && typeof data.error === "object") {
+          const firstError = Object.values(data.error as Record<string, string[]>)[0]?.[0];
+          throw new Error(firstError || "Failed to invite member");
+        }
+        throw new Error("Failed to invite member");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      setInviteOpen(false);
+      resetForm();
+      queryClient.invalidateQueries({ queryKey: ["team"] });
+    },
+    onError: (err: Error) => {
+      setInviteError(err.message);
+    },
+  });
+
+  const toggleMutation = useMutation({
+    mutationFn: async (params: { id: string; is_active: boolean }) => {
+      const res = await fetch(`/api/settings/team/${params.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ is_active: params.is_active }),
+      });
+      if (!res.ok) throw new Error("Failed to update");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["team"] });
+    },
+    onError: () => {
+      setError("Failed to update member status");
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/settings/team/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to delete");
+      }
+    },
+    onSuccess: () => {
+      setDeleteConfirm(null);
+      queryClient.invalidateQueries({ queryKey: ["team"] });
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+    },
+  });
 
   const { data: membersData, isLoading: loading, error: loadError, refetch: loadData } = useQuery({
     queryKey: ["team-members"],
@@ -97,9 +162,8 @@ export default function TeamPage() {
     setInviteError(null);
   }
 
-  async function handleInvite(e: React.FormEvent) {
+  function handleInvite(e: React.FormEvent) {
     e.preventDefault();
-    setSubmitting(true);
     setFormErrors({});
     setInviteError(null);
 
@@ -114,82 +178,18 @@ export default function TeamPage() {
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
-      setSubmitting(false);
       return;
     }
 
-    try {
-      const res = await fetch("/api/settings/team", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(inviteForm),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        if (data.error && typeof data.error === "string") {
-          setInviteError(data.error);
-        } else if (data.error && typeof data.error === "object") {
-          setFormErrors(
-            Object.fromEntries(
-              Object.entries(data.error).map(([k, v]) => [k, (v as string[])[0]]),
-            ),
-          );
-        } else {
-          setInviteError("Failed to invite member");
-        }
-        setSubmitting(false);
-        return;
-      }
-
-      const member = await res.json();
-      setMembers((prev) => [...prev, member]);
-      setInviteOpen(false);
-      resetForm();
-    } catch {
-      setInviteError("Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
+    inviteMutation.mutate(inviteForm);
   }
 
-  async function handleToggle(member: TeamMember) {
-    setToggling(member.id);
-    try {
-      const res = await fetch(`/api/settings/team/${member.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ is_active: !member.is_active }),
-      });
-      if (!res.ok) throw new Error("Failed to update");
-      const updated = await res.json();
-      setMembers((prev) =>
-        prev.map((m) => (m.id === updated.id ? { ...m, is_active: updated.is_active } : m)),
-      );
-    } catch {
-      setError("Failed to update member status");
-    } finally {
-      setToggling(null);
-    }
+  function handleToggle(member: TeamMember) {
+    toggleMutation.mutate({ id: member.id, is_active: !member.is_active });
   }
 
-  async function handleDelete(id: string) {
-    setDeleting(true);
-    try {
-      const res = await fetch(`/api/settings/team/${id}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to delete");
-      }
-      setMembers((prev) => prev.filter((m) => m.id !== id));
-      setDeleteConfirm(null);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to delete");
-    } finally {
-      setDeleting(false);
-    }
+  function handleDelete(id: string) {
+    deleteMutation.mutate(id);
   }
 
   return (
@@ -379,14 +379,14 @@ export default function TeamPage() {
                     >
                       <button
                         onClick={() => handleToggle(m)}
-                        disabled={toggling === m.id}
+                        disabled={toggleMutation.isPending}
                         className={`text-xs font-bold px-3 py-1 rounded ${
                           m.is_active
                             ? "bg-[#EAB308]/10 text-[#EAB308] hover:bg-[#EAB308]/20"
                             : "bg-success/10 text-success hover:bg-success/20"
                         } disabled:opacity-50 transition-colors`}
                       >
-                        {toggling === m.id
+                        {toggleMutation.isPending
                           ? "..."
                           : m.is_active
                             ? "Deactivate"
@@ -456,14 +456,14 @@ export default function TeamPage() {
                 <div className="flex gap-1 justify-end items-end">
                   <button
                     onClick={() => handleToggle(m)}
-                    disabled={toggling === m.id}
+                    disabled={toggleMutation.isPending}
                     className={`px-3 py-1.5 text-xs font-bold rounded-lg ${
                       m.is_active
                         ? "bg-[#EAB308]/10 text-[#EAB308]"
                         : "bg-success/10 text-success"
                     } disabled:opacity-50`}
                   >
-                    {toggling === m.id
+                    {toggleMutation.isPending
                       ? "..."
                       : m.is_active
                         ? "Deactivate"
@@ -491,7 +491,7 @@ export default function TeamPage() {
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
           onClick={() => {
-            if (!submitting) {
+            if (!inviteMutation.isPending) {
               setInviteOpen(false);
               resetForm();
             }
@@ -511,7 +511,7 @@ export default function TeamPage() {
                   setInviteOpen(false);
                   resetForm();
                 }}
-                disabled={submitting}
+                disabled={inviteMutation.isPending}
                 className="text-[#505f76] hover:text-[#0F172A] disabled:opacity-50"
               >
                 <span className="material-symbols-outlined">close</span>
@@ -616,17 +616,17 @@ export default function TeamPage() {
                     setInviteOpen(false);
                     resetForm();
                   }}
-                  disabled={submitting}
+                  disabled={inviteMutation.isPending}
                   className="flex-1 px-4 py-2 border border-[#c6c6cd] text-[#505f76] font-semibold rounded-lg text-sm hover:bg-[#f2f4f6] transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  disabled={submitting}
+                  disabled={inviteMutation.isPending}
                   className="flex-1 px-4 py-2 bg-[#0F172A] text-white font-semibold rounded-lg text-sm hover:bg-[#0F172A]/90 transition-all disabled:opacity-50 active:scale-95"
                 >
-                  {submitting ? "Sending..." : "Send Invite"}
+                  {inviteMutation.isPending ? "Sending..." : "Send Invite"}
                 </button>
               </div>
             </form>
@@ -638,7 +638,7 @@ export default function TeamPage() {
       {deleteConfirm && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-          onClick={() => !deleting && setDeleteConfirm(null)}
+          onClick={() => !deleteMutation.isPending && setDeleteConfirm(null)}
         >
           <div
             className="bg-white rounded-xl shadow-xl w-full max-w-sm mx-4 p-6"
@@ -666,17 +666,17 @@ export default function TeamPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                disabled={deleting}
+                disabled={deleteMutation.isPending}
                 className="flex-1 px-4 py-2 border border-[#c6c6cd] text-[#505f76] font-semibold rounded-lg text-sm hover:bg-[#f2f4f6] transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
-                disabled={deleting}
+                disabled={deleteMutation.isPending}
                 className="flex-1 px-4 py-2 bg-[#EF4444] text-white font-semibold rounded-lg text-sm hover:bg-[#EF4444]/90 transition-all disabled:opacity-50 active:scale-95"
               >
-                {deleting ? "Removing..." : "Remove"}
+                {deleteMutation.isPending ? "Removing..." : "Remove"}
               </button>
             </div>
           </div>

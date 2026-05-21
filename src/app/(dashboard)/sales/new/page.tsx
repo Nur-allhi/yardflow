@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
 import { useCustomers } from "@/hooks/useCustomers";
 import { useCategories, useSubtypes } from "@/hooks/useCategories";
@@ -34,6 +35,7 @@ function calcLineTotal(item: LineItem) {
 
 export default function NewSalePage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { data: customersData } = useCustomers();
   const { data: categoriesData } = useCategories();
@@ -105,6 +107,32 @@ export default function NewSalePage() {
     return (subtypesData ?? []).filter((st) => st.category_id === item.category_id);
   }
 
+  const createSaleMutation = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
+      const res = await fetch("/api/sales", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to create sale");
+      }
+      return res.json();
+    },
+    onSuccess: (sale) => {
+      queryClient.invalidateQueries({ queryKey: ["sales"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      router.push(`/sales/${sale.id}`);
+    },
+    onError: (e) => {
+      setError(e instanceof Error ? e.message : "Something went wrong");
+    },
+    onSettled: () => {
+      setSubmitting(false);
+    },
+  });
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!customerId) {
@@ -128,37 +156,19 @@ export default function NewSalePage() {
     setSubmitting(true);
     setError(null);
 
-    try {
-      const res = await fetch("/api/sales", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customer_id: customerId,
-          sale_type: saleType,
-          sale_date: saleDate,
-          note: note || undefined,
-          items: validItems.map((item) => ({
-            subtype_id: item.subtype_id,
-            quantity_kg: parseFloat(item.quantity_kg),
-            price_per_kg: parseFloat(item.price_per_kg),
-          })),
-          amount_received: payAmount > 0 ? payAmount : undefined,
-          account_id: accountId || undefined,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to create sale");
-      }
-
-      const sale = await res.json();
-      router.push(`/sales/${sale.id}`);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
+    createSaleMutation.mutate({
+      customer_id: customerId,
+      sale_type: saleType,
+      sale_date: saleDate,
+      note: note || undefined,
+      items: validItems.map((item) => ({
+        subtype_id: item.subtype_id,
+        quantity_kg: parseFloat(item.quantity_kg),
+        price_per_kg: parseFloat(item.price_per_kg),
+      })),
+      amount_received: payAmount > 0 ? payAmount : undefined,
+      account_id: accountId || undefined,
+    });
   }
 
   return (

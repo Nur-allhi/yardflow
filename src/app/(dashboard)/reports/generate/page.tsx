@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
@@ -11,6 +12,7 @@ const MONTHS = [
 
 export default function GenerateReportPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const today = new Date();
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth();
@@ -21,12 +23,32 @@ export default function GenerateReportPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [totalOtherExpenses, setTotalOtherExpenses] = useState<number | string>("");
-  const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(e: React.FormEvent) {
+  const mutation = useMutation({
+    mutationFn: async (formData: Record<string, unknown>) => {
+      const res = await fetch("/api/reports", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to generate report");
+      }
+      return res.json();
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ["reports"] });
+      router.push(`/reports/${result.id}`);
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+    },
+  });
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setGenerating(true);
     setError(null);
 
     let start_date: string;
@@ -42,42 +64,22 @@ export default function GenerateReportPage() {
     } else {
       if (!startDate || !endDate) {
         setError("Please select both start and end dates");
-        setGenerating(false);
         return;
       }
       if (new Date(endDate) < new Date(startDate)) {
         setError("End date must be after start date");
-        setGenerating(false);
         return;
       }
       start_date = startDate;
       end_date = endDate;
     }
 
-    try {
-      const res = await fetch("/api/reports", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          period_type: periodType,
-          start_date,
-          end_date,
-          total_other_expenses: totalOtherExpenses === "" ? 0 : Number(totalOtherExpenses),
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "Failed to generate report");
-      }
-
-      const report = await res.json();
-      router.push(`/reports/${report.id}`);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setGenerating(false);
-    }
+    mutation.mutate({
+      period_type: periodType,
+      start_date,
+      end_date,
+      total_other_expenses: totalOtherExpenses === "" ? 0 : Number(totalOtherExpenses),
+    });
   }
 
   const selectedLabel =
@@ -269,10 +271,10 @@ export default function GenerateReportPage() {
 
             <button
               type="submit"
-              disabled={generating}
+              disabled={mutation.isPending}
               className="w-full h-12 bg-[#0F172A] text-white font-bold rounded-lg hover:bg-[#0F172A]/90 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 shadow-sm"
             >
-              {generating ? (
+              {mutation.isPending ? (
                 <>
                   <span className="material-symbols-outlined animate-spin text-lg">refresh</span>
                   Generating...

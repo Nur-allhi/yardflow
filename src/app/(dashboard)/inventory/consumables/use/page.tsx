@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { InventoryNav } from "@/components/InventoryNav";
 
 interface ConsumableItem {
@@ -13,6 +13,7 @@ interface ConsumableItem {
 }
 
 export default function UseConsumablePage() {
+  const queryClient = useQueryClient();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +22,7 @@ export default function UseConsumablePage() {
   const [usedAt, setUsedAt] = useState(new Date().toISOString().split("T")[0]);
   const [note, setNote] = useState("");
 
-  const { data: itemsData, isLoading: loading, error: loadError, refetch: refetchItems } = useQuery<ConsumableItem[]>({
+  const { data: itemsData, isLoading: loading, error: loadError } = useQuery<ConsumableItem[]>({
     queryKey: ["consumables"],
     queryFn: async () => {
       const res = await fetch("/api/inventory/consumables?limit=100");
@@ -45,35 +46,44 @@ export default function UseConsumablePage() {
   const items = itemsData ?? [];
   const selectedItem = items.find((i) => i.id === consumableId);
 
+  const useConsumableMutation = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
+      const res = await fetch("/api/inventory/consumables/use", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to record usage");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["consumables"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      setQuantity("");
+      setNote("");
+      setUsedAt(new Date().toISOString().split("T")[0]);
+    },
+    onError: (e) => {
+      setError(e instanceof Error ? e.message : "Failed to record usage");
+    },
+    onSettled: () => {
+      setSubmitting(false);
+    },
+  });
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!consumableId) return;
     setSubmitting(true);
-    try {
-      const res = await fetch("/api/inventory/consumables/use", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          consumable_id: consumableId,
-          quantity: parseFloat(quantity) || 0,
-          used_at: usedAt,
-          note: note || undefined,
-        }),
-      });
-      if (res.ok) {
-        setQuantity("");
-        setNote("");
-        setUsedAt(new Date().toISOString().split("T")[0]);
-        await refetchItems();
-      } else {
-        const err = await res.json();
-        setError(err.error || "Failed to record usage");
-      }
-    } catch {
-      setError("Failed to record usage");
-    } finally {
-      setSubmitting(false);
-    }
+    setError(null);
+    useConsumableMutation.mutate({
+      consumable_id: consumableId,
+      quantity: parseFloat(quantity) || 0,
+      used_at: usedAt,
+      note: note || undefined,
+    });
   }
 
   if (loading) {
@@ -94,7 +104,7 @@ export default function UseConsumablePage() {
           <span className="material-symbols-outlined text-5xl block mb-4">error_outline</span>
           <p className="text-lg font-medium mb-2">Error</p>
           <p className="text-sm">{itemsError}</p>
-          <button onClick={() => refetchItems()} className="mt-4 px-5 py-2 bg-[#0F172A] text-white rounded-md text-sm">Retry</button>
+          <button onClick={() => queryClient.invalidateQueries({ queryKey: ["consumables"] })} className="mt-4 px-5 py-2 bg-[#0F172A] text-white rounded-md text-sm">Retry</button>
         </div>
       </div>
     );

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
 
 function formatMoney(n: number) {
@@ -11,6 +12,7 @@ function formatMoney(n: number) {
 
 export default function TransferPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { data: accountsData, isLoading: loading, error: accountsLoadError, refetch: loadAccounts } = useAccounts();
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +24,28 @@ export default function TransferPage() {
     new Date().toISOString().split("T")[0],
   );
   const [note, setNote] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const mutation = useMutation({
+    mutationFn: async (formData: Record<string, unknown>) => {
+      const res = await fetch("/api/accounts/transfer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to process transfer");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["recent-transactions"] });
+      router.push("/accounts");
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+    },
+  });
 
   const accounts = (accountsData ?? []).filter((a) => a.current_balance >= 0);
   const fromAccount = accounts.find((a) => a.id === fromAccountId);
@@ -38,7 +61,7 @@ export default function TransferPage() {
     return null;
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const validationError = validate();
     if (validationError) {
@@ -46,33 +69,15 @@ export default function TransferPage() {
       return;
     }
 
-    setSubmitting(true);
     setError(null);
 
-    try {
-      const res = await fetch("/api/accounts/transfer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          from_account_id: fromAccountId,
-          to_account_id: toAccountId,
-          amount: numAmount,
-          transfer_date: transferDate,
-          note: note.trim() || undefined,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "Failed to process transfer");
-      }
-
-      router.push("/accounts");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
+    mutation.mutate({
+      from_account_id: fromAccountId,
+      to_account_id: toAccountId,
+      amount: numAmount,
+      transfer_date: transferDate,
+      note: note.trim() || undefined,
+    });
   }
 
   if (loading) {
@@ -261,10 +266,10 @@ export default function TransferPage() {
             </Link>
             <button
               type="submit"
-              disabled={submitting}
+              disabled={mutation.isPending}
               className="flex-1 h-[42px] bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
             >
-              {submitting ? "Processing..." : "Transfer"}
+              {mutation.isPending ? "Processing..." : "Transfer"}
             </button>
           </div>
         </div>
@@ -279,10 +284,10 @@ export default function TransferPage() {
           </Link>
           <button
             type="submit"
-            disabled={submitting}
+            disabled={mutation.isPending}
             className="flex-1 h-12 bg-[#0F172A] text-white font-bold text-sm rounded-lg shadow-md active:scale-[0.98] transition-all disabled:opacity-40"
           >
-            {submitting ? "Processing..." : "Transfer"}
+            {mutation.isPending ? "Processing..." : "Transfer"}
           </button>
         </div>
       </form>

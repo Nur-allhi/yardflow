@@ -3,19 +3,42 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function NewAccountPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [name, setName] = useState("");
   const [type, setType] = useState<"cash" | "bank">("cash");
   const [bankName, setBankName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [openingBalance, setOpeningBalance] = useState("");
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(e: React.FormEvent) {
+  const mutation = useMutation({
+    mutationFn: async (formData: Record<string, unknown>) => {
+      const res = await fetch("/api/accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to create account");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      router.push("/accounts");
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+    },
+  });
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) {
       setError("Account name is required");
@@ -26,33 +49,15 @@ export default function NewAccountPage() {
       return;
     }
 
-    setSubmitting(true);
     setError(null);
 
-    try {
-      const res = await fetch("/api/accounts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name.trim(),
-          type,
-          bank_name: type === "bank" ? bankName.trim() : undefined,
-          account_number: type === "bank" ? accountNumber.trim() || undefined : undefined,
-          opening_balance: openingBalance ? parseFloat(openingBalance) : 0,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || "Failed to create account");
-      }
-
-      router.push("/accounts");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
+    mutation.mutate({
+      name: name.trim(),
+      type,
+      bank_name: type === "bank" ? bankName.trim() : undefined,
+      account_number: type === "bank" ? accountNumber.trim() || undefined : undefined,
+      opening_balance: openingBalance ? parseFloat(openingBalance) : 0,
+    });
   }
 
   return (
@@ -185,10 +190,10 @@ export default function NewAccountPage() {
             </Link>
             <button
               type="submit"
-              disabled={submitting}
+              disabled={mutation.isPending}
               className="flex-1 h-[42px] bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
             >
-              {submitting ? "Saving..." : "Save Account"}
+              {mutation.isPending ? "Saving..." : "Save Account"}
             </button>
           </div>
         </div>
@@ -203,10 +208,10 @@ export default function NewAccountPage() {
           </Link>
           <button
             type="submit"
-            disabled={submitting}
+            disabled={mutation.isPending}
             className="flex-1 h-12 bg-[#0F172A] text-white font-bold text-sm rounded-lg shadow-md active:scale-[0.98] transition-all disabled:opacity-40"
           >
-            {submitting ? "Saving..." : "Save Account"}
+            {mutation.isPending ? "Saving..." : "Save Account"}
           </button>
         </div>
       </form>

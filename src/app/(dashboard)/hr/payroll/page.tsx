@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
 import Link from "next/link";
 
@@ -78,8 +78,34 @@ export default function PayrollPage() {
   const [payDate, setPayDate] = useState(
     new Date().toISOString().split("T")[0],
   );
-  const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
+
+  const payMutation = useMutation({
+    mutationFn: async (formData: Record<string, unknown>) => {
+      const res = await fetch("/api/hr/payroll/pay", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to process payment");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      setShowPayModal(false);
+      setPayTarget(null);
+      queryClient.invalidateQueries({ queryKey: ["payroll", selectedMonth, selectedYear] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["workers"] });
+    },
+    onError: (err: Error) => {
+      setPayError(err.message);
+    },
+  });
+
+  const queryClient = useQueryClient();
 
   const { data: payroll, isLoading, error, refetch } = useQuery<PayrollData>({
     queryKey: ["payroll", selectedMonth, selectedYear],
@@ -103,7 +129,7 @@ export default function PayrollPage() {
     setShowPayModal(true);
   }
 
-  async function handlePay(e: React.FormEvent) {
+  function handlePay(e: React.FormEvent) {
     e.preventDefault();
     if (!payTarget) return;
 
@@ -113,36 +139,16 @@ export default function PayrollPage() {
       return;
     }
 
-    setPaying(true);
     setPayError(null);
 
-    try {
-      const res = await fetch("/api/hr/payroll/pay", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          worker_id: payTarget.worker_id,
-          month: selectedMonth,
-          year: selectedYear,
-          paid_amount: amount,
-          account_id: payAccountId,
-          payment_date: payDate,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to process payment");
-      }
-
-      setShowPayModal(false);
-      setPayTarget(null);
-      await refetch();
-    } catch (e) {
-      setPayError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setPaying(false);
-    }
+    payMutation.mutate({
+      worker_id: payTarget.worker_id,
+      month: selectedMonth,
+      year: selectedYear,
+      paid_amount: amount,
+      account_id: payAccountId,
+      payment_date: payDate,
+    });
   }
 
   const years = Array.from(
@@ -570,10 +576,10 @@ export default function PayrollPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={paying || payTarget.net_payable < 0}
+                  disabled={payMutation.isPending || payTarget.net_payable < 0}
                   className="flex-1 h-[42px] bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
                 >
-                  {paying ? "Processing..." : payTarget.net_payable < 0 ? "Cannot Pay — Negative Balance" : "Confirm Payment"}
+                  {payMutation.isPending ? "Processing..." : payTarget.net_payable < 0 ? "Cannot Pay — Negative Balance" : "Confirm Payment"}
                 </button>
               </div>
             </form>

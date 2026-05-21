@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InventoryNav } from "@/components/InventoryNav";
 
 interface Category {
@@ -11,6 +12,7 @@ interface Category {
 }
 
 export default function CategoriesPage() {
+  const queryClient = useQueryClient();
   const [categories, setCategories] = useState<Category[]>([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -35,42 +37,70 @@ export default function CategoriesPage() {
     setEditDescription(cat.description || "");
   }
 
-  async function handleSave(id: string) {
-    setSaving(true);
-    try {
-      const res = await fetch(`/api/inventory/categories/${id}`, {
+  const saveMutation = useMutation({
+    mutationFn: async (data: { id: string; name: string; description: string | undefined }) => {
+      const res = await fetch(`/api/inventory/categories/${data.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: editName, description: editDescription || undefined }),
+        body: JSON.stringify({ name: data.name, description: data.description }),
       });
-      if (res.ok) {
-        setEditingId(null);
-        await loadCategories();
-      }
-    } catch {}
-    setSaving(false);
+      if (!res.ok) throw new Error("Failed to update");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      setEditingId(null);
+      loadCategories();
+    },
+    onSettled: () => {
+      setSaving(false);
+    },
+  });
+
+  const deleteMutation = useMutation<void, Error, string>({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/inventory/categories/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      loadCategories();
+    },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
+      const res = await fetch("/api/inventory/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Failed to create");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      setName("");
+      setDescription("");
+      loadCategories();
+    },
+    onSettled: () => {
+      setLoading(false);
+    },
+  });
+
+  async function handleSave(id: string) {
+    setSaving(true);
+    saveMutation.mutate({ id, name: editName, description: editDescription || undefined });
   }
 
-  async function handleDelete(id: string) {
+  function handleDelete(id: string) {
     if (!confirm("Delete this category?")) return;
-    await fetch(`/api/inventory/categories/${id}`, { method: "DELETE" });
-    await loadCategories();
+    deleteMutation.mutate(id);
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    const res = await fetch("/api/inventory/categories", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, description: description || undefined }),
-    });
-    if (res.ok) {
-      setName("");
-      setDescription("");
-      await loadCategories();
-    }
-    setLoading(false);
+    createMutation.mutate({ name, description: description || undefined });
   }
 
   return (

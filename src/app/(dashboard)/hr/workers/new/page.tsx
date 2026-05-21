@@ -3,18 +3,41 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function NewWorkerPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [designation, setDesignation] = useState("");
   const [monthlySalary, setMonthlySalary] = useState("");
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(e: React.FormEvent) {
+  const mutation = useMutation({
+    mutationFn: async (formData: Record<string, unknown>) => {
+      const res = await fetch("/api/hr/workers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to create worker");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workers"] });
+      router.push("/hr/workers");
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+    },
+  });
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     const salary = parseFloat(monthlySalary);
@@ -27,32 +50,14 @@ export default function NewWorkerPage() {
       return;
     }
 
-    setSubmitting(true);
     setError(null);
 
-    try {
-      const res = await fetch("/api/hr/workers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name.trim(),
-          phone: phone.trim() || undefined,
-          designation: designation.trim() || undefined,
-          monthly_salary: salary,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to create worker");
-      }
-
-      router.push("/hr/workers");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
+    mutation.mutate({
+      name: name.trim(),
+      phone: phone.trim() || undefined,
+      designation: designation.trim() || undefined,
+      monthly_salary: salary,
+    });
   }
 
   return (
@@ -149,10 +154,10 @@ export default function NewWorkerPage() {
             </Link>
             <button
               type="submit"
-              disabled={submitting}
+              disabled={mutation.isPending}
               className="px-5 py-2.5 bg-[#0F172A] text-white font-bold text-sm rounded-lg hover:bg-[#0F172A]/90 transition-all active:scale-95 shadow-sm disabled:opacity-40"
             >
-              {submitting ? "Saving..." : "Save Worker"}
+              {mutation.isPending ? "Saving..." : "Save Worker"}
             </button>
           </div>
         </div>
@@ -167,10 +172,10 @@ export default function NewWorkerPage() {
           </Link>
           <button
             type="submit"
-            disabled={submitting}
+            disabled={mutation.isPending}
             className="flex-1 h-12 flex items-center justify-center bg-[#0F172A] text-white font-bold text-sm rounded-lg active:scale-95 transition-all shadow-md disabled:opacity-40"
           >
-            {submitting ? "Saving..." : "Save Worker"}
+            {mutation.isPending ? "Saving..." : "Save Worker"}
           </button>
         </div>
       </form>

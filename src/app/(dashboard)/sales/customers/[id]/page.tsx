@@ -160,6 +160,8 @@ export default function CustomerProfilePage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customer", id] });
+      queryClient.invalidateQueries({ queryKey: ["sales"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
       setShowPaymentModal(false);
       setPayAmount("");
       setPaySaleId("");

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
 
 function formatMoney(n: number) {
@@ -11,6 +12,7 @@ function formatMoney(n: number) {
 
 export default function ScrapSalePage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { data: accountsData, isLoading: accountsLoading } = useAccounts();
   const accounts = accountsData ?? [];
@@ -43,6 +45,33 @@ export default function ScrapSalePage() {
     }
   }
 
+  const createScrapSaleMutation = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
+      const res = await fetch("/api/sales/scrap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to create scrap sale");
+      }
+      return res.json();
+    },
+    onSuccess: (sale) => {
+      queryClient.invalidateQueries({ queryKey: ["sales"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["scrap"] });
+      router.push(`/sales/${sale.id}`);
+    },
+    onError: (e) => {
+      setError(e instanceof Error ? e.message : "Something went wrong");
+    },
+    onSettled: () => {
+      setSubmitting(false);
+    },
+  });
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
@@ -62,34 +91,16 @@ export default function ScrapSalePage() {
     setSubmitting(true);
     setError(null);
 
-    try {
-      const res = await fetch("/api/sales/scrap", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sale_date: saleDate,
-          buyer_name: buyerName || undefined,
-          quantity_kg: qty,
-          price_per_kg: price,
-          total_amount: totalAmount,
-          amount_received: received,
-          account_id: accountId,
-          note: note || undefined,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to create scrap sale");
-      }
-
-      const sale = await res.json();
-      router.push(`/sales/${sale.id}`);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
+    createScrapSaleMutation.mutate({
+      sale_date: saleDate,
+      buyer_name: buyerName || undefined,
+      quantity_kg: qty,
+      price_per_kg: price,
+      total_amount: totalAmount,
+      amount_received: received,
+      account_id: accountId,
+      note: note || undefined,
+    });
   }
 
   return (

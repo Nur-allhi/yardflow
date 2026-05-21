@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
 import { useCategories, useSubtypes } from "@/hooks/useCategories";
 
@@ -33,6 +34,7 @@ function calcLineTotal(item: LineItem) {
 
 export default function QuickCashSalePage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { data: categoriesData } = useCategories();
   const { data: accountsData } = useAccounts();
@@ -94,6 +96,32 @@ export default function QuickCashSalePage() {
     return (subtypesData ?? []).filter((st) => st.category_id === item.category_id);
   }
 
+  const createSaleMutation = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
+      const res = await fetch("/api/sales", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to create sale");
+      }
+      return res.json();
+    },
+    onSuccess: (sale) => {
+      queryClient.invalidateQueries({ queryKey: ["sales"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      router.push(`/sales/${sale.id}`);
+    },
+    onError: (e) => {
+      setError(e instanceof Error ? e.message : "Something went wrong");
+    },
+    onSettled: () => {
+      setSubmitting(false);
+    },
+  });
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
@@ -113,38 +141,20 @@ export default function QuickCashSalePage() {
     setSubmitting(true);
     setError(null);
 
-    try {
-      const res = await fetch("/api/sales", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sale_date: saleDate,
-          sale_type: "fabricated",
-          is_quick_cash_sale: true,
-          customer_name: customerName || undefined,
-          items: validItems.map((item) => ({
-            subtype_id: item.subtype_id,
-            quantity_kg: parseFloat(item.quantity_kg),
-            price_per_kg: parseFloat(item.price_per_kg),
-          })),
-          amount_received: amountReceived,
-          account_id: accountId,
-          note: note || undefined,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to create sale");
-      }
-
-      const sale = await res.json();
-      router.push(`/sales/${sale.id}`);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
+    createSaleMutation.mutate({
+      sale_date: saleDate,
+      sale_type: "fabricated",
+      is_quick_cash_sale: true,
+      customer_name: customerName || undefined,
+      items: validItems.map((item) => ({
+        subtype_id: item.subtype_id,
+        quantity_kg: parseFloat(item.quantity_kg),
+        price_per_kg: parseFloat(item.price_per_kg),
+      })),
+      amount_received: amountReceived,
+      account_id: accountId,
+      note: note || undefined,
+    });
   }
 
   return (

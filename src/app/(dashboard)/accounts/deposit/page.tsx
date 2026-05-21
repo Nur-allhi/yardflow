@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
 
 function formatMoney(n: number) {
@@ -11,6 +12,7 @@ function formatMoney(n: number) {
 
 export default function DepositPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { data: accountsData, isLoading: loading, error: accountsLoadError, refetch: loadAccounts } = useAccounts();
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +23,28 @@ export default function DepositPage() {
     new Date().toISOString().split("T")[0],
   );
   const [note, setNote] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const mutation = useMutation({
+    mutationFn: async (formData: Record<string, unknown>) => {
+      const res = await fetch("/api/accounts/deposit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to process deposit");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["recent-transactions"] });
+      router.push("/accounts");
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+    },
+  });
 
   const accounts = accountsData ?? [];
   const selectedAccount = accounts.find((a) => a.id === accountId);
@@ -33,7 +56,7 @@ export default function DepositPage() {
     return null;
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const validationError = validate();
     if (validationError) {
@@ -41,32 +64,14 @@ export default function DepositPage() {
       return;
     }
 
-    setSubmitting(true);
     setError(null);
 
-    try {
-      const res = await fetch("/api/accounts/deposit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          account_id: accountId,
-          amount: numAmount,
-          transaction_date: depositDate,
-          note: note.trim() || undefined,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "Failed to process deposit");
-      }
-
-      router.push("/accounts");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
+    mutation.mutate({
+      account_id: accountId,
+      amount: numAmount,
+      transaction_date: depositDate,
+      note: note.trim() || undefined,
+    });
   }
 
   if (loading) {
@@ -234,10 +239,10 @@ export default function DepositPage() {
             </Link>
             <button
               type="submit"
-              disabled={submitting}
+              disabled={mutation.isPending}
               className="flex-1 h-[42px] bg-[#059669] text-white hover:bg-[#059669]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
             >
-              {submitting ? "Depositing..." : "Deposit"}
+              {mutation.isPending ? "Depositing..." : "Deposit"}
             </button>
           </div>
         </div>
@@ -252,10 +257,10 @@ export default function DepositPage() {
           </Link>
           <button
             type="submit"
-            disabled={submitting}
+            disabled={mutation.isPending}
             className="flex-1 h-12 bg-[#059669] text-white font-bold text-sm rounded-lg shadow-md active:scale-[0.98] transition-all disabled:opacity-40"
           >
-            {submitting ? "Depositing..." : "Deposit"}
+            {mutation.isPending ? "Depositing..." : "Deposit"}
           </button>
         </div>
       </form>

@@ -133,6 +133,8 @@ export default function SaleDetailPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["sale", id] });
+      queryClient.invalidateQueries({ queryKey: ["sales"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
       setShowPaymentModal(false);
       setPayAmount("");
       setPayNote("");

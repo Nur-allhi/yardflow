@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { InventoryNav } from "@/components/InventoryNav";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface ScrapMovement {
   id: string;
@@ -49,13 +49,14 @@ function formatDate(dateStr: string): string {
 }
 
 export default function ScrapPoolPage() {
+  const queryClient = useQueryClient();
   const [addScrapKg, setAddScrapKg] = useState("");
   const [addScrapDate, setAddScrapDate] = useState(new Date().toISOString().split("T")[0]);
   const [addScrapNote, setAddScrapNote] = useState("");
   const [addingScrap, setAddingScrap] = useState(false);
   const [addScrapMsg, setAddScrapMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const { data, isLoading, error, refetch } = useQuery<ScrapData>({
+  const { data, isLoading, error } = useQuery<ScrapData>({
     queryKey: ["scrap"],
     queryFn: async () => {
       const res = await fetch("/api/inventory/scrap");
@@ -67,35 +68,44 @@ export default function ScrapPoolPage() {
     },
   });
 
-  async function handleAddScrap(e: React.FormEvent) {
-    e.preventDefault();
-    if (!addScrapKg || Number(addScrapKg) <= 0) return;
-    setAddingScrap(true);
-    setAddScrapMsg(null);
-    try {
+  const addScrapMutation = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
       const res = await fetch("/api/inventory/scrap", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          quantity_kg: Number(addScrapKg),
-          movement_date: addScrapDate,
-          note: addScrapNote || undefined,
-        }),
+        body: JSON.stringify(data),
       });
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.error || "Failed to add scrap");
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["scrap"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
       setAddScrapMsg({ type: "success", text: "Scrap added successfully!" });
       setAddScrapKg("");
       setAddScrapNote("");
-      refetch();
       setTimeout(() => setAddScrapMsg(null), 3000);
-    } catch (err) {
+    },
+    onError: (err) => {
       setAddScrapMsg({ type: "error", text: err instanceof Error ? err.message : "Failed to add scrap" });
-    } finally {
+    },
+    onSettled: () => {
       setAddingScrap(false);
-    }
+    },
+  });
+
+  async function handleAddScrap(e: React.FormEvent) {
+    e.preventDefault();
+    if (!addScrapKg || Number(addScrapKg) <= 0) return;
+    setAddingScrap(true);
+    setAddScrapMsg(null);
+    addScrapMutation.mutate({
+      quantity_kg: Number(addScrapKg),
+      movement_date: addScrapDate,
+      note: addScrapNote || undefined,
+    });
   }
 
   if (isLoading) {
@@ -124,7 +134,7 @@ export default function ScrapPoolPage() {
           <p className="text-[#ba1a1a] font-medium mb-2">Failed to load scrap pool</p>
           <p className="text-sm text-[#505f76] mb-4">{error?.message}</p>
           <button
-            onClick={() => refetch()}
+            onClick={() => queryClient.invalidateQueries({ queryKey: ["scrap"] })}
             className="px-5 py-2 bg-[#0F172A] text-white font-semibold rounded-md hover:bg-[#0F172A]/90 transition-colors text-sm"
           >
             Try Again

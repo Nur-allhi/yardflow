@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 
 interface Vendor {
@@ -51,7 +51,6 @@ function getStatusChip(due: number) {
 export default function VendorsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
-  const [formSubmitting, setFormSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
   const [formName, setFormName] = useState("");
@@ -59,6 +58,8 @@ export default function VendorsPage() {
   const [formAddress, setFormAddress] = useState("");
   const [formType, setFormType] = useState<"shipyard" | "consumable" | "other">("shipyard");
   const [formOpeningBalance, setFormOpeningBalance] = useState("");
+
+  const queryClient = useQueryClient();
 
   const { data: vendors = [], isLoading, error, refetch } = useQuery<Vendor[]>({
     queryKey: ["vendors"],
@@ -88,35 +89,40 @@ export default function VendorsPage() {
     setFormError(null);
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setFormSubmitting(true);
-    setFormError(null);
-    try {
+  const mutation = useMutation({
+    mutationFn: async (formData: Record<string, unknown>) => {
       const res = await fetch("/api/purchases/vendors", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formName,
-          phone: formPhone || undefined,
-          address: formAddress || undefined,
-          type: formType,
-          opening_balance: formOpeningBalance ? Number(formOpeningBalance) : undefined,
-        }),
+        body: JSON.stringify(formData),
       });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         throw new Error(errData.message || "Failed to create vendor");
       }
+      return res.json();
+    },
+    onSuccess: () => {
       resetForm();
       setShowModal(false);
       setCurrentPage(1);
-      await refetch();
-    } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setFormSubmitting(false);
-    }
+      queryClient.invalidateQueries({ queryKey: ["vendors"] });
+    },
+    onError: (err: Error) => {
+      setFormError(err.message);
+    },
+  });
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setFormError(null);
+    mutation.mutate({
+      name: formName,
+      phone: formPhone || undefined,
+      address: formAddress || undefined,
+      type: formType,
+      opening_balance: formOpeningBalance ? Number(formOpeningBalance) : undefined,
+    });
   }
 
   if (isLoading) {
@@ -511,10 +517,10 @@ export default function VendorsPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={formSubmitting}
+                  disabled={mutation.isPending}
                   className="flex-1 h-[42px] bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
                 >
-                  {formSubmitting ? "Saving..." : "Save Vendor"}
+                  {mutation.isPending ? "Saving..." : "Save Vendor"}
                 </button>
               </div>
             </form>
@@ -596,10 +602,10 @@ export default function VendorsPage() {
               <div className="flex flex-col gap-3 mt-4">
                 <button
                   type="submit"
-                  disabled={formSubmitting}
+                  disabled={mutation.isPending}
                   className="w-full h-12 bg-[#0F172A] text-white font-bold rounded-lg shadow-md active:scale-[0.98] transition-all disabled:opacity-40"
                 >
-                  {formSubmitting ? "Saving..." : "Save Vendor"}
+                  {mutation.isPending ? "Saving..." : "Save Vendor"}
                 </button>
                 <button
                   type="button"

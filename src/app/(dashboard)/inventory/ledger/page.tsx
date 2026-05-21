@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { InventoryNav } from "@/components/InventoryNav";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSubtypes } from "@/hooks/useCategories";
 
 interface LedgerEntry {
@@ -59,6 +59,7 @@ function formatReference(ref: string): string {
 }
 
 export default function StockLedgerPage() {
+  const queryClient = useQueryClient();
   const [filterSubtypeId, setFilterSubtypeId] = useState("");
   const [filterDateFrom, setFilterDateFrom] = useState("");
   const [filterDateTo, setFilterDateTo] = useState("");
@@ -75,7 +76,7 @@ export default function StockLedgerPage() {
   const [adjusting, setAdjusting] = useState(false);
   const [adjMsg, setAdjMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const { data: ledgerData, isLoading, error, refetch } = useQuery<{ entries: LedgerEntry[]; summary: LedgerSummary }>({
+  const { data: ledgerData, isLoading, error } = useQuery<{ entries: LedgerEntry[]; summary: LedgerSummary }>({
     queryKey: ["ledger", appliedSubtypeId, appliedDateFrom, appliedDateTo],
     queryFn: async () => {
       const params = new URLSearchParams();
@@ -111,37 +112,46 @@ export default function StockLedgerPage() {
 
   const activeFilters = appliedSubtypeId || appliedDateFrom || appliedDateTo;
 
-  async function handleAdjustment(e: React.FormEvent) {
-    e.preventDefault();
-    if (!adjSubtypeId || !adjQuantity || Number(adjQuantity) <= 0) return;
-    setAdjusting(true);
-    setAdjMsg(null);
-    try {
+  const adjustStockMutation = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
       const res = await fetch("/api/inventory/stock", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          subtype_id: adjSubtypeId,
-          movement_type: adjType,
-          quantity_kg: Number(adjQuantity),
-          note: adjNote || undefined,
-        }),
+        body: JSON.stringify(data),
       });
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.error || "Adjustment failed");
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ledger"] });
+      queryClient.invalidateQueries({ queryKey: ["stock"] });
       setAdjMsg({ type: "success", text: "Stock adjusted successfully!" });
       setAdjSubtypeId("");
       setAdjQuantity("");
       setAdjNote("");
-      refetch();
       setTimeout(() => setAdjMsg(null), 3000);
-    } catch (err) {
+    },
+    onError: (err) => {
       setAdjMsg({ type: "error", text: err instanceof Error ? err.message : "Adjustment failed" });
-    } finally {
+    },
+    onSettled: () => {
       setAdjusting(false);
-    }
+    },
+  });
+
+  async function handleAdjustment(e: React.FormEvent) {
+    e.preventDefault();
+    if (!adjSubtypeId || !adjQuantity || Number(adjQuantity) <= 0) return;
+    setAdjusting(true);
+    setAdjMsg(null);
+    adjustStockMutation.mutate({
+      subtype_id: adjSubtypeId,
+      movement_type: adjType,
+      quantity_kg: Number(adjQuantity),
+      note: adjNote || undefined,
+    });
   }
 
   function SkeletonRow() {
@@ -428,7 +438,7 @@ export default function StockLedgerPage() {
           <p className="text-lg font-medium mb-2">Failed to load ledger</p>
           <p className="text-sm">{error?.message}</p>
           <button
-            onClick={() => refetch()}
+            onClick={() => queryClient.invalidateQueries({ queryKey: ["ledger"] })}
             className="mt-4 px-5 py-2 bg-[#0F172A] text-white rounded-md text-sm font-semibold"
           >
             Retry

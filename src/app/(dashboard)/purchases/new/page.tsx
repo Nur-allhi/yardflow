@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
 import { useCategories, useSubtypes } from "@/hooks/useCategories";
 import { useVendors } from "@/hooks/useVendors";
@@ -36,6 +37,7 @@ function formatMoney(n: number) {
 
 export default function NewPurchasePage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { data: vendorsData } = useVendors();
   const { data: categoriesData } = useCategories();
@@ -49,7 +51,6 @@ export default function NewPurchasePage() {
   const [note, setNote] = useState("");
   const [otherExpenses, setOtherExpenses] = useState<OtherExpense[]>([]);
   const nextExpenseKey = useRef(1);
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [items, setItems] = useState<LineItem[]>([
@@ -145,7 +146,31 @@ export default function NewPurchasePage() {
     return (subtypesData ?? []).filter((st) => st.category_id === item.category_id);
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  const mutation = useMutation({
+    mutationFn: async (formData: Record<string, unknown>) => {
+      const res = await fetch("/api/purchases", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to create purchase");
+      }
+      return res.json();
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ["purchases"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["vendors"] });
+      router.push(`/purchases/${result.id}`);
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+    },
+  });
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!vendorId) {
       setError("Please select a vendor");
@@ -160,43 +185,24 @@ export default function NewPurchasePage() {
       return;
     }
 
-    setSubmitting(true);
     setError(null);
 
-    try {
-      const res = await fetch("/api/purchases", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          vendor_id: vendorId,
-          purchase_date: purchaseDate,
-          note: note || undefined,
-          other_expenses: otherExpenses.map((exp) => ({
-            description: exp.description,
-            amount: parseFloat(exp.amount),
-            account_id: exp.account_id || null,
-            add_to_vendor_total: exp.add_to_vendor_total,
-          })),
-          items: validItems.map((item) => ({
-            subtype_id: item.subtype_id,
-            quantity_kg: parseFloat(item.quantity_kg),
-            price_per_kg: parseFloat(item.price_per_kg),
-          })),
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to create purchase");
-      }
-
-      const purchase = await res.json();
-      router.push(`/purchases/${purchase.id}`);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
+    mutation.mutate({
+      vendor_id: vendorId,
+      purchase_date: purchaseDate,
+      note: note || undefined,
+      other_expenses: otherExpenses.map((exp) => ({
+        description: exp.description,
+        amount: parseFloat(exp.amount),
+        account_id: exp.account_id || null,
+        add_to_vendor_total: exp.add_to_vendor_total,
+      })),
+      items: validItems.map((item) => ({
+        subtype_id: item.subtype_id,
+        quantity_kg: parseFloat(item.quantity_kg),
+        price_per_kg: parseFloat(item.price_per_kg),
+      })),
+    });
   }
 
   return (
@@ -678,11 +684,11 @@ export default function NewPurchasePage() {
               </div>
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={mutation.isPending}
                 className="w-full mt-6 h-12 bg-white text-[#0F172A] font-bold rounded-lg hover:bg-white/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined text-lg">save</span>
-                {submitting ? "Creating..." : "Create Purchase"}
+                {mutation.isPending ? "Creating..." : "Create Purchase"}
               </button>
             </div>
           </div>
@@ -707,10 +713,10 @@ export default function NewPurchasePage() {
           </div>
           <button
             type="submit"
-            disabled={submitting}
+            disabled={mutation.isPending}
             className="bg-[#0F172A] text-white px-6 py-3 rounded-lg font-bold text-sm flex items-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
           >
-            {submitting ? "Creating..." : "Create Purchase"}
+            {mutation.isPending ? "Creating..." : "Create Purchase"}
             <span className="material-symbols-outlined text-sm">send</span>
           </button>
         </div>
