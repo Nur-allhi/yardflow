@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 import { InventoryNav } from "@/components/InventoryNav";
 
 interface ConsumableItem {
@@ -12,8 +13,6 @@ interface ConsumableItem {
 }
 
 export default function UseConsumablePage() {
-  const [items, setItems] = useState<ConsumableItem[]>([]);
-  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,31 +21,28 @@ export default function UseConsumablePage() {
   const [usedAt, setUsedAt] = useState(new Date().toISOString().split("T")[0]);
   const [note, setNote] = useState("");
 
-  const loadItems = useCallback(async () => {
-    try {
+  const { data: itemsData, isLoading: loading, error: loadError, refetch: refetchItems } = useQuery<ConsumableItem[]>({
+    queryKey: ["consumables"],
+    queryFn: async () => {
       const res = await fetch("/api/inventory/consumables?limit=100");
       if (!res.ok) throw new Error("Failed to load");
       const json = await res.json();
-      const stockItems = json.entries
+      return json.entries
         .filter((e: ConsumableItem) => e.stock_quantity > 0)
         .map((e: ConsumableItem) => ({
           ...e,
           stock_quantity: Number(e.stock_quantity),
         }));
-      setItems(stockItems);
-      if (stockItems.length > 0) setConsumableId(stockItems[0].id);
-      setError(null);
-    } catch {
-      setError("Could not load consumables");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+  });
 
   useEffect(() => {
-    loadItems();
-  }, [loadItems]);
+    if (itemsData && itemsData.length > 0 && !consumableId) {
+      setConsumableId(itemsData[0].id);
+    }
+  }, [itemsData, consumableId]);
 
+  const items = itemsData ?? [];
   const selectedItem = items.find((i) => i.id === consumableId);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -68,7 +64,7 @@ export default function UseConsumablePage() {
         setQuantity("");
         setNote("");
         setUsedAt(new Date().toISOString().split("T")[0]);
-        await loadItems();
+        await refetchItems();
       } else {
         const err = await res.json();
         setError(err.error || "Failed to record usage");
@@ -90,14 +86,15 @@ export default function UseConsumablePage() {
     );
   }
 
-  if (error && items.length === 0) {
+  const itemsError = error || (loadError ? "Could not load consumables" : null);
+  if ((error || loadError) && items.length === 0) {
     return (
       <div className="p-4 md:p-8">
         <div className="text-center py-16 text-[#505f76]">
           <span className="material-symbols-outlined text-5xl block mb-4">error_outline</span>
           <p className="text-lg font-medium mb-2">Error</p>
-          <p className="text-sm">{error}</p>
-          <button onClick={() => { setLoading(true); loadItems(); }} className="mt-4 px-5 py-2 bg-[#0F172A] text-white rounded-md text-sm">Retry</button>
+          <p className="text-sm">{itemsError}</p>
+          <button onClick={() => refetchItems()} className="mt-4 px-5 py-2 bg-[#0F172A] text-white rounded-md text-sm">Retry</button>
         </div>
       </div>
     );

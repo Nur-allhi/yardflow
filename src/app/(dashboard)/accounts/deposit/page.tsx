@@ -1,15 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-interface Account {
-  id: string;
-  name: string;
-  type: "cash" | "bank";
-  current_balance: number;
-}
+import { useAccounts } from "@/hooks/useAccounts";
 
 function formatMoney(n: number) {
   return "৳" + n.toLocaleString("en-IN");
@@ -18,8 +12,7 @@ function formatMoney(n: number) {
 export default function DepositPage() {
   const router = useRouter();
 
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: accountsData, isLoading: loading, error: accountsLoadError, refetch: loadAccounts } = useAccounts();
   const [error, setError] = useState<string | null>(null);
 
   const [accountId, setAccountId] = useState("");
@@ -30,25 +23,7 @@ export default function DepositPage() {
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const loadAccounts = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/accounts");
-      if (!res.ok) throw new Error("Failed to load accounts");
-      const data = await res.json();
-      setAccounts(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadAccounts();
-  }, [loadAccounts]);
-
+  const accounts = accountsData ?? [];
   const selectedAccount = accounts.find((a) => a.id === accountId);
   const numAmount = parseFloat(amount) || 0;
 
@@ -104,14 +79,15 @@ export default function DepositPage() {
     );
   }
 
-  if (error && accounts.length === 0) {
+  const loadError = accountsLoadError ? (accountsLoadError instanceof Error ? accountsLoadError.message : "Failed to load accounts") : null;
+  if ((error || loadError) && accounts.length === 0) {
     return (
       <div className="p-4 md:p-8">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
           <p className="text-[#EF4444] font-medium text-lg mb-2">Failed to Load Accounts</p>
-          <p className="text-sm mb-4">{error}</p>
+          <p className="text-sm mb-4">{error || loadError}</p>
           <button
-            onClick={loadAccounts}
+            onClick={() => loadAccounts()}
             className="px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
           >
             Try Again

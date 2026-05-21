@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 interface OrgData {
   id: string;
@@ -13,37 +14,31 @@ interface OrgData {
 }
 
 export default function SettingsPage() {
-  const [org, setOrg] = useState<OrgData | null>(null);
   const [form, setForm] = useState({ name: "", address: "", phone: "", email: "" });
-  const [loading, setLoading] = useState(true);
+  const [org, setOrg] = useState<OrgData | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
-  const loadData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data: orgData, isLoading: loading, error: loadError, refetch: loadData } = useQuery({
+    queryKey: ["settings"],
+    queryFn: async () => {
       const res = await fetch("/api/settings");
       if (!res.ok) throw new Error("Failed to load settings");
       const data: OrgData = await res.json();
-      setOrg(data);
       setForm({
         name: data.name || "",
         address: data.address || "",
         phone: data.phone || "",
         email: data.email || "",
       });
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      return data;
+    },
+  });
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    if (orgData) setOrg(orgData);
+  }, [orgData]);
 
   const handleChange = (field: keyof typeof form) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -121,14 +116,14 @@ export default function SettingsPage() {
       )}
 
       {/* Error */}
-      {error && !loading && (
+      {!loading && (error || loadError) && (
         <div className="max-w-2xl bg-red-50 border border-red-200 rounded-xl p-6 text-center">
           <span className="material-symbols-outlined text-4xl text-[#EF4444] block mb-2">
             error
           </span>
-          <p className="text-[#EF4444] font-medium text-sm">{error}</p>
+          <p className="text-[#EF4444] font-medium text-sm">{error || (loadError instanceof Error ? loadError.message : "Failed to load settings")}</p>
           <button
-            onClick={loadData}
+            onClick={() => loadData()}
             className="mt-3 px-4 py-2 bg-[#0F172A] text-white text-sm font-semibold rounded-lg"
           >
             Retry
@@ -137,7 +132,7 @@ export default function SettingsPage() {
       )}
 
       {/* Form */}
-      {!loading && !error && (
+      {!loading && !(error || loadError) && (
         <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
           <div className="bg-white rounded-xl border border-[#c6c6cd] p-6 md:p-8 shadow-sm">
             {/* Company Name */}

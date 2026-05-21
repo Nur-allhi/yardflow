@@ -1,32 +1,17 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-interface Customer {
-  id: string;
-  name: string;
-  phone: string | null;
-  due_balance: number;
-}
-
-interface Category {
-  id: string;
-  name: string;
-}
+import { useAccounts } from "@/hooks/useAccounts";
+import { useCustomers } from "@/hooks/useCustomers";
+import { useCategories, useSubtypes } from "@/hooks/useCategories";
 
 interface Subtype {
   id: string;
   name: string;
   category_id: string;
   default_price_per_kg: number | null;
-}
-
-interface Account {
-  id: string;
-  name: string;
-  current_balance: number;
 }
 
 interface LineItem {
@@ -50,10 +35,11 @@ function calcLineTotal(item: LineItem) {
 export default function NewSalePage() {
   const router = useRouter();
 
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [subtypesMap, setSubtypesMap] = useState<Record<string, Subtype[]>>({});
-  const [accounts, setAccounts] = useState<Account[]>([]);
+  const { data: customersData } = useCustomers();
+  const { data: categoriesData } = useCategories();
+  const { data: accountsData } = useAccounts();
+  const { data: subtypesData } = useSubtypes();
+
   const [customerId, setCustomerId] = useState("");
   const [saleType, setSaleType] = useState<"fabricated" | "raw_passthrough">("fabricated");
   const [saleDate, setSaleDate] = useState(
@@ -70,42 +56,13 @@ export default function NewSalePage() {
   ]);
   const nextKey = useRef(2);
 
+  const customers = (customersData ?? []).map((c) => ({
+    ...c,
+    due_balance: c.total_purchases - c.total_paid,
+  }));
+  const categories = categoriesData ?? [];
+  const accounts = accountsData ?? [];
   const selectedCustomer = customers.find((c) => c.id === customerId);
-
-  const loadCustomers = useCallback(async () => {
-    const res = await fetch("/api/sales/customers");
-    if (res.ok) setCustomers(await res.json());
-  }, []);
-
-  const loadCategories = useCallback(async () => {
-    const res = await fetch("/api/inventory/categories");
-    if (res.ok) setCategories(await res.json());
-  }, []);
-
-  const loadAccounts = useCallback(async () => {
-    const res = await fetch("/api/accounts");
-    if (res.ok) {
-      const data = await res.json();
-      setAccounts(data);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadCustomers();
-    loadCategories();
-    loadAccounts();
-  }, [loadCustomers, loadCategories, loadAccounts]);
-
-  async function loadSubtypes(categoryId: string) {
-    if (subtypesMap[categoryId]) return;
-    const res = await fetch(
-      `/api/inventory/subtypes?category_id=${categoryId}`,
-    );
-    if (res.ok) {
-      const data = await res.json();
-      setSubtypesMap((prev) => ({ ...prev, [categoryId]: data }));
-    }
-  }
 
   function handleCategoryChange(key: number, categoryId: string) {
     setItems((prev) =>
@@ -115,7 +72,6 @@ export default function NewSalePage() {
           : item,
       ),
     );
-    if (categoryId) loadSubtypes(categoryId);
   }
 
   function handleItemChange(key: number, field: keyof LineItem, value: string) {
@@ -146,7 +102,7 @@ export default function NewSalePage() {
   const remainingDue = grandTotal - payAmount;
 
   function getSubtypesFor(item: LineItem): Subtype[] {
-    return subtypesMap[item.category_id] || [];
+    return (subtypesData ?? []).filter((st) => st.category_id === item.category_id);
   }
 
   async function handleSubmit(e: React.FormEvent) {

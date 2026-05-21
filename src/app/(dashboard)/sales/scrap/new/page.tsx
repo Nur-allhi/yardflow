@@ -1,14 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-interface Account {
-  id: string;
-  name: string;
-  current_balance: number;
-}
+import { useAccounts } from "@/hooks/useAccounts";
 
 function formatMoney(n: number) {
   return "৳" + n.toLocaleString("en-IN");
@@ -17,8 +12,8 @@ function formatMoney(n: number) {
 export default function ScrapSalePage() {
   const router = useRouter();
 
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [accountsLoading, setAccountsLoading] = useState(true);
+  const { data: accountsData, isLoading: accountsLoading } = useAccounts();
+  const accounts = accountsData ?? [];
 
   const today = new Date().toISOString().split("T")[0];
   const [saleDate, setSaleDate] = useState(today);
@@ -36,21 +31,6 @@ export default function ScrapSalePage() {
   const totalAmount = qty * price;
 
   const received = amountReceived === "" ? totalAmount : (parseFloat(amountReceived) || 0);
-
-  const loadAccounts = useCallback(async () => {
-    setAccountsLoading(true);
-    const res = await fetch("/api/accounts");
-    if (res.ok) {
-      const data = await res.json();
-      setAccounts(data);
-      if (data.length > 0) setAccountId(data[0].id);
-    }
-    setAccountsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    loadAccounts();
-  }, [loadAccounts]);
 
   function handleReceivedChange(value: string) {
     if (value === "") {

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 
 interface TeamMember {
   id: string;
@@ -49,7 +50,6 @@ function StatusBadge({ active }: { active: boolean }) {
 
 export default function TeamPage() {
   const [members, setMembers] = useState<TeamMember[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [inviteOpen, setInviteOpen] = useState(false);
@@ -66,24 +66,20 @@ export default function TeamPage() {
   const [deleting, setDeleting] = useState(false);
   const [toggling, setToggling] = useState<string | null>(null);
 
-  const loadData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
+  const { data: membersData, isLoading: loading, error: loadError, refetch: loadData } = useQuery({
+    queryKey: ["team-members"],
+    queryFn: async () => {
       const res = await fetch("/api/settings/team");
       if (!res.ok) throw new Error("Failed to load team members");
-      const data = await res.json();
-      setMembers(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      return res.json() as Promise<TeamMember[]>;
+    },
+  });
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    if (membersData) {
+      setMembers(membersData);
+    }
+  }, [membersData]);
 
   const filtered = members.filter(
     (m) =>
@@ -278,11 +274,11 @@ export default function TeamPage() {
       )}
 
       {/* Error */}
-      {error && !loading && (
+      {(error || loadError) && !loading && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <p className="text-[#EF4444] font-medium text-sm">{error}</p>
+          <p className="text-[#EF4444] font-medium text-sm">{error || (loadError instanceof Error ? loadError.message : "Failed to load team members")}</p>
           <button
-            onClick={loadData}
+            onClick={() => loadData()}
             className="mt-3 px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
           >
             Retry
@@ -291,7 +287,7 @@ export default function TeamPage() {
       )}
 
       {/* Empty State */}
-      {!loading && !error && filtered.length === 0 && (
+      {!loading && !(error || loadError) && filtered.length === 0 && (
         <div className="bg-white rounded-xl border border-[#c6c6cd]/30 p-12 text-center">
           <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">
             group
@@ -327,7 +323,7 @@ export default function TeamPage() {
       )}
 
       {/* Desktop Table */}
-      {!loading && !error && filtered.length > 0 && (
+      {!loading && !(error || loadError) && filtered.length > 0 && (
         <div className="hidden md:block bg-white rounded-xl border border-[#c6c6cd] overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
             <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
@@ -416,7 +412,7 @@ export default function TeamPage() {
       )}
 
       {/* Mobile Card List */}
-      {!loading && !error && filtered.length > 0 && (
+      {!loading && !(error || loadError) && filtered.length > 0 && (
         <div className="md:hidden space-y-3">
           <div className="flex justify-between items-center">
             <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-[#505f76]">

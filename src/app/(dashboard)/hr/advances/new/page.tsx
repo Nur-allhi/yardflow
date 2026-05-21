@@ -1,19 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-
-interface Worker {
-  id: string;
-  name: string;
-}
-
-interface Account {
-  id: string;
-  name: string;
-  current_balance: number;
-}
+import { useAccounts } from "@/hooks/useAccounts";
+import { useWorkers } from "@/hooks/useWorkers";
 
 function formatMoney(n: number) {
   return "\u09F3" + (n ?? 0).toLocaleString("en-IN");
@@ -28,9 +19,9 @@ export default function NewAdvancePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [workers, setWorkers] = useState<Worker[]>([]);
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: workersData, isLoading: workersLoading } = useWorkers();
+  const { data: accountsData, isLoading: accountsLoading } = useAccounts();
+  const loading = workersLoading || accountsLoading;
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,37 +38,8 @@ export default function NewAdvancePage() {
   const year = selectedDate.getFullYear();
   const monthLabel = MONTH_NAMES[month - 1];
 
-  const loadData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [workersRes, accountsRes] = await Promise.all([
-        fetch("/api/hr/workers"),
-        fetch("/api/accounts"),
-      ]);
-      if (workersRes.ok) {
-        const data = await workersRes.json();
-        setWorkers(data.workers || data);
-      }
-      if (accountsRes.ok) {
-        const data = await accountsRes.json();
-        setAccounts(data);
-      }
-    } catch {
-      // handled by empty state
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  useEffect(() => {
-    if (accounts.length > 0 && !accountId) {
-      setAccountId(accounts[0].id);
-    }
-  }, [accounts, accountId]);
+  const workers = workersData?.workers ?? [];
+  const accounts = accountsData ?? [];
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
