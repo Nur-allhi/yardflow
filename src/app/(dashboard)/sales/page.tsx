@@ -353,16 +353,6 @@ export default function SalesPage() {
             className="bg-transparent border-none text-sm focus:ring-0 p-0 w-28 outline-none"
           />
         </div>
-        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-[#c6c6cd] rounded-lg">
-          <span className="material-symbols-outlined text-[#505f76] text-sm">search</span>
-          <input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") { setPage(1); loadData(); } }}
-            className="bg-transparent border-none text-sm focus:ring-0 p-0 w-32 outline-none"
-            placeholder="Search..."
-          />
-        </div>
         <div className="space-y-1.5">
           <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1 px-1.5">Customer</label>
           <select
@@ -407,6 +397,16 @@ export default function SalesPage() {
         >
           <span className="material-symbols-outlined">filter_list</span>
         </button>
+        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-[#c6c6cd] rounded-lg ml-auto flex-1 min-w-[160px]">
+          <span className="material-symbols-outlined text-[#505f76] text-sm">search</span>
+          <input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") { setPage(1); loadData(); } }}
+            className="bg-transparent border-none text-sm focus:ring-0 p-0 w-full outline-none"
+            placeholder="Search..."
+          />
+        </div>
       </div>
 
       {/* Loading State */}
