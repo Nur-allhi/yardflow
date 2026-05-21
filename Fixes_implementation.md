@@ -1,6 +1,6 @@
 # Fixes Implementation Plan
 
-> Based on testing findings from `Finding_after_testing.md`
+> Merged from `Findings_v2.md` and `ERROR_FROM_FINDINGS_v2.md`
 > Priority: P0 (crash) → P1 (bug) → P2 (missing feature) → P3 (polish)
 
 ---
@@ -9,12 +9,9 @@
 
 | # | Finding | Action | Files | Status |
 |---|---------|--------|-------|--------|
-| 1 | **Consumable page error** (Error 1) | Debug and fix consumables page/API | `inventory/consumables/page.tsx`, `api/inventory/consumables/route.ts` | ✅ |
-| 2 | **Sales: Quick sale shows [object Object]** (Error 2) | Fix form submission — wrong object serialization | `sales/new/quick/page.tsx` | ✅ |
-| 3 | **HR: Add worker error** (Error 3) | Debug and fix worker creation API | `api/hr/workers/route.ts` | ✅ |
-| 4 | **HR: Worker detail page crash** (Error 4) | Debug and fix worker detail page | `hr/workers/[id]/page.tsx`, `api/hr/workers/[id]/route.ts` | ✅ |
-| 5 | **HR: Record advance error** (Error 5) | Debug and fix advance creation | `api/hr/advances/route.ts`, `hr/advances/new/page.tsx` | ✅ |
-| 6 | **HR: Payroll page crash** (Error 6) | Debug and fix payroll page | `hr/payroll/page.tsx`, `api/hr/payroll/route.ts` | ✅ |
+| 1 | **HR: Nested `<a>` tag** (Error NO: 1) | Fix nested `<Link>` in workers page mobile cards; audit ALL pages for same pattern | `hr/workers/page.tsx` + global audit | ❌ |
+| 2 | **HR: Payroll [Object object] on Confirm Payment** | Debug `api/hr/payroll/pay` — 400 error, wrong object serialization | `hr/payroll/page.tsx`, `api/hr/payroll/pay/route.ts` | ❌ |
+| 3 | **Consumables: fields inactive after 1 character** | Fix form re-render causing inputs to lose focus/state | `inventory/consumables/page.tsx` | ❌ |
 
 ---
 
@@ -22,13 +19,16 @@
 
 | # | Finding | Action | Files | Status |
 |---|---------|--------|-------|--------|
-| 7 | **Account balances not updating on pay/receive** | Debug transaction logic for balance updates | `api/accounts/route.ts`, `api/purchases/[id]/payments/route.ts`, `api/sales/[id]/payments/route.ts` | ✅ |
-| 8 | **Dashboard blank — no data shown** | Debug dashboard KPI widgets | `(dashboard)/page.tsx` | ✅ |
-| 9 | **Vendor opening balance not affecting Accounts Payable** | Add opening balance to vendor due calculation | `api/purchases/vendors/route.ts`, `api/purchases/route.ts` | ✅ |
-| 10 | **Customer opening balance not affecting Accounts Receivable** | Add opening balance to customer due calculation | `api/sales/customers/route.ts`, `api/sales/route.ts` | ✅ |
-| 11 | **Customer opening balance not showing in customer list** | Include opening balance in customer list response | `api/sales/customers/route.ts` | ✅ |
-| 12 | **Vendor page action buttons not working** | Wire up edit/delete buttons | `purchases/vendors/page.tsx` | ✅ |
-| 13 | **Customer page action buttons not working** | Wire up edit/delete buttons | `sales/customers/page.tsx` | ✅ |
+| 4 | **Account balances not updating after pay/receive** | Debug transaction → balance update logic | `api/accounts/route.ts`, payment routes | ❌ |
+| 5 | **Dashboard widgets update inaccurate** | Debug KPI aggregation queries | `(dashboard)/page.tsx` | ❌ |
+| 6 | **HR: THIS MONTH ADVANCES not showing** | Fix advance → current-month filter query | `api/hr/advances/route.ts`, workers detail page | ❌ |
+| 7 | **HR: Advance history Account column blank** | Fix advance transaction account_id population | `api/hr/advances/route.ts` | ❌ |
+| 8 | **Vendor opening balance not flowing to dashboard** | Include opening balance in vendor due across pages | `api/purchases/vendors/route.ts`, `api/purchases/route.ts` | ❌ |
+| 9 | **Customer opening balance not flowing to dashboard** | Include opening balance in customer due across pages | `api/sales/customers/route.ts`, `api/sales/route.ts` | ❌ |
+| 10 | **Vendor pay button redirects to purchases dashboard** | Fix redirect target URL | `purchases/vendors/page.tsx` | ❌ |
+| 11 | **Customer pay button redirects to purchases dashboard** | Fix redirect target URL | `sales/customers/page.tsx` | ❌ |
+| 12 | **Vendors page action buttons redirect to sales** | Fix button href targets | `purchases/vendors/page.tsx` | ❌ |
+| 13 | **Customers page action buttons redirect to sales** | Fix button href targets | `sales/customers/page.tsx` | ❌ |
 
 ---
 
@@ -36,37 +36,25 @@
 
 | # | Finding | Action | Files | Status |
 |---|---------|--------|-------|--------|
-| 14 | **No logout button** | Add logout to dashboard sidebar | `components/Sidebar.tsx`, `components/MobileSidebar.tsx` | ✅ |
-| 15 | **No nav to `/accounts/transfer`** | Add transfer link to accounts page | `accounts/page.tsx` | ✅ |
-| 16 | **No nav to `/purchases/vendors`** | Add vendors link to purchases page | `purchases/page.tsx` | ✅ |
-| 17 | **No nav to `/sales/customers`** | Add customers link to sales page | `sales/page.tsx` | ✅ |
-| 18 | **No nav to `/sales/scrap/new`** | Add scrap sale link to sales + scrap pages | `sales/page.tsx`, `inventory/scrap/page.tsx` | ✅ |
-| 19 | **No nav to `/settings/team`** | Add team link to settings page | `settings/page.tsx` | ✅ |
-| 20 | **No way to add money to cash/bank (owner deposit)** | Add deposit form to accounts | `accounts/page.tsx`, `api/accounts/deposit/route.ts` | ✅ |
-| 21 | **No category edit option** | Add edit button/modal to categories | `inventory/categories/page.tsx` | ✅ |
-| 22 | **No manual "Add Scrap" option** | Add add-scrap form to scrap pool page | `inventory/scrap/page.tsx`, `api/inventory/scrap/route.ts` | ✅ |
-| 23 | **No physical inventory adjustment system** | Create stock adjustment API + UI | `api/inventory/stock/route.ts`, `inventory/ledger/page.tsx` | ✅ |
+| 14 | **Accounts: Two forms always showing** | Hide deposit/transfer forms under buttons; place buttons top of page | `accounts/page.tsx` | ❌ |
+| 15 | **Accounts: Form buttons → separate pages** | Create separate pages for deposit and transfer | `accounts/deposit/page.tsx`, `accounts/transfer/page.tsx` | ❌ |
+| 16 | **Consumables: Stock-on-hand tracking** | Add quantity/balance column to consumables model | `api/inventory/consumables/route.ts`, schema | ❌ |
+| 17 | **Consumables: Record consumption/usage** | Add consumption log form and API | `inventory/consumables/use/page.tsx`, API route | ❌ |
+| 18 | **Consumables: Deduct from running balance** | Auto-deduct on consumption; prevent negative balance | API + DB logic | ❌ |
+| 19 | **Consumables: Upgrade to inventory management** | Category, reorder level, unit tracking | Schema, pages | ❌ |
 
 ---
 
 ## P3 — UI POLISH
 
-| # | Finding | Action | Status |
-|---|---------|--------|--------|
-| 24 | **No loading spinners anywhere** | Add spinner/skeleton to all data-fetching pages | ⏭️ Most pages already have spinners |
-| 25 | **No animations** | Add subtle transitions (fade in, slide up) | ⏭️ Low priority, design system decision |
-| 26 | **Dropdowns look outdated** | Style select elements consistently | ⏭️ Design system scope |
-| 27 | **Dropdowns need loading spinner while fetching** | Add loading state to dropdowns with API data | ⏭️ Depends on dropdown redesign |
-| 28 | **Calendar/date inputs need modern look** | Style date inputs consistently with dropdowns | ⏭️ Design system scope |
-| 29 | **Subtype page button placement wrong** | Redesign subtype page layout | ✅ |
-| 30 | **Sub-navigation shown twice on consumables page** | Remove duplicate InventoryNav | ✅ |
-| 31 | **Total purchase number in wrong currency format** | Fix formatMoney usage on purchase list | ✅ |
-| 32 | **Bar (|) showing in front of currency values** | Fix table cell rendering for currency columns | ✅ |
-| 33 | **Other expenses field has extra 0** | Fix input default value in report generate | ✅ |
-| 34 | **PDF currency format broken** | Remove `.toLocaleString()` from PDF generation | ✅ |
-| 35 | **Customer dropdown overlapping with label** | Fix CSS/z-index on sale form | ✅ |
-| 36 | **Purchase form needs "other expenses" fields** | Add truck/labour/food fields to purchase form | ✅ |
+| # | Finding | Action | Files | Status |
+|---|---------|--------|-------|--------|
+| 20 | **Duplicate inventory nav still present** | Remove duplicate `InventoryNav` component | `inventory/consumables/page.tsx` | ❌ |
+| 21 | **Bar (\|) showing in front of sales card numbers** | Fix KPI card value rendering | `sales/page.tsx` (cards section) | ❌ |
+| 22 | **Sales page second row items overlapping** | Fix CSS grid/flex layout on sale form | `sales/new/page.tsx` | ❌ |
+| 23 | **Purchase form "other expenses" fields** | Verify/re-add truck/labour/food fields | `purchases/new/page.tsx` | ❌ |
+| — | *P3 items 24–28 from old plan (spinners, animations, dropdowns, date inputs)* | ⏭️ Deferred — design system scope | — | ⏭️ |
 
 ---
 
-**Total: 36 items** · P0: 6 ✅ · P1: 7 ✅ · P2: 10 ✅ · P3: 8 ✅ + 5 ⏭️
+**Total: 23 items** · P0: 3 ❌ · P1: 10 ❌ · P2: 6 ❌ · P3: 4 ❌ + 5 ⏭️

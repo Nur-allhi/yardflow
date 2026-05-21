@@ -434,3 +434,40 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 - P0-3: Workers list field name — advance API reference_type fixed (salary → advance)
 - P0-4: Worker detail page — fixed to destructure { worker, advances } from API response
 - P0-6: Payroll API — fixed field name mismatches (name → worker_name, total_advances → advances_taken, total_advances_sum → total_advances)
+
+## Session: 2026-05-21 — P1, P2, P3 Full Fix Cycle
+
+### P1 — Functionality Bugs (7 items)
+- **Account balances update on pay/receive**: Added `UPDATE accounts SET current_balance` in purchase/sale payment routes
+- **Dashboard converted to live data**: Replaced static zeros with DB queries (stock kg, today sales, AR/AP totals, pending salaries, account balances, recent sales, category stock bars)
+- **Vendor/customer opening balance**: Included `opening_balance` in `due_balance` calculations in API routes
+- **Vendor/customer action buttons**: Changed inert `<button>` to `<Link>` navigations to detail pages
+
+### P2 — Missing UI & Navigation (10 items)
+- **Logout button**: Added to Sidebar.tsx + MobileSidebar.tsx (POSTs to `/api/auth/logout`, redirects to `/login`)
+- **Nav links added**: vendors (purchases), customers (sales), transfer anchor (accounts), scrap sale (sales), team tab (settings)
+- **Deposit form**: Created `/api/accounts/deposit/route.ts` + deposit card UI on accounts page
+- **Category edit**: Inline edit/delete with hover-reveal icons on categories page (API already existed)
+- **Manual "Add Scrap"**: POST handler in scrap API + form on scrap pool page
+- **Stock adjustment**: POST handler in stock API + collapsible form on ledger page
+
+### P3 — UI Polish (13 items)
+- **Subtype button placement**: Added `gap-4` + `flex-shrink-0` to right panel header
+- **Customer dropdown overlap**: Added `relative z-10` to select wrapper on sale form
+- **Other expenses default**: Changed from `useState(0)` to `useState("")` to avoid showing "0"
+- **Purchase count format**: Removed `formatMoney()` from count fields (COUNT is not currency)
+- **PDF NaN guards**: Added `isNaN()` checks in `fmtMoney`/`fmtKg` in PDF generation
+- **Purchase other expenses**: Added `truck_fare`, `labour_cost`, `food_cost` columns to schema + migration + API + form UI
+- Items 24-28 (spinners, animations, dropdown styling) deferred as design-system scope
+
+### Notable bug found
+- **Advance API missing account balance deduction**: Creates debit transaction but never deducts from `accounts.current_balance` — same pattern as P1 fix #7
+
+### Quality Gates
+- `npx tsc --noEmit` — zero errors
+- `npx next build` — compiled successfully (57 pages)
+- All changes committed across 5 commits
+
+### Files modified or created
+- 14 files modified, 2 created (deposit API, migration)
+- New migration: `0001_illegal_dust.sql` (adds truck_fare, labour_cost, food_cost to purchases)

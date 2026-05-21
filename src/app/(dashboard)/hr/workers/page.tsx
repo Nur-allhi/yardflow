@@ -317,10 +317,10 @@ export default function WorkersPage() {
             </h2>
           </div>
           {filtered.map((w) => (
-            <Link
+            <div
               key={w.id}
-              href={`/hr/workers/${w.id}`}
-              className="block bg-white rounded-lg p-4 shadow-sm border border-[#c6c6cd]/20"
+              onClick={() => window.location.href = `/hr/workers/${w.id}`}
+              className="block bg-white rounded-lg p-4 shadow-sm border border-[#c6c6cd]/20 cursor-pointer"
             >
               <div className="flex items-start gap-3 mb-3">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${w.is_active ? 'bg-[#d0e1fb] text-[#0F172A]' : 'bg-[#e0e3e5] text-[#505f76]'}`}>
@@ -354,7 +354,7 @@ export default function WorkersPage() {
                   </p>
                 </div>
               </div>
-              <div className="flex gap-2 mt-3 pt-3 border-t border-[#c6c6cd]/30">
+              <div className="flex gap-2 mt-3 pt-3 border-t border-[#c6c6cd]/30" onClick={(e) => e.stopPropagation()}>
                 <Link
                   href={`/hr/workers/${w.id}`}
                   className="flex-1 py-2 text-[#059669] font-bold text-sm bg-[#059669]/5 rounded-lg text-center"
@@ -368,7 +368,7 @@ export default function WorkersPage() {
                   Advance
                 </Link>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}

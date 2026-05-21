@@ -144,7 +144,7 @@ export default function PayrollPage() {
           worker_id: payTarget.worker_id,
           month: selectedMonth,
           year: selectedYear,
-          amount,
+          paid_amount: amount,
           account_id: payAccountId,
           payment_date: payDate,
         }),

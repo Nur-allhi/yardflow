@@ -161,14 +161,8 @@ export default function ConsumablesPage() {
     });
   };
 
-  const FormFields = ({
-    onSubmit,
-    submitting,
-  }: {
-    onSubmit: (e: React.FormEvent) => void;
-    submitting: boolean;
-  }) => (
-    <form onSubmit={onSubmit} className="space-y-4">
+  const formContent = (submitting: boolean) => (
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block text-sm font-bold text-[#0F172A] mb-1">
           Item Name
@@ -519,7 +513,7 @@ export default function ConsumablesPage() {
                 Log Consumable
               </h3>
             </div>
-            <FormFields onSubmit={handleSubmit} submitting={submitting} />
+            {formContent(submitting)}
           </div>
         </aside>
       </div>
@@ -654,7 +648,7 @@ export default function ConsumablesPage() {
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            <FormFields onSubmit={handleSubmit} submitting={submitting} />
+            {formContent(submitting)}
             <div className="h-6" />
           </div>
         </div>
