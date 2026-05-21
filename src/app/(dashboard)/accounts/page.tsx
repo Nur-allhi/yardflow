@@ -44,7 +44,7 @@ const { data: accountsData, isLoading: accountsLoading } = useQuery<Account[]>({
   },
 });
 
-const { data: transactionsData, isLoading: txLoading } = useQuery<Transaction[]>({
+const { data: transactionsData } = useQuery<Transaction[]>({
   queryKey: ["recent-transactions"],
   queryFn: async () => {
     const res = await fetch("/api/accounts/transactions?limit=10");

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { InventoryNav } from "@/components/InventoryNav";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";

@@ -21,13 +21,6 @@ interface Sale {
   total_kg: number;
 }
 
-interface Summary {
-  total_sales: number;
-  total_paid: number;
-  total_due: number;
-  this_month: number;
-}
-
 interface CustomerOption {
   id: string;
   name: string;

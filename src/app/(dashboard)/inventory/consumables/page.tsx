@@ -1,17 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { InventoryNav } from "@/components/InventoryNav";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
-
-interface Account {
-  id: string;
-  name: string;
-  type: "cash" | "bank";
-  current_balance: number;
-}
 
 interface ConsumableEntry {
   id: string;

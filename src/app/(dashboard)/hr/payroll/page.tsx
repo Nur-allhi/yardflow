@@ -25,12 +25,6 @@ interface PayrollData {
   };
 }
 
-interface Account {
-  id: string;
-  name: string;
-  current_balance: number;
-}
-
 function formatMoney(n: number) {
   return "\u09F3" + (n ?? 0).toLocaleString("en-IN");
 }
