@@ -58,7 +58,7 @@ function formatDate(dateStr: string): string {
 }
 
 function formatMoney(n: number): string {
-  return "\u09F7" + n.toLocaleString("en-IN");
+  return "৳" + n.toLocaleString("en-IN");
 }
 
 function formatKg(n: number): string {

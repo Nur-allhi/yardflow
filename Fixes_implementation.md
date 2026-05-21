@@ -38,10 +38,10 @@
 |---|---------|--------|-------|--------|
 | 14 | **Accounts: Two forms always showing** | Hide deposit/transfer forms under buttons; place buttons top of page | `accounts/page.tsx` | ✅ |
 | 15 | **Accounts: Form buttons → separate pages** | Create separate pages for deposit and transfer | `accounts/deposit/page.tsx`, `accounts/transfer/page.tsx` | ✅ |
-| 16 | **Consumables: Stock-on-hand tracking** | Add quantity/balance column to consumables model | `api/inventory/consumables/route.ts`, schema | ❌ |
-| 17 | **Consumables: Record consumption/usage** | Add consumption log form and API | `inventory/consumables/use/page.tsx`, API route | ❌ |
-| 18 | **Consumables: Deduct from running balance** | Auto-deduct on consumption; prevent negative balance | API + DB logic | ❌ |
-| 19 | **Consumables: Upgrade to inventory management** | Category, reorder level, unit tracking | Schema, pages | ❌ |
+| 16 | **Consumables: Stock-on-hand tracking** | Add quantity/balance column to consumables model | `api/inventory/consumables/route.ts`, schema | ✅ |
+| 17 | **Consumables: Record consumption/usage** | Add consumption log form and API | `inventory/consumables/use/page.tsx`, API route | ✅ |
+| 18 | **Consumables: Deduct from running balance** | Auto-deduct on consumption; prevent negative balance | API + DB logic | ✅ |
+| 19 | **Consumables: Upgrade to inventory management** | Category, reorder level, unit tracking | Schema, pages | ✅ |
 
 ---
 

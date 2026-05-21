@@ -19,7 +19,7 @@ interface Vendor {
 const ITEMS_PER_PAGE = 10;
 
 function formatMoney(amount: number): string {
-  return `\u09F7${amount.toLocaleString("en-IN")}`;
+  return `৳${amount.toLocaleString("en-IN")}`;
 }
 
 function getTypeChip(type: string) {
