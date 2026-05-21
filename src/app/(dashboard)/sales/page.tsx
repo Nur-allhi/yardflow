@@ -283,7 +283,7 @@ export default function SalesPage() {
               Total Sales
             </p>
             <p className="text-xl font-mono font-bold text-[#191c1e]">
-              {summary ? formatMoney(summary.total_sales) : "—"}
+              {summary ? summary.total_sales.toLocaleString("en-IN") : "—"}
             </p>
           </div>
         </div>
