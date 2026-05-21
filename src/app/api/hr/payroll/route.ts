@@ -117,11 +117,11 @@ export async function GET(request: Request) {
 
     return {
       worker_id: w.id,
-      name: w.name,
+      worker_name: w.name,
       phone: w.phone,
       designation: w.designation,
       base_salary: baseSalary,
-      total_advances: totalAdv,
+      advances_taken: totalAdv,
       net_payable: netPayable,
       paid_amount: payment ? Number(payment.paid_amount) : 0,
       status: payment ? payment.status : "pending",
@@ -134,7 +134,7 @@ export async function GET(request: Request) {
       month,
       year,
       total_salary: totalSalary,
-      total_advances_sum: totalAdvancesSum,
+      total_advances: totalAdvancesSum,
       total_payable: totalPayable,
     },
   });

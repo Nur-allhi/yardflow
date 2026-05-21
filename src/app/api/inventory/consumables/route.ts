@@ -21,8 +21,25 @@ const consumablesSchema = z.object({
   note: z.string().optional(),
 });
 
-export async function GET(_request: Request) {
+export async function GET(request: Request) {
   const orgId = await requireOrg();
+
+  const { searchParams } = new URL(request.url);
+  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
+  const limit = Math.max(1, Math.min(100, parseInt(searchParams.get("limit") ?? "20", 10)));
+  const offset = (page - 1) * limit;
+
+  const [{ count }] = await db
+    .select({
+      count: sql<number>`COUNT(*)::int`,
+    })
+    .from(consumablesLog)
+    .where(
+      and(
+        eq(consumablesLog.organization_id, orgId),
+        sql`${consumablesLog.deleted_at} IS NULL`,
+      ),
+    );
 
   const entries = await db
     .select({
@@ -47,13 +64,15 @@ export async function GET(_request: Request) {
         sql`${consumablesLog.deleted_at} IS NULL`,
       ),
     )
-    .orderBy(desc(consumablesLog.purchase_date));
+    .orderBy(desc(consumablesLog.purchase_date))
+    .limit(limit)
+    .offset(offset);
 
   const [summary] = await db
     .select({
       total_spent_this_month:
         sql<string>`COALESCE(SUM(CASE WHEN ${consumablesLog.purchase_date} >= date_trunc('month', now()) THEN ${consumablesLog.total_price} ELSE 0 END), 0)`,
-      total_items_logged: sql<number>`COUNT(*)`,
+      total_items: sql<number>`COUNT(*)`,
     })
     .from(consumablesLog)
     .where(
@@ -79,6 +98,8 @@ export async function GET(_request: Request) {
     .orderBy(sql`COUNT(*) DESC`)
     .limit(1);
 
+  const totalPages = Math.ceil(count / limit);
+
   return NextResponse.json({
     entries: entries.map((e) => ({
       ...e,
@@ -86,9 +107,15 @@ export async function GET(_request: Request) {
       unit_price: e.unit_price ? Number(e.unit_price) : null,
       total_price: Number(e.total_price),
     })),
+    pagination: {
+      page,
+      limit,
+      total: count,
+      totalPages,
+    },
     summary: {
       total_spent_this_month: Number(summary.total_spent_this_month),
-      total_items_logged: summary.total_items_logged,
+      total_items: summary.total_items,
       most_used_item: mostUsed?.item_name || null,
     },
   });

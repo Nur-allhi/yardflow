@@ -101,49 +101,50 @@ npx drizzle-kit migrate
 
 ## REMAINING WORK — IMPLEMENTATION PLAN
 
-All remaining work is defined in `PLAN.md`. The plan is organized into **5 batches** executed sequentially:
+All remaining work is defined in `Fixes_implementation.md`. The plan covers **36 fix items** organized by priority:
 
-| Batch | Module | Priority |
-|-------|--------|----------|
-| 1 | Reports — PDF export + other expenses field | High |
-| 2 | HR — Zod schemas + negative net_payable warning | Medium |
-| 3 | Settings — Org profile + Team + Role middleware | Medium |
-| 4 | Seed + End-to-end walkthrough | High |
-| 5 | Deploy to Vercel + Supabase production | High |
+| Priority | Count |
+|----------|-------|
+| P0 — CRASHES | 6 |
+| P1 — FUNCTIONALITY BUGS | 7 |
+| P2 — MISSING UI & NAVIGATION | 10 |
+| P3 — UI POLISH | 13 |
+
+Execute in P0 → P1 → P2 → P3 order. Items at the same priority can be parallelized.
 
 ---
 
 ## AUTONOMOUS WORKFLOW
 
-The agent works **autonomously, batch by batch** without being asked for each step.
+The agent works **autonomously, fix by fix** without being asked for each step.
 
-### Per-Batch Process
+### Per-Fix Process
 
-1. **Read `PLAN.md`** to get the current batch's task list
-2. **Read all files listed** in the batch's "Files affected" section before making changes
-3. **Implement each task** in the batch using sub-agents for parallel work where possible
-4. **After each task** (not after the entire batch), run:
+1. **Read `Fixes_implementation.md`** to get the current priority's task list
+2. **Read all files listed** for the fix before making changes
+3. **Implement each fix** using sub-agents for parallel work where possible
+4. **After each fix** (not after the entire priority), run:
    ```bash
    npx tsc --noEmit        # TypeScript — zero errors required
    npx eslint .            # Lint — zero errors required
    npx next build          # Build — must succeed
    ```
-5. **After each task**, commit the changes with a descriptive message:
+5. **After each fix**, commit the changes with a descriptive message:
    ```bash
-   git add -A && git commit -m "[batch N] task description"
+   git add -A && git commit -m "[P# - fix #] description"
    ```
 6. **Update the session log** after each commit
-7. **When a batch is complete**, update `PLAN.md` by marking completed items with `[x]`
-8. **Proceed to the next batch** automatically — do not wait for confirmation
+7. **When a priority level is complete**, update `Fixes_implementation.md` by marking completed items with `[x]`
+8. **Proceed to the next priority** automatically — do not wait for confirmation
 9. **If blocked** (e.g., missing dependency, unexpected error), fix the blocker and continue. If unable to resolve, stop and report to user.
 
 ### Key Rules
 
-- Never ask the user for permission to proceed between batches — work autonomously
-- Each commit should represent one complete, tested task
-- If a task is too large, break it into sub-tasks and commit each one
-- `PLAN.md` is the source of truth for what's left — keep it updated
-- After all 5 batches are done, run the full test suite once more and report completion
+- Never ask the user for permission to proceed between fixes — work autonomously
+- Each commit should represent one complete, tested fix
+- If a fix is too large, break it into sub-tasks and commit each one
+- `Fixes_implementation.md` is the source of truth for what's left — keep it updated
+- After all 4 priority levels are done, run the full test suite once more and report completion
 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence

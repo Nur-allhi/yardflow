@@ -67,7 +67,7 @@ export default function WorkerDetailPage() {
       const res = await fetch(`/api/hr/workers/${id}`);
       if (!res.ok) throw new Error("Worker not found");
       const data = await res.json();
-      setWorker(data);
+      setWorker({ ...data.worker, advances: data.advances });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong");
     } finally {

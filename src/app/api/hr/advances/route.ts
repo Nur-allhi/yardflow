@@ -91,7 +91,7 @@ export async function POST(request: Request) {
         account_id: parsed.data.account_id,
         type: "debit",
         amount: parsed.data.amount.toFixed(2),
-        reference_type: "salary",
+        reference_type: "advance",
         reference_id: advance.id,
         transaction_date: new Date(parsed.data.advance_date),
         note: parsed.data.note || null,

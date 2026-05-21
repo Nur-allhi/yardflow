@@ -154,6 +154,7 @@ export default function QuickCashSalePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sale_date: saleDate,
+          sale_type: "fabricated",
           is_quick_cash_sale: true,
           items: validItems.map((item) => ({
             subtype_id: item.subtype_id,
