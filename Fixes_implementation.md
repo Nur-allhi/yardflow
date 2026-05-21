@@ -19,12 +19,12 @@
 
 | # | Finding | Action | Files | Status |
 |---|---------|--------|-------|--------|
-| 4 | **Account balances not updating after pay/receive** | Debug transaction → balance update logic | `api/accounts/route.ts`, payment routes | ❌ |
-| 5 | **Dashboard widgets update inaccurate** | Debug KPI aggregation queries | `(dashboard)/page.tsx` | ❌ |
-| 6 | **HR: THIS MONTH ADVANCES not showing** | Fix advance → current-month filter query | `api/hr/advances/route.ts`, workers detail page | ❌ |
-| 7 | **HR: Advance history Account column blank** | Fix advance transaction account_id population | `api/hr/advances/route.ts` | ❌ |
-| 8 | **Vendor opening balance not flowing to dashboard** | Include opening balance in vendor due across pages | `api/purchases/vendors/route.ts`, `api/purchases/route.ts` | ❌ |
-| 9 | **Customer opening balance not flowing to dashboard** | Include opening balance in customer due across pages | `api/sales/customers/route.ts`, `api/sales/route.ts` | ❌ |
+| 4 | **Account balances not updating after pay/receive** | Debug transaction → balance update logic | `api/accounts/route.ts`, payment routes | ✅ |
+| 5 | **Dashboard widgets update inaccurate** | Debug KPI aggregation queries | `(dashboard)/page.tsx` | ✅ |
+| 6 | **HR: THIS MONTH ADVANCES not showing** | Fix advance → current-month filter query | `api/hr/advances/route.ts`, workers detail page | ✅ |
+| 7 | **HR: Advance history Account column blank** | Fix advance transaction account_id population | `api/hr/advances/route.ts` | ✅ |
+| 8 | **Vendor opening balance not flowing to dashboard** | Include opening balance in vendor due across pages | `api/purchases/vendors/route.ts`, `api/purchases/route.ts` | ✅ |
+| 9 | **Customer opening balance not flowing to dashboard** | Include opening balance in customer due across pages | `api/sales/customers/route.ts`, `api/sales/route.ts` | ✅ |
 | 10 | **Vendor pay button redirects to purchases dashboard** | Fix redirect target URL | `purchases/vendors/page.tsx` | ✅ |
 | 11 | **Customer pay button redirects to purchases dashboard** | Fix redirect target URL | `sales/customers/page.tsx` | ✅ |
 | 12 | **Vendors page action buttons redirect to sales** | Fix button href targets | `purchases/vendors/page.tsx` | ✅ |
@@ -36,8 +36,8 @@
 
 | # | Finding | Action | Files | Status |
 |---|---------|--------|-------|--------|
-| 14 | **Accounts: Two forms always showing** | Hide deposit/transfer forms under buttons; place buttons top of page | `accounts/page.tsx` | ❌ |
-| 15 | **Accounts: Form buttons → separate pages** | Create separate pages for deposit and transfer | `accounts/deposit/page.tsx`, `accounts/transfer/page.tsx` | ❌ |
+| 14 | **Accounts: Two forms always showing** | Hide deposit/transfer forms under buttons; place buttons top of page | `accounts/page.tsx` | ✅ |
+| 15 | **Accounts: Form buttons → separate pages** | Create separate pages for deposit and transfer | `accounts/deposit/page.tsx`, `accounts/transfer/page.tsx` | ✅ |
 | 16 | **Consumables: Stock-on-hand tracking** | Add quantity/balance column to consumables model | `api/inventory/consumables/route.ts`, schema | ❌ |
 | 17 | **Consumables: Record consumption/usage** | Add consumption log form and API | `inventory/consumables/use/page.tsx`, API route | ❌ |
 | 18 | **Consumables: Deduct from running balance** | Auto-deduct on consumption; prevent negative balance | API + DB logic | ❌ |
@@ -57,4 +57,4 @@
 
 ---
 
-**Total: 23 items** · P0: 3 ✅ · P1: 6 ❌ · P2: 6 ❌ · P3: 4 ❌ + 5 ⏭️
+**Total: 23 items** · P0: 3 ✅ · P1: 10 ✅ · P2: 2 ✅ (14-15) + 4 ❌ · P3: 4 ❌ + 5 ⏭️

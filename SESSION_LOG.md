@@ -495,6 +495,17 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 - `src/app/api/purchases/route.ts` — P1-8 (vendor opening in summary)
 - `src/app/(dashboard)/page.tsx` — P1-5 (opening balances in dashboard AR/AP KPI)
 
+## Session: 2026-05-21 — P2-14 & P2-15 Accounts Forms Fix
+
+### Changes
+- **P2-14**: Removed inline deposit/transfer forms from `accounts/page.tsx`, replaced with Deposit + Transfer buttons in the header
+- **P2-15**: Created `accounts/deposit/page.tsx` with breadcrumb navigation, form (account select, amount, date, note), validation, loading/error states, redirect on success
+
+### Files modified
+- `src/app/(dashboard)/accounts/page.tsx` — removed inline forms, added Deposit/Transfer/Link buttons
+- `src/app/(dashboard)/accounts/deposit/page.tsx` — **created** new deposit form page
+
 ### Quality Gates
 - `npx tsc --noEmit` — zero errors
+- `npx eslint src/app/(dashboard)/accounts/` — zero new errors
 - `npx next build` — succeeded

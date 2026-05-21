@@ -39,31 +39,6 @@ export default function AccountsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [fromId, setFromId] = useState("");
-  const [toId, setToId] = useState("");
-  const [amount, setAmount] = useState("");
-  const [transferDate, setTransferDate] = useState(
-    new Date().toISOString().split("T")[0],
-  );
-  const [remark, setRemark] = useState("");
-  const [transferring, setTransferring] = useState(false);
-  const [transferMsg, setTransferMsg] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
-
-  const [depositAccountId, setDepositAccountId] = useState("");
-  const [depositAmount, setDepositAmount] = useState("");
-  const [depositDate, setDepositDate] = useState(
-    new Date().toISOString().split("T")[0],
-  );
-  const [depositNote, setDepositNote] = useState("");
-  const [depositing, setDepositing] = useState(false);
-  const [depositMsg, setDepositMsg] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
-
   useEffect(() => {
     Promise.all([
       fetch("/api/accounts").then((r) => r.json()),
@@ -81,86 +56,6 @@ export default function AccountsPage() {
     (s, a) => s + (a.is_active ? a.current_balance : 0),
     0,
   );
-
-  const fromAccount = accounts.find((a) => a.id === fromId);
-
-  async function handleTransfer(e: React.FormEvent) {
-    e.preventDefault();
-    if (!fromId || !toId || !amount || !transferDate) return;
-    setTransferring(true);
-    setTransferMsg(null);
-    try {
-      const res = await fetch("/api/accounts/transfer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          from_account_id: fromId,
-          to_account_id: toId,
-          amount: Number(amount),
-          transfer_date: transferDate,
-          note: remark || undefined,
-        }),
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Transfer failed");
-      }
-      setTransferMsg({ type: "success", text: "Transfer completed successfully!" });
-      setFromId("");
-      setToId("");
-      setAmount("");
-      setRemark("");
-      const [accts, txns] = await Promise.all([
-        fetch("/api/accounts").then((r) => r.json()),
-        fetch("/api/accounts/transactions?limit=10").then((r) => r.json()),
-      ]);
-      setAccounts(accts);
-      setTransactions(txns);
-      setTimeout(() => setTransferMsg(null), 3000);
-    } catch (err) {
-      setTransferMsg({ type: "error", text: err instanceof Error ? err.message : "Transfer failed" });
-    } finally {
-      setTransferring(false);
-    }
-  }
-
-  async function handleDeposit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!depositAccountId || !depositAmount) return;
-    setDepositing(true);
-    setDepositMsg(null);
-    try {
-      const res = await fetch("/api/accounts/deposit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          account_id: depositAccountId,
-          amount: Number(depositAmount),
-          transaction_date: depositDate,
-          note: depositNote || undefined,
-        }),
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Deposit failed");
-      }
-      setDepositMsg({ type: "success", text: "Deposit successful!" });
-      setDepositAccountId("");
-      setDepositAmount("");
-      setDepositNote("");
-      const [accts, txns] = await Promise.all([
-        fetch("/api/accounts").then((r) => r.json()),
-        fetch("/api/accounts/transactions?limit=10").then((r) => r.json()),
-      ]);
-      setAccounts(accts);
-      setTransactions(txns);
-      setTimeout(() => setDepositMsg(null), 3000);
-    } catch (err) {
-      setDepositMsg({ type: "error", text: err instanceof Error ? err.message : "Deposit failed" });
-    } finally {
-      setDepositing(false);
-    }
-  }
 
   if (loading) {
     return (
@@ -191,13 +86,20 @@ export default function AccountsPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <a
-            href="#transfer"
+          <Link
+            href="/accounts/deposit"
+            className="px-5 py-2.5 bg-white border-2 border-[#059669] text-[#059669] hover:bg-[#059669]/5 transition-colors font-semibold rounded-md flex items-center justify-center gap-2 text-sm"
+          >
+            <span className="material-symbols-outlined text-xl">payments</span>
+            Deposit
+          </Link>
+          <Link
+            href="/accounts/transfer"
             className="px-5 py-2.5 bg-white border-2 border-[#0F172A] text-[#0F172A] hover:bg-[#0F172A]/5 transition-colors font-semibold rounded-md flex items-center justify-center gap-2 text-sm"
           >
             <span className="material-symbols-outlined text-xl">swap_horiz</span>
             Transfer
-          </a>
+          </Link>
           <Link
             href="/accounts/new"
             className="px-5 py-2.5 bg-white border-2 border-[#0F172A] text-[#0F172A] hover:bg-[#0F172A]/5 transition-colors font-semibold rounded-md flex items-center justify-center gap-2 text-sm"
@@ -271,266 +173,94 @@ export default function AccountsPage() {
         </div>
       )}
 
-      {/* Bottom Grid: Transactions + Deposit + Transfer */}
-      <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 md:gap-8">
-        {/* Recent Transactions */}
-        <div className="xl:col-span-3 bg-white rounded-lg shadow-sm border border-[#c6c6cd]/30 overflow-hidden">
-          <div className="p-4 md:p-6 border-b border-[#c6c6cd]/20 flex justify-between items-center bg-[#f2f4f6]/50">
-            <h2 className="font-headline font-semibold text-[#0F172A]">
-              Recent Transactions — All Accounts
-            </h2>
+      {/* Recent Transactions */}
+      <div className="bg-white rounded-lg shadow-sm border border-[#c6c6cd]/30 overflow-hidden">
+        <div className="p-4 md:p-6 border-b border-[#c6c6cd]/20 flex justify-between items-center bg-[#f2f4f6]/50">
+          <h2 className="font-headline font-semibold text-[#0F172A]">
+            Recent Transactions — All Accounts
+          </h2>
+        </div>
+        {transactions.length === 0 ? (
+          <div className="p-8 text-center text-[#505f76] text-sm">
+            No transactions yet.
           </div>
-          {transactions.length === 0 ? (
-            <div className="p-8 text-center text-[#505f76] text-sm">
-              No transactions yet.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-white text-left border-b border-[#c6c6cd]/20">
-                    <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-[#76777d] uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-[#76777d] uppercase tracking-wider">
-                      Account
-                    </th>
-                    <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-[#76777d] uppercase tracking-wider">
-                      Amount
-                    </th>
-                    <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-[#76777d] uppercase tracking-wider">
-                      Reference
-                    </th>
-                    <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-[#76777d] uppercase tracking-wider">
-                      Description
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#c6c6cd]/10 text-sm">
-                  {transactions.map((tx) => {
-                    const isCredit = tx.type === "credit";
-                    return (
-                      <tr
-                        key={tx.id}
-                        className="hover:bg-white transition-colors"
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-white text-left border-b border-[#c6c6cd]/20">
+                  <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-[#76777d] uppercase tracking-wider">
+                    Date
+                  </th>
+                  <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-[#76777d] uppercase tracking-wider">
+                    Account
+                  </th>
+                  <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-[#76777d] uppercase tracking-wider">
+                    Amount
+                  </th>
+                  <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-[#76777d] uppercase tracking-wider">
+                    Reference
+                  </th>
+                  <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-[#76777d] uppercase tracking-wider">
+                    Description
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#c6c6cd]/10 text-sm">
+                {transactions.map((tx) => {
+                  const isCredit = tx.type === "credit";
+                  return (
+                    <tr
+                      key={tx.id}
+                      className="hover:bg-white transition-colors"
+                    >
+                      <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-[#191c1e]">
+                        {formatDate(tx.transaction_date)}
+                      </td>
+                      <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-[#505f76] font-medium">
+                        {tx.account_name}
+                      </td>
+                      <td
+                        className={`px-4 md:px-6 py-3 md:py-4 whitespace-nowrap font-mono font-bold flex items-center gap-1 ${
+                          isCredit ? "text-[#16A34A]" : "text-[#ba1a1a]"
+                        }`}
                       >
-                        <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-[#191c1e]">
-                          {formatDate(tx.transaction_date)}
-                        </td>
-                        <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-[#505f76] font-medium">
-                          {tx.account_name}
-                        </td>
-                        <td
-                          className={`px-4 md:px-6 py-3 md:py-4 whitespace-nowrap font-mono font-bold flex items-center gap-1 ${
-                            isCredit ? "text-[#16A34A]" : "text-[#ba1a1a]"
-                          }`}
-                        >
-                          <span className="material-symbols-outlined text-xs">
-                            {isCredit ? "arrow_upward" : "arrow_downward"}
+                        <span className="material-symbols-outlined text-xs">
+                          {isCredit ? "arrow_upward" : "arrow_downward"}
+                        </span>
+                        {formatMoney(tx.amount)}
+                      </td>
+                      <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                        {tx.reference_id ? (
+                          <span className="text-[#069669] hover:underline text-xs font-medium">
+                            #
+                            {tx.reference_type === "purchase_payment"
+                              ? "PUR"
+                              : tx.reference_type === "sale_payment"
+                                ? "SAL"
+                                : tx.reference_type === "salary"
+                                  ? "SLR"
+                                  : tx.reference_type === "transfer"
+                                    ? "TRF"
+                                    : "REF"}
+                            -{tx.reference_id.slice(0, 8)}
                           </span>
-                          {formatMoney(tx.amount)}
-                        </td>
-                        <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                          {tx.reference_id ? (
-                            <span className="text-[#069669] hover:underline text-xs font-medium">
-                              #
-                              {tx.reference_type === "purchase_payment"
-                                ? "PUR"
-                                : tx.reference_type === "sale_payment"
-                                  ? "SAL"
-                                  : tx.reference_type === "salary"
-                                    ? "SLR"
-                                    : tx.reference_type === "transfer"
-                                      ? "TRF"
-                                      : "REF"}
-                              -{tx.reference_id.slice(0, 8)}
-                            </span>
-                          ) : (
-                            <span className="text-[#76777d]">&mdash;</span>
-                          )}
-                        </td>
-                        <td className="px-4 md:px-6 py-3 md:py-4 text-[#505f76] max-w-[200px] truncate">
-                          {tx.note || (
-                            <span className="text-[#76777d]">&mdash;</span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-
-        {/* Deposit Card */}
-        <div className="bg-white rounded-lg shadow-sm border border-[#c6c6cd]/30 flex flex-col h-full">
-          <div className="p-4 md:p-6 border-b border-[#c6c6cd]/20 bg-[#f2f4f6]/50">
-            <h2 className="font-headline font-semibold text-[#0F172A]">
-              Deposit Money
-            </h2>
+                        ) : (
+                          <span className="text-[#76777d]">&mdash;</span>
+                        )}
+                      </td>
+                      <td className="px-4 md:px-6 py-3 md:py-4 text-[#505f76] max-w-[200px] truncate">
+                        {tx.note || (
+                          <span className="text-[#76777d]">&mdash;</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-          <form onSubmit={handleDeposit} className="p-4 md:p-6 space-y-4 md:space-y-5 flex-1">
-            {depositMsg && (
-              <div className={`p-3 rounded-md text-sm font-medium ${
-                depositMsg.type === "success" ? "bg-[#22C55E]/10 text-[#16A34A]" : "bg-[#ffdad6] text-[#93000a]"
-              }`}>
-                {depositMsg.text}
-              </div>
-            )}
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#191c1e] uppercase tracking-tight">Account</label>
-              <select value={depositAccountId} onChange={(e) => setDepositAccountId(e.target.value)} required
-                className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md text-sm py-2.5 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all">
-                <option value="">Select account</option>
-                {accounts.map((a) => (
-                  <option key={a.id} value={a.id}>{a.name} ({formatMoney(a.current_balance)})</option>
-                ))}
-              </select>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-[#191c1e] uppercase tracking-tight">Amount (৳)</label>
-                <input type="number" min="0" step="0.01" value={depositAmount}
-                  onChange={(e) => setDepositAmount(e.target.value)} required placeholder="0.00"
-                  className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md font-mono text-sm py-2.5 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-[#191c1e] uppercase tracking-tight">Date</label>
-                <input type="date" value={depositDate}
-                  onChange={(e) => setDepositDate(e.target.value)} required
-                  className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md text-sm py-2 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#191c1e] uppercase tracking-tight">Note</label>
-              <textarea value={depositNote} onChange={(e) => setDepositNote(e.target.value)}
-                placeholder="Source of deposit..." rows={2}
-                className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md text-sm py-2.5 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all resize-none" />
-            </div>
-            <button type="submit" disabled={depositing}
-              className="w-full bg-[#059669] text-white font-bold py-3 rounded-md hover:bg-[#059669]/90 transition-colors active:scale-[0.98] duration-100 flex justify-center items-center gap-2 shadow-sm disabled:opacity-50">
-              <span className="material-symbols-outlined text-xl">payments</span>
-              {depositing ? "Depositing..." : "Deposit Money"}
-            </button>
-          </form>
-        </div>
-
-        {/* Transfer Card */}
-        <div id="transfer" className="bg-white rounded-lg shadow-sm border border-[#c6c6cd]/30 flex flex-col h-full">
-          <div className="p-4 md:p-6 border-b border-[#c6c6cd]/20 bg-[#f2f4f6]/50">
-            <h2 className="font-headline font-semibold text-[#0F172A]">
-              Transfer Between Accounts
-            </h2>
-          </div>
-          <form onSubmit={handleTransfer} className="p-4 md:p-6 space-y-4 md:space-y-5 flex-1">
-            {transferMsg && (
-              <div
-                className={`p-3 rounded-md text-sm font-medium ${
-                  transferMsg.type === "success"
-                    ? "bg-[#22C55E]/10 text-[#16A34A]"
-                    : "bg-[#ffdad6] text-[#93000a]"
-                }`}
-              >
-                {transferMsg.text}
-              </div>
-            )}
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#191c1e] uppercase tracking-tight">
-                From Account
-              </label>
-              <select
-                value={fromId}
-                onChange={(e) => setFromId(e.target.value)}
-                required
-                className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md text-sm py-2.5 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all"
-              >
-                <option value="">Select source</option>
-                {accounts.map((a) => (
-                  <option key={a.id} value={a.id}>
-                    {a.name} ({formatMoney(a.current_balance)})
-                  </option>
-                ))}
-              </select>
-              {fromAccount && (
-                <p className="text-xs text-[#76777d]">
-                  Balance: {formatMoney(fromAccount.current_balance)}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#191c1e] uppercase tracking-tight">
-                To Account
-              </label>
-              <select
-                value={toId}
-                onChange={(e) => setToId(e.target.value)}
-                required
-                className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md text-sm py-2.5 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all"
-              >
-                <option value="">Select destination</option>
-                {accounts
-                  .filter((a) => a.id !== fromId)
-                  .map((a) => (
-                    <option key={a.id} value={a.id}>
-                      {a.name} ({formatMoney(a.current_balance)})
-                    </option>
-                  ))}
-              </select>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-[#191c1e] uppercase tracking-tight">
-                  Amount (৳)
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  required
-                  placeholder="0.00"
-                  className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md font-mono text-sm py-2.5 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-[#191c1e] uppercase tracking-tight">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  value={transferDate}
-                  onChange={(e) => setTransferDate(e.target.value)}
-                  required
-                  className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md text-sm py-2 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all"
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold text-[#191c1e] uppercase tracking-tight">
-                Remarks
-              </label>
-              <textarea
-                value={remark}
-                onChange={(e) => setRemark(e.target.value)}
-                placeholder="Reason for transfer..."
-                rows={2}
-                className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md text-sm py-2.5 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all resize-none"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={transferring}
-              className="w-full bg-[#0F172A] text-white font-bold py-3 rounded-md hover:bg-[#45464d] transition-colors active:scale-[0.98] duration-100 flex justify-center items-center gap-2 shadow-sm disabled:opacity-50"
-            >
-              <span className="material-symbols-outlined text-xl">
-                swap_horiz
-              </span>
-              {transferring ? "Transferring..." : "Execute Transfer"}
-            </button>
-          </form>
-        </div>
+        )}
       </div>
     </div>
   );
