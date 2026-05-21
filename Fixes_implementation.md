@@ -49,12 +49,12 @@
 
 | # | Finding | Action | Files | Status |
 |---|---------|--------|-------|--------|
-| 20 | **Duplicate inventory nav still present** | Remove duplicate `InventoryNav` component | `inventory/consumables/page.tsx` | ❌ |
-| 21 | **Bar (\|) showing in front of sales card numbers** | Fix KPI card value rendering | `sales/page.tsx` (cards section) | ❌ |
-| 22 | **Sales page second row items overlapping** | Fix CSS grid/flex layout on sale form | `sales/new/page.tsx` | ❌ |
-| 23 | **Purchase form "other expenses" fields** | Verify/re-add truck/labour/food fields | `purchases/new/page.tsx` | ❌ |
+| 20 | **Duplicate inventory nav still present** | Remove duplicate `InventoryNav` component | `inventory/consumables/page.tsx` | ✅ |
+| 21 | **Bar (\|) showing in front of sales card numbers** | Fix KPI card value rendering | `sales/page.tsx` (cards section) | ✅ |
+| 22 | **Sales page second row items overlapping** | Fix CSS grid/flex layout on sale form | `sales/new/page.tsx` | ✅ |
+| 23 | **Purchase form "other expenses" fields** | Verify/re-add truck/labour/food fields | `purchases/new/page.tsx` | ✅ |
 | — | *P3 items 24–28 from old plan (spinners, animations, dropdowns, date inputs)* | ⏭️ Deferred — design system scope | — | ⏭️ |
 
 ---
 
-**Total: 23 items** · P0: 3 ✅ · P1: 10 ✅ · P2: 2 ✅ (14-15) + 4 ❌ · P3: 4 ❌ + 5 ⏭️
+**Total: 23 items** · P0: 3 ✅ · P1: 10 ✅ · P2: 6 ✅ · P3: 4 ✅ + 5 ⏭️
