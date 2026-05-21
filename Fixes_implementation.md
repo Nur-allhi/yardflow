@@ -25,10 +25,10 @@
 | 7 | **HR: Advance history Account column blank** | Fix advance transaction account_id population | `api/hr/advances/route.ts` | ❌ |
 | 8 | **Vendor opening balance not flowing to dashboard** | Include opening balance in vendor due across pages | `api/purchases/vendors/route.ts`, `api/purchases/route.ts` | ❌ |
 | 9 | **Customer opening balance not flowing to dashboard** | Include opening balance in customer due across pages | `api/sales/customers/route.ts`, `api/sales/route.ts` | ❌ |
-| 10 | **Vendor pay button redirects to purchases dashboard** | Fix redirect target URL | `purchases/vendors/page.tsx` | ❌ |
-| 11 | **Customer pay button redirects to purchases dashboard** | Fix redirect target URL | `sales/customers/page.tsx` | ❌ |
-| 12 | **Vendors page action buttons redirect to sales** | Fix button href targets | `purchases/vendors/page.tsx` | ❌ |
-| 13 | **Customers page action buttons redirect to sales** | Fix button href targets | `sales/customers/page.tsx` | ❌ |
+| 10 | **Vendor pay button redirects to purchases dashboard** | Fix redirect target URL | `purchases/vendors/page.tsx` | ✅ |
+| 11 | **Customer pay button redirects to purchases dashboard** | Fix redirect target URL | `sales/customers/page.tsx` | ✅ |
+| 12 | **Vendors page action buttons redirect to sales** | Fix button href targets | `purchases/vendors/page.tsx` | ✅ |
+| 13 | **Customers page action buttons redirect to sales** | Fix button href targets | `sales/customers/page.tsx` | ✅ |
 
 ---
 
@@ -57,4 +57,4 @@
 
 ---
 
-**Total: 23 items** · P0: 3 ❌ · P1: 10 ❌ · P2: 6 ❌ · P3: 4 ❌ + 5 ⏭️
+**Total: 23 items** · P0: 3 ✅ · P1: 6 ❌ · P2: 6 ❌ · P3: 4 ❌ + 5 ⏭️
