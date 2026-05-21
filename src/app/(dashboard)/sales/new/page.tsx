@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -68,7 +68,7 @@ export default function NewSalePage() {
   const [items, setItems] = useState<LineItem[]>([
     { key: 1, category_id: "", subtype_id: "", quantity_kg: "", price_per_kg: "" },
   ]);
-  let nextKey = 2;
+  const nextKey = useRef(2);
 
   const selectedCustomer = customers.find((c) => c.id === customerId);
 
@@ -127,7 +127,7 @@ export default function NewSalePage() {
   function addItem() {
     setItems((prev) => [
       ...prev,
-      { key: nextKey++, category_id: "", subtype_id: "", quantity_kg: "", price_per_kg: "" },
+      { key: nextKey.current++, category_id: "", subtype_id: "", quantity_kg: "", price_per_kg: "" },
     ]);
   }
 

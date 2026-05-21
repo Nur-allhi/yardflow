@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -65,14 +65,14 @@ export default function NewPurchasePage() {
   );
   const [note, setNote] = useState("");
   const [otherExpenses, setOtherExpenses] = useState<OtherExpense[]>([]);
-  let nextExpenseKey = 1;
+  const nextExpenseKey = useRef(1);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [items, setItems] = useState<LineItem[]>([
     { key: 1, category_id: "", subtype_id: "", quantity_kg: "", price_per_kg: "" },
   ]);
-  let nextKey = 2;
+  const nextKey = useRef(2);
 
   const selectedVendor = vendors.find((v) => v.id === vendorId);
 
@@ -132,7 +132,7 @@ export default function NewPurchasePage() {
   function addItem() {
     setItems((prev) => [
       ...prev,
-      { key: nextKey++, category_id: "", subtype_id: "", quantity_kg: "", price_per_kg: "" },
+      { key: nextKey.current++, category_id: "", subtype_id: "", quantity_kg: "", price_per_kg: "" },
     ]);
   }
 
@@ -145,7 +145,7 @@ export default function NewPurchasePage() {
     setOtherExpenses((prev) => [
       ...prev,
       {
-        key: nextExpenseKey++,
+        key: nextExpenseKey.current++,
         description: "",
         amount: "",
         account_id: "",
