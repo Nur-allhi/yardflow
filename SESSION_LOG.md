@@ -529,3 +529,74 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 ### Quality Gates
 - `npx tsc --noEmit` — zero errors
 - `npx next build` — succeeded
+
+## Session: 2026-05-21 — Findings_v3 P0-P2 Implementation
+
+### P0-1: Consumables GET 500 error
+- **Root cause**: Migration `0002_dizzy_epoch.sql` (adding `stock_quantity` + `consumption_logs` table) was generated but never applied to the DB
+- **Fix**: Ran `npx drizzle-kit migrate` — migration applied successfully
+
+### P1-2: "truck_fare column does not exist" on payment
+- **Root cause**: Migration `0001_illegal_dust.sql` (adding `truck_fare`, `labour_cost`, `food_cost` to purchases table) existed in migration journal but was never applied to the DB
+- **Fix**: Same migrate run applied this migration
+- **Lesson**: Always run `drizzle-kit migrate` after `drizzle-kit generate`
+
+### P1-3: Sales total count shown with currency format
+- **Root cause**: `total_sales` in API is `COUNT(*)::int` (number of sales), but frontend used `formatMoney()` which prepends `৳`
+- **Fix**: Changed to `summary.total_sales.toLocaleString("en-IN")` — plain number format
+
+### P2-4: Vendors with old payable not in Due list
+- **Root cause**: purchases API only returned purchases with `status='due'` — vendors with only opening balance (no purchase records) had no entries
+- **Fix**: When `status=due`, API also queries vendors with `opening_balance > 0` and `NOT EXISTS` recent due purchases — merges synthetic entries with `id: "ob-{vendor_id}"`
+- Purchases page handles null dates for synthetic entries
+
+### P2-5: Vendor profile page with payment support
+- Created `/purchases/vendors/[id]/page.tsx` — vendor profile with info card, purchase history, payment ledger, Record Payment modal
+- Created `/api/purchases/vendors/[id]/route.ts` — returns vendor + purchases + payments + aggregated totals
+- Vendor names on vendor list page link to profile
+
+### P2-6: Customer profile page with receive support
+- Created `/sales/customers/[id]/page.tsx` — customer profile (same pattern as vendor)
+- Created `/api/sales/customers/[id]/route.ts` — customer detail API
+- Customer names on customer list page link to profile
+
+### P2-7: Dynamic other expenses with account debit
+- Replaced fixed `truck_fare`/`labour_cost`/`food_cost` fields with dynamic add/remove expense rows
+- Each row: description, amount, account_id dropdown, "Add to vendor total" toggle
+- New `purchase_other_expenses` DB table + migration `0003_magical_rocket_racer.sql`
+- Expenses with `add_to_vendor_total=true` add to `total_amount`; others create `account_transactions` debit
+
+### ERROR.md: Duplicate React key error
+- **Root cause**: `let nextExpenseKey = 1;` and `let nextKey = 2;` declared as plain `let` inside component body — resets to initial value on every render, causing duplicate keys
+- **Fix**: Changed all 3 files (purchases/new, sales/new, sales/new/quick) to use `useRef()` instead of `let` for key counters
+
+### Findings_v4 Fixes
+- **Vendor opening balance payment**: Added "Opening Balance" option in vendor payment select + new API endpoint `/api/purchases/vendors/[id]/pay-opening-balance` that creates debit account_transaction and reduces vendor `opening_balance`
+- **Customer opening balance receive**: Same pattern — "Opening Balance" in receive modal + `/api/sales/customers/[id]/receive-opening-balance` API
+- **Customers with only due in sales**: Sales API now returns synthetic `ob-{id}` entries for customers with `opening_balance > 0` when `status=due` (mirrors purchases fix)
+- **Purchases Due list actions**: Added "View Vendor" button for synthetic `ob-` entries linking to vendor profile
+- **Dropdown overlap**: Already fixed in prior commit (removed `z-10` from customer select)
+- **Duplicate nav**: Already resolved — only 1 `InventoryNav` instance in consumables page
+
+### Files modified (Findings_v3 round)
+- `src/app/api/purchases/route.ts` — P2-4 (synthetic vendor entries) + P2-7 (dynamic expenses)
+- `src/app/(dashboard)/purchases/page.tsx` — P2-4 (null-safe dates, synthetic entry rendering)
+- `src/app/api/sales/route.ts` — P1-3 (added customer opening balance synthetic entries)
+- `src/app/(dashboard)/sales/page.tsx` — P1-3 (null-safe dates + synthetic entry actions)
+- `src/app/(dashboard)/purchases/new/page.tsx` — P2-7 (dynamic expenses) + ERROR.md (useRef key fix)
+- `src/app/(dashboard)/sales/new/page.tsx` — ERROR.md (useRef key fix)
+- `src/app/(dashboard)/sales/new/quick/page.tsx` — ERROR.md (useRef key fix)
+- `src/lib/db/schema.ts` — P2-7 (purchaseOtherExpenses table)
+- `src/lib/validations/schemas.ts` — P2-7 (otherExpenseSchema)
+
+### Files created (Findings_v3 round)
+- `src/app/(dashboard)/purchases/vendors/[id]/page.tsx` — P2-5 vendor profile
+- `src/app/api/purchases/vendors/[id]/route.ts` — P2-5 vendor detail API
+- `src/app/(dashboard)/sales/customers/[id]/page.tsx` — P2-6 customer profile
+- `src/app/api/sales/customers/[id]/route.ts` — P2-6 customer detail API
+- `src/app/api/purchases/vendors/[id]/pay-opening-balance/route.ts` — opening balance payment API
+- `src/app/api/sales/customers/[id]/receive-opening-balance/route.ts` — opening balance receive API
+
+### Quality Gates
+- `npx tsc --noEmit` — zero errors
+- `npx next build` — succeeded
