@@ -255,7 +255,7 @@ export default function PayrollPage() {
 
       {/* Error */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+        <div role="alert" aria-live="polite" className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
           <p className="text-error font-medium text-sm">{error?.message}</p>
           <button
             onClick={() => refetch()}
@@ -569,7 +569,12 @@ export default function PayrollPage() {
                   enterKeyHint="send"
                   className="flex-1 h-[44px] bg-primary-container text-white hover:bg-primary-container/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
                 >
-                  {payMutation.isPending ? "Processing..." : payTarget.net_payable < 0 ? "Cannot Pay — Negative Balance" : "Confirm Payment"}
+                  {payMutation.isPending ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Processing...
+                    </span>
+                  ) : payTarget.net_payable < 0 ? "Cannot Pay — Negative Balance" : "Confirm Payment"}
                 </button>
               </div>
             </form>

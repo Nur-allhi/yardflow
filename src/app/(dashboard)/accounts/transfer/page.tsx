@@ -131,7 +131,7 @@ export default function TransferPage() {
             </div>
 
             {error && (
-              <div className="mb-4 p-3 bg-error-container border border-error/20 rounded-lg text-sm text-error font-medium">
+              <div role="alert" aria-live="polite" className="mb-4 p-3 bg-error-container border border-error/20 rounded-lg text-sm text-error font-medium">
                 {error}
               </div>
             )}
@@ -275,7 +275,12 @@ export default function TransferPage() {
               enterKeyHint="send"
               className="flex-1 h-[44px] bg-primary-container text-white hover:bg-primary-container/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
             >
-              {mutation.isPending ? "Processing..." : "Transfer"}
+              {mutation.isPending ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Processing...
+                </span>
+              ) : "Transfer"}
             </button>
           </div>
         </div>
@@ -293,7 +298,12 @@ export default function TransferPage() {
             disabled={mutation.isPending}
             className="flex-1 h-12 bg-primary-container text-white font-bold text-sm rounded-lg shadow-md active:scale-[0.98] transition-all disabled:opacity-40"
           >
-            {mutation.isPending ? "Processing..." : "Transfer"}
+            {mutation.isPending ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Processing...
+                </span>
+              ) : "Transfer"}
           </button>
         </div>
       </form>

@@ -92,7 +92,7 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="mb-md rounded border border-red-200 bg-red-50 px-md py-sm text-body-sm font-body-sm text-red-700">
+              <div role="alert" aria-live="polite" className="mb-md rounded border border-red-200 bg-red-50 px-md py-sm text-body-sm font-body-sm text-red-700">
                 {error}
               </div>
             )}
@@ -150,7 +150,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 bg-primary-container text-white font-body font-bold rounded-lg hover:opacity-90 transition-all disabled:opacity-40 flex items-center justify-center gap-sm"
+                className="w-full h-12 bg-primary-container text-white font-body font-bold rounded-lg hover:opacity-90 transition-all disabled:opacity-40 flex items-center justify-center gap-sm focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2"
               >
                 {loading ? "Signing in..." : "Sign In"}
               </button>
@@ -218,7 +218,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="mb-md rounded border border-red-200 bg-red-50 px-md py-sm text-body-sm font-body-sm text-red-700">
+            <div role="alert" aria-live="polite" className="mb-md rounded border border-red-200 bg-red-50 px-md py-sm text-body-sm font-body-sm text-red-700">
               {error}
             </div>
           )}
@@ -275,11 +275,11 @@ export default function LoginPage() {
             </div>
 
             <button
-              type="submit"
-              disabled={loading}
-              className="w-full h-[48px] bg-primary-container text-white font-body font-bold rounded flex items-center justify-center gap-sm hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-40"
-            >
-              {loading ? (
+                type="submit"
+                disabled={loading}
+                className="w-full h-[48px] bg-primary-container text-white font-body font-bold rounded flex items-center justify-center gap-sm hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-40 focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2"
+              >
+                {loading ? (
                 "Signing in..."
               ) : (
                 <>

@@ -48,7 +48,7 @@ export default function Sidebar() {
             <motion.div key={item.href} variants={navItemVariants} whileHover={{ x: 4 }} whileTap={{ scale: 0.97 }} className="relative">
               <Link
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-container ${
                   active
                     ? "bg-on-primary-fixed-variant text-white"
                     : "text-on-primary-container hover:bg-on-primary-fixed-variant hover:text-white"
@@ -84,7 +84,7 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-container ${
                 active
                   ? "bg-on-primary-fixed-variant text-white"
                   : "text-on-primary-container hover:bg-on-primary-fixed-variant hover:text-white"
@@ -101,7 +101,7 @@ export default function Sidebar() {
               window.location.href = "/login";
             });
           }}
-          className="flex items-center gap-3 px-4 py-3 rounded-md transition-all text-on-primary-container hover:bg-on-primary-fixed-variant hover:text-white w-full text-left"
+          className="flex items-center gap-3 px-4 py-3 rounded-md transition-all text-on-primary-container hover:bg-on-primary-fixed-variant hover:text-white w-full text-left focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-container"
         >
           <span className="material-symbols-outlined">logout</span>
           <span className="text-sm font-medium">Logout</span>

@@ -283,7 +283,7 @@ export default function ScrapSalePage() {
           </section>
 
           {error && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div role="alert" aria-live="polite" className="p-4 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-error text-sm font-medium">{error}</p>
             </div>
           )}
@@ -295,8 +295,17 @@ export default function ScrapSalePage() {
             enterKeyHint="send"
             className="hidden md:flex w-full h-12 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 items-center justify-center gap-2"
           >
-            <span className="material-symbols-outlined text-lg">sell</span>
-            {submitting ? "Saving..." : "Record Scrap Sale"}
+            {submitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Saving...
+              </span>
+            ) : (
+              <>
+                <span className="material-symbols-outlined text-lg">sell</span>
+                Record Scrap Sale
+              </>
+            )}
           </button>
         </div>
       </form>
@@ -320,8 +329,17 @@ export default function ScrapSalePage() {
           }}
           className="w-full h-12 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 flex items-center justify-center gap-2"
         >
-          <span className="material-symbols-outlined text-lg">sell</span>
-          {submitting ? "Saving..." : "Record Scrap Sale"}
+          {submitting ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              Saving...
+            </span>
+          ) : (
+            <>
+              <span className="material-symbols-outlined text-lg">sell</span>
+              Record Scrap Sale
+            </>
+          )}
         </button>
       </div>
     </div>

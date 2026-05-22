@@ -269,7 +269,7 @@ export default function TeamPage() {
 
       {/* Error */}
       {(error || loadError) && !loading && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+        <div role="alert" aria-live="polite" className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
           <p className="text-error font-medium text-sm">{error || (loadError instanceof Error ? loadError.message : "Failed to load team members")}</p>
           <button
             onClick={() => loadData()}
@@ -515,7 +515,7 @@ export default function TeamPage() {
             {/* Modal Body */}
             <form onSubmit={handleInvite} className="p-6 space-y-4">
               {inviteError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-error">
+                <div role="alert" aria-live="polite" className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-error">
                   {inviteError}
                 </div>
               )}
@@ -628,7 +628,12 @@ export default function TeamPage() {
                   enterKeyHint="send"
                   className="flex-1 px-4 py-2 bg-primary-container text-white font-semibold rounded-lg text-sm hover:bg-primary-container/90 transition-all disabled:opacity-50 active:scale-95"
                 >
-                  {inviteMutation.isPending ? "Sending..." : "Send Invite"}
+                  {inviteMutation.isPending ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Sending...
+                    </span>
+                  ) : "Send Invite"}
                 </button>
               </div>
             </form>

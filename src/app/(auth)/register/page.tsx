@@ -115,7 +115,7 @@ export default function RegisterPage() {
           </header>
 
           {error && (
-            <div className="rounded border border-red-200 bg-red-50 px-md py-sm text-body-sm font-body-sm text-red-700">
+            <div role="alert" aria-live="polite" className="rounded border border-red-200 bg-red-50 px-md py-sm text-body-sm font-body-sm text-red-700">
               {error}
             </div>
           )}
@@ -286,7 +286,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 bg-primary-container text-white font-body font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-sm disabled:opacity-40"
+                className="w-full h-12 bg-primary-container text-white font-body font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-sm disabled:opacity-40 focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2"
               >
                 {loading ? (
                   "Creating..."
@@ -347,7 +347,7 @@ export default function RegisterPage() {
 
         <main className="px-[20px] pt-lg pb-[120px]" style={{ paddingBottom: "calc(120px + env(safe-area-inset-bottom, 0px))" }}>
           {error && (
-            <div className="mb-md rounded border border-red-200 bg-red-50 px-md py-sm text-body-sm font-body-sm text-red-700">
+            <div role="alert" aria-live="polite" className="mb-md rounded border border-red-200 bg-red-50 px-md py-sm text-body-sm font-body-sm text-red-700">
               {error}
             </div>
           )}
@@ -543,7 +543,7 @@ export default function RegisterPage() {
             type="submit"
             form="registerForm"
             disabled={loading}
-            className="w-full h-[48px] bg-primary-container text-white font-body font-bold rounded-lg flex items-center justify-center gap-sm active:scale-[0.98] transition-transform disabled:opacity-40"
+            className="w-full h-[48px] bg-primary-container text-white font-body font-bold rounded-lg flex items-center justify-center gap-sm active:scale-[0.98] transition-transform disabled:opacity-40 focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2"
           >
             {loading ? (
               "Creating..."

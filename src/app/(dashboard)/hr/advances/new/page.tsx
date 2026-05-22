@@ -226,7 +226,7 @@ export default function NewAdvancePage() {
           </div>
 
           {error && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div role="alert" aria-live="polite" className="p-4 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-error text-sm font-medium">{error}</p>
             </div>
           )}
@@ -245,7 +245,12 @@ export default function NewAdvancePage() {
               enterKeyHint="send"
               className="px-5 py-2.5 bg-primary-container text-white font-bold text-sm rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40"
             >
-              {mutation.isPending ? "Recording..." : "Record Advance"}
+              {mutation.isPending ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Recording...
+                </span>
+              ) : "Record Advance"}
             </button>
           </div>
         </div>
@@ -263,7 +268,12 @@ export default function NewAdvancePage() {
             disabled={mutation.isPending}
             className="flex-1 h-12 flex items-center justify-center bg-primary-container text-white font-bold text-sm rounded-lg active:scale-95 transition-all shadow-md disabled:opacity-40"
           >
-            {mutation.isPending ? "Recording..." : "Record Advance"}
+            {mutation.isPending ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Recording...
+                </span>
+              ) : "Record Advance"}
           </button>
         </div>
       </form>

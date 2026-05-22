@@ -31,7 +31,7 @@ export default function MobileBottomNav() {
             <motion.div key={item.href} whileTap={{ scale: 0.92 }} className="relative">
               <Link
                 href={item.href}
-                className={`flex flex-col items-center gap-0.5 min-w-[60px] snap-start min-h-[56px] py-2 ${
+                className={`flex flex-col items-center gap-0.5 min-w-[60px] snap-start min-h-[56px] py-2 focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 rounded-lg ${
                   active ? "text-primary-container" : "text-secondary"
                 }`}
               >

@@ -115,7 +115,7 @@ export default function SettingsPage() {
 
       {/* Error */}
       {!loading && (error || loadError) && (
-        <div className="max-w-2xl bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+        <div role="alert" aria-live="polite" className="max-w-2xl bg-red-50 border border-red-200 rounded-xl p-6 text-center">
           <span className="material-symbols-outlined text-4xl text-error block mb-2">
             error
           </span>
@@ -215,12 +215,10 @@ export default function SettingsPage() {
                 className="flex items-center gap-2 px-6 py-3 bg-primary-container text-white font-semibold rounded-lg hover:bg-primary-container/90 transition-all text-sm shadow-sm active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {mutation.isPending ? (
-                  <>
-                    <span className="material-symbols-outlined text-lg animate-spin">
-                      progress_activity
-                    </span>
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     Saving...
-                  </>
+                  </span>
                 ) : (
                   <>
                     <span className="material-symbols-outlined text-lg">save</span>

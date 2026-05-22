@@ -595,8 +595,17 @@ export default function NewSalePage() {
                 enterKeyHint="send"
                 className="w-full mt-6 h-12 bg-white text-primary-container font-bold rounded-lg hover:bg-white/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 flex items-center justify-center gap-2"
               >
-                <span className="material-symbols-outlined text-lg">save</span>
-                {submitting ? "Creating..." : "Save Sale"}
+                {submitting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Creating...
+                  </span>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-lg">save</span>
+                    Save Sale
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -604,7 +613,7 @@ export default function NewSalePage() {
 
         {/* Error */}
         {error && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div role="alert" aria-live="polite" className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-error text-sm font-medium">{error}</p>
           </div>
         )}
@@ -623,8 +632,17 @@ export default function NewSalePage() {
             enterKeyHint="send"
             className="bg-primary-container text-white px-6 py-3 rounded-lg font-bold text-sm flex items-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
           >
-            {submitting ? "Creating..." : "Save Sale"}
-            <span className="material-symbols-outlined text-sm">send</span>
+            {submitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Creating...
+              </span>
+            ) : (
+              <>
+                Save Sale
+                <span className="material-symbols-outlined text-sm">send</span>
+              </>
+            )}
           </button>
         </div>
       </form>

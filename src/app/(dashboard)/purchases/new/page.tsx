@@ -301,7 +301,7 @@ export default function NewPurchasePage() {
                     <button
                       type="button"
                       onClick={addOtherExpense}
-                      className="flex items-center gap-1 text-tertiary hover:bg-tertiary/5 px-2 py-1 rounded transition-all text-xs font-bold"
+                      className="flex items-center gap-1 text-tertiary hover:bg-tertiary/5 px-2 py-1 rounded transition-all text-xs font-bold focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2"
                     >
                       <span className="material-symbols-outlined text-sm">add</span>
                       Add Expense
@@ -411,7 +411,7 @@ export default function NewPurchasePage() {
                 <button
                   type="button"
                   onClick={addItem}
-                  className="flex items-center gap-1.5 text-tertiary hover:bg-tertiary/5 px-3 py-1.5 rounded transition-all text-sm font-bold"
+                  className="flex items-center gap-1.5 text-tertiary hover:bg-tertiary/5 px-3 py-1.5 rounded transition-all text-sm font-bold focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2"
                 >
                   <span className="material-symbols-outlined text-sm">add</span>
                   Add Item
@@ -709,8 +709,17 @@ export default function NewPurchasePage() {
                 enterKeyHint="send"
                 className="w-full mt-6 h-12 bg-white text-primary-container font-bold rounded-lg hover:bg-white/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 flex items-center justify-center gap-2"
               >
-                <span className="material-symbols-outlined text-lg">save</span>
-                {mutation.isPending ? "Creating..." : "Create Purchase"}
+                {mutation.isPending ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Creating...
+                  </span>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-lg">save</span>
+                    Create Purchase
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -718,7 +727,7 @@ export default function NewPurchasePage() {
 
         {/* Error */}
         {error && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div role="alert" aria-live="polite" className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-error text-sm font-medium">{error}</p>
           </div>
         )}
@@ -739,8 +748,17 @@ export default function NewPurchasePage() {
             enterKeyHint="send"
             className="bg-primary-container text-white px-6 py-3 rounded-lg font-bold text-sm flex items-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
           >
-            {mutation.isPending ? "Creating..." : "Create Purchase"}
-            <span className="material-symbols-outlined text-sm">send</span>
+            {mutation.isPending ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Creating...
+              </span>
+            ) : (
+              <>
+                Create Purchase
+                <span className="material-symbols-outlined text-sm">send</span>
+              </>
+            )}
           </button>
         </div>
       </form>

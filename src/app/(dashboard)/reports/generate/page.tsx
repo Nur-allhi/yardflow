@@ -263,7 +263,7 @@ export default function GenerateReportPage() {
             </div>
 
             {error && (
-              <p className="text-sm text-[#ba1a1a] font-medium bg-red-50 border border-red-200 rounded-lg p-3">{error}</p>
+              <div role="alert" aria-live="polite" className="text-sm text-[#ba1a1a] font-medium bg-red-50 border border-red-200 rounded-lg p-3">{error}</div>
             )}
 
             <button
@@ -273,10 +273,10 @@ export default function GenerateReportPage() {
               className="w-full h-12 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 shadow-sm"
             >
               {mutation.isPending ? (
-                <>
-                  <span className="material-symbols-outlined animate-spin text-lg">refresh</span>
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   Generating...
-                </>
+                </span>
               ) : (
                 <>
                   <span className="material-symbols-outlined text-lg">refresh</span>
