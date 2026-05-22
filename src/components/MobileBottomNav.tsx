@@ -29,7 +29,7 @@ export default function MobileBottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center gap-0.5 min-w-[60px] snap-start py-1 ${
+              className={`flex flex-col items-center gap-0.5 min-w-[60px] snap-start min-h-[56px] py-2 ${
                 active ? "text-primary-container" : "text-secondary"
               }`}
             >

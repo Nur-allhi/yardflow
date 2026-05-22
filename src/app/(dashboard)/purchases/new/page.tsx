@@ -245,7 +245,7 @@ export default function NewPurchasePage() {
                     value={vendorId}
                     onChange={(e) => setVendorId(e.target.value)}
                     required
-                    className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+                    className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
                   >
                     <option value="">Select vendor</option>
                     {vendors.map((v) => (
@@ -275,7 +275,7 @@ export default function NewPurchasePage() {
                     value={purchaseDate}
                     onChange={(e) => setPurchaseDate(e.target.value)}
                     required
-                    className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+                    className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
                   />
                 </div>
                 <div className="md:col-span-2 space-y-1.5">
@@ -286,6 +286,8 @@ export default function NewPurchasePage() {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     rows={2}
+                    autoComplete="off"
+                    enterKeyHint="next"
                     className="w-full border border-outline-variant rounded bg-white p-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all resize-none"
                     placeholder="Enter purchase terms, transportation notes, or loading bay numbers..."
                   />
@@ -324,6 +326,8 @@ export default function NewPurchasePage() {
                             onChange={(e) =>
                               handleOtherExpenseChange(exp.key, "description", e.target.value)
                             }
+                            autoComplete="off"
+                            enterKeyHint="next"
                             className="w-full h-[38px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
                             placeholder="e.g. Truck fare"
                           />
@@ -338,6 +342,9 @@ export default function NewPurchasePage() {
                             onChange={(e) =>
                               handleOtherExpenseChange(exp.key, "amount", e.target.value)
                             }
+                            autoComplete="off"
+                            inputMode="decimal"
+                            enterKeyHint="next"
                             className="w-full h-[38px] border border-outline-variant rounded bg-white px-3 text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
                             placeholder="0.00"
                           />
@@ -483,6 +490,9 @@ export default function NewPurchasePage() {
                                 e.target.value,
                               )
                             }
+                            autoComplete="off"
+                            inputMode="decimal"
+                            enterKeyHint="next"
                             className="w-full h-[38px] border border-outline-variant rounded px-2 text-sm text-right font-mono focus:border-primary-container outline-none"
                             placeholder="0"
                           />
@@ -504,6 +514,9 @@ export default function NewPurchasePage() {
                                   e.target.value,
                                 )
                               }
+                              autoComplete="off"
+                              inputMode="decimal"
+                              enterKeyHint="next"
                               className="w-full h-[38px] pl-5 border border-outline-variant rounded px-2 text-sm text-right font-mono focus:border-primary-container outline-none"
                               placeholder="0"
                             />
@@ -586,6 +599,9 @@ export default function NewPurchasePage() {
                           onChange={(e) =>
                             handleItemChange(item.key, "quantity_kg", e.target.value)
                           }
+                          autoComplete="off"
+                          inputMode="decimal"
+                          enterKeyHint="next"
                           className="w-full h-[38px] border border-outline-variant rounded px-2 text-sm font-mono outline-none"
                           placeholder="0"
                         />
@@ -610,6 +626,9 @@ export default function NewPurchasePage() {
                                 e.target.value,
                               )
                             }
+                            autoComplete="off"
+                            inputMode="decimal"
+                            enterKeyHint="next"
                             className="w-full h-[38px] pl-5 border border-outline-variant rounded px-2 text-sm font-mono outline-none"
                             placeholder="0"
                           />
@@ -687,6 +706,7 @@ export default function NewPurchasePage() {
               <button
                 type="submit"
                 disabled={mutation.isPending}
+                enterKeyHint="send"
                 className="w-full mt-6 h-12 bg-white text-primary-container font-bold rounded-lg hover:bg-white/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined text-lg">save</span>
@@ -716,6 +736,7 @@ export default function NewPurchasePage() {
           <button
             type="submit"
             disabled={mutation.isPending}
+            enterKeyHint="send"
             className="bg-primary-container text-white px-6 py-3 rounded-lg font-bold text-sm flex items-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
           >
             {mutation.isPending ? "Creating..." : "Create Purchase"}

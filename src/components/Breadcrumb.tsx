@@ -19,7 +19,7 @@ export default function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
               </span>
             )}
             {item.href ? (
-              <Link href={item.href} className="hover:text-primary-container">
+              <Link href={item.href} className="min-h-[44px] flex items-center hover:text-primary-container">
                 {item.label}
               </Link>
             ) : (

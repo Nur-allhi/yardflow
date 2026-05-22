@@ -139,7 +139,7 @@ export default function ScrapSalePage() {
                     value={saleDate}
                     onChange={(e) => setSaleDate(e.target.value)}
                     required
-                    className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+                    className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -150,8 +150,10 @@ export default function ScrapSalePage() {
                     type="text"
                     value={buyerName}
                     onChange={(e) => setBuyerName(e.target.value)}
+                    autoComplete="name"
+                    enterKeyHint="next"
                     placeholder="e.g. Scrap Dealer"
-                    className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+                    className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -168,8 +170,11 @@ export default function ScrapSalePage() {
                     value={quantityKg}
                     onChange={(e) => setQuantityKg(e.target.value)}
                     required
+                    autoComplete="off"
+                    inputMode="decimal"
+                    enterKeyHint="next"
                     placeholder="0"
-                    className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
+                    className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -185,8 +190,11 @@ export default function ScrapSalePage() {
                       value={pricePerKg}
                       onChange={(e) => setPricePerKg(e.target.value)}
                       required
+                      autoComplete="off"
+                      inputMode="decimal"
+                      enterKeyHint="next"
                       placeholder="0"
-                      className="w-full h-[42px] pl-7 pr-3 border border-outline-variant rounded bg-white text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
+                      className="w-full h-[44px] pl-7 pr-3 border border-outline-variant rounded bg-white text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -222,8 +230,11 @@ export default function ScrapSalePage() {
                     min="0"
                     value={amountReceived === "" ? "" : amountReceived}
                     onChange={(e) => handleReceivedChange(e.target.value)}
+                    autoComplete="off"
+                    inputMode="decimal"
+                    enterKeyHint="next"
                     placeholder={totalAmount > 0 ? formatMoney(totalAmount).replace("৳", "") : "0"}
-                    className="w-full h-[42px] pl-7 pr-3 border border-outline-variant rounded bg-white text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
+                    className="w-full h-[44px] pl-7 pr-3 border border-outline-variant rounded bg-white text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
                   />
                 </div>
                 <p className="text-[11px] text-[#8a9bb5]">
@@ -236,13 +247,13 @@ export default function ScrapSalePage() {
                   Pay Into Account
                 </label>
                 {accountsLoading ? (
-                  <div className="h-[42px] bg-surface-container-low rounded animate-pulse" />
+                  <div className="h-[44px] bg-surface-container-low rounded animate-pulse" />
                 ) : (
                   <select
                     value={accountId}
                     onChange={(e) => setAccountId(e.target.value)}
                     required
-                    className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
+                    className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                   >
                     <option value="">Select account</option>
                     {accounts.map((a) => (
@@ -262,6 +273,8 @@ export default function ScrapSalePage() {
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   rows={2}
+                  autoComplete="off"
+                  enterKeyHint="next"
                   className="w-full border border-outline-variant rounded bg-white p-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all resize-none"
                   placeholder="Internal note..."
                 />
@@ -279,6 +292,7 @@ export default function ScrapSalePage() {
           <button
             type="submit"
             disabled={submitting}
+            enterKeyHint="send"
             className="hidden md:flex w-full h-12 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-lg">sell</span>
@@ -298,6 +312,7 @@ export default function ScrapSalePage() {
         <button
           type="submit"
           disabled={submitting}
+          enterKeyHint="send"
           form=""
           onClick={(_e) => {
             const form = document.querySelector("form");

@@ -243,7 +243,9 @@ export default function TeamPage() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-white border border-outline-variant rounded-lg text-sm outline-none focus:ring-0"
+            autoComplete="off"
+            enterKeyHint="search"
+            className="w-full h-[44px] pl-10 pr-4 bg-white border border-outline-variant rounded-lg text-sm outline-none focus:ring-0"
             placeholder="Search members..."
           />
         </div>
@@ -527,7 +529,9 @@ export default function TeamPage() {
                   onChange={(e) =>
                     setInviteForm((f) => ({ ...f, name: e.target.value }))
                   }
-                  className={`w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-0 ${
+                  autoComplete="name"
+                  enterKeyHint="next"
+                  className={`w-full h-[44px] px-4 border rounded-lg text-sm outline-none focus:ring-0 ${
                     formErrors.name ? "border-red-400 bg-red-50" : "border-outline-variant"
                   }`}
                   placeholder="John Doe"
@@ -547,7 +551,10 @@ export default function TeamPage() {
                   onChange={(e) =>
                     setInviteForm((f) => ({ ...f, email: e.target.value }))
                   }
-                  className={`w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-0 ${
+                  autoComplete="email"
+                  inputMode="email"
+                  enterKeyHint="next"
+                  className={`w-full h-[44px] px-4 border rounded-lg text-sm outline-none focus:ring-0 ${
                     formErrors.email ? "border-red-400 bg-red-50" : "border-outline-variant"
                   }`}
                   placeholder="john@example.com"
@@ -567,7 +574,9 @@ export default function TeamPage() {
                   onChange={(e) =>
                     setInviteForm((f) => ({ ...f, password: e.target.value }))
                   }
-                  className={`w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-0 ${
+                  autoComplete="new-password"
+                  enterKeyHint="next"
+                  className={`w-full h-[44px] px-4 border rounded-lg text-sm outline-none focus:ring-0 ${
                     formErrors.password
                       ? "border-red-400 bg-red-50"
                       : "border-outline-variant"
@@ -593,7 +602,7 @@ export default function TeamPage() {
                       role: e.target.value as InviteForm["role"],
                     }))
                   }
-                  className="w-full px-3 py-2 border border-outline-variant rounded-lg text-sm outline-none focus:ring-0 bg-white"
+                  className="w-full h-[44px] px-4 border border-outline-variant rounded-lg text-sm outline-none focus:ring-0 bg-white"
                 >
                   <option value="worker">Worker</option>
                   <option value="manager">Manager</option>
@@ -616,6 +625,7 @@ export default function TeamPage() {
                 <button
                   type="submit"
                   disabled={inviteMutation.isPending}
+                  enterKeyHint="send"
                   className="flex-1 px-4 py-2 bg-primary-container text-white font-semibold rounded-lg text-sm hover:bg-primary-container/90 transition-all disabled:opacity-50 active:scale-95"
                 >
                   {inviteMutation.isPending ? "Sending..." : "Send Invite"}

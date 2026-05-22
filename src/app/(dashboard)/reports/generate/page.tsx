@@ -168,7 +168,7 @@ export default function GenerateReportPage() {
                     <select
                       value={month}
                       onChange={(e) => setMonth(Number(e.target.value))}
-                      className="w-full h-[42px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
+                      className="w-full h-[44px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
                     >
                       {MONTHS.map((m, i) => (
                         <option key={m} value={i}>{m}</option>
@@ -182,7 +182,7 @@ export default function GenerateReportPage() {
                     <select
                       value={year}
                       onChange={(e) => setYear(Number(e.target.value))}
-                      className="w-full h-[42px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
+                      className="w-full h-[44px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
                     >
                       {Array.from({ length: 10 }, (_, i) => currentYear - 5 + i).map((y) => (
                         <option key={y} value={y}>{y}</option>
@@ -200,7 +200,7 @@ export default function GenerateReportPage() {
                   <select
                     value={year}
                     onChange={(e) => setYear(Number(e.target.value))}
-                    className="w-full h-[42px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
+                    className="w-full h-[44px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
                   >
                     {Array.from({ length: 10 }, (_, i) => currentYear - 5 + i).map((y) => (
                       <option key={y} value={y}>{y}</option>
@@ -219,7 +219,7 @@ export default function GenerateReportPage() {
                       type="date"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
-                      className="w-full h-[42px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
+                      className="w-full h-[44px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
                     />
                   </div>
                   <div>
@@ -230,7 +230,7 @@ export default function GenerateReportPage() {
                       type="date"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
-                      className="w-full h-[42px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
+                      className="w-full h-[44px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
                     />
                   </div>
                 </div>
@@ -248,7 +248,10 @@ export default function GenerateReportPage() {
                 step="0.01"
                 value={totalOtherExpenses}
                 onChange={(e) => setTotalOtherExpenses(e.target.value === "" ? "" : Number(e.target.value))}
-                className="w-full h-[42px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
+                autoComplete="off"
+                inputMode="decimal"
+                enterKeyHint="next"
+                className="w-full h-[44px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
               />
               <p className="text-xs text-secondary mt-1">Rent, electricity, transportation, etc.</p>
             </div>
@@ -266,6 +269,7 @@ export default function GenerateReportPage() {
             <button
               type="submit"
               disabled={mutation.isPending}
+              enterKeyHint="send"
               className="w-full h-12 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 shadow-sm"
             >
               {mutation.isPending ? (

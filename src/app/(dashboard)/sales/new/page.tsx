@@ -262,7 +262,7 @@ export default function NewSalePage() {
                     value={customerId}
                     onChange={(e) => setCustomerId(e.target.value)}
                     required
-                    className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+                    className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
                   >
                     <option value="">Select customer</option>
                     {customers.map((c) => (
@@ -288,7 +288,7 @@ export default function NewSalePage() {
                     value={saleDate}
                     onChange={(e) => setSaleDate(e.target.value)}
                     required
-                    className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+                    className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
                   />
                 </div>
                 <div className="md:col-span-2 space-y-1.5">
@@ -299,6 +299,8 @@ export default function NewSalePage() {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     rows={2}
+                    autoComplete="off"
+                    enterKeyHint="next"
                     className="w-full border border-outline-variant rounded bg-white p-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all resize-none"
                     placeholder="Delivery notes or special instructions..."
                   />
@@ -371,6 +373,9 @@ export default function NewSalePage() {
                             min="0"
                             value={item.quantity_kg}
                             onChange={(e) => handleItemChange(item.key, "quantity_kg", e.target.value)}
+                            autoComplete="off"
+                            inputMode="decimal"
+                            enterKeyHint="next"
                             className="w-full h-[38px] border border-outline-variant rounded px-2 text-sm text-right font-mono focus:border-primary-container outline-none"
                             placeholder="0"
                           />
@@ -384,6 +389,9 @@ export default function NewSalePage() {
                               min="0"
                               value={item.price_per_kg}
                               onChange={(e) => handleItemChange(item.key, "price_per_kg", e.target.value)}
+                              autoComplete="off"
+                              inputMode="decimal"
+                              enterKeyHint="next"
                               className="w-full h-[38px] pl-5 border border-outline-variant rounded px-2 text-sm text-right font-mono focus:border-primary-container outline-none"
                               placeholder="0"
                             />
@@ -445,6 +453,9 @@ export default function NewSalePage() {
                           min="0"
                           value={item.quantity_kg}
                           onChange={(e) => handleItemChange(item.key, "quantity_kg", e.target.value)}
+                          autoComplete="off"
+                          inputMode="decimal"
+                          enterKeyHint="next"
                           className="w-full h-[38px] border border-outline-variant rounded px-2 text-sm font-mono outline-none"
                           placeholder="0"
                         />
@@ -459,6 +470,9 @@ export default function NewSalePage() {
                             min="0"
                             value={item.price_per_kg}
                             onChange={(e) => handleItemChange(item.key, "price_per_kg", e.target.value)}
+                            autoComplete="off"
+                            inputMode="decimal"
+                            enterKeyHint="next"
                             className="w-full h-[38px] pl-5 border border-outline-variant rounded px-2 text-sm font-mono outline-none"
                             placeholder="0"
                           />
@@ -509,7 +523,10 @@ export default function NewSalePage() {
                         max={grandTotal}
                         value={amountReceived}
                         onChange={(e) => setAmountReceived(e.target.value)}
-                        className="w-full h-[42px] pl-8 pr-3 border border-outline-variant rounded text-sm font-mono focus:border-primary-container focus:ring-0 outline-none"
+                        autoComplete="off"
+                        inputMode="decimal"
+                        enterKeyHint="next"
+                        className="w-full h-[44px] pl-8 pr-3 border border-outline-variant rounded text-sm font-mono focus:border-primary-container focus:ring-0 outline-none"
                         placeholder="0.00"
                       />
                     </div>
@@ -521,7 +538,7 @@ export default function NewSalePage() {
                     <select
                       value={accountId}
                       onChange={(e) => setAccountId(e.target.value)}
-                      className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
+                      className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                     >
                       <option value="">Select account</option>
                       {accounts.map((a) => (
@@ -575,6 +592,7 @@ export default function NewSalePage() {
               <button
                 type="submit"
                 disabled={submitting}
+                enterKeyHint="send"
                 className="w-full mt-6 h-12 bg-white text-primary-container font-bold rounded-lg hover:bg-white/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined text-lg">save</span>
@@ -602,6 +620,7 @@ export default function NewSalePage() {
           <button
             type="submit"
             disabled={submitting}
+            enterKeyHint="send"
             className="bg-primary-container text-white px-6 py-3 rounded-lg font-bold text-sm flex items-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
           >
             {submitting ? "Creating..." : "Save Sale"}

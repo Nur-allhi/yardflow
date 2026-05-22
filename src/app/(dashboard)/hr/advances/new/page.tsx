@@ -129,7 +129,7 @@ export default function NewAdvancePage() {
               value={workerId}
               onChange={(e) => setWorkerId(e.target.value)}
               required
-              className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+              className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
             >
               <option value="">Select worker</option>
               {workers.map((w) => (
@@ -156,7 +156,10 @@ export default function NewAdvancePage() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   required
-                  className="w-full h-[42px] pl-8 pr-3 border border-outline-variant rounded bg-white text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
+                  autoComplete="off"
+                  inputMode="decimal"
+                  enterKeyHint="next"
+                  className="w-full h-[44px] pl-8 pr-3 border border-outline-variant rounded bg-white text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
                   placeholder="0.00"
                 />
               </div>
@@ -170,7 +173,7 @@ export default function NewAdvancePage() {
                 value={accountId}
                 onChange={(e) => setAccountId(e.target.value)}
                 required
-                className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+                className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
               >
                 <option value="">Select account</option>
                 {accounts.map((a) => (
@@ -190,7 +193,7 @@ export default function NewAdvancePage() {
                 value={advanceDate}
                 onChange={(e) => setAdvanceDate(e.target.value)}
                 required
-                className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+                className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
               />
             </div>
 
@@ -202,7 +205,7 @@ export default function NewAdvancePage() {
                 type="text"
                 value={`${monthLabel} ${year}`}
                 readOnly
-                className="w-full h-[42px] border border-outline-variant rounded bg-surface-container-low px-3 text-sm font-medium text-primary-container cursor-not-allowed"
+                className="w-full h-[44px] border border-outline-variant rounded bg-surface-container-low px-3 text-sm font-medium text-primary-container cursor-not-allowed"
               />
             </div>
           </div>
@@ -215,6 +218,8 @@ export default function NewAdvancePage() {
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={3}
+              autoComplete="off"
+              enterKeyHint="next"
               className="w-full border border-outline-variant rounded bg-white p-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all resize-none"
               placeholder="Additional details..."
             />
@@ -237,6 +242,7 @@ export default function NewAdvancePage() {
             <button
               type="submit"
               disabled={mutation.isPending}
+              enterKeyHint="send"
               className="px-5 py-2.5 bg-primary-container text-white font-bold text-sm rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40"
             >
               {mutation.isPending ? "Recording..." : "Record Advance"}

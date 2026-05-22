@@ -36,7 +36,7 @@ export function InventoryNav({ active }: InventoryNavProps) {
           <Link
             key={item.key}
             href={item.href}
-            className={`px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap transition-colors ${
+            className={`px-4 py-2.5 text-xs font-medium rounded-full whitespace-nowrap transition-colors ${
               item.key === active
                 ? "bg-primary-container text-white"
                 : "bg-surface-container-low text-secondary"

@@ -86,7 +86,9 @@ export default function NewWorkerPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+              autoComplete="name"
+              enterKeyHint="next"
+              className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
               placeholder="Full name"
             />
           </div>
@@ -99,7 +101,10 @@ export default function NewWorkerPage() {
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+              autoComplete="tel"
+              inputMode="tel"
+              enterKeyHint="next"
+              className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
               placeholder="015xxxxxxxx"
             />
           </div>
@@ -112,7 +117,9 @@ export default function NewWorkerPage() {
               type="text"
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}
-              className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+              autoComplete="off"
+              enterKeyHint="next"
+              className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
               placeholder="e.g. Welder, Helper, Manager"
             />
           </div>
@@ -132,7 +139,10 @@ export default function NewWorkerPage() {
                 value={monthlySalary}
                 onChange={(e) => setMonthlySalary(e.target.value)}
                 required
-                className="w-full h-[42px] pl-8 pr-3 border border-outline-variant rounded bg-white text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
+                autoComplete="off"
+                inputMode="decimal"
+                enterKeyHint="next"
+                className="w-full h-[44px] pl-8 pr-3 border border-outline-variant rounded bg-white text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
                 placeholder="0.00"
               />
             </div>
@@ -155,6 +165,7 @@ export default function NewWorkerPage() {
             <button
               type="submit"
               disabled={mutation.isPending}
+              enterKeyHint="send"
               className="px-5 py-2.5 bg-primary-container text-white font-bold text-sm rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40"
             >
               {mutation.isPending ? "Saving..." : "Save Worker"}

@@ -141,7 +141,9 @@ export default function SettingsPage() {
               <input
                 value={form.name}
                 onChange={handleChange("name")}
-                className="w-full px-4 py-3 bg-white border border-outline-variant rounded-lg text-sm text-primary-container outline-none focus:ring-1 focus:ring-tertiary focus:border-tertiary"
+                autoComplete="organization"
+                enterKeyHint="next"
+                className="w-full h-[44px] px-4 bg-white border border-outline-variant rounded-lg text-sm text-primary-container outline-none focus:ring-1 focus:ring-tertiary focus:border-tertiary"
                 placeholder="Enter company name"
                 required
               />
@@ -169,7 +171,10 @@ export default function SettingsPage() {
               <input
                 value={form.phone}
                 onChange={handleChange("phone")}
-                className="w-full px-4 py-3 bg-white border border-outline-variant rounded-lg text-sm text-primary-container outline-none focus:ring-1 focus:ring-tertiary focus:border-tertiary"
+                autoComplete="tel"
+                inputMode="tel"
+                enterKeyHint="next"
+                className="w-full h-[44px] px-4 bg-white border border-outline-variant rounded-lg text-sm text-primary-container outline-none focus:ring-1 focus:ring-tertiary focus:border-tertiary"
                 placeholder="Enter phone number"
               />
             </div>
@@ -183,7 +188,10 @@ export default function SettingsPage() {
                 value={form.email}
                 onChange={handleChange("email")}
                 type="email"
-                className="w-full px-4 py-3 bg-white border border-outline-variant rounded-lg text-sm text-primary-container outline-none focus:ring-1 focus:ring-tertiary focus:border-tertiary"
+                autoComplete="email"
+                inputMode="email"
+                enterKeyHint="next"
+                className="w-full h-[44px] px-4 bg-white border border-outline-variant rounded-lg text-sm text-primary-container outline-none focus:ring-1 focus:ring-tertiary focus:border-tertiary"
                 placeholder="Enter email address"
               />
             </div>

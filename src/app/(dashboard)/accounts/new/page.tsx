@@ -97,7 +97,9 @@ export default function NewAccountPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
+                  autoComplete="off"
+                  enterKeyHint="next"
+                  className="w-full h-[44px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                   placeholder="e.g. Main Cash"
                 />
               </div>
@@ -145,7 +147,9 @@ export default function NewAccountPage() {
                       required
                       value={bankName}
                       onChange={(e) => setBankName(e.target.value)}
-                      className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
+                      autoComplete="organization"
+                      enterKeyHint="next"
+                      className="w-full h-[44px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                       placeholder="e.g. Sonali Bank"
                     />
                   </div>
@@ -156,7 +160,9 @@ export default function NewAccountPage() {
                     <input
                       value={accountNumber}
                       onChange={(e) => setAccountNumber(e.target.value)}
-                      className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
+                      autoComplete="off"
+                      enterKeyHint="next"
+                      className="w-full h-[44px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                       placeholder="e.g. 1234567890"
                     />
                   </div>
@@ -173,7 +179,10 @@ export default function NewAccountPage() {
                   min="0"
                   value={openingBalance}
                   onChange={(e) => setOpeningBalance(e.target.value)}
-                  className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm font-mono focus:border-primary-container focus:ring-0 outline-none"
+                  autoComplete="off"
+                  inputMode="decimal"
+                  enterKeyHint="next"
+                  className="w-full h-[44px] border border-outline-variant rounded px-3 text-sm font-mono focus:border-primary-container focus:ring-0 outline-none"
                   placeholder="0.00"
                 />
               </div>
@@ -184,14 +193,15 @@ export default function NewAccountPage() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/accounts"
-              className="flex-1 h-[42px] bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded border border-outline-variant flex items-center justify-center"
+              className="flex-1 h-[44px] bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded border border-outline-variant flex items-center justify-center"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="flex-1 h-[42px] bg-primary-container text-white hover:bg-primary-container/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
+              enterKeyHint="send"
+              className="flex-1 h-[44px] bg-primary-container text-white hover:bg-primary-container/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
             >
               {mutation.isPending ? "Saving..." : "Save Account"}
             </button>

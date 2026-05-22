@@ -142,7 +142,7 @@ export default function DepositPage() {
                   value={accountId}
                   onChange={(e) => setAccountId(e.target.value)}
                   required
-                  className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
+                  className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                 >
                   <option value="">Select account</option>
                   {accounts.map((a) => (
@@ -172,7 +172,10 @@ export default function DepositPage() {
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     required
-                    className="w-full h-[42px] pl-8 pr-3 border border-outline-variant rounded text-sm font-mono focus:border-primary-container focus:ring-0 outline-none"
+                    autoComplete="off"
+                    inputMode="decimal"
+                    enterKeyHint="next"
+                    className="w-full h-[44px] pl-8 pr-3 border border-outline-variant rounded text-sm font-mono focus:border-primary-container focus:ring-0 outline-none"
                     placeholder="0.00"
                   />
                 </div>
@@ -187,7 +190,7 @@ export default function DepositPage() {
                   value={depositDate}
                   onChange={(e) => setDepositDate(e.target.value)}
                   required
-                  className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
+                  className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                 />
               </div>
 
@@ -199,6 +202,8 @@ export default function DepositPage() {
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   rows={2}
+                  autoComplete="off"
+                  enterKeyHint="next"
                   className="w-full border border-outline-variant rounded bg-white p-3 text-sm focus:border-primary-container focus:ring-0 outline-none resize-none"
                   placeholder="Source of deposit..."
                 />
@@ -227,14 +232,15 @@ export default function DepositPage() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/accounts"
-              className="flex-1 h-[42px] bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded border border-outline-variant flex items-center justify-center"
+              className="flex-1 h-[44px] bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded border border-outline-variant flex items-center justify-center"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="flex-1 h-[42px] bg-tertiary text-white hover:bg-tertiary/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
+              enterKeyHint="send"
+              className="flex-1 h-[44px] bg-tertiary text-white hover:bg-tertiary/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
             >
               {mutation.isPending ? "Depositing..." : "Deposit"}
             </button>

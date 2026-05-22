@@ -166,7 +166,7 @@ export default function PayrollPage() {
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            className="h-[42px] border border-outline-variant rounded-lg bg-white px-3 text-sm focus:border-primary-container outline-none"
+            className="h-[44px] border border-outline-variant rounded-lg bg-white px-3 text-sm focus:border-primary-container outline-none"
           >
             {MONTH_NAMES.map((name, idx) => (
               <option key={idx + 1} value={idx + 1}>
@@ -177,7 +177,7 @@ export default function PayrollPage() {
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="h-[42px] border border-outline-variant rounded-lg bg-white px-3 text-sm focus:border-primary-container outline-none"
+            className="h-[44px] border border-outline-variant rounded-lg bg-white px-3 text-sm focus:border-primary-container outline-none"
           >
             {years.map((y) => (
               <option key={y} value={y}>
@@ -510,7 +510,10 @@ export default function PayrollPage() {
                     value={payAmount}
                     onChange={(e) => setPayAmount(e.target.value)}
                     required
-                    className="w-full h-[42px] pl-8 pr-3 border border-outline-variant rounded text-sm font-mono focus:border-primary-container focus:ring-0 outline-none"
+                    autoComplete="off"
+                    inputMode="decimal"
+                    enterKeyHint="next"
+                    className="w-full h-[44px] pl-8 pr-3 border border-outline-variant rounded text-sm font-mono focus:border-primary-container focus:ring-0 outline-none"
                     placeholder="0.00"
                   />
                 </div>
@@ -524,7 +527,7 @@ export default function PayrollPage() {
                   value={payAccountId}
                   onChange={(e) => setPayAccountId(e.target.value)}
                   required
-                  className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
+                  className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                 >
                   <option value="">Select account</option>
                   {accounts.map((a) => (
@@ -544,7 +547,7 @@ export default function PayrollPage() {
                   value={payDate}
                   onChange={(e) => setPayDate(e.target.value)}
                   required
-                  className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
+                  className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                 />
               </div>
 
@@ -556,14 +559,15 @@ export default function PayrollPage() {
                 <button
                   type="button"
                   onClick={() => setShowPayModal(false)}
-                  className="flex-1 h-[42px] bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded"
+                  className="flex-1 h-[44px] bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={payMutation.isPending || payTarget.net_payable < 0}
-                  className="flex-1 h-[42px] bg-primary-container text-white hover:bg-primary-container/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
+                  enterKeyHint="send"
+                  className="flex-1 h-[44px] bg-primary-container text-white hover:bg-primary-container/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
                 >
                   {payMutation.isPending ? "Processing..." : payTarget.net_payable < 0 ? "Cannot Pay — Negative Balance" : "Confirm Payment"}
                 </button>
