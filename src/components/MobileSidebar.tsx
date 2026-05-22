@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { fadeIn, slideInLeft, staggerContainer, navItemVariants } from "@/lib/animation";
+import { fadeIn, staggerContainer, navItemVariants } from "@/lib/animation";
 
 const navItems = [
   { href: "/", icon: "dashboard", label: "Dashboard" },
