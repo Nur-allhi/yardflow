@@ -53,7 +53,7 @@ function formatDate(dateStr: string | null): string {
 }
 
 function formatMoney(n: number): string {
-  return "৳" + n.toLocaleString("en-IN");
+  return n.toLocaleString("en-IN") + " tk";
 }
 
 function formatKg(n: number): string {
@@ -72,7 +72,7 @@ function SaleTypeBadge({
 }) {
   if (isQuickCash) {
     return (
-      <span className="inline-flex text-[10px] font-bold px-2 py-0.5 rounded border border-[#76777d] text-[#76777d] bg-[#e0e3e5] uppercase tracking-wider">
+      <span className="inline-flex text-[10px] font-bold px-2 py-0.5 rounded border border-outline text-outline bg-surface-container-highest uppercase tracking-wider">
         Quick Cash
       </span>
     );
@@ -87,8 +87,8 @@ function SaleTypeBadge({
       label: "Fabricated",
     },
     raw_passthrough: {
-      border: "border-[#505f76]",
-      text: "text-[#505f76]",
+      border: "border-secondary",
+      text: "text-secondary",
       label: "Raw",
     },
     scrap: {
@@ -100,7 +100,7 @@ function SaleTypeBadge({
   const c = chips[type] || chips.fabricated;
   return (
     <span
-      className={`inline-flex text-[10px] font-bold px-2 py-0.5 rounded border ${c.border} ${c.text} bg-[#e0e3e5] uppercase tracking-wider`}
+      className={`inline-flex text-[10px] font-bold px-2 py-0.5 rounded border ${c.border} ${c.text} bg-surface-container-highest uppercase tracking-wider`}
     >
       {c.label}
     </span>
@@ -113,15 +113,15 @@ function StatusBadge({ status }: { status: string }) {
     { bg: string; text: string; dot: string; label: string }
   > = {
     paid: {
-      bg: "bg-[#22C55E]/10",
-      text: "text-[#22C55E]",
-      dot: "bg-[#22C55E]",
+      bg: "bg-success/10",
+      text: "text-success",
+      dot: "bg-success",
       label: "Paid",
     },
     partial: {
-      bg: "bg-[#EAB308]/10",
-      text: "text-[#EAB308]",
-      dot: "bg-[#EAB308]",
+      bg: "bg-warning/10",
+      text: "text-warning",
+      dot: "bg-warning",
       label: "Partial",
     },
     due: {
@@ -148,10 +148,10 @@ function SkeletonTable() {
       {[1, 2, 3, 4, 5].map((i) => (
         <div
           key={i}
-          className="bg-white rounded-xl border border-[#c6c6cd]/30 p-6 animate-pulse"
+          className="bg-white rounded-xl border border-outline-variant/30 p-6 animate-pulse"
         >
-          <div className="h-4 bg-[#e0e3e5] rounded w-1/3 mb-3" />
-          <div className="h-4 bg-[#e0e3e5] rounded w-1/2" />
+          <div className="h-4 bg-surface-container-highest rounded w-1/3 mb-3" />
+          <div className="h-4 bg-surface-container-highest rounded w-1/2" />
         </div>
       ))}
     </div>
@@ -214,7 +214,7 @@ export default function SalesPage() {
   return (
     <div className="p-4 md:p-8">
       {/* Breadcrumb */}
-      <nav className="flex text-[10px] uppercase tracking-widest text-[#505f76] mb-1 font-bold">
+      <nav className="flex text-[10px] uppercase tracking-widest text-secondary mb-1 font-bold">
         <span>ERP</span>
         <span className="mx-2">/</span>
         <span className="text-[#191c1e]">Sales Management</span>
@@ -228,7 +228,7 @@ export default function SalesPage() {
         <div className="flex gap-3">
           <Link
             href="/sales/customers"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#191c1e] text-[#191c1e] font-bold hover:bg-[#f2f4f6] transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#191c1e] text-[#191c1e] font-bold hover:bg-surface-container-low transition-all active:scale-95"
           >
             <span className="material-symbols-outlined text-lg">people</span>
             Customers
@@ -242,14 +242,14 @@ export default function SalesPage() {
           </Link>
           <Link
             href="/sales/new/quick"
-            className="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-[#191c1e] text-[#191c1e] font-bold hover:bg-[#f2f4f6] transition-all active:scale-95"
+            className="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-[#191c1e] text-[#191c1e] font-bold hover:bg-surface-container-low transition-all active:scale-95"
           >
             <span className="material-symbols-outlined text-lg">receipt_long</span>
             + Quick Cash Sale
           </Link>
           <Link
             href="/sales/new"
-            className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#0F172A] text-white font-bold hover:bg-[#0F172A]/90 transition-all shadow-md active:scale-95"
+            className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-primary-container text-white font-bold hover:bg-primary-container/90 transition-all shadow-md active:scale-95"
           >
             <span className="material-symbols-outlined text-lg">add_shopping_cart</span>
             + New Sale
@@ -259,12 +259,12 @@ export default function SalesPage() {
 
       {/* Summary Strip */}
       <section className="flex md:grid md:grid-cols-4 gap-3 md:gap-4 mb-6 overflow-x-auto no-scrollbar pb-2 md:pb-0">
-        <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-[#c6c6cd] p-5 rounded-lg shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-[#d0e1fb] rounded-lg text-[#505f76]">
+        <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-outline-variant p-5 rounded-lg shadow-sm flex items-center gap-4">
+          <div className="p-3 bg-secondary-container rounded-lg text-secondary">
             <span className="material-symbols-outlined">payments</span>
           </div>
           <div>
-            <p className="text-xs font-bold text-[#505f76] uppercase tracking-wider">
+            <p className="text-xs font-bold text-secondary uppercase tracking-wider">
               Total Sales
             </p>
             <p className="text-xl font-mono font-bold text-[#191c1e]">
@@ -272,38 +272,38 @@ export default function SalesPage() {
             </p>
           </div>
         </div>
-        <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-[#c6c6cd] p-5 rounded-lg shadow-sm flex items-center gap-4">
+        <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-outline-variant p-5 rounded-lg shadow-sm flex items-center gap-4">
           <div className="p-3 bg-[#85f8c4] rounded-lg text-[#069669]">
             <span className="material-symbols-outlined">account_balance_wallet</span>
           </div>
           <div>
-            <p className="text-xs font-bold text-[#505f76] uppercase tracking-wider">
+            <p className="text-xs font-bold text-secondary uppercase tracking-wider">
               Total Received
             </p>
-            <p className="text-xl font-mono font-bold text-[#22C55E]">
+            <p className="text-xl font-mono font-bold text-success">
               {data?.summary ? formatMoney(data.summary.total_paid) : "—"}
             </p>
           </div>
         </div>
-        <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-[#c6c6cd] p-5 rounded-lg shadow-sm flex items-center gap-4">
+        <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-outline-variant p-5 rounded-lg shadow-sm flex items-center gap-4">
           <div className="p-3 bg-[#ffdad6] rounded-lg text-[#ba1a1a]">
             <span className="material-symbols-outlined">pending_actions</span>
           </div>
           <div>
-            <p className="text-xs font-bold text-[#505f76] uppercase tracking-wider">
+            <p className="text-xs font-bold text-secondary uppercase tracking-wider">
               Total Due
             </p>
-            <p className="text-xl font-mono font-bold text-[#EAB308]">
+            <p className="text-xl font-mono font-bold text-warning">
               {data?.summary ? formatMoney(data.summary.total_due) : "—"}
             </p>
           </div>
         </div>
-        <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-[#c6c6cd] p-5 rounded-lg shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-[#e0e3e5] rounded-lg text-[#505f76]">
+        <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-outline-variant p-5 rounded-lg shadow-sm flex items-center gap-4">
+          <div className="p-3 bg-surface-container-highest rounded-lg text-secondary">
             <span className="material-symbols-outlined">today</span>
           </div>
           <div>
-            <p className="text-xs font-bold text-[#505f76] uppercase tracking-wider">
+            <p className="text-xs font-bold text-secondary uppercase tracking-wider">
               Today&apos;s Sales
             </p>
             <p className="text-xl font-mono font-bold text-[#191c1e]">
@@ -314,9 +314,9 @@ export default function SalesPage() {
       </section>
 
       {/* Filter Bar */}
-      <div className="bg-[#f2f4f6] p-3 md:p-4 rounded-xl border border-[#c6c6cd]/50 mb-6 flex flex-wrap items-center gap-5">
-        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-[#c6c6cd] rounded-lg">
-          <span className="material-symbols-outlined text-[#505f76] text-sm">calendar_today</span>
+      <div className="bg-surface-container-low p-3 md:p-4 rounded-xl border border-outline-variant/50 mb-6 flex flex-wrap items-center gap-5">
+        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-outline-variant rounded-lg">
+          <span className="material-symbols-outlined text-secondary text-sm">calendar_today</span>
           <input
             type="date"
             value={dateFrom}
@@ -324,9 +324,9 @@ export default function SalesPage() {
             className="bg-transparent border-none text-sm focus:ring-0 p-0 w-28 outline-none"
           />
         </div>
-        <span className="text-[#505f76] text-xs">—</span>
-        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-[#c6c6cd] rounded-lg">
-          <span className="material-symbols-outlined text-[#505f76] text-sm">calendar_today</span>
+        <span className="text-secondary text-xs">—</span>
+        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-outline-variant rounded-lg">
+          <span className="material-symbols-outlined text-secondary text-sm">calendar_today</span>
           <input
             type="date"
             value={dateTo}
@@ -335,11 +335,11 @@ export default function SalesPage() {
           />
         </div>
         <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1 px-1.5">Customer</label>
+          <label className="text-[10px] font-bold text-secondary uppercase tracking-tighter ml-1 px-1.5">Customer</label>
           <select
             value={customerFilter}
             onChange={(e) => { setCustomerFilter(e.target.value); setPage(1); }}
-            className="bg-white border border-[#c6c6cd] rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
+            className="bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
           >
             <option value="">All Customers</option>
             {(data?.customers ?? []).map((c: CustomerOption) => (
@@ -348,11 +348,11 @@ export default function SalesPage() {
           </select>
         </div>
         <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1 px-1.5">Sale Type</label>
+          <label className="text-[10px] font-bold text-secondary uppercase tracking-tighter ml-1 px-1.5">Sale Type</label>
           <select
             value={saleTypeFilter}
             onChange={(e) => { setSaleTypeFilter(e.target.value); setPage(1); }}
-            className="bg-white border border-[#c6c6cd] rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
+            className="bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
           >
             {SALE_TYPES.map((st) => (
               <option key={st.value} value={st.value}>{st.label}</option>
@@ -360,11 +360,11 @@ export default function SalesPage() {
           </select>
         </div>
         <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-[#505f76] uppercase tracking-tighter ml-1 px-1.5">Status</label>
+          <label className="text-[10px] font-bold text-secondary uppercase tracking-tighter ml-1 px-1.5">Status</label>
           <select
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-            className="bg-white border border-[#c6c6cd] rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
+            className="bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
           >
             {STATUSES.map((st) => (
               <option key={st.value} value={st.value}>{st.label}</option>
@@ -373,13 +373,13 @@ export default function SalesPage() {
         </div>
         <button
           onClick={() => refetch()}
-          className="p-2 hover:bg-white border border-transparent hover:border-[#c6c6cd] rounded-lg transition-colors text-[#505f76]"
+          className="p-2 hover:bg-white border border-transparent hover:border-outline-variant rounded-lg transition-colors text-secondary"
           title="Apply filters"
         >
           <span className="material-symbols-outlined">filter_list</span>
         </button>
-        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-[#c6c6cd] rounded-lg ml-auto flex-1 min-w-[160px]">
-          <span className="material-symbols-outlined text-[#505f76] text-sm">search</span>
+        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-outline-variant rounded-lg ml-auto flex-1 min-w-[160px]">
+          <span className="material-symbols-outlined text-secondary text-sm">search</span>
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -412,17 +412,17 @@ export default function SalesPage() {
 
       {/* Empty State */}
       {!isLoading && !error && (data?.sales ?? []).length === 0 && (
-        <div className="bg-white rounded-xl border border-[#c6c6cd]/30 py-20 text-center">
-          <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">
+        <div className="bg-white rounded-xl border border-outline-variant/30 py-20 text-center">
+          <span className="material-symbols-outlined text-5xl text-outline-variant block mb-4">
             payments
           </span>
-          <p className="text-[#505f76] font-medium mb-2">No sales yet</p>
-          <p className="text-[#505f76] text-xs mb-6">
+          <p className="text-secondary font-medium mb-2">No sales yet</p>
+          <p className="text-secondary text-xs mb-6">
             Create your first sale to get started
           </p>
           <Link
             href="/sales/new"
-            className="inline-flex items-center gap-2 bg-[#0F172A] text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-[#0F172A]/90 transition-all"
+            className="inline-flex items-center gap-2 bg-primary-container text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-primary-container/90 transition-all"
           >
             <span className="material-symbols-outlined text-sm">add</span>
             New Sale
@@ -434,45 +434,45 @@ export default function SalesPage() {
       {!isLoading && !error && (data?.sales ?? []).length > 0 && (
         <>
           {/* Desktop Table */}
-          <div className="hidden md:block bg-white border border-[#c6c6cd] rounded-lg overflow-hidden shadow-sm">
+          <div className="hidden md:block bg-white border border-outline-variant rounded-lg overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#f2f4f6] border-b border-[#c6c6cd]">
-                    <th className="px-6 py-4 text-[10px] font-bold text-[#505f76] uppercase tracking-wider">
+                  <tr className="bg-surface-container-low border-b border-outline-variant">
+                    <th className="px-6 py-4 text-[10px] font-bold text-secondary uppercase tracking-wider">
                       Date
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-[#505f76] uppercase tracking-wider">
+                    <th className="px-6 py-4 text-[10px] font-bold text-secondary uppercase tracking-wider">
                       Sale #
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-[#505f76] uppercase tracking-wider">
+                    <th className="px-6 py-4 text-[10px] font-bold text-secondary uppercase tracking-wider">
                       Customer
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-[#505f76] uppercase tracking-wider">
+                    <th className="px-6 py-4 text-[10px] font-bold text-secondary uppercase tracking-wider">
                       Type
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-[#505f76] uppercase tracking-wider">
+                    <th className="px-6 py-4 text-[10px] font-bold text-secondary uppercase tracking-wider">
                       Weight (kg)
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-[#505f76] uppercase tracking-wider text-right">
+                    <th className="px-6 py-4 text-[10px] font-bold text-secondary uppercase tracking-wider text-right">
                       Total
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-[#505f76] uppercase tracking-wider text-right">
+                    <th className="px-6 py-4 text-[10px] font-bold text-secondary uppercase tracking-wider text-right">
                       Due
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-[#505f76] uppercase tracking-wider text-center">
+                    <th className="px-6 py-4 text-[10px] font-bold text-secondary uppercase tracking-wider text-center">
                       Status
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-[#505f76] uppercase tracking-wider text-right">
+                    <th className="px-6 py-4 text-[10px] font-bold text-secondary uppercase tracking-wider text-right">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#c6c6cd]/30">
+                <tbody className="divide-y divide-outline-variant/30">
                   {(data?.sales ?? []).map((s: Sale) => (
                     <tr
                       key={s.id}
-                      className="hover:bg-[#f7f9fb] transition-colors group"
+                      className="hover:bg-surface-bright transition-colors group"
                     >
                       <td className="px-6 py-4 text-xs font-mono">
                         {formatDate(s.sale_date)}
@@ -498,8 +498,8 @@ export default function SalesPage() {
                       <td
                         className={`px-6 py-4 text-sm font-mono text-right ${
                           s.due_amount > 0
-                            ? "font-bold text-[#EAB308]"
-                            : "text-[#505f76]"
+                            ? "font-bold text-warning"
+                            : "text-secondary"
                         }`}
                       >
                         {formatMoney(s.due_amount)}
@@ -512,7 +512,7 @@ export default function SalesPage() {
                           {s.id.startsWith("ob-") ? (
                             <Link
                               href={`/sales/customers/${s.customer_id}`}
-                              className="text-[#0F172A] font-bold text-[10px] uppercase tracking-tighter hover:underline"
+                              className="text-primary-container font-bold text-[10px] uppercase tracking-tighter hover:underline"
                             >
                               View Customer
                             </Link>
@@ -543,8 +543,8 @@ export default function SalesPage() {
             </div>
 
             {/* Pagination */}
-            <div className="bg-[#f2f4f6] px-6 py-4 flex items-center justify-between border-t border-[#c6c6cd]">
-              <p className="text-xs text-[#505f76]">
+            <div className="bg-surface-container-low px-6 py-4 flex items-center justify-between border-t border-outline-variant">
+              <p className="text-xs text-secondary">
                 Showing{" "}
                 <span className="font-bold text-[#191c1e]">
                   {(page - 1) * PER_PAGE + 1} -{" "}
@@ -560,7 +560,7 @@ export default function SalesPage() {
                 <button
                   disabled={page <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="p-1.5 rounded border border-[#c6c6cd] hover:bg-white transition-colors disabled:opacity-50"
+                  className="p-1.5 rounded border border-outline-variant hover:bg-white transition-colors disabled:opacity-50"
                 >
                   <span className="material-symbols-outlined text-sm">
                     chevron_left
@@ -576,7 +576,7 @@ export default function SalesPage() {
                   .map((p, idx, arr) => (
                     <span key={p} className="contents">
                       {idx > 0 && arr[idx - 1] !== p - 1 && (
-                        <span className="px-3 py-1 text-xs text-[#505f76]">
+                        <span className="px-3 py-1 text-xs text-secondary">
                           ...
                         </span>
                       )}
@@ -584,8 +584,8 @@ export default function SalesPage() {
                         onClick={() => setPage(p)}
                         className={`px-3 py-1 rounded border text-xs font-bold ${
                           page === p
-                            ? "border-[#0F172A] bg-[#0F172A] text-white"
-                            : "border-[#c6c6cd] hover:bg-white text-[#505f76]"
+                            ? "border-primary-container bg-primary-container text-white"
+                            : "border-outline-variant hover:bg-white text-secondary"
                         }`}
                       >
                         {p}
@@ -595,7 +595,7 @@ export default function SalesPage() {
                 <button
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  className="p-1.5 rounded border border-[#c6c6cd] hover:bg-white transition-colors disabled:opacity-50"
+                  className="p-1.5 rounded border border-outline-variant hover:bg-white transition-colors disabled:opacity-50"
                 >
                   <span className="material-symbols-outlined text-sm">
                     chevron_right
@@ -610,7 +610,7 @@ export default function SalesPage() {
             {(data?.sales ?? []).map((s: Sale) => (
               <div
                 key={s.id}
-                className="bg-white p-4 rounded-xl border border-[#c6c6cd]/30 shadow-sm space-y-3"
+                className="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm space-y-3"
               >
                 {/* Top row */}
                 <div className="flex justify-between items-start">
@@ -618,7 +618,7 @@ export default function SalesPage() {
                     <h4 className="font-headline text-sm font-bold text-[#191c1e]">
                       {s.customer_name || "Cash Sale"}
                     </h4>
-                    <p className="font-mono text-[10px] text-[#505f76]">
+                    <p className="font-mono text-[10px] text-secondary">
                       {getSaleIdDisplay(s)}
                     </p>
                   </div>
@@ -631,7 +631,7 @@ export default function SalesPage() {
                 {/* Middle row */}
                 <div className="flex justify-between items-end">
                   <div>
-                    <p className="text-[10px] text-[#505f76] font-medium">
+                    <p className="text-[10px] text-secondary font-medium">
                       {formatKg(s.total_kg)}
                     </p>
                     <p className="font-mono text-lg font-bold text-[#191c1e]">
@@ -645,7 +645,7 @@ export default function SalesPage() {
                       </p>
                     )}
                     <StatusBadge status={s.status} />
-                    <p className="text-[10px] text-[#505f76] mt-1">
+                    <p className="text-[10px] text-secondary mt-1">
                       {formatDate(s.sale_date)}
                     </p>
                   </div>
@@ -656,7 +656,7 @@ export default function SalesPage() {
                   {s.id.startsWith("ob-") ? (
                     <Link
                       href={`/sales/customers/${s.customer_id}`}
-                      className="flex-1 py-2 text-xs font-bold rounded-lg bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-colors text-center"
+                      className="flex-1 py-2 text-xs font-bold rounded-lg bg-primary-container text-white hover:bg-primary-container/90 transition-colors text-center"
                     >
                       View Customer
                     </Link>
@@ -664,7 +664,7 @@ export default function SalesPage() {
                     <>
                       <Link
                         href={`/sales/${s.id}`}
-                        className="flex-1 py-2 text-xs font-bold rounded-lg bg-[#e0e3e5] text-[#191c1e] hover:bg-[#c6c6cd] transition-colors text-center"
+                        className="flex-1 py-2 text-xs font-bold rounded-lg bg-surface-container-highest text-[#191c1e] hover:bg-outline-variant transition-colors text-center"
                       >
                         View Details
                       </Link>

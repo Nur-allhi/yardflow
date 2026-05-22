@@ -52,7 +52,7 @@ function formatDate(dateStr: string) {
 }
 
 function formatMoney(n: number) {
-  return "৳" + n.toLocaleString("en-IN");
+  return n.toLocaleString("en-IN") + " tk";
 }
 
 function StatusChip({ status }: { status: string }) {
@@ -74,15 +74,15 @@ function StatusChip({ status }: { status: string }) {
 function TypeChip({ type, isQuickCash }: { type: string | null; isQuickCash: boolean }) {
   if (isQuickCash) {
     return (
-      <span className="text-[10px] font-bold px-2 py-0.5 rounded border border-[#059669] text-[#059669] bg-[#059669]/5 uppercase">
+      <span className="text-[10px] font-bold px-2 py-0.5 rounded border border-tertiary text-tertiary bg-tertiary/5 uppercase">
         Quick Cash
       </span>
     );
   }
   const map: Record<string, { border: string; text: string; bg: string; label: string }> = {
-    fabricated: { border: "border-[#0F172A]", text: "text-[#0F172A]", bg: "bg-[#0F172A]/5", label: "Fabricated" },
-    raw_passthrough: { border: "border-[#505f76]", text: "text-[#505f76]", bg: "bg-[#505f76]/5", label: "Raw" },
-    scrap: { border: "border-[#059669]", text: "text-[#059669]", bg: "bg-[#059669]/5", label: "Scrap" },
+    fabricated: { border: "border-primary-container", text: "text-primary-container", bg: "bg-primary-container/5", label: "Fabricated" },
+    raw_passthrough: { border: "border-secondary", text: "text-secondary", bg: "bg-secondary/5", label: "Raw" },
+    scrap: { border: "border-tertiary", text: "text-tertiary", bg: "bg-tertiary/5", label: "Scrap" },
   };
   const s = map[type || ""] || map.fabricated;
   return (
@@ -181,9 +181,9 @@ export default function SaleDetailPage() {
   if (isLoading) {
     return (
       <div className="p-4 md:p-8 space-y-6 animate-pulse">
-        <div className="h-6 bg-[#e6e8ea] rounded w-1/3" />
-        <div className="h-12 bg-[#e6e8ea] rounded w-1/2" />
-        <div className="h-64 bg-[#e6e8ea] rounded-xl" />
+        <div className="h-6 bg-surface-container-high rounded w-1/3" />
+        <div className="h-12 bg-surface-container-high rounded w-1/2" />
+        <div className="h-64 bg-surface-container-high rounded-xl" />
       </div>
     );
   }
@@ -193,12 +193,12 @@ export default function SaleDetailPage() {
     return (
       <div className="p-4 md:p-8">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
-          <p className="text-[#EF4444] font-medium text-lg mb-2">
+          <p className="text-error font-medium text-lg mb-2">
             {error?.message || "Sale not found"}
           </p>
           <Link
             href="/sales"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary-container text-white text-sm rounded-lg"
           >
             <span className="material-symbols-outlined text-lg">arrow_back</span>
             Back to Sales
@@ -220,11 +220,11 @@ export default function SaleDetailPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/sales"
-            className="w-9 h-9 flex items-center justify-center rounded-full border border-[#c6c6cd] text-[#505f76] hover:bg-[#f2f4f6] transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-full border border-outline-variant text-secondary hover:bg-surface-container-low transition-colors"
           >
             <span className="material-symbols-outlined">arrow_back</span>
           </Link>
-          <h1 className="font-display text-lg md:text-xl font-bold text-[#0F172A]">
+          <h1 className="font-display text-lg md:text-xl font-bold text-primary-container">
             Sale #SAL-{id.slice(0, 4).toUpperCase()}
           </h1>
           <StatusChip status={sale.status} />
@@ -233,7 +233,7 @@ export default function SaleDetailPage() {
           <button
             onClick={openPaymentModal}
             disabled={sale.status === "paid"}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#0F172A] text-white font-bold text-sm rounded-lg hover:bg-[#0F172A]/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary-container text-white font-bold text-sm rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-sm">payments</span>
             {sale.status === "paid" ? "Fully Paid" : "Record Payment"}
@@ -246,51 +246,51 @@ export default function SaleDetailPage() {
         {/* LEFT */}
         <div className="lg:col-span-7 space-y-6">
           {/* Sale Info */}
-          <div className="bg-white border border-[#c6c6cd]/50 rounded-xl shadow-sm overflow-hidden">
-            <div className="px-5 md:px-6 py-4 border-b border-[#c6c6cd]/50 bg-[#f2f4f6]">
-              <h3 className="font-display font-bold text-[#0F172A] flex items-center gap-2">
+          <div className="bg-white border border-outline-variant/50 rounded-xl shadow-sm overflow-hidden">
+            <div className="px-5 md:px-6 py-4 border-b border-outline-variant/50 bg-surface-container-low">
+              <h3 className="font-display font-bold text-primary-container flex items-center gap-2">
                 <span className="material-symbols-outlined">info</span>
                 Sale Information
               </h3>
             </div>
             <div className="p-5 md:p-6 grid grid-cols-2 gap-y-5">
               <div>
-                <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">
+                <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
                   Customer
                 </p>
                 {sale.is_quick_cash ? (
-                  <span className="italic text-[#505f76] text-sm">Cash Sale</span>
+                  <span className="italic text-secondary text-sm">Cash Sale</span>
                 ) : (
                   <>
-                    <p className="font-medium text-[#0F172A] text-sm">
+                    <p className="font-medium text-primary-container text-sm">
                       {sale.customer_name || "—"}
                     </p>
                     {sale.customer_phone && (
-                      <p className="text-xs text-[#505f76]">{sale.customer_phone}</p>
+                      <p className="text-xs text-secondary">{sale.customer_phone}</p>
                     )}
                   </>
                 )}
               </div>
               <div>
-                <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">
+                <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
                   Sale Type
                 </p>
                 <TypeChip type={sale.sale_type} isQuickCash={sale.is_quick_cash} />
               </div>
               <div>
-                <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">
+                <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
                   Sale Date
                 </p>
-                <p className="font-medium text-[#0F172A] text-sm">
+                <p className="font-medium text-primary-container text-sm">
                   {formatDate(sale.sale_date)}
                 </p>
               </div>
               {sale.note && (
                 <div className="col-span-2">
-                  <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">
+                  <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
                     Note
                   </p>
-                  <p className="text-sm text-[#0F172A] italic">
+                  <p className="text-sm text-primary-container italic">
                     &ldquo;{sale.note}&rdquo;
                   </p>
                 </div>
@@ -299,9 +299,9 @@ export default function SaleDetailPage() {
           </div>
 
           {/* Items Table */}
-          <div className="bg-white border border-[#c6c6cd]/50 rounded-xl shadow-sm overflow-hidden">
-            <div className="px-5 md:px-6 py-4 border-b border-[#c6c6cd]/50 bg-[#f2f4f6]">
-              <h3 className="font-display font-bold text-[#0F172A] flex items-center gap-2">
+          <div className="bg-white border border-outline-variant/50 rounded-xl shadow-sm overflow-hidden">
+            <div className="px-5 md:px-6 py-4 border-b border-outline-variant/50 bg-surface-container-low">
+              <h3 className="font-display font-bold text-primary-container flex items-center gap-2">
                 <span className="material-symbols-outlined">list_alt</span>
                 Line Items
               </h3>
@@ -309,26 +309,26 @@ export default function SaleDetailPage() {
             {/* Desktop Table */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse">
-                <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
+                <thead className="bg-surface-container-high border-b border-outline-variant">
                   <tr>
-                    <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider">
+                    <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">
                       Sub-type
                     </th>
-                    <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider text-right">
+                    <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider text-right">
                       Qty (kg)
                     </th>
-                    <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider text-right">
+                    <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider text-right">
                       Price/kg
                     </th>
-                    <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider text-right">
+                    <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider text-right">
                       Total
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#c6c6cd]/30">
+                <tbody className="divide-y divide-outline-variant/30">
                   {sale.items.map((item) => (
-                    <tr key={item.id} className="hover:bg-[#F8FAFC]">
-                      <td className="px-6 py-4 text-sm font-bold text-[#0F172A]">
+                    <tr key={item.id} className="hover:bg-background">
+                      <td className="px-6 py-4 text-sm font-bold text-primary-container">
                         {item.subtype_name || "—"}
                       </td>
                       <td className="px-6 py-4 font-mono text-sm text-right">
@@ -344,14 +344,14 @@ export default function SaleDetailPage() {
                   ))}
                 </tbody>
                 <tfoot>
-                  <tr className="bg-[#f2f4f6] border-t-2 border-[#0F172A]/10">
+                  <tr className="bg-surface-container-low border-t-2 border-primary-container/10">
                     <td
                       colSpan={3}
-                      className="px-6 py-4 font-display font-bold text-[#0F172A] text-right uppercase tracking-widest text-xs"
+                      className="px-6 py-4 font-display font-bold text-primary-container text-right uppercase tracking-widest text-xs"
                     >
                       Total Amount
                     </td>
-                    <td className="px-6 py-4 font-mono text-right text-lg font-bold text-[#0F172A]">
+                    <td className="px-6 py-4 font-mono text-right text-lg font-bold text-primary-container">
                       {formatMoney(sale.total_amount)}
                     </td>
                   </tr>
@@ -364,10 +364,10 @@ export default function SaleDetailPage() {
               {sale.items.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-white rounded-lg p-4 border border-[#c6c6cd]/30"
+                  className="bg-white rounded-lg p-4 border border-outline-variant/30"
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-bold text-[#0F172A] text-sm">
+                    <h4 className="font-bold text-primary-container text-sm">
                       {item.subtype_name || "—"}
                     </h4>
                     <span className="font-mono text-sm font-bold">
@@ -376,7 +376,7 @@ export default function SaleDetailPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <p className="text-[10px] text-[#505f76] uppercase font-bold">
+                      <p className="text-[10px] text-secondary uppercase font-bold">
                         Quantity
                       </p>
                       <p className="font-mono text-sm">
@@ -384,7 +384,7 @@ export default function SaleDetailPage() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] text-[#505f76] uppercase font-bold">
+                      <p className="text-[10px] text-secondary uppercase font-bold">
                         Price/kg
                       </p>
                       <p className="font-mono text-sm">
@@ -401,10 +401,10 @@ export default function SaleDetailPage() {
         {/* RIGHT */}
         <div className="lg:col-span-5 space-y-6">
           {/* Financial Summary */}
-          <div className="bg-[#0F172A] text-white rounded-xl p-6 shadow-md relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#059669]/10 blur-[60px] rounded-full -mr-16 -mt-16" />
+          <div className="bg-primary-container text-white rounded-xl p-6 shadow-md relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-tertiary/10 blur-[60px] rounded-full -mr-16 -mt-16" />
             <h3 className="font-display font-bold text-lg mb-6 flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#059669]">
+              <span className="material-symbols-outlined text-tertiary">
                 account_balance_wallet
               </span>
               Financial Summary
@@ -418,7 +418,7 @@ export default function SaleDetailPage() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-sm">Total Paid</span>
-                <span className="font-mono font-bold text-[#059669]">
+                <span className="font-mono font-bold text-tertiary">
                   {formatMoney(sale.paid_amount)}
                 </span>
               </div>
@@ -428,7 +428,7 @@ export default function SaleDetailPage() {
                 </span>
                 <span
                   className={`font-mono font-bold text-lg ${
-                    sale.due_amount > 0 ? "text-[#EAB308]" : "text-[#059669]"
+                    sale.due_amount > 0 ? "text-warning" : "text-tertiary"
                   }`}
                 >
                   {formatMoney(sale.due_amount)}
@@ -438,12 +438,12 @@ export default function SaleDetailPage() {
             {/* Progress Bar */}
             <div className="mt-6">
               <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-2">
-                <span className="text-[#059669]">Paid {paidPercent}%</span>
+                <span className="text-tertiary">Paid {paidPercent}%</span>
                 <span className="text-white/50">Due {100 - Number(paidPercent)}%</span>
               </div>
               <div className="h-3 w-full bg-white/20 rounded-full overflow-hidden flex">
                 <div
-                  className="h-full bg-[#059669] rounded-full transition-all duration-500"
+                  className="h-full bg-tertiary rounded-full transition-all duration-500"
                   style={{ width: `${paidPercent}%` }}
                 />
               </div>
@@ -451,45 +451,45 @@ export default function SaleDetailPage() {
           </div>
 
           {/* Payment History */}
-          <div className="bg-white border border-[#c6c6cd]/50 rounded-xl shadow-sm overflow-hidden">
-            <div className="px-5 md:px-6 py-4 border-b border-[#c6c6cd]/50 bg-[#f2f4f6]">
-              <h3 className="font-display font-bold text-[#0F172A] text-sm uppercase tracking-wide flex items-center gap-2">
+          <div className="bg-white border border-outline-variant/50 rounded-xl shadow-sm overflow-hidden">
+            <div className="px-5 md:px-6 py-4 border-b border-outline-variant/50 bg-surface-container-low">
+              <h3 className="font-display font-bold text-primary-container text-sm uppercase tracking-wide flex items-center gap-2">
                 <span className="material-symbols-outlined text-lg">history</span>
                 Payment Ledger
               </h3>
             </div>
             {sale.payments.length === 0 ? (
-              <div className="p-6 text-center text-[#505f76] text-sm">
-                <span className="material-symbols-outlined text-3xl block mb-2 text-[#c6c6cd]">
+              <div className="p-6 text-center text-secondary text-sm">
+                <span className="material-symbols-outlined text-3xl block mb-2 text-outline-variant">
                   payments
                 </span>
                 No payments recorded yet
               </div>
             ) : (
-              <div className="divide-y divide-[#c6c6cd]/30">
+              <div className="divide-y divide-outline-variant/30">
                 {sale.payments.map((pmt) => (
                   <div
                     key={pmt.id}
-                    className="p-5 md:p-6 flex items-start gap-4 bg-[#059669]/5"
+                    className="p-5 md:p-6 flex items-start gap-4 bg-tertiary/5"
                   >
-                    <div className="w-10 h-10 rounded-full bg-[#059669]/10 flex items-center justify-center text-[#059669]">
+                    <div className="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary">
                       <span className="material-symbols-outlined">done_all</span>
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between items-center mb-1">
-                        <p className="font-mono font-bold text-[#0F172A]">
+                        <p className="font-mono font-bold text-primary-container">
                           {formatMoney(pmt.amount)}
                         </p>
-                        <p className="text-xs text-[#505f76] font-medium">
+                        <p className="text-xs text-secondary font-medium">
                           {formatDate(pmt.payment_date)}
                         </p>
                       </div>
-                      <p className="text-xs text-[#505f76]">
+                      <p className="text-xs text-secondary">
                         <span className="font-bold">Account:</span>{" "}
                         {pmt.account_name || "—"}
                       </p>
                       {pmt.note && (
-                        <p className="text-xs text-[#505f76] italic mt-1">
+                        <p className="text-xs text-secondary italic mt-1">
                           &ldquo;{pmt.note}&rdquo;
                         </p>
                       )}
@@ -498,11 +498,11 @@ export default function SaleDetailPage() {
                 ))}
               </div>
             )}
-            <div className="p-5 md:p-6 border-t border-[#c6c6cd]/50">
+            <div className="p-5 md:p-6 border-t border-outline-variant/50">
               <button
                 onClick={openPaymentModal}
                 disabled={sale.status === "paid"}
-                className="w-full py-3 rounded-lg border-2 border-dashed border-[#c6c6cd] hover:border-[#0F172A] hover:text-[#0F172A] transition-all text-[#505f76] font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-40"
+                className="w-full py-3 rounded-lg border-2 border-dashed border-outline-variant hover:border-primary-container hover:text-primary-container transition-all text-secondary font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-40"
               >
                 <span className="material-symbols-outlined">add</span>
                 Add New Record
@@ -513,11 +513,11 @@ export default function SaleDetailPage() {
       </div>
 
       {/* Mobile: Fixed Bottom Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-[#c6c6cd] px-4 py-3 z-40 shadow-lg">
+      <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 shadow-lg">
         <button
           onClick={openPaymentModal}
           disabled={sale.status === "paid"}
-          className="w-full h-12 bg-[#059669] text-white font-bold rounded-lg flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
+          className="w-full h-12 bg-tertiary text-white font-bold rounded-lg flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
         >
           <span className="material-symbols-outlined">add_card</span>
           {sale.status === "paid" ? "Fully Paid" : "Record Payment"}
@@ -528,32 +528,32 @@ export default function SaleDetailPage() {
 
       {/* Payment Modal */}
       {showPaymentModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#0F172A]/40 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-primary-container/40 backdrop-blur-sm p-4">
           <div
             className="absolute inset-0"
             onClick={() => setShowPaymentModal(false)}
           />
-          <div className="bg-white w-full max-w-md rounded-xl shadow-lg border border-[#c6c6cd]/30 relative z-10 overflow-hidden">
+          <div className="bg-white w-full max-w-md rounded-xl shadow-lg border border-outline-variant/30 relative z-10 overflow-hidden">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 pb-0">
-              <h2 className="font-display font-bold text-xl text-[#0F172A]">
+              <h2 className="font-display font-bold text-xl text-primary-container">
                 Record Payment
               </h2>
               <button
                 onClick={() => setShowPaymentModal(false)}
-                className="text-[#505f76] hover:text-[#0F172A] transition-colors"
+                className="text-secondary hover:text-primary-container transition-colors"
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
 
             {/* Outstanding Due Banner */}
-            <div className="mx-6 mt-4 p-4 bg-[#EAB308]/10 border border-[#EAB308]/20 rounded-lg">
+            <div className="mx-6 mt-4 p-4 bg-warning/10 border border-warning/20 rounded-lg">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-[#505f76]">
+                <span className="text-sm font-medium text-secondary">
                   Outstanding Due
                 </span>
-                <span className="font-mono font-bold text-[#EAB308] text-lg">
+                <span className="font-mono font-bold text-warning text-lg">
                   {formatMoney(sale.due_amount)}
                 </span>
               </div>
@@ -561,11 +561,11 @@ export default function SaleDetailPage() {
 
             <form onSubmit={handlePayment} className="p-6 space-y-5">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                   Amount
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm text-[#505f76]">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm text-secondary">
                     ৳
                   </span>
                   <input
@@ -576,21 +576,21 @@ export default function SaleDetailPage() {
                     value={payAmount}
                     onChange={(e) => setPayAmount(e.target.value)}
                     required
-                    className="w-full h-[42px] pl-8 pr-3 border border-[#c6c6cd] rounded text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none"
+                    className="w-full h-[42px] pl-8 pr-3 border border-outline-variant rounded text-sm font-mono focus:border-primary-container focus:ring-0 outline-none"
                     placeholder="0.00"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                   Pay From Account
                 </label>
                 <select
                   value={payAccountId}
                   onChange={(e) => setPayAccountId(e.target.value)}
                   required
-                  className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
+                  className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                 >
                   <option value="">Select account</option>
                   {accountsData?.map((a) => (
@@ -602,7 +602,7 @@ export default function SaleDetailPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                   Payment Date
                 </label>
                 <input
@@ -610,59 +610,59 @@ export default function SaleDetailPage() {
                   value={payDate}
                   onChange={(e) => setPayDate(e.target.value)}
                   required
-                  className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
+                  className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                   Note (optional)
                 </label>
                 <textarea
                   value={payNote}
                   onChange={(e) => setPayNote(e.target.value)}
                   rows={2}
-                  className="w-full border border-[#c6c6cd] rounded bg-white p-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none resize-none"
+                  className="w-full border border-outline-variant rounded bg-white p-3 text-sm focus:border-primary-container focus:ring-0 outline-none resize-none"
                   placeholder="Additional note..."
                 />
               </div>
 
               {/* Payment Preview */}
-              <div className="bg-[#f2f4f6] rounded-lg p-4 space-y-2 border border-[#c6c6cd]/50">
+              <div className="bg-surface-container-low rounded-lg p-4 space-y-2 border border-outline-variant/50">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="text-[#505f76]">Total Sale</span>
+                  <span className="text-secondary">Total Sale</span>
                   <span className="font-mono">{formatMoney(sale.total_amount)}</span>
                 </div>
                 <div className="flex justify-between items-center text-xs">
-                  <span className="text-[#505f76]">Paying Now</span>
-                  <span className="font-mono text-[#059669] font-bold">
+                  <span className="text-secondary">Paying Now</span>
+                  <span className="font-mono text-tertiary font-bold">
                     -{formatMoney(parseFloat(payAmount) || 0)}
                   </span>
                 </div>
-                <div className="flex justify-between items-center pt-2 border-t border-[#c6c6cd]/50">
+                <div className="flex justify-between items-center pt-2 border-t border-outline-variant/50">
                   <span className="text-sm font-bold">New Due</span>
-                  <span className="font-mono font-bold text-[#EAB308]">
+                  <span className="font-mono font-bold text-warning">
                     {formatMoney(sale.due_amount - (parseFloat(payAmount) || 0))}
                   </span>
                 </div>
               </div>
 
               {payError && (
-                <p className="text-sm text-[#EF4444] font-medium">{payError}</p>
+                <p className="text-sm text-error font-medium">{payError}</p>
               )}
 
               <div className="flex gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowPaymentModal(false)}
-                  className="flex-1 h-[42px] bg-transparent text-[#505f76] hover:bg-[#f2f4f6] transition-colors font-bold text-sm rounded"
+                  className="flex-1 h-[42px] bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                     disabled={paymentMutation.isPending}
-                  className="flex-1 h-[42px] bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
+                  className="flex-1 h-[42px] bg-primary-container text-white hover:bg-primary-container/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
                 >
                     {paymentMutation.isPending ? "Processing..." : "Confirm Payment"}
                 </button>

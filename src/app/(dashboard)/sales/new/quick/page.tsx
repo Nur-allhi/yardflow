@@ -23,7 +23,7 @@ interface LineItem {
 }
 
 function formatMoney(n: number) {
-  return "৳" + n.toLocaleString("en-IN");
+  return n.toLocaleString("en-IN") + " tk";
 }
 
 function calcLineTotal(item: LineItem) {
@@ -162,11 +162,11 @@ export default function QuickCashSalePage() {
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/sales"
-          className="w-9 h-9 flex items-center justify-center rounded-full border border-[#c6c6cd] text-[#505f76] hover:bg-[#f2f4f6] transition-colors"
+          className="w-9 h-9 flex items-center justify-center rounded-full border border-outline-variant text-secondary hover:bg-surface-container-low transition-colors"
         >
           <span className="material-symbols-outlined">arrow_back</span>
         </Link>
-        <h1 className="font-display text-xl md:text-2xl font-bold text-[#0F172A]">
+        <h1 className="font-display text-xl md:text-2xl font-bold text-primary-container">
           Quick Cash Sale
         </h1>
       </div>
@@ -176,14 +176,14 @@ export default function QuickCashSalePage() {
           {/* Top Row: Sale Details + Payment */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Sale Details */}
-            <section className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm p-5 md:p-6">
+            <section className="bg-white rounded-lg border border-outline-variant/50 shadow-sm p-5 md:p-6">
               <div className="flex items-center gap-2 mb-5">
-                <span className="material-symbols-outlined text-[#0F172A]">bolt</span>
+                <span className="material-symbols-outlined text-primary-container">bolt</span>
                 <h2 className="font-display text-lg font-semibold">Sale Details</h2>
               </div>
-              <p className="text-sm text-[#505f76] mb-4">No customer record. Payment received in full.</p>
+              <p className="text-sm text-secondary mb-4">No customer record. Payment received in full.</p>
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                   Sale Date
                 </label>
                 <input
@@ -191,53 +191,53 @@ export default function QuickCashSalePage() {
                   value={saleDate}
                   onChange={(e) => setSaleDate(e.target.value)}
                   required
-                  className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                  className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
                 />
               </div>
               <div className="space-y-1.5 mt-4">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                   Customer Name (optional)
                 </label>
                 <input
                   type="text"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                  className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
                   placeholder="Walk-in customer"
                 />
               </div>
             </section>
 
             {/* Payment */}
-            <section className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm p-5 md:p-6">
+            <section className="bg-white rounded-lg border border-outline-variant/50 shadow-sm p-5 md:p-6">
               <div className="flex items-center gap-2 mb-5">
-                <span className="material-symbols-outlined text-[#0F172A]">account_balance_wallet</span>
+                <span className="material-symbols-outlined text-primary-container">account_balance_wallet</span>
                 <h2 className="font-display text-lg font-semibold">Payment</h2>
               </div>
               <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                  <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                     Amount Received
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#505f76] font-mono">৳</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-secondary font-mono">৳</span>
                     <input
                       type="text"
                       value={formatMoney(amountReceived)}
                       readOnly
-                      className="w-full h-[42px] pl-8 pr-3 border border-[#c6c6cd] rounded bg-[#f2f4f6] text-sm font-mono font-bold text-[#059669] outline-none cursor-default"
+                      className="w-full h-[42px] pl-8 pr-3 border border-outline-variant rounded bg-surface-container-low text-sm font-mono font-bold text-tertiary outline-none cursor-default"
                     />
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                  <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                     Pay Into Account
                   </label>
                   <select
                     value={accountId}
                     onChange={(e) => setAccountId(e.target.value)}
                     required
-                    className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
+                    className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                   >
                     <option value="">Select account</option>
                     {accounts.map((a) => (
@@ -248,14 +248,14 @@ export default function QuickCashSalePage() {
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                  <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                     Note (optional)
                   </label>
                   <textarea
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     rows={2}
-                    className="w-full border border-[#c6c6cd] rounded bg-white p-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all resize-none"
+                    className="w-full border border-outline-variant rounded bg-white p-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all resize-none"
                     placeholder="Internal note..."
                   />
                 </div>
@@ -264,16 +264,16 @@ export default function QuickCashSalePage() {
           </div>
 
           {/* Items */}
-          <section className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm overflow-hidden">
-            <div className="p-5 md:p-6 border-b border-[#c6c6cd]/50 flex justify-between items-center">
+          <section className="bg-white rounded-lg border border-outline-variant/50 shadow-sm overflow-hidden">
+            <div className="p-5 md:p-6 border-b border-outline-variant/50 flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#0F172A]">category</span>
+                <span className="material-symbols-outlined text-primary-container">category</span>
                 <h2 className="font-display text-lg font-semibold">Items</h2>
               </div>
               <button
                 type="button"
                 onClick={addItem}
-                className="flex items-center gap-1.5 text-[#059669] hover:bg-[#059669]/5 px-3 py-1.5 rounded transition-all text-sm font-bold"
+                className="flex items-center gap-1.5 text-tertiary hover:bg-tertiary/5 px-3 py-1.5 rounded transition-all text-sm font-bold"
               >
                 <span className="material-symbols-outlined text-sm">add</span>
                 Add Item
@@ -291,24 +291,24 @@ export default function QuickCashSalePage() {
                   <col className="w-[16%]" />
                   <col className="w-[10%]" />
                 </colgroup>
-                <thead className="bg-[#f2f4f6] border-b border-[#c6c6cd]/50">
+                <thead className="bg-surface-container-low border-b border-outline-variant/50">
                   <tr>
-                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Category</th>
-                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Sub-type</th>
-                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-[#505f76] text-right">Qty (kg)</th>
-                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-[#505f76] text-right">Price/kg</th>
-                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-[#505f76] text-right">Total</th>
+                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-secondary">Category</th>
+                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-secondary">Sub-type</th>
+                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Qty (kg)</th>
+                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Price/kg</th>
+                    <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Total</th>
                     <th className="px-8 py-5" />
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#c6c6cd]/30">
+                <tbody className="divide-y divide-outline-variant/30">
                   {items.map((item) => (
-                    <tr key={item.key} className="hover:bg-[#F8FAFC]">
+                    <tr key={item.key} className="hover:bg-background">
                       <td className="px-8 py-4">
                         <select
                           value={item.category_id}
                           onChange={(e) => handleCategoryChange(item.key, e.target.value)}
-                          className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm focus:border-[#0F172A] outline-none bg-white"
+                          className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container outline-none bg-white"
                         >
                           <option value="">Category</option>
                           {categories.map((cat) => (
@@ -321,7 +321,7 @@ export default function QuickCashSalePage() {
                           value={item.subtype_id}
                           onChange={(e) => handleItemChange(item.key, "subtype_id", e.target.value)}
                           disabled={!item.category_id}
-                          className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm focus:border-[#0F172A] outline-none bg-white disabled:opacity-40"
+                          className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container outline-none bg-white disabled:opacity-40"
                         >
                           <option value="">Sub-type</option>
                           {getSubtypesFor(item).map((st) => (
@@ -336,25 +336,25 @@ export default function QuickCashSalePage() {
                           min="0"
                           value={item.quantity_kg}
                           onChange={(e) => handleItemChange(item.key, "quantity_kg", e.target.value)}
-                          className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm text-right font-mono focus:border-[#0F172A] outline-none"
+                          className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm text-right font-mono focus:border-primary-container outline-none"
                           placeholder="0"
                         />
                       </td>
                       <td className="px-8 py-4">
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#505f76]">৳</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-secondary">৳</span>
                           <input
                             type="number"
                             step="0.01"
                             min="0"
                             value={item.price_per_kg}
                             onChange={(e) => handleItemChange(item.key, "price_per_kg", e.target.value)}
-                            className="w-full h-[42px] pl-6 border border-[#c6c6cd] rounded px-3 text-sm text-right font-mono focus:border-[#0F172A] outline-none"
+                            className="w-full h-[42px] pl-6 border border-outline-variant rounded px-3 text-sm text-right font-mono focus:border-primary-container outline-none"
                             placeholder="0"
                           />
                         </div>
                       </td>
-                      <td className="px-8 py-4 text-right font-mono text-base font-semibold text-[#0F172A]">
+                      <td className="px-8 py-4 text-right font-mono text-base font-semibold text-primary-container">
                         ৳{calcLineTotal(item).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                       <td className="px-8 py-4 text-center">
@@ -362,7 +362,7 @@ export default function QuickCashSalePage() {
                           <button
                             type="button"
                             onClick={() => removeItem(item.key)}
-                            className="text-[#EF4444] hover:bg-red-50 p-1.5 rounded-lg transition-colors"
+                            className="text-error hover:bg-red-50 p-1.5 rounded-lg transition-colors"
                           >
                             <span className="material-symbols-outlined text-lg">delete</span>
                           </button>
@@ -377,12 +377,12 @@ export default function QuickCashSalePage() {
             {/* Mobile Items */}
             <div className="md:hidden space-y-4 p-4">
               {items.map((item) => (
-                <div key={item.key} className="border border-[#c6c6cd]/50 rounded-xl p-4 space-y-4 bg-white">
+                <div key={item.key} className="border border-outline-variant/50 rounded-xl p-4 space-y-4 bg-white">
                   <div className="grid grid-cols-2 gap-3">
                     <select
                       value={item.category_id}
                       onChange={(e) => handleCategoryChange(item.key, e.target.value)}
-                      className="h-[42px] border border-[#c6c6cd] rounded-lg px-3 text-sm outline-none bg-white"
+                      className="h-[42px] border border-outline-variant rounded-lg px-3 text-sm outline-none bg-white"
                     >
                       <option value="">Category</option>
                       {categories.map((cat) => (
@@ -393,7 +393,7 @@ export default function QuickCashSalePage() {
                       value={item.subtype_id}
                       onChange={(e) => handleItemChange(item.key, "subtype_id", e.target.value)}
                       disabled={!item.category_id}
-                      className="h-[42px] border border-[#c6c6cd] rounded-lg px-3 text-sm outline-none bg-white disabled:opacity-40"
+                      className="h-[42px] border border-outline-variant rounded-lg px-3 text-sm outline-none bg-white disabled:opacity-40"
                     >
                       <option value="">Sub-type</option>
                       {getSubtypesFor(item).map((st) => (
@@ -403,39 +403,39 @@ export default function QuickCashSalePage() {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] uppercase font-bold text-[#505f76] block mb-1.5">Qty (kg)</label>
+                      <label className="text-[10px] uppercase font-bold text-secondary block mb-1.5">Qty (kg)</label>
                       <input
                         type="number"
                         step="0.001"
                         min="0"
                         value={item.quantity_kg}
                         onChange={(e) => handleItemChange(item.key, "quantity_kg", e.target.value)}
-                        className="w-full h-[42px] border border-[#c6c6cd] rounded-lg px-3 text-sm font-mono outline-none"
+                        className="w-full h-[42px] border border-outline-variant rounded-lg px-3 text-sm font-mono outline-none"
                         placeholder="0"
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] uppercase font-bold text-[#505f76] block mb-1.5">Price/kg</label>
+                      <label className="text-[10px] uppercase font-bold text-secondary block mb-1.5">Price/kg</label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#505f76]">৳</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-secondary">৳</span>
                         <input
                           type="number"
                           step="0.01"
                           min="0"
                           value={item.price_per_kg}
                           onChange={(e) => handleItemChange(item.key, "price_per_kg", e.target.value)}
-                          className="w-full h-[42px] pl-6 border border-[#c6c6cd] rounded-lg px-3 text-sm font-mono outline-none"
+                          className="w-full h-[42px] pl-6 border border-outline-variant rounded-lg px-3 text-sm font-mono outline-none"
                           placeholder="0"
                         />
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center pt-3 border-t border-dashed border-[#c6c6cd]/50">
-                    <span className="text-base font-mono font-bold text-[#0F172A]">
+                  <div className="flex justify-between items-center pt-3 border-t border-dashed border-outline-variant/50">
+                    <span className="text-base font-mono font-bold text-primary-container">
                       ৳{calcLineTotal(item).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                     {items.length > 1 && (
-                      <button type="button" onClick={() => removeItem(item.key)} className="text-[#EF4444] text-xs font-bold hover:bg-red-50 px-2 py-1 rounded">
+                      <button type="button" onClick={() => removeItem(item.key)} className="text-error text-xs font-bold hover:bg-red-50 px-2 py-1 rounded">
                         Remove
                       </button>
                     )}
@@ -445,35 +445,35 @@ export default function QuickCashSalePage() {
             </div>
 
             {/* Grand Total */}
-            <div className="px-8 py-5 bg-[#f2f4f6]/50 border-t border-[#c6c6cd]/50 flex justify-between items-center">
+            <div className="px-8 py-5 bg-surface-container-low/50 border-t border-outline-variant/50 flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-[#505f76]">{totalWeight.toFixed(3)} kg total weight</span>
+                <span className="text-sm font-medium text-secondary">{totalWeight.toFixed(3)} kg total weight</span>
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-sm font-bold text-[#505f76] uppercase tracking-wider">Grand Total:</span>
-                <span className="text-2xl font-bold font-mono text-[#0F172A]">{formatMoney(grandTotal)}</span>
+                <span className="text-sm font-bold text-secondary uppercase tracking-wider">Grand Total:</span>
+                <span className="text-2xl font-bold font-mono text-primary-container">{formatMoney(grandTotal)}</span>
               </div>
             </div>
           </section>
 
           {/* Info + Submit */}
-          <div className="bg-[#059669]/5 border border-[#059669]/20 rounded-lg p-4 flex items-start gap-3">
-            <span className="material-symbols-outlined text-[#059669] text-lg">info</span>
-            <p className="text-sm font-medium text-[#059669]">
+          <div className="bg-tertiary/5 border border-tertiary/20 rounded-lg p-4 flex items-start gap-3">
+            <span className="material-symbols-outlined text-tertiary text-lg">info</span>
+            <p className="text-sm font-medium text-tertiary">
               This sale will be recorded as <strong>PAID</strong> immediately. No invoice will be pending.
             </p>
           </div>
 
           {error && (
             <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-[#EF4444] text-sm font-medium">{error}</p>
+              <p className="text-error text-sm font-medium">{error}</p>
             </div>
           )}
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full h-12 bg-[#0F172A] text-white font-bold rounded-lg hover:bg-[#0F172A]/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 flex items-center justify-center gap-2"
+            className="w-full h-12 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-lg">save</span>
             {submitting ? "Saving..." : "Complete Sale"}
@@ -482,7 +482,7 @@ export default function QuickCashSalePage() {
           <div className="text-center">
             <Link
               href="/sales/new"
-              className="text-sm text-[#059669] hover:underline inline-flex items-center gap-1"
+              className="text-sm text-tertiary hover:underline inline-flex items-center gap-1"
             >
               Need to record a customer?
               <span className="material-symbols-outlined text-sm">arrow_forward</span>
