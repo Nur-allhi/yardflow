@@ -38,8 +38,8 @@ interface ConsumablesData {
 }
 
 function formatTk(amount: number): string {
-  if (amount === 0) return "৳0";
-  return `৳${Math.round(amount).toLocaleString("en-IN")}`;
+  if (amount === 0) return "0 tk";
+  return `${Math.round(amount).toLocaleString("en-IN")} tk`;
 }
 
 function formatDate(dateStr: string): string {
@@ -147,7 +147,7 @@ export default function ConsumablesPage() {
   const formContent = (submitting: boolean) => (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-bold text-[#0F172A] mb-1">
+        <label className="block text-sm font-bold text-primary-container mb-1">
           Item Name
         </label>
         <input
@@ -155,7 +155,7 @@ export default function ConsumablesPage() {
           value={itemName}
           onChange={(e) => setItemName(e.target.value)}
           list="item-suggestions"
-          className="w-full h-[42px] border border-[#c6c6cd] rounded px-4 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+          className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
           placeholder="e.g. Welding Rod"
         />
         <datalist id="item-suggestions">
@@ -166,7 +166,7 @@ export default function ConsumablesPage() {
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-sm font-bold text-[#0F172A] mb-1">
+          <label className="block text-sm font-bold text-primary-container mb-1">
             Qty
           </label>
           <input
@@ -175,18 +175,18 @@ export default function ConsumablesPage() {
             min="0"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="w-full h-[42px] border border-[#c6c6cd] rounded px-4 text-sm font-mono focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+            className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm font-mono focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
             placeholder="0"
           />
         </div>
         <div>
-          <label className="block text-sm font-bold text-[#0F172A] mb-1">
+          <label className="block text-sm font-bold text-primary-container mb-1">
             Unit
           </label>
           <select
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
-            className="w-full h-[42px] border border-[#c6c6cd] rounded px-4 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+            className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
           >
             <option value="pcs">pcs</option>
             <option value="box">box</option>
@@ -196,7 +196,7 @@ export default function ConsumablesPage() {
         </div>
       </div>
       <div>
-        <label className="block text-sm font-bold text-[#0F172A] mb-1">
+        <label className="block text-sm font-bold text-primary-container mb-1">
           Unit Price (৳)
         </label>
         <input
@@ -205,38 +205,38 @@ export default function ConsumablesPage() {
           min="0"
           value={unitPrice}
           onChange={(e) => setUnitPrice(e.target.value)}
-          className="w-full h-[42px] border border-[#c6c6cd] rounded px-4 text-sm font-mono focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+          className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm font-mono focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
           placeholder="0.00"
         />
       </div>
-      <div className="bg-[#f2f4f6] p-3 rounded border border-dashed border-[#c6c6cd]">
-        <label className="block text-[10px] font-bold text-[#505f76] uppercase tracking-wider mb-1">
+      <div className="bg-surface-container-low p-3 rounded border border-dashed border-outline-variant">
+        <label className="block text-[10px] font-bold text-secondary uppercase tracking-wider mb-1">
           Total Amount
         </label>
-        <div className="text-xl font-mono font-bold text-[#059669]">
+        <div className="text-xl font-mono font-bold text-tertiary">
           {formatTk(totalAmount)}
         </div>
       </div>
       <div>
-        <label className="block text-sm font-bold text-[#0F172A] mb-1">
+        <label className="block text-sm font-bold text-primary-container mb-1">
           Vendor Name{" "}
-          <span className="text-xs font-normal text-[#505f76]">(Optional)</span>
+          <span className="text-xs font-normal text-secondary">(Optional)</span>
         </label>
         <input
           value={vendorName}
           onChange={(e) => setVendorName(e.target.value)}
-          className="w-full h-[42px] border border-[#c6c6cd] rounded px-4 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+          className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
           placeholder="Search or add vendor"
         />
       </div>
       <div>
-        <label className="block text-sm font-bold text-[#0F172A] mb-1">
+        <label className="block text-sm font-bold text-primary-container mb-1">
           Pay From Account
         </label>
         <select
           value={accountId}
           onChange={(e) => setAccountId(e.target.value)}
-          className="w-full h-[42px] border border-[#c6c6cd] rounded px-4 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+          className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
         >
             {(!accountsData || accountsData.length === 0) && (
               <option value="">No accounts available</option>
@@ -249,7 +249,7 @@ export default function ConsumablesPage() {
         </select>
       </div>
       <div>
-        <label className="block text-sm font-bold text-[#0F172A] mb-1">
+        <label className="block text-sm font-bold text-primary-container mb-1">
           Date
         </label>
         <input
@@ -257,25 +257,25 @@ export default function ConsumablesPage() {
           required
           value={purchaseDate}
           onChange={(e) => setPurchaseDate(e.target.value)}
-          className="w-full h-[42px] border border-[#c6c6cd] rounded px-4 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+          className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
         />
       </div>
       <div>
-        <label className="block text-sm font-bold text-[#0F172A] mb-1">
-          Note <span className="text-xs font-normal text-[#505f76]">(Optional)</span>
+        <label className="block text-sm font-bold text-primary-container mb-1">
+          Note <span className="text-xs font-normal text-secondary">(Optional)</span>
         </label>
         <textarea
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={2}
-          className="w-full p-3 border border-[#c6c6cd] rounded text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none resize-none"
+          className="w-full p-3 border border-outline-variant rounded text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none resize-none"
           placeholder="Add a note..."
         />
       </div>
       <button
         type="submit"
         disabled={submitting || !itemName || totalAmount <= 0}
-        className="w-full h-[46px] bg-[#0F172A] text-white font-bold rounded-lg hover:bg-[#0F172A]/90 transition-all flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] disabled:opacity-40"
+        className="w-full h-[46px] bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] disabled:opacity-40"
       >
         <span className="material-symbols-outlined text-[20px]">add</span>
         {submitting ? "Logging..." : "Log Item"}
@@ -287,7 +287,7 @@ export default function ConsumablesPage() {
     return (
       <div className="p-4 md:p-8">
         <div className="flex items-center justify-center py-20">
-          <div className="w-8 h-8 border-4 border-[#059669] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-tertiary border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -296,7 +296,7 @@ export default function ConsumablesPage() {
   if (error) {
     return (
       <div className="p-4 md:p-8">
-        <div className="text-center py-16 text-[#505f76]">
+        <div className="text-center py-16 text-secondary">
           <span className="material-symbols-outlined text-5xl block mb-4">
             error_outline
           </span>
@@ -304,7 +304,7 @@ export default function ConsumablesPage() {
           <p className="text-sm">{error?.message}</p>
           <button
             onClick={() => refetch()}
-            className="mt-4 px-5 py-2 bg-[#0F172A] text-white rounded-md text-sm"
+            className="mt-4 px-5 py-2 bg-primary-container text-white rounded-md text-sm"
           >
             Retry
           </button>
@@ -316,14 +316,14 @@ export default function ConsumablesPage() {
   return (
     <div className="p-4 md:p-8">
       {/* Breadcrumbs & Header */}
-      <nav className="flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-[#0F172A]">Dashboard</Link>
+      <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
+        <Link href="/" className="hover:text-primary-container">Dashboard</Link>
         <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <Link href="/inventory" className="hover:text-[#0F172A]">Inventory</Link>
+        <Link href="/inventory" className="hover:text-primary-container">Inventory</Link>
         <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-[#0F172A] font-bold">Consumables</span>
+        <span className="text-primary-container font-bold">Consumables</span>
       </nav>
-      <h1 className="font-display text-2xl md:text-3xl font-bold text-[#0F172A] tracking-tight mb-2">
+      <h1 className="font-display text-2xl md:text-3xl font-bold text-primary-container tracking-tight mb-2">
         Consumables Log
       </h1>
 
@@ -331,7 +331,7 @@ export default function ConsumablesPage() {
         <InventoryNav active="consumables" />
         <Link
           href="/inventory/consumables/use"
-          className="flex items-center gap-1.5 px-4 h-[38px] bg-[#DC2626] text-white text-sm font-bold rounded-lg hover:bg-[#DC2626]/90 transition-all flex-shrink-0 shadow-sm active:scale-[0.98]"
+          className="flex items-center gap-1.5 px-4 h-[38px] bg-error text-white text-sm font-bold rounded-lg hover:bg-error/90 transition-all flex-shrink-0 shadow-sm active:scale-[0.98]"
         >
           <span className="material-symbols-outlined text-[18px]">remove</span>
           Use Item
@@ -340,37 +340,37 @@ export default function ConsumablesPage() {
 
       {/* Top Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 md:mb-8">
-        <div className="bg-white p-4 md:p-6 rounded-lg border border-[#c6c6cd]/30 shadow-sm">
-          <p className="text-[#505f76] text-xs font-bold uppercase tracking-wider mb-2">
+        <div className="bg-white p-4 md:p-6 rounded-lg border border-outline-variant/30 shadow-sm">
+          <p className="text-secondary text-xs font-bold uppercase tracking-wider mb-2">
             This Month Spent
           </p>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-mono font-bold text-[#EAB308]">
+            <span className="text-2xl font-mono font-bold text-warning">
               {formatTk(data?.summary.total_spent_this_month ?? 0)}
             </span>
           </div>
         </div>
-        <div className="bg-white p-4 md:p-6 rounded-lg border border-[#c6c6cd]/30 shadow-sm">
-          <p className="text-[#505f76] text-xs font-bold uppercase tracking-wider mb-2">
+        <div className="bg-white p-4 md:p-6 rounded-lg border border-outline-variant/30 shadow-sm">
+          <p className="text-secondary text-xs font-bold uppercase tracking-wider mb-2">
             Total Items Logged
           </p>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-mono font-bold text-[#0F172A]">
+            <span className="text-2xl font-mono font-bold text-primary-container">
               {data?.summary.total_items ?? 0}
             </span>
-            <span className="text-[10px] text-[#505f76]">entries total</span>
+            <span className="text-[10px] text-secondary">entries total</span>
           </div>
         </div>
-        <div className="bg-white p-4 md:p-6 rounded-lg border border-[#c6c6cd]/30 shadow-sm">
-          <p className="text-[#505f76] text-xs font-bold uppercase tracking-wider mb-2">
+        <div className="bg-white p-4 md:p-6 rounded-lg border border-outline-variant/30 shadow-sm">
+          <p className="text-secondary text-xs font-bold uppercase tracking-wider mb-2">
             Most Used Item
           </p>
           <div className="flex items-center justify-between">
-            <span className="text-lg font-bold font-display text-[#0F172A]">
+            <span className="text-lg font-bold font-display text-primary-container">
               {data?.summary.most_used_item ?? "—"}
             </span>
             {data?.summary.most_used_item && (
-              <span className="bg-[#0EA5E9]/10 text-[#0EA5E9] px-3 py-1 rounded-full text-xs font-bold uppercase">
+              <span className="bg-info/10 text-info px-3 py-1 rounded-full text-xs font-bold uppercase">
                 Top
               </span>
             )}
@@ -383,7 +383,7 @@ export default function ConsumablesPage() {
         {/* Left: Table */}
         <div className="flex-1 w-full overflow-hidden">
           {!data || data.entries.length === 0 ? (
-            <div className="bg-white rounded-lg border border-[#c6c6cd]/30 shadow-sm py-16 text-center text-[#505f76]">
+            <div className="bg-white rounded-lg border border-outline-variant/30 shadow-sm py-16 text-center text-secondary">
               <span className="material-symbols-outlined text-5xl block mb-4">
                 inventory
               </span>
@@ -394,75 +394,75 @@ export default function ConsumablesPage() {
             </div>
           ) : (
             <>
-              <div className="bg-white rounded-lg border border-[#c6c6cd]/30 shadow-sm overflow-x-auto">
+              <div className="bg-white rounded-lg border border-outline-variant/30 shadow-sm overflow-x-auto">
                 <table className="w-full text-left border-collapse min-w-[800px]">
-                  <thead className="bg-[#f2f4f6] border-b border-[#c6c6cd]/40">
+                  <thead className="bg-surface-container-low border-b border-outline-variant/40">
                     <tr>
-                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Date</th>
-                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Item</th>
-                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Stock</th>
-                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Qty</th>
-                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Unit Price</th>
-                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Total</th>
-                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Vendor</th>
-                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Account</th>
-                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-[#505f76]">Note</th>
+                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Date</th>
+                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Item</th>
+                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Stock</th>
+                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Qty</th>
+                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Unit Price</th>
+                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Total</th>
+                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Vendor</th>
+                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Account</th>
+                      <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Note</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#c6c6cd]/20">
+                  <tbody className="divide-y divide-outline-variant/20">
                     {data.entries.map((entry) => (
-                      <tr key={entry.id} className="hover:bg-[#f2f4f6]/50 transition-colors">
+                      <tr key={entry.id} className="hover:bg-surface-container-low/50 transition-colors">
                         <td className="px-4 py-4 text-sm whitespace-nowrap">
                           {formatDate(entry.purchase_date)}
                         </td>
-                        <td className="px-4 py-4 text-sm font-medium text-[#0F172A]">
+                        <td className="px-4 py-4 text-sm font-medium text-primary-container">
                           {entry.item_name}
                         </td>
                         <td className="px-4 py-4 text-sm font-mono">
-                          <span className={entry.stock_quantity > 0 ? "text-[#059669]" : "text-[#DC2626]"}>
+                          <span className={entry.stock_quantity > 0 ? "text-tertiary" : "text-error"}>
                             {entry.stock_quantity} {entry.unit || ""}
                           </span>
                         </td>
-                        <td className="px-4 py-4 text-sm font-mono text-[#505f76]">
+                        <td className="px-4 py-4 text-sm font-mono text-secondary">
                           {entry.quantity != null
                             ? `${entry.quantity} ${entry.unit || ""}`
                             : "—"}
                         </td>
-                        <td className="px-4 py-4 text-sm font-mono text-[#505f76]">
+                        <td className="px-4 py-4 text-sm font-mono text-secondary">
                           {entry.unit_price != null
                             ? formatTk(entry.unit_price)
                             : "—"}
                         </td>
-                        <td className="px-4 py-4 text-sm font-mono font-semibold text-[#0F172A]">
+                        <td className="px-4 py-4 text-sm font-mono font-semibold text-primary-container">
                           {formatTk(entry.total_price)}
                         </td>
-                        <td className="px-4 py-4 text-sm text-[#505f76]">
+                        <td className="px-4 py-4 text-sm text-secondary">
                           {entry.vendor_name || "—"}
                         </td>
                         <td className="px-4 py-4 text-sm">
                           {entry.account_name ? (
-                            <span className="px-2 py-0.5 rounded bg-[#e0e3e5] text-xs font-medium">
+                            <span className="px-2 py-0.5 rounded bg-surface-container-highest text-xs font-medium">
                               {entry.account_name}
                             </span>
                           ) : (
-                            <span className="text-[#505f76]">—</span>
+                            <span className="text-secondary">—</span>
                           )}
                         </td>
-                        <td className="px-4 py-4 text-xs text-[#505f76] italic">
+                        <td className="px-4 py-4 text-xs text-secondary italic">
                           {entry.note || "—"}
                         </td>
                       </tr>
                     ))}
                   </tbody>
-                  <tfoot className="bg-[#e6e8ea] border-t-2 border-[#76777d]">
+                  <tfoot className="bg-surface-container-high border-t-2 border-outline">
                     <tr>
                       <td
                         colSpan={5}
-                        className="px-4 py-4 text-right text-sm font-bold text-[#505f76] uppercase tracking-wider"
+                        className="px-4 py-4 text-right text-sm font-bold text-secondary uppercase tracking-wider"
                       >
                         Monthly Total:
                       </td>
-                      <td className="px-4 py-4 text-base font-mono font-bold text-[#0F172A]">
+                      <td className="px-4 py-4 text-base font-mono font-bold text-primary-container">
                         {formatTk(data.summary.total_spent_this_month)}
                       </td>
                       <td colSpan={3} />
@@ -473,21 +473,21 @@ export default function ConsumablesPage() {
 
               {/* Pagination */}
               <div className="mt-4 flex justify-between items-center px-2">
-                <p className="text-xs text-[#505f76]">
+                <p className="text-xs text-secondary">
                   Showing {data.entries.length} of {data.pagination.total} logs
                 </p>
                 <div className="flex gap-2">
                   <button
                     disabled={page <= 1}
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    className="px-3 py-1.5 border border-[#c6c6cd] rounded bg-white text-xs hover:bg-[#f2f4f6] transition-colors disabled:opacity-30"
+                    className="px-3 py-1.5 border border-outline-variant rounded bg-white text-xs hover:bg-surface-container-low transition-colors disabled:opacity-30"
                   >
                     Previous
                   </button>
                   <button
                     disabled={page >= data.pagination.totalPages}
                     onClick={() => setPage((p) => p + 1)}
-                    className="px-3 py-1.5 border border-[#c6c6cd] rounded bg-white text-xs hover:bg-[#f2f4f6] transition-colors disabled:opacity-30"
+                    className="px-3 py-1.5 border border-outline-variant rounded bg-white text-xs hover:bg-surface-container-low transition-colors disabled:opacity-30"
                   >
                     Next
                   </button>
@@ -499,15 +499,15 @@ export default function ConsumablesPage() {
 
         {/* Right: Form Sidebar */}
         <aside className="w-full lg:w-[320px] flex-shrink-0">
-          <div className="bg-white rounded-lg border border-[#c6c6cd]/30 shadow-md p-6 sticky top-24">
+          <div className="bg-white rounded-lg border border-outline-variant/30 shadow-md p-6 sticky top-24">
             <div className="flex items-center gap-2 mb-6">
               <span
-                className="material-symbols-outlined text-[#059669]"
+                className="material-symbols-outlined text-tertiary"
                 style={{ fontVariationSettings: "'FILL' 1" }}
               >
                 add_circle
               </span>
-              <h3 className="font-display font-bold text-lg text-[#0F172A]">
+              <h3 className="font-display font-bold text-lg text-primary-container">
                 Log Consumable
               </h3>
             </div>
@@ -519,27 +519,27 @@ export default function ConsumablesPage() {
       {/* Mobile: Stats (horizontal scroll) */}
       <div className="md:hidden -mx-4 px-4 mb-4">
         <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
-          <div className="bg-white p-4 rounded-lg border border-[#c6c6cd]/30 shadow-sm min-w-[160px] flex-shrink-0">
-            <p className="text-[#505f76] text-[10px] font-bold uppercase tracking-wider mb-1">
+          <div className="bg-white p-4 rounded-lg border border-outline-variant/30 shadow-sm min-w-[160px] flex-shrink-0">
+            <p className="text-secondary text-[10px] font-bold uppercase tracking-wider mb-1">
               This Month
             </p>
-            <span className="text-lg font-mono font-bold text-[#EAB308]">
+            <span className="text-lg font-mono font-bold text-warning">
               {formatTk(data?.summary.total_spent_this_month ?? 0)}
             </span>
           </div>
-          <div className="bg-white p-4 rounded-lg border border-[#c6c6cd]/30 shadow-sm min-w-[160px] flex-shrink-0">
-            <p className="text-[#505f76] text-[10px] font-bold uppercase tracking-wider mb-1">
+          <div className="bg-white p-4 rounded-lg border border-outline-variant/30 shadow-sm min-w-[160px] flex-shrink-0">
+            <p className="text-secondary text-[10px] font-bold uppercase tracking-wider mb-1">
               Total Items
             </p>
-            <span className="text-lg font-mono font-bold text-[#0F172A]">
+            <span className="text-lg font-mono font-bold text-primary-container">
               {data?.summary.total_items ?? 0}
             </span>
           </div>
-          <div className="bg-white p-4 rounded-lg border border-[#c6c6cd]/30 shadow-sm min-w-[160px] flex-shrink-0">
-            <p className="text-[#505f76] text-[10px] font-bold uppercase tracking-wider mb-1">
+          <div className="bg-white p-4 rounded-lg border border-outline-variant/30 shadow-sm min-w-[160px] flex-shrink-0">
+            <p className="text-secondary text-[10px] font-bold uppercase tracking-wider mb-1">
               Most Used
             </p>
-            <span className="text-sm font-bold font-display text-[#0F172A]">
+            <span className="text-sm font-bold font-display text-primary-container">
               {data?.summary.most_used_item ?? "—"}
             </span>
           </div>
@@ -548,11 +548,11 @@ export default function ConsumablesPage() {
 
       {/* Mobile: Recent Entries */}
       <div className="md:hidden">
-        <h2 className="font-display font-bold text-lg text-[#0F172A] mb-4">
+        <h2 className="font-display font-bold text-lg text-primary-container mb-4">
           Recent Entries
         </h2>
         {!data || data.entries.length === 0 ? (
-          <div className="bg-white rounded-xl border border-[#c6c6cd]/30 py-12 text-center text-[#505f76] text-sm">
+          <div className="bg-white rounded-xl border border-outline-variant/30 py-12 text-center text-secondary text-sm">
             <span className="material-symbols-outlined text-4xl block mb-2">
               inventory
             </span>
@@ -563,27 +563,27 @@ export default function ConsumablesPage() {
             {data.entries.map((entry) => (
               <div
                 key={entry.id}
-                className="bg-white p-4 rounded-xl border border-[#c6c6cd]/30 shadow-sm flex items-center gap-4"
+                className="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex items-center gap-4"
               >
-                <div className="w-10 h-10 rounded-lg bg-[#059669]/10 flex items-center justify-center flex-shrink-0">
-                  <span className="material-symbols-outlined text-[#059669] text-xl">
+                <div className="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center flex-shrink-0">
+                  <span className="material-symbols-outlined text-tertiary text-xl">
                     inventory
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-sm text-[#0F172A] truncate">
+                  <h3 className="font-semibold text-sm text-primary-container truncate">
                     {entry.item_name}
                   </h3>
-                  <p className="text-[10px] text-[#505f76]">
+                  <p className="text-[10px] text-secondary">
                     {formatDateFull(entry.purchase_date)}
                     {entry.vendor_name && ` · ${entry.vendor_name}`}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-mono font-bold text-sm text-[#0F172A]">
+                  <p className="font-mono font-bold text-sm text-primary-container">
                     {formatTk(entry.total_price)}
                   </p>
-                  <p className="text-[10px] text-[#505f76]">
+                  <p className="text-[10px] text-secondary">
                     {entry.quantity != null
                       ? `${entry.quantity} ${entry.unit || ""}`
                       : "—"}
@@ -600,17 +600,17 @@ export default function ConsumablesPage() {
             <button
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="px-4 py-2 border border-[#c6c6cd] rounded-lg bg-white text-sm disabled:opacity-30"
+              className="px-4 py-2 border border-outline-variant rounded-lg bg-white text-sm disabled:opacity-30"
             >
               Previous
             </button>
-            <span className="text-sm text-[#505f76] self-center">
+            <span className="text-sm text-secondary self-center">
               {page} / {data.pagination.totalPages}
             </span>
             <button
               disabled={page >= data.pagination.totalPages}
               onClick={() => setPage((p) => p + 1)}
-              className="px-4 py-2 border border-[#c6c6cd] rounded-lg bg-white text-sm disabled:opacity-30"
+              className="px-4 py-2 border border-outline-variant rounded-lg bg-white text-sm disabled:opacity-30"
             >
               Next
             </button>
@@ -621,7 +621,7 @@ export default function ConsumablesPage() {
       {/* Mobile FAB */}
       <button
         onClick={() => setShowMobileForm(true)}
-        className="md:hidden fixed bottom-20 right-4 z-50 w-14 h-14 rounded-full bg-[#0F172A] text-white flex items-center justify-center shadow-xl active:scale-95 transition-transform"
+        className="md:hidden fixed bottom-20 right-4 z-50 w-14 h-14 rounded-full bg-primary-container text-white flex items-center justify-center shadow-xl active:scale-95 transition-transform"
       >
         <span className="material-symbols-outlined text-2xl">add</span>
       </button>
@@ -630,18 +630,18 @@ export default function ConsumablesPage() {
       {showMobileForm && (
         <div className="md:hidden fixed inset-0 z-[60]">
           <div
-            className="absolute inset-0 bg-[#0F172A]/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-primary-container/40 backdrop-blur-sm"
             onClick={() => setShowMobileForm(false)}
           />
           <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-2xl p-6 flex flex-col gap-6 max-h-[85vh] overflow-y-auto">
-            <div className="w-12 h-1 bg-[#c6c6cd] rounded-full mx-auto mb-2" />
+            <div className="w-12 h-1 bg-outline-variant rounded-full mx-auto mb-2" />
             <div className="flex items-center justify-between">
-              <h2 className="font-display font-bold text-xl text-[#0F172A]">
+              <h2 className="font-display font-bold text-xl text-primary-container">
                 Log Consumable
               </h2>
               <button
                 onClick={() => setShowMobileForm(false)}
-                className="text-[#505f76]"
+                className="text-secondary"
               >
                 <span className="material-symbols-outlined">close</span>
               </button>

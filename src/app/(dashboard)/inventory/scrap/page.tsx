@@ -112,13 +112,13 @@ export default function ScrapPoolPage() {
     return (
       <div className="p-4 md:p-8">
         <div className="animate-pulse space-y-6">
-          <div className="h-8 w-48 bg-[#e0e3e5] rounded" />
+          <div className="h-8 w-48 bg-surface-container-highest rounded" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-40 bg-[#eceef0] rounded-lg" />
+              <div key={i} className="h-40 bg-surface-container rounded-lg" />
             ))}
           </div>
-          <div className="h-64 bg-[#eceef0] rounded-lg" />
+          <div className="h-64 bg-surface-container rounded-lg" />
         </div>
       </div>
     );
@@ -128,14 +128,14 @@ export default function ScrapPoolPage() {
     return (
       <div className="p-4 md:p-8">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <span className="material-symbols-outlined text-4xl text-[#ba1a1a] block mb-3">
+          <span className="material-symbols-outlined text-4xl text-error block mb-3">
             error
           </span>
-          <p className="text-[#ba1a1a] font-medium mb-2">Failed to load scrap pool</p>
-          <p className="text-sm text-[#505f76] mb-4">{error?.message}</p>
+          <p className="text-error font-medium mb-2">Failed to load scrap pool</p>
+          <p className="text-sm text-secondary mb-4">{error?.message}</p>
           <button
             onClick={() => queryClient.invalidateQueries({ queryKey: ["scrap"] })}
-            className="px-5 py-2 bg-[#0F172A] text-white font-semibold rounded-md hover:bg-[#0F172A]/90 transition-colors text-sm"
+            className="px-5 py-2 bg-primary-container text-white font-semibold rounded-md hover:bg-primary-container/90 transition-colors text-sm"
           >
             Try Again
           </button>
@@ -147,7 +147,7 @@ export default function ScrapPoolPage() {
   if (!data) {
     return (
       <div className="p-4 md:p-8">
-        <div className="text-center py-16 text-[#505f76]">
+        <div className="text-center py-16 text-secondary">
           <span className="material-symbols-outlined text-5xl block mb-4">
             recycling
           </span>
@@ -162,18 +162,18 @@ export default function ScrapPoolPage() {
     <>
       {/* Desktop Header */}
       <div className="hidden md:block p-4 md:p-8 pb-0">
-        <nav className="flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
-          <Link href="/" className="hover:text-[#0F172A]">
+        <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
+          <Link href="/" className="hover:text-primary-container">
             Dashboard
           </Link>
           <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <Link href="/inventory" className="hover:text-[#0F172A]">
+          <Link href="/inventory" className="hover:text-primary-container">
             Inventory
           </Link>
           <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <span className="text-[#0F172A] font-bold">Scrap Pool</span>
+          <span className="text-primary-container font-bold">Scrap Pool</span>
         </nav>
-        <h1 className="font-display text-2xl md:text-3xl font-bold text-[#0F172A] tracking-tight mb-6">
+        <h1 className="font-display text-2xl md:text-3xl font-bold text-primary-container tracking-tight mb-6">
           Scrap Pool
         </h1>
 
@@ -181,16 +181,16 @@ export default function ScrapPoolPage() {
       </div>
 
       {/* Mobile Top AppBar */}
-      <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-[#c6c6cd] sticky top-0 z-30">
+      <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-outline-variant sticky top-0 z-30">
         <div className="flex items-center gap-3">
-          <button className="text-[#0F172A]">
+          <button className="text-primary-container">
             <span className="material-symbols-outlined">menu</span>
           </button>
-          <h1 className="font-display text-lg font-bold text-[#0F172A]">
+          <h1 className="font-display text-lg font-bold text-primary-container">
             Scrap Pool
           </h1>
         </div>
-        <div className="w-8 h-8 rounded-full bg-[#d0e1fb] flex items-center justify-center text-xs font-bold text-[#0F172A]">
+        <div className="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-xs font-bold text-primary-container">
           RM
         </div>
       </div>
@@ -199,28 +199,28 @@ export default function ScrapPoolPage() {
         {/* KPI Cards */}
         <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 mb-8 overflow-x-auto hide-scrollbar pb-2 md:pb-0 -mx-4 md:mx-0 px-4 md:px-0">
           {/* Card 1: Current Scrap Pool */}
-          <div className="min-w-[180px] md:min-w-0 bg-white p-5 md:p-6 rounded-lg shadow-sm border border-[#c6c6cd]/30 flex flex-col justify-between flex-shrink-0">
+          <div className="min-w-[180px] md:min-w-0 bg-white p-5 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between flex-shrink-0">
             <div className="flex items-center justify-between">
-              <span className="text-[#505f76] text-xs md:text-sm font-medium">
+              <span className="text-secondary text-xs md:text-sm font-medium">
                 Current Scrap Pool
               </span>
-              <span className="material-symbols-outlined text-[#059669] text-xl">
+              <span className="material-symbols-outlined text-tertiary text-xl">
                 database
               </span>
             </div>
             <div className="mt-3 md:mt-4">
-              <span className="text-2xl md:text-4xl font-mono font-bold text-[#059669]">
+              <span className="text-2xl md:text-4xl font-mono font-bold text-tertiary">
                 {(data.current_kg).toLocaleString("en-IN", {
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0,
                 })}
               </span>
-              <span className="text-[#059669] font-medium ml-1 text-sm md:text-base">
+              <span className="text-tertiary font-medium ml-1 text-sm md:text-base">
                 kg
               </span>
             </div>
-            <div className="text-[10px] text-[#505f76] uppercase tracking-wider flex items-center gap-1 mt-2">
-              <span className="material-symbols-outlined text-[12px] text-[#059669]">
+            <div className="text-[10px] text-secondary uppercase tracking-wider flex items-center gap-1 mt-2">
+              <span className="material-symbols-outlined text-[12px] text-tertiary">
                 trending_up
               </span>
               Updated live
@@ -228,53 +228,53 @@ export default function ScrapPoolPage() {
           </div>
 
           {/* Card 2: Estimated Value */}
-          <div className="min-w-[180px] md:min-w-0 bg-white p-5 md:p-6 rounded-lg shadow-sm border border-[#c6c6cd]/30 flex flex-col justify-between flex-shrink-0">
+          <div className="min-w-[180px] md:min-w-0 bg-white p-5 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between flex-shrink-0">
             <div className="flex items-center justify-between">
-              <span className="text-[#505f76] text-xs md:text-sm font-medium">
+              <span className="text-secondary text-xs md:text-sm font-medium">
                 Estimated Value
               </span>
-              <span className="material-symbols-outlined text-[#505f76] text-xl">
+              <span className="material-symbols-outlined text-secondary text-xl">
                 payments
               </span>
             </div>
             <div className="mt-3 md:mt-4">
-              <span className="text-2xl md:text-4xl font-mono font-bold text-[#0F172A]">
+              <span className="text-2xl md:text-4xl font-mono font-bold text-primary-container">
                 {formatTk(data.estimated_value)}
               </span>
             </div>
-            <div className="text-xs md:text-sm text-[#505f76] font-mono bg-[#f2f4f6] px-2 py-0.5 rounded w-fit mt-2">
+            <div className="text-xs md:text-sm text-secondary font-mono bg-surface-container-low px-2 py-0.5 rounded w-fit mt-2">
               @ {formatTk(data.estimated_price_per_kg)}/kg
             </div>
           </div>
 
           {/* Card 3: Last Scrap Sale */}
-          <div className="min-w-[180px] md:min-w-0 bg-white p-5 md:p-6 rounded-lg shadow-sm border border-[#c6c6cd]/30 flex flex-col justify-between flex-shrink-0">
+          <div className="min-w-[180px] md:min-w-0 bg-white p-5 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between flex-shrink-0">
             <div className="flex items-center justify-between">
-              <span className="text-[#505f76] text-xs md:text-sm font-medium">
+              <span className="text-secondary text-xs md:text-sm font-medium">
                 Last Scrap Sale
               </span>
-              <span className="material-symbols-outlined text-[#505f76] text-xl">
+              <span className="material-symbols-outlined text-secondary text-xl">
                 history
               </span>
             </div>
             <div className="mt-3 md:mt-4">
               {data.days_since_last_sale !== null ? (
                 <>
-                  <span className="text-2xl md:text-4xl font-mono font-bold text-[#0F172A]">
+                  <span className="text-2xl md:text-4xl font-mono font-bold text-primary-container">
                     {data.days_since_last_sale}
                   </span>
-                  <span className="text-[#505f76] font-medium ml-1 text-sm md:text-base">
+                  <span className="text-secondary font-medium ml-1 text-sm md:text-base">
                     days ago
                   </span>
                 </>
               ) : (
-                <span className="text-lg md:text-xl font-medium text-[#505f76]">
+                <span className="text-lg md:text-xl font-medium text-secondary">
                   No sales yet
                 </span>
               )}
             </div>
             {data.last_sale_kg > 0 && (
-              <div className="text-xs md:text-sm text-[#505f76] flex items-center gap-2 mt-2">
+              <div className="text-xs md:text-sm text-secondary flex items-center gap-2 mt-2">
                 <span className="font-mono">{formatKg(data.last_sale_kg)} sold</span>
               </div>
             )}
@@ -286,63 +286,63 @@ export default function ScrapPoolPage() {
           {/* Left: Scrap Movement History (60%) */}
           <div className="lg:col-span-6 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-display text-lg md:text-xl font-bold text-[#0F172A]">
+              <h3 className="font-display text-lg md:text-xl font-bold text-primary-container">
                 Scrap Movement History
               </h3>
               {data.movements.length > 0 && (
-                <span className="text-xs text-[#505f76] font-mono">
+                <span className="text-xs text-secondary font-mono">
                   {data.movements.length} entries
                 </span>
               )}
             </div>
 
             {data.movements.length === 0 ? (
-              <div className="bg-white rounded-lg border border-[#c6c6cd]/30 p-8 text-center">
-                <span className="material-symbols-outlined text-4xl text-[#c6c6cd] block mb-3">
+              <div className="bg-white rounded-lg border border-outline-variant/30 p-8 text-center">
+                <span className="material-symbols-outlined text-4xl text-outline-variant block mb-3">
                   history
                 </span>
-                <p className="text-sm text-[#505f76]">No scrap movements yet</p>
+                <p className="text-sm text-secondary">No scrap movements yet</p>
               </div>
             ) : (
               <>
                 {/* Desktop Table */}
-                <div className="hidden md:block bg-white rounded-lg border border-[#c6c6cd]/30 overflow-hidden shadow-sm">
+                <div className="hidden md:block bg-white rounded-lg border border-outline-variant/30 overflow-hidden shadow-sm">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="bg-[#f2f4f6] border-b border-[#c6c6cd]/50">
-                        <th className="px-4 py-3 text-xs font-bold text-[#505f76] uppercase tracking-wider">
+                      <tr className="bg-surface-container-low border-b border-outline-variant/50">
+                        <th className="px-4 py-3 text-xs font-bold text-secondary uppercase tracking-wider">
                           Date
                         </th>
-                        <th className="px-4 py-3 text-xs font-bold text-[#505f76] uppercase tracking-wider">
+                        <th className="px-4 py-3 text-xs font-bold text-secondary uppercase tracking-wider">
                           Type
                         </th>
-                        <th className="px-4 py-3 text-xs font-bold text-[#505f76] uppercase tracking-wider">
+                        <th className="px-4 py-3 text-xs font-bold text-secondary uppercase tracking-wider">
                           Qty (kg)
                         </th>
-                        <th className="px-4 py-3 text-xs font-bold text-[#505f76] uppercase tracking-wider">
+                        <th className="px-4 py-3 text-xs font-bold text-secondary uppercase tracking-wider">
                           Reference
                         </th>
-                        <th className="px-4 py-3 text-xs font-bold text-[#505f76] uppercase tracking-wider text-right">
+                        <th className="px-4 py-3 text-xs font-bold text-secondary uppercase tracking-wider text-right">
                           Balance
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#c6c6cd]/20">
+                    <tbody className="divide-y divide-outline-variant/20">
                       {data.movements.map((m) => (
                         <tr
                           key={m.id}
                           className="hover:bg-[#f7f9fb] transition-colors"
                         >
-                          <td className="px-4 py-4 font-mono text-xs text-[#505f76]">
+                          <td className="px-4 py-4 font-mono text-xs text-secondary">
                             {formatDate(m.movement_date)}
                           </td>
                           <td className="px-4 py-4">
                             {m.movement_type === "in" ? (
-                              <span className="bg-[#059669]/10 text-[#059669] px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">
+                              <span className="bg-tertiary/10 text-tertiary px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">
                                 Added
                               </span>
                             ) : (
-                              <span className="bg-[#0F172A] text-white px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">
+                              <span className="bg-primary-container text-white px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">
                                 Sold
                               </span>
                             )}
@@ -351,8 +351,8 @@ export default function ScrapPoolPage() {
                             <span
                               className={
                                 m.movement_type === "in"
-                                  ? "text-[#059669]"
-                                  : "text-[#ba1a1a]"
+                                  ? "text-tertiary"
+                                  : "text-error"
                               }
                             >
                               {m.movement_type === "in" ? "+" : "-"}
@@ -362,7 +362,7 @@ export default function ScrapPoolPage() {
                               })}
                             </span>
                           </td>
-                          <td className="px-4 py-4 text-xs text-[#505f76] truncate max-w-[140px]">
+                          <td className="px-4 py-4 text-xs text-secondary truncate max-w-[140px]">
                             {m.note || (
                               <span className="italic opacity-60">
                                 {m.movement_type === "in"
@@ -375,8 +375,8 @@ export default function ScrapPoolPage() {
                             <span
                               className={
                                 m.balance > 0
-                                  ? "text-[#0F172A]"
-                                  : "text-[#505f76]"
+                                  ? "text-primary-container"
+                                  : "text-secondary"
                               }
                             >
                               {m.balance.toLocaleString("en-IN", {
@@ -396,18 +396,18 @@ export default function ScrapPoolPage() {
                   {data.movements.map((m) => (
                     <div
                       key={m.id}
-                      className="bg-white p-4 rounded-xl border border-[#c6c6cd]/30 shadow-sm"
+                      className="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm"
                     >
                       <div className="flex items-start justify-between mb-2">
-                        <span className="font-mono text-xs text-[#505f76]">
+                        <span className="font-mono text-xs text-secondary">
                           {formatDate(m.movement_date)}
                         </span>
                         {m.movement_type === "in" ? (
-                          <span className="bg-[#059669]/10 text-[#059669] px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">
+                          <span className="bg-tertiary/10 text-tertiary px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">
                             Added
                           </span>
                         ) : (
-                          <span className="bg-[#0F172A] text-white px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">
+                          <span className="bg-primary-container text-white px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">
                             Sold
                           </span>
                         )}
@@ -418,8 +418,8 @@ export default function ScrapPoolPage() {
                             <span
                               className={
                                 m.movement_type === "in"
-                                  ? "text-[#059669]"
-                                  : "text-[#ba1a1a]"
+                                  ? "text-tertiary"
+                                  : "text-error"
                               }
                             >
                               {m.movement_type === "in" ? "+" : "-"}
@@ -429,7 +429,7 @@ export default function ScrapPoolPage() {
                               })}
                             </span>
                           </p>
-                          <p className="text-[10px] text-[#505f76] mt-0.5">
+                          <p className="text-[10px] text-secondary mt-0.5">
                             {m.note ||
                               (m.movement_type === "in"
                                 ? "Period addition"
@@ -437,10 +437,10 @@ export default function ScrapPoolPage() {
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-[10px] text-[#505f76] uppercase tracking-wider font-medium">
+                          <p className="text-[10px] text-secondary uppercase tracking-wider font-medium">
                             Balance
                           </p>
-                          <p className="font-mono text-sm font-bold text-[#0F172A]">
+                          <p className="font-mono text-sm font-bold text-primary-container">
                             {m.balance.toLocaleString("en-IN", {
                               minimumFractionDigits: 3,
                               maximumFractionDigits: 3,
@@ -458,36 +458,36 @@ export default function ScrapPoolPage() {
 
           {/* Right: Add Scrap Card */}
           <div className="lg:col-span-4 space-y-4">
-            <h3 className="font-display text-lg md:text-xl font-bold text-[#0F172A]">Add Scrap</h3>
-            <div className="bg-white p-6 rounded-lg border border-[#c6c6cd]/30 shadow-sm">
+            <h3 className="font-display text-lg md:text-xl font-bold text-primary-container">Add Scrap</h3>
+            <div className="bg-white p-6 rounded-lg border border-outline-variant/30 shadow-sm">
               <form onSubmit={handleAddScrap} className="space-y-5">
                 {addScrapMsg && (
                   <div className={`p-3 rounded-md text-sm font-medium ${
-                    addScrapMsg.type === "success" ? "bg-[#22C55E]/10 text-[#16A34A]" : "bg-[#ffdad6] text-[#93000a]"
+                    addScrapMsg.type === "success" ? "bg-success/10 text-success" : "bg-error-container text-on-error-container"
                   }`}>
                     {addScrapMsg.text}
                   </div>
                 )}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Quantity (kg)</label>
+                  <label className="text-xs font-bold text-secondary uppercase tracking-wider">Quantity (kg)</label>
                   <input type="number" min="0" step="0.001" value={addScrapKg}
                     onChange={(e) => setAddScrapKg(e.target.value)} required placeholder="0.000"
-                    className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md font-mono text-sm py-2.5 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all" />
+                    className="w-full bg-surface-container-low border border-outline-variant rounded-md font-mono text-sm py-2.5 px-3 focus:ring-1 focus:ring-primary-container focus:border-primary-container transition-all" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Date</label>
+                  <label className="text-xs font-bold text-secondary uppercase tracking-wider">Date</label>
                   <input type="date" value={addScrapDate}
                     onChange={(e) => setAddScrapDate(e.target.value)} required
-                    className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md text-sm py-2 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all" />
+                    className="w-full bg-surface-container-low border border-outline-variant rounded-md text-sm py-2 px-3 focus:ring-1 focus:ring-primary-container focus:border-primary-container transition-all" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Note</label>
+                  <label className="text-xs font-bold text-secondary uppercase tracking-wider">Note</label>
                   <textarea value={addScrapNote} onChange={(e) => setAddScrapNote(e.target.value)}
                     placeholder="Source of scrap..." rows={2}
-                    className="w-full bg-[#f2f4f6] border border-[#c6c6cd] rounded-md text-sm py-2.5 px-3 focus:ring-1 focus:ring-[#0F172A] focus:border-[#0F172A] transition-all resize-none" />
+                    className="w-full bg-surface-container-low border border-outline-variant rounded-md text-sm py-2.5 px-3 focus:ring-1 focus:ring-primary-container focus:border-primary-container transition-all resize-none" />
                 </div>
                 <button type="submit" disabled={addingScrap}
-                  className="w-full py-3 bg-[#059669] text-white font-bold rounded-md hover:bg-[#059669]/90 transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2 disabled:opacity-50">
+                  className="w-full py-3 bg-tertiary text-white font-bold rounded-md hover:bg-tertiary/90 transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2 disabled:opacity-50">
                   <span className="material-symbols-outlined text-sm">add_circle</span>
                   {addingScrap ? "Adding..." : "Add Scrap"}
                 </button>
@@ -497,33 +497,33 @@ export default function ScrapPoolPage() {
 
           {/* Right: New Scrap Sale Card (40%) */}
           <div className="lg:col-span-4 space-y-4">
-            <h3 className="font-display text-lg md:text-xl font-bold text-[#0F172A]">
+            <h3 className="font-display text-lg md:text-xl font-bold text-primary-container">
               New Scrap Sale
             </h3>
-            <div className="bg-white p-6 rounded-lg border border-[#c6c6cd]/30 shadow-sm">
+            <div className="bg-white p-6 rounded-lg border border-outline-variant/30 shadow-sm">
               <div className="space-y-5">
-                <div className="flex items-center gap-3 pb-4 border-b border-dashed border-[#c6c6cd]/50">
-                  <span className="w-12 h-12 rounded-full bg-[#059669]/10 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-[#059669] text-2xl">
+                <div className="flex items-center gap-3 pb-4 border-b border-dashed border-outline-variant/50">
+                  <span className="w-12 h-12 rounded-full bg-tertiary/10 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-tertiary text-2xl">
                       sell
                     </span>
                   </span>
                   <div>
-                    <p className="font-display font-semibold text-[#0F172A]">
+                    <p className="font-display font-semibold text-primary-container">
                       Quick Scrap Sale
                     </p>
-                    <p className="text-xs text-[#505f76]">
+                    <p className="text-xs text-secondary">
                       Sell accumulated scrap in bulk
                     </p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-[#f2f4f6] rounded-lg p-3">
-                    <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">
+                  <div className="bg-surface-container-low rounded-lg p-3">
+                    <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
                       Available
                     </p>
-                    <p className="font-mono font-bold text-[#059669]">
+                    <p className="font-mono font-bold text-tertiary">
                       {data.current_kg.toLocaleString("en-IN", {
                         minimumFractionDigits: 3,
                         maximumFractionDigits: 3,
@@ -531,28 +531,28 @@ export default function ScrapPoolPage() {
                       kg
                     </p>
                   </div>
-                  <div className="bg-[#f2f4f6] rounded-lg p-3">
-                    <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">
+                  <div className="bg-surface-container-low rounded-lg p-3">
+                    <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
                       Est. Price
                     </p>
-                    <p className="font-mono font-bold text-[#0F172A]">
+                    <p className="font-mono font-bold text-primary-container">
                       {formatTk(data.estimated_price_per_kg)}/kg
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-[#059669]/5 border border-[#059669]/20 rounded-lg p-4">
-                  <p className="text-xs text-[#505f76] mb-1">
+                <div className="bg-tertiary/5 border border-tertiary/20 rounded-lg p-4">
+                  <p className="text-xs text-secondary mb-1">
                     Estimated Total Value
                   </p>
-                  <p className="text-xl font-mono font-bold text-[#059669]">
+                  <p className="text-xl font-mono font-bold text-tertiary">
                     {formatTk(data.estimated_value)}
                   </p>
                 </div>
 
                 <Link
                   href="/sales/scrap/new"
-                  className="block w-full py-3 bg-[#0F172A] text-white font-bold rounded-lg hover:bg-[#0F172A]/90 transition-all active:scale-[0.98] text-center text-sm"
+                  className="block w-full py-3 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-[0.98] text-center text-sm"
                 >
                   <span className="flex items-center justify-center gap-2">
                     <span className="material-symbols-outlined text-sm">
@@ -562,7 +562,7 @@ export default function ScrapPoolPage() {
                   </span>
                 </Link>
 
-                <p className="text-[10px] text-center text-[#505f76]">
+                <p className="text-[10px] text-center text-secondary">
                   You will be redirected to the scrap sale form
                 </p>
               </div>
@@ -575,7 +575,7 @@ export default function ScrapPoolPage() {
       <div className="md:hidden fixed bottom-20 right-6 z-40">
         <Link
           href="/sales/scrap/new"
-          className="w-14 h-14 rounded-full bg-[#0F172A] text-white flex items-center justify-center shadow-lg hover:bg-[#0F172A]/90 active:scale-95 transition-all"
+          className="w-14 h-14 rounded-full bg-primary-container text-white flex items-center justify-center shadow-lg hover:bg-primary-container/90 active:scale-95 transition-all"
         >
           <span className="material-symbols-outlined text-2xl">add</span>
         </Link>

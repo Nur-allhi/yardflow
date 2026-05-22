@@ -120,29 +120,29 @@ export default async function InventoryPage() {
       {/* Breadcrumbs and Header */}
       <div className="hidden md:flex justify-between items-end mb-6">
         <div>
-          <nav className="flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
-            <Link href="/" className="hover:text-[#0F172A]">
+            <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
+            <Link href="/" className="hover:text-primary-container">
               Dashboard
             </Link>
             <span className="material-symbols-outlined text-xs">
               chevron_right
             </span>
-            <span className="text-[#0F172A] font-bold">Inventory</span>
+            <span className="text-primary-container font-bold">Inventory</span>
           </nav>
-          <h1 className="font-display text-[2rem] font-bold text-[#0F172A] tracking-tight">
+          <h1 className="font-display text-[2rem] font-bold text-primary-container tracking-tight">
             Inventory
           </h1>
         </div>
         <div className="flex gap-3">
           <Link
             href="/inventory/categories"
-            className="px-4 py-2 border border-[#c6c6cd] text-[#0F172A] font-medium rounded-lg hover:bg-[#f2f4f6] transition-all text-sm"
+            className="px-4 py-2 border border-outline-variant text-primary-container font-medium rounded-lg hover:bg-surface-container-low transition-all text-sm"
           >
             Categories
           </Link>
           <Link
             href="/inventory/subtypes"
-            className="px-4 py-2 bg-[#0F172A] text-white font-semibold rounded-lg hover:bg-[#0F172A]/90 transition-all text-sm shadow-sm"
+            className="px-4 py-2 bg-primary-container text-white font-semibold rounded-lg hover:bg-primary-container/90 transition-all text-sm shadow-sm"
           >
             + Sub-type
           </Link>

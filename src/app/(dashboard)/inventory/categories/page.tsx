@@ -106,14 +106,14 @@ export default function CategoriesPage() {
   return (
     <div className="p-4 md:p-8">
       {/* Breadcrumbs + Header */}
-      <nav className="flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-[#0F172A]">Dashboard</Link>
+      <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
+        <Link href="/" className="hover:text-primary-container">Dashboard</Link>
         <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <Link href="/inventory" className="hover:text-[#0F172A]">Inventory</Link>
+        <Link href="/inventory" className="hover:text-primary-container">Inventory</Link>
         <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-[#0F172A] font-bold">Categories</span>
+        <span className="text-primary-container font-bold">Categories</span>
       </nav>
-      <h1 className="font-display text-2xl md:text-3xl font-bold text-[#0F172A] tracking-tight mb-2">
+      <h1 className="font-display text-2xl md:text-3xl font-bold text-primary-container tracking-tight mb-2">
         Category Management
       </h1>
 
@@ -121,37 +121,37 @@ export default function CategoriesPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {/* Add Category Form */}
-        <div className="bg-white p-5 md:p-6 rounded-lg border border-[#c6c6cd]/30 shadow-sm">
+        <div className="bg-white p-5 md:p-6 rounded-lg border border-outline-variant/30 shadow-sm">
           <h2 className="font-display font-bold text-lg mb-4">Add Category</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#0F172A] mb-1">
+              <label className="block text-sm font-medium text-primary-container mb-1">
                 Category Name
               </label>
               <input
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full h-[42px] px-4 border border-[#c6c6cd] rounded bg-white text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+                className="w-full h-[42px] px-4 border border-outline-variant rounded bg-white text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
                 placeholder="e.g. Iron Plates"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#0F172A] mb-1">
+              <label className="block text-sm font-medium text-primary-container mb-1">
                 Description
               </label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={2}
-                className="w-full p-4 border border-[#c6c6cd] rounded bg-white text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none resize-none"
+                className="w-full p-4 border border-outline-variant rounded bg-white text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none resize-none"
                 placeholder="Optional description"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full md:w-auto px-5 py-2.5 bg-[#0F172A] text-white font-semibold rounded-md hover:bg-[#0F172A]/90 transition-all text-sm disabled:opacity-40"
+              className="w-full md:w-auto px-5 py-2.5 bg-primary-container text-white font-semibold rounded-md hover:bg-primary-container/90 transition-all text-sm disabled:opacity-40"
             >
               {loading ? "Adding..." : "Add Category"}
             </button>
@@ -159,16 +159,16 @@ export default function CategoriesPage() {
         </div>
 
         {/* Existing Categories */}
-        <div className="bg-white rounded-lg border border-[#c6c6cd]/30 shadow-sm overflow-hidden">
-          <div className="px-5 md:px-6 py-4 border-b border-[#c6c6cd]/30">
+        <div className="bg-white rounded-lg border border-outline-variant/30 shadow-sm overflow-hidden">
+          <div className="px-5 md:px-6 py-4 border-b border-outline-variant/30">
             <h2 className="font-display font-bold text-lg">Existing Categories</h2>
           </div>
           {categories.length === 0 ? (
-            <div className="p-6 text-center text-[#505f76] text-sm">
+            <div className="p-6 text-center text-secondary text-sm">
               No categories yet
             </div>
           ) : (
-            <div className="divide-y divide-[#c6c6cd]/20">
+            <div className="divide-y divide-outline-variant/20">
               {categories.map((cat) => (
                 <div key={cat.id} className="px-5 md:px-6 py-4 flex justify-between items-center group">
                   {editingId === cat.id ? (
@@ -176,24 +176,24 @@ export default function CategoriesPage() {
                       <input
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
-                        className="w-full h-[42px] px-4 border border-[#c6c6cd] rounded bg-white text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+                        className="w-full h-[42px] px-4 border border-outline-variant rounded bg-white text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
                         placeholder="Category name"
                       />
                       <textarea
                         value={editDescription}
                         onChange={(e) => setEditDescription(e.target.value)}
                         rows={2}
-                        className="w-full p-4 border border-[#c6c6cd] rounded bg-white text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none resize-none"
+                        className="w-full p-4 border border-outline-variant rounded bg-white text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none resize-none"
                         placeholder="Description"
                       />
                       <div className="flex gap-2">
                         <button onClick={() => handleSave(cat.id)}
                           disabled={saving}
-                          className="px-4 py-2 bg-[#059669] text-white font-semibold rounded-md hover:bg-[#059669]/90 transition-all text-sm disabled:opacity-40">
+                          className="px-4 py-2 bg-tertiary text-white font-semibold rounded-md hover:bg-tertiary/90 transition-all text-sm disabled:opacity-40">
                           {saving ? "Saving..." : "Save"}
                         </button>
                         <button onClick={() => setEditingId(null)}
-                          className="px-4 py-2 border border-[#c6c6cd] text-[#505f76] font-semibold rounded-md hover:bg-[#f2f4f6] transition-all text-sm">
+                          className="px-4 py-2 border border-outline-variant text-secondary font-semibold rounded-md hover:bg-surface-container-low transition-all text-sm">
                           Cancel
                         </button>
                       </div>
@@ -201,23 +201,23 @@ export default function CategoriesPage() {
                   ) : (
                     <>
                       <div>
-                        <p className="font-medium text-[#0F172A]">{cat.name}</p>
+                        <p className="font-medium text-primary-container">{cat.name}</p>
                         {cat.description && (
-                          <p className="text-xs text-[#505f76]">{cat.description}</p>
+                          <p className="text-xs text-secondary">{cat.description}</p>
                         )}
                       </div>
                       <div className="flex items-center gap-2">
                         <button onClick={() => startEdit(cat)}
-                          className="opacity-0 group-hover:opacity-100 text-[#505f76] hover:text-[#0F172A] transition-all p-1"
+                          className="opacity-0 group-hover:opacity-100 text-secondary hover:text-primary-container transition-all p-1"
                           title="Edit">
                           <span className="material-symbols-outlined text-sm">edit</span>
                         </button>
                         <button onClick={() => handleDelete(cat.id)}
-                          className="opacity-0 group-hover:opacity-100 text-[#ba1a1a] hover:text-[#93000a] transition-all p-1"
+                          className="opacity-0 group-hover:opacity-100 text-error hover:text-on-error-container transition-all p-1"
                           title="Delete">
                           <span className="material-symbols-outlined text-sm">delete</span>
                         </button>
-                        <span className="text-[10px] md:text-xs text-[#505f76] font-mono ml-2">
+                        <span className="text-[10px] md:text-xs text-secondary font-mono ml-2">
                           {cat.id.slice(0, 8)}
                         </span>
                       </div>

@@ -112,14 +112,14 @@ export default function SubtypesPage() {
     <>
       {/* Breadcrumbs & Header (desktop) */}
       <div className="hidden md:block px-8 pt-8 pb-4">
-        <nav className="flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
-          <Link href="/" className="hover:text-[#0F172A]">Dashboard</Link>
+        <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
+          <Link href="/" className="hover:text-primary-container">Dashboard</Link>
           <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <Link href="/inventory" className="hover:text-[#0F172A]">Inventory</Link>
+          <Link href="/inventory" className="hover:text-primary-container">Inventory</Link>
           <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <span className="text-[#0F172A] font-bold">Sub-types</span>
+          <span className="text-primary-container font-bold">Sub-types</span>
         </nav>
-        <h1 className="font-display text-2xl font-bold text-[#0F172A] tracking-tight">
+        <h1 className="font-display text-2xl font-bold text-primary-container tracking-tight">
           Inventory Management
         </h1>
       </div>
@@ -138,8 +138,8 @@ export default function SubtypesPage() {
               onClick={() => setSelectedCategoryId(cat.id)}
               className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all ${
                 isSelected
-                  ? "bg-[#002114] text-[#059669] border border-[#059669]"
-                  : "bg-[#f2f4f6] text-[#505f76] border border-[#c6c6cd]/50 hover:bg-[#eceef0]"
+                  ? "bg-on-tertiary-fixed text-tertiary border border-tertiary"
+                  : "bg-surface-container-low text-secondary border border-outline-variant/50 hover:bg-surface-container"
               }`}
             >
               {cat.name}
@@ -150,13 +150,13 @@ export default function SubtypesPage() {
 
       {/* Mobile: Page Title & FAB */}
       <div className="md:hidden flex justify-between items-center px-4 mb-4">
-        <h2 className="font-display font-bold text-lg text-[#0F172A]">
+        <h2 className="font-display font-bold text-lg text-primary-container">
           {selectedCategory ? `${selectedCategory.name} — Sub-types` : "Sub-types"}
         </h2>
         {selectedCategory && (
           <button
             onClick={() => setShowModal(true)}
-            className="w-10 h-10 rounded-full bg-[#0F172A] text-white flex items-center justify-center shadow-md active:scale-95 transition-transform"
+            className="w-10 h-10 rounded-full bg-primary-container text-white flex items-center justify-center shadow-md active:scale-95 transition-transform"
           >
             <span className="material-symbols-outlined">add</span>
           </button>
@@ -164,12 +164,12 @@ export default function SubtypesPage() {
       </div>
 
       {/* Two-Panel Content (desktop) */}
-      <div className="hidden md:flex flex-1 p-8 grid grid-cols-12 gap-6 bg-[#F8FAFC">
+      <div className="hidden md:flex flex-1 p-8 grid grid-cols-12 gap-6 bg-background">
         {/* Left Panel: Categories */}
         <section className="col-span-4 flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-display font-bold text-lg text-[#0F172A]">Categories</h3>
-            <Link href="/inventory/categories" className="flex items-center gap-1 text-[#059669] hover:bg-[#059669]/10 px-2 py-1 rounded transition-colors text-xs font-semibold">
+            <h3 className="font-display font-bold text-lg text-primary-container">Categories</h3>
+            <Link href="/inventory/categories" className="flex items-center gap-1 text-tertiary hover:bg-tertiary/10 px-2 py-1 rounded transition-colors text-xs font-semibold">
               <span className="material-symbols-outlined text-[18px]">add</span>
               Add
             </Link>
@@ -183,25 +183,25 @@ export default function SubtypesPage() {
                   onClick={() => setSelectedCategoryId(cat.id)}
                   className={`flex items-center justify-between p-4 rounded-lg border-l-4 shadow-sm group text-left transition-all hover:translate-x-1 ${
                     isSelected
-                      ? "bg-white border-l-[#059669]"
-                      : "bg-[#f2f4f6] border-l-transparent hover:bg-[#eceef0]"
+                      ? "bg-white border-l-tertiary"
+                      : "bg-surface-container-low border-l-transparent hover:bg-surface-container"
                   }`}
                 >
                   <div>
-                    <p className={`text-sm font-bold ${isSelected ? "text-[#0F172A]" : "text-[#505f76]"}`}>{cat.name}</p>
-                    <p className="text-xs text-[#505f76]">{subtypeCount(cat.id)} sub-types</p>
+                    <p className={`text-sm font-bold ${isSelected ? "text-primary-container" : "text-secondary"}`}>{cat.name}</p>
+                    <p className="text-xs text-secondary">{subtypeCount(cat.id)} sub-types</p>
                   </div>
-                  <span className={`material-symbols-outlined text-[#76777d] ${isSelected ? "text-[#0F172A]" : "group-hover:text-[#0F172A]"}`}>
+                  <span className={`material-symbols-outlined text-outline ${isSelected ? "text-primary-container" : "group-hover:text-primary-container"}`}>
                     chevron_right
                   </span>
                 </button>
               );
             })}
             {categories.length === 0 && (
-              <div className="text-center py-8 text-xs text-[#505f76]">No categories yet</div>
+              <div className="text-center py-8 text-xs text-secondary">No categories yet</div>
             )}
-            <Link href="/inventory/categories" className="flex items-center justify-center p-4 bg-transparent border-2 border-dashed border-[#c6c6cd] rounded-lg hover:border-[#059669] hover:bg-[#059669]/5 transition-all group mt-2">
-              <div className="flex items-center gap-2 text-[#76777d] group-hover:text-[#059669]">
+            <Link href="/inventory/categories" className="flex items-center justify-center p-4 bg-transparent border-2 border-dashed border-outline-variant rounded-lg hover:border-tertiary hover:bg-tertiary/5 transition-all group mt-2">
+              <div className="flex items-center gap-2 text-outline group-hover:text-tertiary">
                 <span className="material-symbols-outlined">add_circle</span>
                 <span className="text-sm font-medium">Add Category</span>
               </div>
@@ -212,13 +212,13 @@ export default function SubtypesPage() {
         {/* Right Panel: Sub-types Table */}
         <section className="col-span-8 flex flex-col gap-4">
           <div className="flex items-center justify-between gap-4">
-            <h3 className="font-display font-bold text-lg text-[#0F172A] min-w-0 flex-shrink">
+            <h3 className="font-display font-bold text-lg text-primary-container min-w-0 flex-shrink">
               {selectedCategory ? (
-                <>{selectedCategory.name} — <span className="text-[#505f76]">Sub-types</span></>
+                <>{selectedCategory.name} — <span className="text-secondary">Sub-types</span></>
               ) : "Select a category"}
             </h3>
             {selectedCategory && (
-              <button onClick={() => setShowModal(true)} className="flex-shrink-0 flex items-center gap-2 bg-[#0F172A] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#0F172A]/90 transition-all active:scale-95 shadow-sm text-sm">
+              <button onClick={() => setShowModal(true)} className="flex-shrink-0 flex items-center gap-2 bg-primary-container text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm text-sm">
                 <span className="material-symbols-outlined text-[20px]">add</span>
                 Add Sub-type
               </button>
@@ -227,29 +227,29 @@ export default function SubtypesPage() {
 
           {selectedCategory ? (
             subtypes.length === 0 ? (
-              <div className="bg-white rounded-xl shadow-sm border border-[#c6c6cd]/30 py-12 text-center text-[#505f76] text-sm">
+              <div className="bg-white rounded-xl shadow-sm border border-outline-variant/30 py-12 text-center text-secondary text-sm">
                 No sub-types in this category yet
               </div>
             ) : (
-              <div className="bg-white rounded-xl shadow-sm border border-[#c6c6cd]/30 overflow-hidden">
+              <div className="bg-white rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
                 <table className="w-full text-left">
-                  <thead className="bg-[#f2f4f6] border-b border-[#c6c6cd]/30">
+                  <thead className="bg-surface-container-low border-b border-outline-variant/30">
                     <tr>
-                      <th className="px-6 py-4 text-xs font-bold text-[#505f76] uppercase tracking-wider">Sub-type Name</th>
-                      <th className="px-6 py-4 text-xs font-bold text-[#505f76] uppercase tracking-wider">Default Price</th>
-                      <th className="px-6 py-4 text-xs font-bold text-[#505f76] uppercase tracking-wider">Unit</th>
-                      <th className="px-6 py-4 text-xs font-bold text-[#505f76] uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-4 text-xs font-bold text-[#505f76] uppercase tracking-wider text-right">Actions</th>
+                      <th className="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Sub-type Name</th>
+                      <th className="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Default Price</th>
+                      <th className="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Unit</th>
+                      <th className="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#c6c6cd]/20">
+                  <tbody className="divide-y divide-outline-variant/20">
                     {subtypes.map((st) => (
-                      <tr key={st.id} className="hover:bg-[#f7f9fb] transition-colors group">
-                        <td className={`px-6 py-4 text-sm font-medium ${st.is_active ? "text-[#0F172A]" : "text-[#505f76]/60"}`}>{st.name}</td>
-                        <td className="px-6 py-4 font-mono text-sm text-[#505f76]">
+                      <tr key={st.id} className="hover:bg-background transition-colors group">
+                        <td className={`px-6 py-4 text-sm font-medium ${st.is_active ? "text-primary-container" : "text-secondary/60"}`}>{st.name}</td>
+                        <td className="px-6 py-4 font-mono text-sm text-secondary">
                           ৳{st.default_price_per_kg ? Number(st.default_price_per_kg).toFixed(2) : "—"}
                         </td>
-                        <td className="px-6 py-4 text-sm text-[#505f76]">{st.unit || "kg"}</td>
+                        <td className="px-6 py-4 text-sm text-secondary">{st.unit || "kg"}</td>
                         <td className="px-6 py-4">
                           {st.is_active ? (
                             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold">
@@ -263,10 +263,10 @@ export default function SubtypesPage() {
                         </td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button className="p-1 hover:text-[#059669] transition-colors">
+                            <button className="p-1 hover:text-tertiary transition-colors">
                               <span className="material-symbols-outlined text-[18px]">edit</span>
                             </button>
-                            <button className="p-1 hover:text-[#ba1a1a] transition-colors">
+                            <button className="p-1 hover:text-error transition-colors">
                               <span className="material-symbols-outlined text-[18px]">{st.is_active ? "block" : "check_circle"}</span>
                             </button>
                           </div>
@@ -278,35 +278,35 @@ export default function SubtypesPage() {
               </div>
             )
           ) : (
-            <div className="bg-white rounded-xl shadow-sm border border-[#c6c6cd]/30 py-16 text-center">
-              <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">category</span>
-              <p className="text-[#505f76] text-sm">Select a category to view sub-types</p>
+            <div className="bg-white rounded-xl shadow-sm border border-outline-variant/30 py-16 text-center">
+              <span className="material-symbols-outlined text-5xl text-outline-variant block mb-4">category</span>
+              <p className="text-secondary text-sm">Select a category to view sub-types</p>
             </div>
           )}
 
           {/* Desktop Stats Row */}
           {selectedCategory && subtypes.length > 0 && (
             <div className="hidden md:grid grid-cols-3 gap-4 mt-2">
-              <div className="p-4 bg-[#002114] text-white rounded-lg flex items-center justify-between border-l-4 border-[#059669] shadow-sm">
+              <div className="p-4 bg-on-tertiary-fixed text-white rounded-lg flex items-center justify-between border-l-4 border-tertiary shadow-sm">
                 <div>
                   <p className="text-[10px] uppercase font-bold tracking-wider opacity-70">Top Sub-type</p>
                   <p className="text-sm font-bold">{topSubtype?.name || "—"}</p>
                 </div>
-                <span className="material-symbols-outlined text-[#059669]" style={{ fontVariationSettings: "'FILL' 1" }}>trending_up</span>
+                <span className="material-symbols-outlined text-tertiary" style={{ fontVariationSettings: "'FILL' 1" }}>trending_up</span>
               </div>
-              <div className="p-4 bg-white border border-[#c6c6cd]/30 rounded-lg flex items-center justify-between shadow-sm">
+              <div className="p-4 bg-white border border-outline-variant/30 rounded-lg flex items-center justify-between shadow-sm">
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider">Avg Price</p>
-                  <p className="text-sm font-mono font-bold text-[#0F172A]">৳{avgPrice.toFixed(2)} /kg</p>
+                  <p className="text-[10px] uppercase font-bold text-secondary tracking-wider">Avg Price</p>
+                  <p className="text-sm font-mono font-bold text-primary-container">৳{avgPrice.toFixed(2)} /kg</p>
                 </div>
-                <span className="material-symbols-outlined text-[#505f76]">payments</span>
+                <span className="material-symbols-outlined text-secondary">payments</span>
               </div>
-              <div className="p-4 bg-white border border-[#c6c6cd]/30 rounded-lg flex items-center justify-between shadow-sm">
+              <div className="p-4 bg-white border border-outline-variant/30 rounded-lg flex items-center justify-between shadow-sm">
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider">Total Stock</p>
-                  <p className="text-sm font-mono font-bold text-[#0F172A]">{totalStock.toLocaleString("en-IN")} kg</p>
+                  <p className="text-[10px] uppercase font-bold text-secondary tracking-wider">Total Stock</p>
+                  <p className="text-sm font-mono font-bold text-primary-container">{totalStock.toLocaleString("en-IN")} kg</p>
                 </div>
-                <span className="material-symbols-outlined text-[#505f76]">inventory_2</span>
+                <span className="material-symbols-outlined text-secondary">inventory_2</span>
               </div>
             </div>
           )}
@@ -318,30 +318,30 @@ export default function SubtypesPage() {
         {selectedCategory && subtypes.length > 0 ? (
           <div className="space-y-3">
             {subtypes.map((st) => (
-              <div key={st.id} className="bg-white p-4 rounded-xl border border-[#c6c6cd]/30 shadow-sm flex flex-col gap-3">
+              <div key={st.id} className="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex flex-col gap-3">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-sm font-semibold text-[#0F172A]">{st.name}</h3>
-                    <span className="text-xs text-[#505f76]">Unit: {st.unit || "kg"}</span>
+                    <h3 className="text-sm font-semibold text-primary-container">{st.name}</h3>
+                    <span className="text-xs text-secondary">Unit: {st.unit || "kg"}</span>
                   </div>
                   {st.is_active ? (
-                    <span className="px-2 py-1 bg-[#002114] text-[#059669] text-[10px] font-bold rounded-sm flex items-center gap-1 uppercase">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#059669]" /> Active
+                    <span className="px-2 py-1 bg-on-tertiary-fixed text-tertiary text-[10px] font-bold rounded-sm flex items-center gap-1 uppercase">
+                      <span className="w-1.5 h-1.5 rounded-full bg-tertiary" /> Active
                     </span>
                   ) : (
-                    <span className="px-2 py-1 bg-[#e0e3e5] text-[#505f76] text-[10px] font-bold rounded-sm flex items-center gap-1 uppercase">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#505f76]" /> Inactive
+                    <span className="px-2 py-1 bg-surface-container-highest text-secondary text-[10px] font-bold rounded-sm flex items-center gap-1 uppercase">
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> Inactive
                     </span>
                   )}
                 </div>
-                <div className="flex justify-between items-end border-t border-dashed border-[#c6c6cd]/50 pt-3">
+                <div className="flex justify-between items-end border-t border-dashed border-outline-variant/50 pt-3">
                   <div>
-                    <p className="text-[10px] uppercase text-[#505f76] font-medium tracking-wider">Default Price</p>
-                    <p className="font-mono text-lg font-bold text-[#0F172A]">
+                    <p className="text-[10px] uppercase text-secondary font-medium tracking-wider">Default Price</p>
+                    <p className="font-mono text-lg font-bold text-primary-container">
                       ৳{st.default_price_per_kg ? Number(st.default_price_per_kg).toFixed(2) : "—"}/kg
                     </p>
                   </div>
-                  <button className="text-[#505f76]">
+                  <button className="text-secondary">
                     <span className="material-symbols-outlined text-xl">edit</span>
                   </button>
                 </div>
@@ -349,11 +349,11 @@ export default function SubtypesPage() {
             ))}
           </div>
         ) : selectedCategory && subtypes.length === 0 ? (
-          <div className="text-center py-12 text-[#505f76] text-sm bg-white rounded-xl border border-[#c6c6cd]/30">
+          <div className="text-center py-12 text-secondary text-sm bg-white rounded-xl border border-outline-variant/30">
             No sub-types in this category yet
           </div>
         ) : (
-          <div className="text-center py-12 text-[#505f76] text-sm bg-white rounded-xl border border-[#c6c6cd]/30">
+          <div className="text-center py-12 text-secondary text-sm bg-white rounded-xl border border-outline-variant/30">
             Select a category to view sub-types
           </div>
         )}
@@ -361,36 +361,36 @@ export default function SubtypesPage() {
 
       {/* Desktop Modal */}
       {showModal && (
-        <div className="hidden md:flex fixed inset-0 z-[60] items-center justify-center bg-[#0F172A]/40 backdrop-blur-sm transition-all duration-300"
+        <div className="hidden md:flex fixed inset-0 z-[60] items-center justify-center bg-primary-container/40 backdrop-blur-sm transition-all duration-300"
           onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false); }}
         >
-          <div className="bg-white w-[480px] p-8 rounded-xl shadow-lg border border-[#c6c6cd]/30">
+          <div className="bg-white w-[480px] p-8 rounded-xl shadow-lg border border-outline-variant/30">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="font-display font-bold text-xl text-[#0F172A]">Add Sub-type</h2>
-              <button className="text-[#76777d] hover:text-[#0F172A] transition-colors" onClick={() => setShowModal(false)}>
+              <h2 className="font-display font-bold text-xl text-primary-container">Add Sub-type</h2>
+              <button className="text-outline hover:text-primary-container transition-colors" onClick={() => setShowModal(false)}>
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-bold text-[#0F172A]">Sub-type Name</label>
+                <label className="text-sm font-bold text-primary-container">Sub-type Name</label>
                 <input required value={name} onChange={(e) => setName(e.target.value)}
-                  className="w-full h-[42px] border border-[#c6c6cd] focus:border-[#059669] focus:ring-0 rounded text-sm px-4 outline-none"
+                  className="w-full h-[42px] border border-outline-variant focus:border-tertiary focus:ring-0 rounded text-sm px-4 outline-none"
                   placeholder="e.g. 30mm Ultra Thick" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-bold text-[#0F172A]">Default Price per kg</label>
+                  <label className="text-sm font-bold text-primary-container">Default Price per kg</label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-[#76777d]">৳</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-outline">৳</span>
                     <input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
-                      className="w-full h-[42px] pl-8 border border-[#c6c6cd] focus:border-[#059669] focus:ring-0 rounded text-sm font-mono outline-none" />
+                      className="w-full h-[42px] pl-8 border border-outline-variant focus:border-tertiary focus:ring-0 rounded text-sm font-mono outline-none" />
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-bold text-[#0F172A]">Unit</label>
+                  <label className="text-sm font-bold text-primary-container">Unit</label>
                   <select value={unit} onChange={(e) => setUnit(e.target.value)}
-                    className="w-full h-[42px] border border-[#c6c6cd] focus:border-[#059669] focus:ring-0 rounded text-sm px-4 outline-none">
+                    className="w-full h-[42px] border border-outline-variant focus:border-tertiary focus:ring-0 rounded text-sm px-4 outline-none">
                     <option value="kg">kg</option>
                     <option value="ton">ton</option>
                   </select>
@@ -398,9 +398,9 @@ export default function SubtypesPage() {
               </div>
               <div className="flex items-center gap-3 pt-4">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="flex-1 h-[42px] bg-transparent text-[#505f76] hover:bg-[#f2f4f6] transition-colors font-bold text-sm rounded">Cancel</button>
+                  className="flex-1 h-[42px] bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded">Cancel</button>
                 <button type="submit" disabled={loading}
-                  className="flex-1 h-[42px] bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40">
+                  className="flex-1 h-[42px] bg-primary-container text-white hover:bg-primary-container/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40">
                   {loading ? "Saving..." : "Save Sub-type"}</button>
               </div>
             </form>
@@ -411,29 +411,29 @@ export default function SubtypesPage() {
       {/* Mobile: Bottom Sheet */}
       {showModal && (
         <div className="md:hidden fixed inset-0 z-[60]">
-          <div className="absolute inset-0 bg-[#0F172A]/40 backdrop-blur-sm"
+          <div className="absolute inset-0 bg-primary-container/40 backdrop-blur-sm"
             onClick={() => setShowModal(false)} />
           <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-2xl p-6 flex flex-col gap-6 transition-transform">
-            <div className="w-12 h-1 bg-[#c6c6cd] rounded-full mx-auto mb-2" />
-            <h2 className="font-display font-bold text-xl text-[#0F172A]">Add Sub-type</h2>
+            <div className="w-12 h-1 bg-outline-variant rounded-full mx-auto mb-2" />
+            <h2 className="font-display font-bold text-xl text-primary-container">Add Sub-type</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Sub-type Name</label>
+                <label className="text-xs font-bold text-secondary uppercase tracking-wider">Sub-type Name</label>
                 <input required value={name} onChange={(e) => setName(e.target.value)}
-                  className="w-full h-[42px] px-4 rounded border border-[#76777d] focus:ring-2 focus:ring-[#0F172A] focus:border-transparent outline-none"
+                  className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary-container focus:border-transparent outline-none"
                   placeholder="e.g., 20mm Super Heavy" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Default Price (৳)</label>
+                  <label className="text-xs font-bold text-secondary uppercase tracking-wider">Default Price (৳)</label>
                   <input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
-                    className="w-full h-[42px] px-4 rounded border border-[#76777d] focus:ring-2 focus:ring-[#0F172A] focus:border-transparent outline-none font-mono"
+                    className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary-container focus:border-transparent outline-none font-mono"
                     placeholder="0.00" />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Unit</label>
+                  <label className="text-xs font-bold text-secondary uppercase tracking-wider">Unit</label>
                   <select value={unit} onChange={(e) => setUnit(e.target.value)}
-                    className="w-full h-[42px] px-4 rounded border border-[#76777d] focus:ring-2 focus:ring-[#0F172A] outline-none">
+                    className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary-container outline-none">
                     <option value="kg">kg</option>
                     <option value="ton">Metric Ton</option>
                   </select>
@@ -441,10 +441,10 @@ export default function SubtypesPage() {
               </div>
               <div className="flex flex-col gap-3 mt-4">
                 <button type="submit" disabled={loading}
-                  className="w-full h-12 bg-[#0F172A] text-white font-bold rounded-lg shadow-md active:scale-[0.98] transition-all">
+                  className="w-full h-12 bg-primary-container text-white font-bold rounded-lg shadow-md active:scale-[0.98] transition-all">
                   {loading ? "Saving..." : "Save Sub-type"}</button>
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="w-full h-12 bg-transparent text-[#505f76] font-medium rounded-lg hover:bg-[#f2f4f6] transition-colors">Cancel</button>
+                  className="w-full h-12 bg-transparent text-secondary font-medium rounded-lg hover:bg-surface-container-low transition-colors">Cancel</button>
               </div>
             </form>
             <div className="h-6" />
