@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 
 interface Account {
   id: string;
@@ -76,6 +77,7 @@ const { data: transactionsData } = useQuery<Transaction[]>({
 
   return (
     <div className="p-4 md:p-8 space-y-6 md:space-y-8 max-w-7xl mx-auto w-full">
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Accounts', href: null }]} />
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
         <div>

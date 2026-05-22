@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 import { useQuery } from "@tanstack/react-query";
 
 interface Advance {
@@ -102,6 +103,7 @@ export default function WorkerDetailPage() {
 
   return (
     <div className="p-4 md:p-8">
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Workers', href: '/hr/workers' }, { label: 'Worker Profile', href: null }]} />
       {/* Back + Title */}
       <div className="flex flex-col md:flex-row md:items-center gap-3 mb-6">
         <div className="flex items-center gap-3">
@@ -241,7 +243,9 @@ export default function WorkerDetailPage() {
                             {formatDate(a.advance_date)}
                           </td>
                           <td className="px-6 py-4 font-mono text-sm font-bold text-right text-warning">
-                            {formatMoney(a.amount)}
+                            <Link href="/hr/payroll" className="hover:underline">
+                              {formatMoney(a.amount)}
+                            </Link>
                           </td>
                           <td className="px-6 py-4 text-sm">
                             {MONTH_NAMES[a.month - 1]} {a.year}
@@ -269,9 +273,9 @@ export default function WorkerDetailPage() {
                         <p className="text-xs text-secondary font-medium">
                           {formatDate(a.advance_date)}
                         </p>
-                        <span className="font-mono font-bold text-warning">
+                        <Link href="/hr/payroll" className="font-mono font-bold text-warning hover:underline">
                           {formatMoney(a.amount)}
-                        </span>
+                        </Link>
                       </div>
                       <div className="flex justify-between text-xs text-secondary">
                         <span>{MONTH_NAMES[a.month - 1]} {a.year}</span>

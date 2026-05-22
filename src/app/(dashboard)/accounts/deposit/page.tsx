@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
 
@@ -104,14 +105,7 @@ export default function DepositPage() {
 
   return (
     <div className="p-4 md:p-8">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-primary-container">Dashboard</Link>
-        <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <Link href="/accounts" className="hover:text-primary-container">Accounts</Link>
-        <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-primary-container font-bold">Deposit</span>
-      </nav>
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Accounts', href: '/accounts' }, { label: 'Deposit', href: null }]} />
 
       <div className="flex items-center gap-3 mb-6">
         <Link

@@ -1,8 +1,8 @@
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import MobileSidebar from "@/components/MobileSidebar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import QueryProvider from "@/components/QueryProvider";
 
 export default async function DashboardLayout({
@@ -57,28 +57,7 @@ export default async function DashboardLayout({
         <main className="flex-1 pb-20 md:pb-0">{children}</main>
 
         {/* Mobile Bottom Nav */}
-        <nav className="fixed bottom-0 w-full md:hidden z-50 bg-white border-t border-outline-variant shadow-lg flex justify-around items-center h-16 px-2">
-          <Link href="/" className="flex flex-col items-center justify-center text-tertiary px-3 py-1 rounded-xl">
-            <span className="material-symbols-outlined text-2xl" style={{fontVariationSettings: "'FILL' 1"}}>home</span>
-            <span className="font-label text-[10px] font-bold">Home</span>
-          </Link>
-          <Link href="/inventory" className="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low px-3 py-1 rounded-xl transition-all">
-            <span className="material-symbols-outlined text-2xl">inventory_2</span>
-            <span className="font-label text-[10px] font-medium">Stock</span>
-          </Link>
-          <Link href="/sales" className="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low px-3 py-1 rounded-xl transition-all">
-            <span className="material-symbols-outlined text-2xl">payments</span>
-            <span className="font-label text-[10px] font-medium">Sales</span>
-          </Link>
-          <Link href="/hr" className="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low px-3 py-1 rounded-xl transition-all">
-            <span className="material-symbols-outlined text-2xl">groups</span>
-            <span className="font-label text-[10px] font-medium">HR</span>
-          </Link>
-          <Link href="/purchases" className="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-low px-3 py-1 rounded-xl transition-all">
-            <span className="material-symbols-outlined text-2xl">shopping_cart</span>
-            <span className="font-label text-[10px] font-medium">Buy</span>
-          </Link>
-        </nav>
+        <MobileBottomNav />
       </div>
     </div>
     </QueryProvider>

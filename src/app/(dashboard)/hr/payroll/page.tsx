@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 
 interface PayrollRow {
   worker_id: string;
@@ -152,16 +153,7 @@ export default function PayrollPage() {
 
   return (
     <div className="p-4 md:p-8">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-primary-container">
-          Dashboard
-        </Link>
-        <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-primary-container font-bold">ERP</span>
-        <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-primary-container font-bold">HR</span>
-      </nav>
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Payroll', href: null }]} />
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">

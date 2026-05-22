@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { generateReportPdf } from "@/lib/pdf/reports";
+import Breadcrumb from "@/components/Breadcrumb";
 
 interface ReportDetail {
   id: string;
@@ -111,14 +112,7 @@ export default function ReportDetailPage() {
 
   return (
     <div className="p-4 md:p-8">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-primary-container">ERP</Link>
-        <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <Link href="/reports" className="hover:text-primary-container">Reports</Link>
-        <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-primary-container font-bold">Report</span>
-      </nav>
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Reports', href: '/reports' }, { label: 'Report Detail', href: null }]} />
 
       {/* Back + Header */}
       <div className="flex flex-col md:flex-row md:items-center gap-3 mb-6">

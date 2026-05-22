@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Breadcrumb from "@/components/Breadcrumb";
 
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
@@ -93,14 +94,7 @@ export default function GenerateReportPage() {
 
   return (
     <div className="p-4 md:p-8">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-primary-container">ERP</Link>
-        <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <Link href="/reports" className="hover:text-primary-container">Reports</Link>
-        <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-primary-container font-bold">Generate</span>
-      </nav>
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Reports', href: '/reports' }, { label: 'Generate', href: null }]} />
 
       {/* Back */}
       <Link

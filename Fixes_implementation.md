@@ -1,44 +1,54 @@
-# Fixes Implementation Plan
+# Navigation Improvement Plan
 
-> Merged from `Findings_v3.md`
-> Priority: P0 (crash) → P1 (bug) → P2 (missing feature) → P3 (polish)
-
----
-
-## P0 — CRASHES (Fix immediately)
-
-| # | Finding | Action | Files | Status |
-|---|---------|--------|-------|--------|
-| 1 | **Consumables GET 500 error** | Fix `GET /api/inventory/consumables?page=1&limit=20` returning 500 — apply missing migration `0002_dizzy_epoch` | `api/inventory/consumables/route.ts`, migration `0002` | ✅ |
+> Priority: P0 (foundation) → P1 (quick wins) → P2 (mobile nav) → P3 (flagship)
+> Decision log: `AGENTS.md` under "Progress"
 
 ---
 
-## P1 — FUNCTIONALITY BUGS
+## P0 — FOUNDATION (Shared components first)
 
-| # | Finding | Action | Files | Status |
-|---|---------|--------|-------|--------|
-| 2 | **"truck_fare" column does not exist on payment** | Apply missing migration `0001_illegal_dust` adding truck_fare/labour_cost/food_cost to purchases table | migration `0001` | ✅ |
-| 3 | **Sales total showing with wrong currency format** | `total_sales` is a COUNT (not money) — display as plain number, not with ৳ | `sales/page.tsx` | ✅ |
-
----
-
-## P2 — MISSING UI & NAVIGATION
-
-| # | Finding | Action | Files | Status |
-|---|---------|--------|-------|--------|
-| 4 | **Vendors with old payable not in Due list** | When `status=due`, also query vendors with `opening_balance > 0` and merge as synthetic entries | `api/purchases/route.ts`, `purchases/page.tsx` | ✅ |
-| 5 | **Vendor profile page with payment support** | Create vendor detail page + API; link from vendors list; Record Payment modal selects due purchase | `purchases/vendors/[id]/page.tsx`, `api/purchases/vendors/[id]/route.ts`, `purchases/vendors/page.tsx` | ✅ |
-| 6 | **Customer profile page with receive support** | Create customer detail page + API; link from customers list; Record Receive modal selects due sale | `sales/customers/[id]/page.tsx`, `api/sales/customers/[id]/route.ts`, `sales/customers/page.tsx` | ✅ |
-| 7 | **Purchase form: dynamic other expenses with account debit** | Replace fixed truck/labour/food fields with dynamic add/remove rows; each row has description, amount, account_id, "add to vendor total" toggle; expenses either debit from account or add to total_amount | `purchases/new/page.tsx`, `api/purchases/route.ts`, `lib/db/schema.ts`, `lib/validations/schemas.ts` | ✅ |
+| # | Task | Action | Files | Status |
+|---|------|--------|-------|--------|
+| 1 | **Shared Breadcrumb component** | Create reusable `<Breadcrumb items={...} />` component with consistent styling (secondary links, primary-container current, chevron_right separator). Replace all 15 manual implementations AND add breadcrumbs to 6 detail pages that have none. | `src/components/Breadcrumb.tsx` (new), all `(dashboard)/*/page.tsx` | ⬜ |
+| 2 | **Clickable entity links on detail pages** | Make vendor name → vendor profile on purchase detail; customer name → customer profile on sale detail; worker name → actions on worker detail; related accounts on account detail. | `purchases/[id]/page.tsx`, `sales/[id]/page.tsx`, `hr/workers/[id]/page.tsx`, `accounts/[id]/page.tsx` | ⬜ |
 
 ---
 
-## P3 — UI POLISH
+## P1 — QUICK WINS (Detail page breadcrumbs + entity links)
 
-| # | Finding | Action | Status |
-|---|---------|--------|--------|
-| — | *No new P3 items* | — | — |
+| # | Task | Action | Files | Status |
+|---|------|--------|-------|--------|
+| 3 | **Add breadcrumbs to detail pages** | Integrate shared Breadcrumb on: purchase detail, sale detail, vendor profile, customer profile, worker profile, account detail. Each shows full trail (e.g. Dashboard > Purchases > Purchase #ABC1). | `purchases/[id]/page.tsx`, `sales/[id]/page.tsx`, `purchases/vendors/[id]/page.tsx`, `sales/customers/[id]/page.tsx`, `hr/workers/[id]/page.tsx`, `accounts/[id]/page.tsx` | ⬜ |
+| 4 | **Refactor all list pages** | Replace manual breadcrumb HTML on all 15 list pages with the shared `<Breadcrumb />` component. | All `(dashboard)/*/page.tsx` | ⬜ |
 
 ---
 
-**Total: 7 items** · P0: 1 ✅ · P1: 2 ✅ · P2: 4 ✅ · P3: 0
+## P2 — MOBILE NAV (Scrollable bottom navbar)
+
+| # | Task | Action | Files | Status |
+|---|------|--------|-------|--------|
+| 5 | **Scrollable mobile bottom navbar** | Expand current 5-icon fixed bottom nav to include ALL modules. Use `overflow-x-auto snap-x` for horizontal scroll. Chips: icon + label. Active chip highlighted. Include: Home, Inventory, Purchases, Sales, HR, Accounts, Reports, Settings. | `src/app/(dashboard)/layout.tsx` | ⬜ |
+
+---
+
+## P3 — FLAGSHIP (Global command palette)
+
+| # | Task | Action | Files | Status |
+|---|------|--------|-------|--------|
+| 6 | **Global command palette (Cmd+K)** | Create modal component triggered by `Cmd+K`/`Ctrl+K`. Groups: Navigation (all routes), Recent (last 5 entities via localStorage), Quick Actions (New Sale, New Purchase, etc.), Entities (vendor/customer/worker search via API). Use `cmdk` library. Add to dashboard layout. | `src/components/CommandPalette.tsx` (new), `src/app/(dashboard)/layout.tsx`, `src/app/api/command-palette/route.ts` (new) | ⬜ |
+
+---
+
+## Execution Order
+
+| Step | Item | Why this order |
+|------|------|----------------|
+| 1 | Breadcrumb component | Foundation — other steps depend on it |
+| 2 | Add breadcrumbs + entity links | High impact, relies on step 1 |
+| 3 | Refactor list pages | Mechanical replacement, uses step 1 |
+| 4 | Mobile bottom nav | Independent layout change |
+| 5 | Command palette | Largest feature, saved for last |
+
+---
+
+**Total: 6 items** · P0: 2 ⬜ · P1: 2 ⬜ · P2: 1 ⬜ · P3: 1 ⬜

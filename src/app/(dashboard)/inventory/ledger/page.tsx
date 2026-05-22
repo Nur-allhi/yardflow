@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 import { InventoryNav } from "@/components/InventoryNav";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSubtypes } from "@/hooks/useCategories";
@@ -190,14 +191,7 @@ export default function StockLedgerPage() {
 
   return (
     <div className="p-4 md:p-8">
-      {/* Breadcrumbs */}
-      <div className="hidden md:flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-[#0F172A]">Dashboard</Link>
-        <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <Link href="/inventory" className="hover:text-[#0F172A]">Inventory</Link>
-        <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-[#0F172A] font-bold">Stock Ledger</span>
-      </div>
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Inventory', href: '/inventory' }, { label: 'Ledger', href: null }]} />
 
       {/* Mobile: back + title */}
       <div className="md:hidden flex items-center gap-3 mb-4">

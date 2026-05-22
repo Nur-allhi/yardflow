@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InventoryNav } from "@/components/InventoryNav";
 
@@ -112,13 +113,7 @@ export default function SubtypesPage() {
     <>
       {/* Breadcrumbs & Header (desktop) */}
       <div className="hidden md:block px-8 pt-8 pb-4">
-        <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
-          <Link href="/" className="hover:text-primary-container">Dashboard</Link>
-          <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <Link href="/inventory" className="hover:text-primary-container">Inventory</Link>
-          <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <span className="text-primary-container font-bold">Sub-types</span>
-        </nav>
+        <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Inventory', href: '/inventory' }, { label: 'Sub-types', href: null }]} />
         <h1 className="font-display text-2xl font-bold text-primary-container tracking-tight">
           Inventory Management
         </h1>

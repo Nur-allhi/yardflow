@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 import { InventoryClient } from "./InventoryClient";
 import { InventoryNav } from "@/components/InventoryNav";
 import { db } from "@/lib/db";
@@ -120,15 +121,7 @@ export default async function InventoryPage() {
       {/* Breadcrumbs and Header */}
       <div className="hidden md:flex justify-between items-end mb-6">
         <div>
-            <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
-            <Link href="/" className="hover:text-primary-container">
-              Dashboard
-            </Link>
-            <span className="material-symbols-outlined text-xs">
-              chevron_right
-            </span>
-            <span className="text-primary-container font-bold">Inventory</span>
-          </nav>
+            <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Inventory', href: null }]} />
           <h1 className="font-display text-[2rem] font-bold text-primary-container tracking-tight">
             Inventory
           </h1>

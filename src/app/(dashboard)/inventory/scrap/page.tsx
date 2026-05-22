@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 import { InventoryNav } from "@/components/InventoryNav";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -162,17 +163,7 @@ export default function ScrapPoolPage() {
     <>
       {/* Desktop Header */}
       <div className="hidden md:block p-4 md:p-8 pb-0">
-        <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
-          <Link href="/" className="hover:text-primary-container">
-            Dashboard
-          </Link>
-          <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <Link href="/inventory" className="hover:text-primary-container">
-            Inventory
-          </Link>
-          <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <span className="text-primary-container font-bold">Scrap Pool</span>
-        </nav>
+        <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Inventory', href: '/inventory' }, { label: 'Scrap Pool', href: null }]} />
         <h1 className="font-display text-2xl md:text-3xl font-bold text-primary-container tracking-tight mb-6">
           Scrap Pool
         </h1>

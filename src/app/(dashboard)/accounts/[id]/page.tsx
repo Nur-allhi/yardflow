@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 import { useQuery } from "@tanstack/react-query";
 
 interface AccountDetail {
@@ -82,6 +83,7 @@ export default function AccountDetailPage() {
 
   return (
     <div className="p-4 md:p-8">
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Accounts', href: '/accounts' }, { label: `Account #${id.slice(0,4).toUpperCase()}`, href: null }]} />
       {/* Back + Title */}
       <div className="flex items-center gap-3 mb-6">
         <Link
@@ -187,7 +189,16 @@ export default function AccountDetailPage() {
                             {txn.type === "credit" ? "+" : "-"}{formatMoney(txn.amount)}
                           </td>
                           <td className="px-6 py-4 text-sm text-secondary capitalize">
-                            {txn.reference_type.replace(/_/g, " ")}
+                            {txn.reference_id ? (
+                              <Link
+                                href={`/${txn.reference_type === "purchase" ? "purchases" : txn.reference_type === "sale" ? "sales" : "#"}/${txn.reference_id}`}
+                                className="hover:underline"
+                              >
+                                {txn.reference_type.replace(/_/g, " ")}
+                              </Link>
+                            ) : (
+                              txn.reference_type.replace(/_/g, " ")
+                            )}
                           </td>
                           <td className="px-6 py-4 text-sm text-secondary italic max-w-[200px] truncate">
                             {txn.note || "—"}
@@ -222,7 +233,16 @@ export default function AccountDetailPage() {
                       <div className="grid grid-cols-2 gap-2 text-[11px] text-secondary pt-2 border-t border-outline-variant/20">
                         <div>
                           <span className="font-bold uppercase tracking-wider">Reference</span>
-                          <p className="capitalize">{txn.reference_type.replace(/_/g, " ")}</p>
+                          {txn.reference_id ? (
+                            <Link
+                              href={`/${["purchase", "sale"].includes(txn.reference_type) ? txn.reference_type + "s" : "#"}/${txn.reference_id}`}
+                              className="hover:underline"
+                            >
+                              {txn.reference_type.replace(/_/g, " ")}
+                            </Link>
+                          ) : (
+                            <p className="capitalize">{txn.reference_type.replace(/_/g, " ")}</p>
+                          )}
                         </div>
                         <div className="text-right">
                           <span className="font-bold uppercase tracking-wider">Note</span>
