@@ -9,8 +9,8 @@
 
 | # | Task | Action | Files | Status |
 |---|------|--------|-------|--------|
-| 1 | **Shared Breadcrumb component** | Create reusable `<Breadcrumb items={...} />` component with consistent styling (secondary links, primary-container current, chevron_right separator). Replace all 15 manual implementations AND add breadcrumbs to 6 detail pages that have none. | `src/components/Breadcrumb.tsx` (new), all `(dashboard)/*/page.tsx` | ⬜ |
-| 2 | **Clickable entity links on detail pages** | Make vendor name → vendor profile on purchase detail; customer name → customer profile on sale detail; worker name → actions on worker detail; related accounts on account detail. | `purchases/[id]/page.tsx`, `sales/[id]/page.tsx`, `hr/workers/[id]/page.tsx`, `accounts/[id]/page.tsx` | ⬜ |
+| 1 | **Shared Breadcrumb component** | Create reusable `<Breadcrumb items={...} />` component with consistent styling (secondary links, primary-container current, chevron_right separator). Replace all 15 manual implementations AND add breadcrumbs to 6 detail pages that have none. | `src/components/Breadcrumb.tsx` (new), all `(dashboard)/*/page.tsx` | ✅ |
+| 2 | **Clickable entity links on detail pages** | Make vendor name → vendor profile on purchase detail; customer name → customer profile on sale detail; worker advance/payment links; related transaction refs on account detail. | `purchases/[id]/page.tsx`, `sales/[id]/page.tsx`, `hr/workers/[id]/page.tsx`, `accounts/[id]/page.tsx` | ✅ |
 
 ---
 
@@ -18,8 +18,8 @@
 
 | # | Task | Action | Files | Status |
 |---|------|--------|-------|--------|
-| 3 | **Add breadcrumbs to detail pages** | Integrate shared Breadcrumb on: purchase detail, sale detail, vendor profile, customer profile, worker profile, account detail. Each shows full trail (e.g. Dashboard > Purchases > Purchase #ABC1). | `purchases/[id]/page.tsx`, `sales/[id]/page.tsx`, `purchases/vendors/[id]/page.tsx`, `sales/customers/[id]/page.tsx`, `hr/workers/[id]/page.tsx`, `accounts/[id]/page.tsx` | ⬜ |
-| 4 | **Refactor all list pages** | Replace manual breadcrumb HTML on all 15 list pages with the shared `<Breadcrumb />` component. | All `(dashboard)/*/page.tsx` | ⬜ |
+| 3 | **Add breadcrumbs to detail pages** | Integrate shared Breadcrumb on: purchase detail, sale detail, vendor profile, customer profile, worker profile, account detail. Each shows full trail (e.g. Dashboard > Purchases > Purchase #ABC1). | `purchases/[id]/page.tsx`, `sales/[id]/page.tsx`, `purchases/vendors/[id]/page.tsx`, `sales/customers/[id]/page.tsx`, `hr/workers/[id]/page.tsx`, `accounts/[id]/page.tsx` | ✅ |
+| 4 | **Refactor all list pages** | Replace manual breadcrumb HTML on all 15 list pages with the shared `<Breadcrumb />` component. | All `(dashboard)/*/page.tsx` | ✅ |
 
 ---
 
@@ -27,7 +27,7 @@
 
 | # | Task | Action | Files | Status |
 |---|------|--------|-------|--------|
-| 5 | **Scrollable mobile bottom navbar** | Expand current 5-icon fixed bottom nav to include ALL modules. Use `overflow-x-auto snap-x` for horizontal scroll. Chips: icon + label. Active chip highlighted. Include: Home, Inventory, Purchases, Sales, HR, Accounts, Reports, Settings. | `src/app/(dashboard)/layout.tsx` | ⬜ |
+| 5 | **Scrollable mobile bottom navbar** | Expand current 5-icon fixed bottom nav to include ALL modules. Use `overflow-x-auto snap-x` for horizontal scroll. Chips: icon + label. Active chip highlighted. Include: Home, Inventory, Purchases, Sales, HR, Accounts, Reports, Settings. | `src/components/MobileBottomNav.tsx` (new), `src/app/(dashboard)/layout.tsx` | ✅ |
 
 ---
 
@@ -51,4 +51,4 @@
 
 ---
 
-**Total: 6 items** · P0: 2 ⬜ · P1: 2 ⬜ · P2: 1 ⬜ · P3: 1 ✅
+**Total: 6 items** · P0: 2 ✅ · P1: 2 ✅ · P2: 1 ✅ · P3: 1 ✅
