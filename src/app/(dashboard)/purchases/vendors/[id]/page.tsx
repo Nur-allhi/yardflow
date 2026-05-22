@@ -294,7 +294,8 @@ export default function VendorProfilePage() {
                 No purchases recorded for this vendor
               </div>
             ) : (
-              <div className="overflow-x-auto">
+              <>
+              <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left">
                   <thead className="bg-surface-container-high border-b border-outline-variant">
                     <tr>
@@ -324,6 +325,33 @@ export default function VendorProfilePage() {
                   </tbody>
                 </table>
               </div>
+              <div className="md:hidden space-y-3 p-4">
+                {vendor.purchases.map((p) => (
+                  <div key={p.id} className="bg-white rounded-lg border border-outline-variant/20 p-4 shadow-sm">
+                    <div className="flex justify-between items-start mb-3">
+                      <Link href={`/purchases/${p.id}`} className="font-medium text-sm text-primary-container hover:text-tertiary">
+                        {formatDate(p.purchase_date)}
+                      </Link>
+                      <StatusChip status={p.status} />
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                      <div>
+                        <p className="text-[10px] uppercase text-secondary font-bold">Total</p>
+                        <p className="font-mono text-sm">{formatMoney(p.total_amount)}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase text-secondary font-bold">Paid</p>
+                        <p className="font-mono text-sm">{formatMoney(p.paid_amount)}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase text-secondary font-bold">Due</p>
+                        <p className={`font-mono text-sm font-bold ${p.due_amount > 0 ? "text-warning" : "text-success"}`}>{formatMoney(p.due_amount)}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              </>
             )}
           </div>
         </div>

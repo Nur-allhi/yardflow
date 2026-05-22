@@ -173,7 +173,7 @@ export default function QuickCashSalePage() {
         </h1>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form id="quick-cash-form" onSubmit={handleSubmit}>
         <div className="max-w-5xl mx-auto space-y-6">
           {/* Top Row: Sale Details + Payment */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -193,7 +193,7 @@ export default function QuickCashSalePage() {
                   value={saleDate}
                   onChange={(e) => setSaleDate(e.target.value)}
                   required
-                  className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+                  className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
                 />
               </div>
               <div className="space-y-1.5 mt-4">
@@ -204,7 +204,9 @@ export default function QuickCashSalePage() {
                   type="text"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+                  autoComplete="name"
+                  enterKeyHint="next"
+                  className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
                   placeholder="Walk-in customer"
                 />
               </div>
@@ -227,7 +229,7 @@ export default function QuickCashSalePage() {
                       type="text"
                       value={formatMoney(amountReceived)}
                       readOnly
-                      className="w-full h-[42px] pl-8 pr-3 border border-outline-variant rounded bg-surface-container-low text-sm font-mono font-bold text-tertiary outline-none cursor-default"
+                      className="w-full h-[44px] pl-8 pr-3 border border-outline-variant rounded bg-surface-container-low text-sm font-mono font-bold text-tertiary outline-none cursor-default"
                     />
                   </div>
                 </div>
@@ -239,7 +241,7 @@ export default function QuickCashSalePage() {
                     value={accountId}
                     onChange={(e) => setAccountId(e.target.value)}
                     required
-                    className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
+                    className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                   >
                     <option value="">Select account</option>
                     {accounts.map((a) => (
@@ -257,6 +259,8 @@ export default function QuickCashSalePage() {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     rows={2}
+                    autoComplete="off"
+                    enterKeyHint="next"
                     className="w-full border border-outline-variant rounded bg-white p-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all resize-none"
                     placeholder="Internal note..."
                   />
@@ -310,7 +314,7 @@ export default function QuickCashSalePage() {
                         <select
                           value={item.category_id}
                           onChange={(e) => handleCategoryChange(item.key, e.target.value)}
-                          className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container outline-none bg-white"
+                          className="w-full h-[44px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container outline-none bg-white"
                         >
                           <option value="">Category</option>
                           {categories.map((cat) => (
@@ -323,7 +327,7 @@ export default function QuickCashSalePage() {
                           value={item.subtype_id}
                           onChange={(e) => handleItemChange(item.key, "subtype_id", e.target.value)}
                           disabled={!item.category_id}
-                          className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container outline-none bg-white disabled:opacity-40"
+                          className="w-full h-[44px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container outline-none bg-white disabled:opacity-40"
                         >
                           <option value="">Sub-type</option>
                           {getSubtypesFor(item).map((st) => (
@@ -338,7 +342,10 @@ export default function QuickCashSalePage() {
                           min="0"
                           value={item.quantity_kg}
                           onChange={(e) => handleItemChange(item.key, "quantity_kg", e.target.value)}
-                          className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm text-right font-mono focus:border-primary-container outline-none"
+                          autoComplete="off"
+                          inputMode="decimal"
+                          enterKeyHint="next"
+                          className="w-full h-[44px] border border-outline-variant rounded px-3 text-sm text-right font-mono focus:border-primary-container outline-none"
                           placeholder="0"
                         />
                       </td>
@@ -351,7 +358,10 @@ export default function QuickCashSalePage() {
                             min="0"
                             value={item.price_per_kg}
                             onChange={(e) => handleItemChange(item.key, "price_per_kg", e.target.value)}
-                            className="w-full h-[42px] pl-6 border border-outline-variant rounded px-3 text-sm text-right font-mono focus:border-primary-container outline-none"
+                            autoComplete="off"
+                            inputMode="decimal"
+                            enterKeyHint="next"
+                            className="w-full h-[44px] pl-6 border border-outline-variant rounded px-3 text-sm text-right font-mono focus:border-primary-container outline-none"
                             placeholder="0"
                           />
                         </div>
@@ -384,7 +394,7 @@ export default function QuickCashSalePage() {
                     <select
                       value={item.category_id}
                       onChange={(e) => handleCategoryChange(item.key, e.target.value)}
-                      className="h-[42px] border border-outline-variant rounded-lg px-3 text-sm outline-none bg-white"
+                      className="h-[44px] border border-outline-variant rounded-lg px-3 text-sm outline-none bg-white"
                     >
                       <option value="">Category</option>
                       {categories.map((cat) => (
@@ -395,7 +405,7 @@ export default function QuickCashSalePage() {
                       value={item.subtype_id}
                       onChange={(e) => handleItemChange(item.key, "subtype_id", e.target.value)}
                       disabled={!item.category_id}
-                      className="h-[42px] border border-outline-variant rounded-lg px-3 text-sm outline-none bg-white disabled:opacity-40"
+                      className="h-[44px] border border-outline-variant rounded-lg px-3 text-sm outline-none bg-white disabled:opacity-40"
                     >
                       <option value="">Sub-type</option>
                       {getSubtypesFor(item).map((st) => (
@@ -406,29 +416,35 @@ export default function QuickCashSalePage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-[10px] uppercase font-bold text-secondary block mb-1.5">Qty (kg)</label>
-                      <input
-                        type="number"
-                        step="0.001"
-                        min="0"
-                        value={item.quantity_kg}
-                        onChange={(e) => handleItemChange(item.key, "quantity_kg", e.target.value)}
-                        className="w-full h-[42px] border border-outline-variant rounded-lg px-3 text-sm font-mono outline-none"
-                        placeholder="0"
-                      />
+                        <input
+                          type="number"
+                          step="0.001"
+                          min="0"
+                          value={item.quantity_kg}
+                          onChange={(e) => handleItemChange(item.key, "quantity_kg", e.target.value)}
+                          autoComplete="off"
+                          inputMode="decimal"
+                          enterKeyHint="next"
+                          className="w-full h-[44px] border border-outline-variant rounded-lg px-3 text-sm font-mono outline-none"
+                          placeholder="0"
+                        />
                     </div>
                     <div>
                       <label className="text-[10px] uppercase font-bold text-secondary block mb-1.5">Price/kg</label>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-secondary">৳</span>
-                        <input
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          value={item.price_per_kg}
-                          onChange={(e) => handleItemChange(item.key, "price_per_kg", e.target.value)}
-                          className="w-full h-[42px] pl-6 border border-outline-variant rounded-lg px-3 text-sm font-mono outline-none"
-                          placeholder="0"
-                        />
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={item.price_per_kg}
+                            onChange={(e) => handleItemChange(item.key, "price_per_kg", e.target.value)}
+                            autoComplete="off"
+                            inputMode="decimal"
+                            enterKeyHint="next"
+                            className="w-full h-[44px] pl-6 border border-outline-variant rounded-lg px-3 text-sm font-mono outline-none"
+                            placeholder="0"
+                          />
                       </div>
                     </div>
                   </div>
@@ -475,11 +491,25 @@ export default function QuickCashSalePage() {
           <button
             type="submit"
             disabled={submitting}
+            className="hidden md:flex w-full h-12 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 items-center justify-center gap-2"
+          >
+            <span className="material-symbols-outlined text-lg">save</span>
+            {submitting ? "Saving..." : "Complete Sale"}
+          </button>
+
+          {/* Mobile Fixed Submit */}
+          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-outline-variant/50 px-4 py-3 z-50 shadow-lg">
+          <button
+            type="submit"
+            disabled={submitting}
+            enterKeyHint="send"
             className="w-full h-12 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-lg">save</span>
             {submitting ? "Saving..." : "Complete Sale"}
           </button>
+          </div>
+          <div className="md:hidden h-20" />
 
           <div className="text-center">
             <Link

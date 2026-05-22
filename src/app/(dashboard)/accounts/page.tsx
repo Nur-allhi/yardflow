@@ -188,7 +188,8 @@ const { data: transactionsData } = useQuery<Transaction[]>({
             No transactions yet.
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-white text-left border-b border-outline-variant/20">
@@ -263,8 +264,53 @@ const { data: transactionsData } = useQuery<Transaction[]>({
               </tbody>
             </table>
           </div>
-        )}
-      </div>
+          <div className="md:hidden space-y-3 p-4">
+            {(transactionsData ?? []).map((tx) => {
+              const isCredit = tx.type === "credit";
+              return (
+                <div key={tx.id} className="bg-white rounded-lg border border-outline-variant/20 p-4 shadow-sm">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <p className="text-xs text-secondary">{formatDate(tx.transaction_date)}</p>
+                      <p className="text-sm font-medium text-primary-container">{tx.account_name}</p>
+                    </div>
+                    <div className={`font-mono font-bold flex items-center gap-1 shrink-0 ${isCredit ? "text-success" : "text-error"}`}>
+                      <span className="material-symbols-outlined text-xs">
+                        {isCredit ? "arrow_upward" : "arrow_downward"}
+                      </span>
+                      {formatMoney(tx.amount)}
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <span>
+                      {tx.reference_id ? (
+                        <span className="text-tertiary font-medium">
+                          #
+                          {tx.reference_type === "purchase_payment"
+                            ? "PUR"
+                            : tx.reference_type === "sale_payment"
+                              ? "SAL"
+                              : tx.reference_type === "salary"
+                                ? "SLR"
+                                : tx.reference_type === "transfer"
+                                  ? "TRF"
+                                  : "REF"}
+                          -{tx.reference_id.slice(0, 8)}
+                        </span>
+                      ) : (
+                        <span className="text-outline">&mdash;</span>
+                      )}
+                    </span>
+                    <span className="text-secondary truncate ml-2 max-w-[50%]">
+                      {tx.note || <span className="text-outline">&mdash;</span>}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          </>
+        )}      </div>
     </div>
   );
 }

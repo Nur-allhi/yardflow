@@ -311,7 +311,8 @@ export default function CustomerProfilePage() {
                 No sales recorded for this customer
               </div>
             ) : (
-              <div className="overflow-x-auto">
+              <>
+              <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left">
                   <thead className="bg-surface-container-high border-b border-outline-variant">
                     <tr>
@@ -345,6 +346,36 @@ export default function CustomerProfilePage() {
                   </tbody>
                 </table>
               </div>
+              <div className="md:hidden space-y-3 p-4">
+                {customer.sales.map((s) => (
+                  <div key={s.id} className="bg-white rounded-lg border border-outline-variant/20 p-4 shadow-sm">
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <Link href={`/sales/${s.id}`} className="font-medium text-sm text-primary-container hover:text-tertiary">
+                          {formatDate(s.sale_date)}
+                        </Link>
+                        <div className="mt-1"><TypeChip type={s.sale_type} isQuickCash={s.is_quick_cash_sale} /></div>
+                      </div>
+                      <StatusChip status={s.status} />
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                      <div>
+                        <p className="text-[10px] uppercase text-secondary font-bold">Total</p>
+                        <p className="font-mono text-sm">{formatMoney(s.total_amount)}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase text-secondary font-bold">Paid</p>
+                        <p className="font-mono text-sm">{formatMoney(s.paid_amount)}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase text-secondary font-bold">Due</p>
+                        <p className={`font-mono text-sm font-bold ${s.due_amount > 0 ? "text-warning" : "text-success"}`}>{formatMoney(s.due_amount)}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              </>
             )}
           </div>
         </div>

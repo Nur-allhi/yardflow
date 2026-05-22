@@ -530,9 +530,15 @@ export default function PurchasesPage() {
                 </div>
               )}
             </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      <Link
+        href="/purchases/new"
+        className="md:hidden fixed bottom-20 right-4 z-50 w-14 h-14 rounded-full bg-primary-container text-white flex items-center justify-center shadow-xl active:scale-95 transition-transform"
+      >
+        <span className="material-symbols-outlined text-2xl">add</span>
+      </Link>
     </div>
   );
 }

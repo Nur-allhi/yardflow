@@ -201,12 +201,12 @@ export default function CategoriesPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <button onClick={() => startEdit(cat)}
-                          className="opacity-0 group-hover:opacity-100 text-secondary hover:text-primary-container transition-all p-1"
+                          className="md:opacity-0 md:group-hover:opacity-100 text-secondary hover:text-primary-container transition-all p-1"
                           title="Edit">
                           <span className="material-symbols-outlined text-sm">edit</span>
                         </button>
                         <button onClick={() => handleDelete(cat.id)}
-                          className="opacity-0 group-hover:opacity-100 text-error hover:text-on-error-container transition-all p-1"
+                          className="md:opacity-0 md:group-hover:opacity-100 text-error hover:text-on-error-container transition-all p-1"
                           title="Delete">
                           <span className="material-symbols-outlined text-sm">delete</span>
                         </button>
