@@ -156,6 +156,7 @@ export default function ConsumablesPage() {
           value={itemName}
           onChange={(e) => setItemName(e.target.value)}
           list="item-suggestions"
+          autoComplete="name" enterKeyHint="next"
           className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
           placeholder="e.g. Welding Rod"
         />
@@ -176,6 +177,7 @@ export default function ConsumablesPage() {
             min="0"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
+            inputMode="decimal" autoComplete="off" enterKeyHint="next"
             className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm font-mono focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
             placeholder="0"
           />
@@ -187,6 +189,7 @@ export default function ConsumablesPage() {
           <select
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
+            autoComplete="off"
             className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
           >
             <option value="pcs">pcs</option>
@@ -206,6 +209,7 @@ export default function ConsumablesPage() {
           min="0"
           value={unitPrice}
           onChange={(e) => setUnitPrice(e.target.value)}
+          inputMode="decimal" autoComplete="off" enterKeyHint="next"
           className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm font-mono focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
           placeholder="0.00"
         />
@@ -226,6 +230,7 @@ export default function ConsumablesPage() {
         <input
           value={vendorName}
           onChange={(e) => setVendorName(e.target.value)}
+          autoComplete="name" enterKeyHint="next"
           className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
           placeholder="Search or add vendor"
         />
@@ -237,6 +242,7 @@ export default function ConsumablesPage() {
         <select
           value={accountId}
           onChange={(e) => setAccountId(e.target.value)}
+          autoComplete="off"
           className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
         >
             {(!accountsData || accountsData.length === 0) && (
@@ -258,6 +264,7 @@ export default function ConsumablesPage() {
           required
           value={purchaseDate}
           onChange={(e) => setPurchaseDate(e.target.value)}
+          autoComplete="off" enterKeyHint="next"
           className="w-full h-[42px] border border-outline-variant rounded px-4 text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
         />
       </div>

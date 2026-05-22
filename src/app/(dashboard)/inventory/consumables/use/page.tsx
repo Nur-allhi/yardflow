@@ -140,14 +140,17 @@ export default function UseConsumablePage() {
           </Link>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-[#c6c6cd]/30 shadow-md p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-bold text-[#0F172A] mb-1">Item</label>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Section 1: Item Selection */}
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-lg shadow-sm p-4">
+            <div>
+              <label className="block text-sm font-bold text-on-surface mb-1">Item</label>
             <select
               required
               value={consumableId}
               onChange={(e) => setConsumableId(e.target.value)}
-              className="w-full h-[42px] border border-[#c6c6cd] rounded px-4 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+              autoComplete="off"
+              className="w-full h-[44px] border border-[#c6c6cd] rounded px-4 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
             >
               {items.map((item) => (
                 <option key={item.id} value={item.id}>
@@ -155,18 +158,21 @@ export default function UseConsumablePage() {
                 </option>
               ))}
             </select>
+            </div>
+
+            {selectedItem && (
+              <div className="mt-3 bg-tertiary-fixed/10 text-on-tertiary-fixed rounded-lg p-3 text-sm">
+                <span className="font-bold">{selectedItem.stock_quantity}</span> {selectedItem.unit || "pcs"} available
+              </div>
+            )}
           </div>
 
-          {selectedItem && (
-            <div className="bg-[#f0fdf4] border border-[#86efac] rounded p-3 text-sm text-[#166534]">
-              <span className="font-bold">{selectedItem.stock_quantity}</span> {selectedItem.unit || "pcs"} available
-            </div>
-          )}
-
-          <div>
-            <label className="block text-sm font-bold text-[#0F172A] mb-1">
-              Quantity Used
-            </label>
+          {/* Section 2: Usage Details */}
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-lg shadow-sm p-4 space-y-3">
+            <div>
+              <label className="block text-sm font-bold text-on-surface mb-1">
+                Quantity Used
+              </label>
             <input
               type="number"
               step="any"
@@ -175,36 +181,39 @@ export default function UseConsumablePage() {
               value={quantity}
               onChange={(e) => setQuantity(e.target.value)}
               placeholder="0"
-              className="w-full h-[42px] border border-[#c6c6cd] rounded px-4 text-sm font-mono focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+              inputMode="decimal" autoComplete="off" enterKeyHint="next"
+              className="w-full h-[44px] border border-[#c6c6cd] rounded px-4 text-sm font-mono focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
             />
-          </div>
+            </div>
 
-          <div>
-            <label className="block text-sm font-bold text-[#0F172A] mb-1">Date</label>
+            <div>
+              <label className="block text-sm font-bold text-on-surface mb-1">Date</label>
             <input
               type="date"
               required
               value={usedAt}
               onChange={(e) => setUsedAt(e.target.value)}
-              className="w-full h-[42px] border border-[#c6c6cd] rounded px-4 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
+              autoComplete="off" enterKeyHint="next"
+              className="w-full h-[44px] border border-[#c6c6cd] rounded px-4 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none"
             />
-          </div>
+            </div>
 
-          <div>
-            <label className="block text-sm font-bold text-[#0F172A] mb-1">
-              Note <span className="text-xs font-normal text-[#505f76]">(Optional)</span>
-            </label>
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              rows={2}
-              className="w-full p-3 border border-[#c6c6cd] rounded text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none resize-none"
-              placeholder="Reason for usage..."
-            />
+            <div>
+              <label className="block text-sm font-bold text-on-surface mb-1">
+                Note <span className="text-xs font-normal text-on-surface-variant">(Optional)</span>
+              </label>
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                rows={2}
+                className="w-full p-3 border border-[#c6c6cd] rounded text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none resize-none"
+                placeholder="Reason for usage..."
+              />
+            </div>
           </div>
 
           {error && (
-            <div className="bg-[#fef2f2] border border-[#fca5a5] rounded p-3 text-sm text-[#991b1b]">
+            <div className="bg-error/10 text-error rounded-lg p-3 text-sm">
               {error}
             </div>
           )}
@@ -212,7 +221,7 @@ export default function UseConsumablePage() {
           <button
             type="submit"
             disabled={submitting || !consumableId || !quantity || parseFloat(quantity) <= 0}
-            className="w-full h-[46px] bg-[#DC2626] text-white font-bold rounded-lg hover:bg-[#DC2626]/90 transition-all flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] disabled:opacity-40"
+            className="w-full h-[46px] bg-primary text-on-primary font-bold rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] disabled:opacity-40"
           >
             <span className="material-symbols-outlined text-[20px]">remove</span>
             {submitting ? "Recording..." : "Record Consumption"}

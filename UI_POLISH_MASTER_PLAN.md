@@ -9,12 +9,12 @@
 
 | Phase | Focus | Items | Effort | Status |
 |-------|-------|-------|--------|--------|
-| P0 | Critical UX blockers (mobile) | 5 | ~2h | ⏳ |
-| P1 | Functional gaps (missing mobile views) | 9 | ~4h | ⏳ |
-| P2 | Touch targets & form UX | 11 | ~4h | ⏳ |
-| P3 | Animations (framer-motion) | 6 | ~2h | ⏳ |
-| P4 | Accessibility & micro-polish | 4 | ~1h | ⏳ |
-| P5 | Design alignment (implement mobile mockups) | 16 | ~9h | ⏳ |
+| P0 | Critical UX blockers (mobile) | 5 | ~2h | ✅ |
+| P1 | Functional gaps (missing mobile views) | 9 | ~4h | ✅ |
+| P2 | Touch targets & form UX | 11 | ~4h | ✅ |
+| P3 | Animations (framer-motion) | 6 | ~2h | ✅ |
+| P4 | Accessibility & micro-polish | 4 | ~1h | ✅ |
+| P5 | Design alignment (implement mobile mockups) | 25 | ~9h | ✅ |
 
 All items at the same priority can be parallelized via sub-agents.
 

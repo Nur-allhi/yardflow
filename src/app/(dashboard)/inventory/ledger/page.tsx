@@ -173,17 +173,18 @@ export default function StockLedgerPage() {
 
   function SkeletonCard() {
     return (
-      <div className="bg-white p-4 rounded-xl border border-[#c6c6cd]/30 shadow-sm animate-pulse">
-        <div className="flex justify-between items-start mb-3">
-          <div className="space-y-2">
-            <div className="h-4 bg-[#e0e3e5] rounded w-24" />
-            <div className="h-3 bg-[#e0e3e5] rounded w-16" />
+      <div className="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 shadow-sm animate-pulse">
+        <div className="flex items-start gap-3 mb-3">
+          <div className="h-6 w-6 bg-[#e0e3e5] rounded-full" />
+          <div className="space-y-2 flex-1">
+            <div className="h-4 bg-[#e0e3e5] rounded w-32" />
+            <div className="h-3 bg-[#e0e3e5] rounded w-20" />
           </div>
-          <div className="h-5 bg-[#e0e3e5] rounded w-14" />
+          <div className="h-4 bg-[#e0e3e5] rounded w-8" />
         </div>
-        <div className="flex justify-between items-end">
-          <div className="h-6 bg-[#e0e3e5] rounded w-20" />
-          <div className="h-3 bg-[#e0e3e5] rounded w-20" />
+        <div className="border-t border-dashed border-outline-variant pt-3">
+          <div className="h-6 bg-[#e0e3e5] rounded w-24 mb-1" />
+          <div className="h-3 bg-[#e0e3e5] rounded w-36" />
         </div>
       </div>
     );
@@ -222,7 +223,8 @@ export default function StockLedgerPage() {
             <select
               value={filterSubtypeId}
               onChange={(e) => setFilterSubtypeId(e.target.value)}
-              className="h-[42px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white"
+              autoComplete="off"
+              className="h-[44px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white"
             >
               <option value="">All Sub-types</option>
               {subtypes?.map((st) => (
@@ -239,7 +241,9 @@ export default function StockLedgerPage() {
               type="date"
               value={filterDateFrom}
               onChange={(e) => setFilterDateFrom(e.target.value)}
-              className="h-[42px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white"
+              autoComplete="off"
+              enterKeyHint="next"
+              className="h-[44px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white"
             />
           </div>
 
@@ -251,20 +255,22 @@ export default function StockLedgerPage() {
               type="date"
               value={filterDateTo}
               onChange={(e) => setFilterDateTo(e.target.value)}
-              className="h-[42px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white"
+              autoComplete="off"
+              enterKeyHint="go"
+              className="h-[44px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white"
             />
           </div>
 
           <div className="flex gap-2">
             <button
               onClick={handleApply}
-              className="h-[42px] px-5 bg-[#0F172A] text-white font-semibold rounded-md hover:bg-[#0F172A]/90 transition-all text-sm"
+              className="h-[44px] px-5 bg-[#0F172A] text-white font-semibold rounded-md hover:bg-[#0F172A]/90 transition-all text-sm"
             >
               Apply
             </button>
             <button
               onClick={handleClear}
-              className="h-[42px] px-5 border border-[#c6c6cd] text-[#505f76] font-semibold rounded-md hover:bg-[#f2f4f6] transition-all text-sm"
+              className="h-[44px] px-5 border border-[#c6c6cd] text-[#505f76] font-semibold rounded-md hover:bg-[#f2f4f6] transition-all text-sm"
             >
               Clear
             </button>
@@ -327,8 +333,8 @@ export default function StockLedgerPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Sub-type</label>
-                <select value={adjSubtypeId} onChange={(e) => setAdjSubtypeId(e.target.value)} required
-                  className="h-[42px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white w-full">
+                <select value={adjSubtypeId} onChange={(e) => setAdjSubtypeId(e.target.value)} required autoComplete="off"
+                  className="h-[44px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white w-full">
                   <option value="">Select sub-type</option>
                   {subtypes?.map((st) => (
                     <option key={st.id} value={st.id}>{st.name}</option>
@@ -337,7 +343,7 @@ export default function StockLedgerPage() {
               </div>
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Type</label>
-                <div className="flex gap-2 h-[42px]">
+                <div className="flex gap-2 h-[44px]">
                   <button type="button" onClick={() => setAdjType("in")}
                     className={`flex-1 rounded text-sm font-bold transition-all ${
                       adjType === "in" ? "bg-[#059669] text-white" : "bg-[#f2f4f6] text-[#505f76] border border-[#c6c6cd]"
@@ -352,16 +358,17 @@ export default function StockLedgerPage() {
                 <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Quantity (kg)</label>
                 <input type="number" min="0" step="0.001" value={adjQuantity}
                   onChange={(e) => setAdjQuantity(e.target.value)} required placeholder="0.000"
-                  className="h-[42px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white font-mono w-full" />
+                  inputMode="decimal" autoComplete="off" enterKeyHint="next"
+                  className="h-[44px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white font-mono w-full" />
               </div>
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-[#505f76] uppercase tracking-wider">Note</label>
                 <div className="flex gap-2">
                   <input value={adjNote} onChange={(e) => setAdjNote(e.target.value)}
-                    placeholder="Reason for adjustment..."
-                    className="h-[42px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white flex-1" />
+                    placeholder="Reason for adjustment..." autoComplete="off" enterKeyHint="go"
+                    className="h-[44px] px-3 border border-[#c6c6cd] rounded text-sm outline-none focus:border-[#059669] bg-white flex-1" />
                   <button type="submit" disabled={adjusting}
-                    className="h-[42px] px-5 bg-[#0F172A] text-white font-semibold rounded-md hover:bg-[#0F172A]/90 transition-all text-sm disabled:opacity-50 whitespace-nowrap">
+                    className="h-[44px] px-5 bg-[#0F172A] text-white font-semibold rounded-md hover:bg-[#0F172A]/90 transition-all text-sm disabled:opacity-50 whitespace-nowrap">
                     {adjusting ? "..." : "Adjust"}
                   </button>
                 </div>
@@ -540,7 +547,7 @@ export default function StockLedgerPage() {
             <SkeletonCard />
           </>
         ) : entries.length === 0 ? (
-          <div className="text-center py-12 text-[#505f76] bg-white rounded-xl border border-[#c6c6cd]/30">
+          <div className="text-center py-12 text-on-surface-variant bg-surface-container-lowest border border-outline-variant rounded-lg">
             <span className="material-symbols-outlined text-4xl block mb-3">receipt_long</span>
             <p className="font-medium mb-1">No movements found</p>
             <p className="text-xs">
@@ -549,35 +556,51 @@ export default function StockLedgerPage() {
           </div>
         ) : (
           entries.map((entry) => (
-            <div key={entry.id} className="bg-white p-4 rounded-xl border border-[#c6c6cd]/30 shadow-sm">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <p className="font-mono text-xs text-[#505f76]">{formatDate(entry.movement_date)}</p>
-                  <p className="font-display text-sm font-semibold text-[#0F172A] mt-0.5">
-                    {entry.subtype_name || "—"}
-                  </p>
-                  {entry.category_name && (
-                    <p className="text-xs text-[#505f76]">{entry.category_name}</p>
-                  )}
+            <div key={entry.id} className="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 shadow-sm">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-start gap-3">
+                  <span className={`material-symbols-outlined text-xl mt-0.5 ${
+                    entry.movement_type === "in" ? "text-on-tertiary-container" : "text-error"
+                  }`}>
+                    {entry.movement_type === "in" ? "add_circle" : "remove_circle"}
+                  </span>
+                  <div>
+                    <p className="font-display text-sm font-semibold text-on-surface">
+                      {entry.subtype_name || "—"}
+                    </p>
+                    <p className="font-code text-xs text-on-surface-variant">
+                      {formatDate(entry.movement_date)}
+                    </p>
+                    {entry.category_name && (
+                      <p className="text-xs text-on-surface-variant">{entry.category_name}</p>
+                    )}
+                  </div>
                 </div>
-                {entry.movement_type === "in" ? (
-                  <span className="px-2 py-0.5 bg-success/10 text-success text-[10px] font-bold rounded uppercase">
-                    IN
-                  </span>
-                ) : (
-                  <span className="px-2 py-0.5 bg-[#ffdad6] text-[#ba1a1a] text-[10px] font-bold rounded uppercase">
-                    OUT
-                  </span>
-                )}
+                <span className={`text-xs font-bold uppercase ${
+                  entry.movement_type === "in" ? "text-on-tertiary-container" : "text-error"
+                }`}>
+                  {entry.movement_type}
+                </span>
               </div>
-              <div className="flex items-end justify-between border-t border-dashed border-[#c6c6cd]/50 pt-3">
+              <div className="flex items-end justify-between border-t border-dashed border-outline-variant pt-3">
                 <div>
-                  <p className="font-mono text-lg font-bold text-[#0F172A]">
-                    {entry.quantity_kg.toLocaleString("en-IN", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
-                    <span className="text-xs font-normal text-[#505f76] ml-1">kg</span>
+                  <p className="font-code text-lg font-bold text-on-surface">
+                    {formatWeight(entry.quantity_kg)}
                   </p>
+                  <div className="flex gap-3 mt-1">
+                    {entry.price_per_kg !== null && (
+                      <p className="font-code text-xs text-on-surface-variant">
+                        ৳{entry.price_per_kg.toFixed(2)}/kg
+                      </p>
+                    )}
+                    {entry.total_value !== null && (
+                      <p className="font-code text-xs font-medium text-on-surface-variant">
+                        {formatTk(entry.total_value)}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <p className="text-xs text-[#505f76]">{formatReference(entry.reference_type)}</p>
+                <p className="text-xs text-on-surface-variant">{formatReference(entry.reference_type)}</p>
               </div>
             </div>
           ))

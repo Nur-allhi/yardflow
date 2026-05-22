@@ -431,12 +431,14 @@ export default function ScrapPoolPage() {
                   <label className="text-xs font-bold text-secondary uppercase tracking-wider">Quantity (kg)</label>
                   <input type="number" min="0" step="0.001" value={addScrapKg}
                     onChange={(e) => setAddScrapKg(e.target.value)} required placeholder="0.000"
+                    inputMode="decimal" autoComplete="off" enterKeyHint="next"
                     className="w-full bg-surface-container-low border border-outline-variant rounded-md font-mono text-sm py-2.5 px-3 focus:ring-1 focus:ring-primary-container focus:border-primary-container transition-all" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-secondary uppercase tracking-wider">Date</label>
                   <input type="date" value={addScrapDate}
                     onChange={(e) => setAddScrapDate(e.target.value)} required
+                    autoComplete="off" enterKeyHint="next"
                     className="w-full bg-surface-container-low border border-outline-variant rounded-md text-sm py-2 px-3 focus:ring-1 focus:ring-primary-container focus:border-primary-container transition-all" />
                 </div>
                 <div className="space-y-2">

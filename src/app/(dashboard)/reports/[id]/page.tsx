@@ -151,7 +151,7 @@ export default function ReportDetailPage() {
         </div>
         <button
           onClick={() => generateReportPdf(report)}
-          className="w-full bg-primary text-on-primary h-[42px] flex items-center justify-center gap-2 rounded font-display font-semibold text-sm active:opacity-70 transition-opacity"
+          className="w-full bg-primary text-on-primary h-[44px] flex items-center justify-center gap-2 rounded font-display font-semibold text-sm active:opacity-70 transition-opacity"
         >
           <span className="material-symbols-outlined text-[20px]">picture_as_pdf</span>
           Export PDF

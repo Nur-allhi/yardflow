@@ -266,19 +266,21 @@ export default function SubtypesPage() {
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Sub-type Name</label>
                 <input required value={name} onChange={(e) => setName(e.target.value)}
-                  className="w-full h-[42px] border border-outline-variant focus:border-primary focus:ring-0 rounded text-sm px-4 outline-none"
+                  autoComplete="name" enterKeyHint="next"
+                  className="w-full h-[44px] border border-outline-variant focus:border-primary focus:ring-0 rounded text-sm px-4 outline-none"
                   placeholder="e.g. 30mm Ultra Thick" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Default Price per kg</label>
                   <input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
-                    className="w-full h-[42px] px-4 border border-outline-variant focus:border-primary focus:ring-0 rounded text-sm font-mono outline-none" />
+                    inputMode="decimal" autoComplete="off" enterKeyHint="next"
+                    className="w-full h-[44px] px-4 border border-outline-variant focus:border-primary focus:ring-0 rounded text-sm font-mono outline-none" />
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Unit</label>
-                  <select value={unit} onChange={(e) => setUnit(e.target.value)}
-                    className="w-full h-[42px] border border-outline-variant focus:border-primary focus:ring-0 rounded text-sm px-4 outline-none">
+                  <select value={unit} onChange={(e) => setUnit(e.target.value)} autoComplete="off"
+                    className="w-full h-[44px] border border-outline-variant focus:border-primary focus:ring-0 rounded text-sm px-4 outline-none">
                     <option value="kg">kg</option>
                     <option value="ton">ton</option>
                   </select>
@@ -286,9 +288,9 @@ export default function SubtypesPage() {
               </div>
               <div className="flex items-center gap-3 pt-4">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="flex-1 h-[42px] bg-transparent text-on-surface-variant hover:bg-surface-container-low transition-colors font-bold text-sm rounded">Cancel</button>
+                  className="flex-1 h-[44px] bg-transparent text-on-surface-variant hover:bg-surface-container-low transition-colors font-bold text-sm rounded">Cancel</button>
                 <button type="submit" disabled={loading}
-                  className="flex-1 h-[42px] bg-primary text-on-primary hover:bg-primary/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40">
+                  className="flex-1 h-[44px] bg-primary text-on-primary hover:bg-primary/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40">
                   {loading ? "Saving..." : "Save Sub-type"}</button>
               </div>
             </form>
@@ -308,20 +310,22 @@ export default function SubtypesPage() {
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Sub-type Name</label>
                 <input required value={name} onChange={(e) => setName(e.target.value)}
-                  className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                  autoComplete="name" enterKeyHint="next"
+                  className="w-full h-[44px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                   placeholder="e.g., 20mm Super Heavy" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Default Price (tk)</label>
                   <input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
-                    className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none font-mono"
+                    inputMode="decimal" autoComplete="off" enterKeyHint="go"
+                    className="w-full h-[44px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none font-mono"
                     placeholder="0.00" />
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Unit</label>
-                  <select value={unit} onChange={(e) => setUnit(e.target.value)}
-                    className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary outline-none">
+                  <select value={unit} onChange={(e) => setUnit(e.target.value)} autoComplete="off"
+                    className="w-full h-[44px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary outline-none">
                     <option value="kg">kg</option>
                     <option value="ton">Metric Ton</option>
                   </select>

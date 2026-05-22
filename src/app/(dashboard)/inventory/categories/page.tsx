@@ -125,7 +125,8 @@ export default function CategoriesPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full h-[42px] px-4 border border-outline-variant rounded bg-white text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
+                autoComplete="name" enterKeyHint="next"
+                className="w-full h-[44px] px-4 border border-outline-variant rounded bg-white text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
                 placeholder="e.g. Iron Plates"
               />
             </div>
@@ -169,7 +170,8 @@ export default function CategoriesPage() {
                       <input
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
-                        className="w-full h-[42px] px-4 border border-outline-variant rounded bg-white text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
+                        autoComplete="name" enterKeyHint="next"
+                        className="w-full h-[44px] px-4 border border-outline-variant rounded bg-white text-sm focus:border-tertiary focus:ring-2 focus:ring-tertiary/10 outline-none"
                         placeholder="Category name"
                       />
                       <textarea
