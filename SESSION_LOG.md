@@ -465,50 +465,86 @@ Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 
 ### Quality Gates
 - `npx tsc --noEmit` — zero errors
-- `npx next build` — compiled successfully (57 pages)
-- All changes committed across 5 commits
+- `npx next build` — succeeded
 
-### Files modified or created
-- 14 files modified, 2 created (deposit API, migration)
-- New migration: `0001_illegal_dust.sql` (adds truck_fare, labour_cost, food_cost to purchases)
+## Session: 2026-05-22 — UI Polish Master Plan (P0-P5)
 
-## Session: 2026-05-21 — P1 Fixes Phase 2 (4 remaining bugs)
+Branch: `ui-polish-master`
 
-### P1-4: Account balance not updating on sale creation
-- **Root cause**: `POST /api/sales` inserted `accountTransactions` for payment but never updated `accounts.current_balance`
-- **Fix**: Added `accounts` import + `UPDATE accounts SET current_balance = (subquery)` after the `accountTransactions` insert in the sale creation transaction
+### P0 — Critical UX Blockers (5 items)
+- **Login header**: `h-[353px]` → `min-h-[220px]` (was 53% of iPhone SE viewport)
+- **Eye icon**: Wrapped in `min-w-[44px] min-h-[44px]` container for 44px touch target
+- **Nested link**: Converted `<Link><button>` to styled `<Link>`
+- **Register keyboard**: Fixed bottom CTA → `sticky bottom-0` with `env(safe-area-inset-bottom)`
+- **Viewport fit**: Added `viewportFit: "cover"` to root layout metadata
 
-### P1-5: Dashboard AR/AP excluding opening balances
-- **Root cause**: Dashboard queried only `SUM(sales.due_amount)` and `SUM(purchases.due_amount)` without adding customer/vendor opening balances
-- **Fix**: Added `COALESCE(SUM(customers.opening_balance), 0)` and `COALESCE(SUM(vendors.opening_balance), 0)` queries to `Promise.all`, added results to `arTotal` and `apTotal`
+### P1 — Functional Gaps (9 items)
+- Mobile card lists added: accounts transactions, vendor purchase history, customer sale history
+- Edit/delete in categories: always-visible on mobile (`md:opacity-0 md:group-hover:opacity-100`)
+- FAB added to purchases page
+- Sticky submit bar added to quick cash sale
+- **Remaining fix**: Stock ledger mobile card list added with in/out icons and price/kg
 
-### P1-8: Vendor opening balance not in purchases summary
-- **Root cause**: `GET /api/purchases` summary `total_due` was `total_amount - total_paid` — excluded vendor opening balances
-- **Fix**: Added vendor opening balance query filtered by `vendor_id` (if present), added to `total_due`
+### P2 — Touch Targets & Form UX (11 items)
+- MobileBottomNav: `min-h-[56px]`
+- Breadcrumb: `min-h-[44px]`
+- InventoryNav: `py-2.5 px-4`
+- All form inputs: `h-[42px]` → `h-[44px]` (5 remaining files fixed: ledger, subtypes, categories, consumables/use, reports/[id])
+- Pagination: `min-w-[44px] min-h-[44px]`
+- Globals: `-webkit-tap-highlight-color: transparent`, `overscroll-behavior: none`
+- autoComplete/inputMode/enterKeyHint added to 13+ form pages (including inventory: ledger, subtypes, categories, scrap, consumables, consumables/use)
 
-### P1-9: Customer opening balance not in sales summary
-- **Root cause**: `GET /api/sales` summary `total_due` was `total_amount - total_paid` — excluded customer opening balances
-- **Fix**: Added customer opening balance query filtered by `customer_id` (if present), added to `total_due`
+### P3 — Animations (6 items)
+- Created `src/lib/animation.ts` with spring configs
+- Sidebar: stagger container + `layoutId` active indicator bar
+- MobileSidebar: `AnimatePresence` spring slide from left + backdrop fade
+- MobileBottomNav: `layoutId="active-tab"` pill animation + `whileTap={{ scale: 0.92 }}`
+- Created `PageTransitionWrapper.tsx` with `AnimatePresence mode="wait"`
+- Dashboard layout wraps children with `<PageTransitionWrapper>`
 
-### Files modified
-- `src/app/api/sales/route.ts` — P1-4 (account balance update) + P1-9 (customer opening in summary)
-- `src/app/api/purchases/route.ts` — P1-8 (vendor opening in summary)
-- `src/app/(dashboard)/page.tsx` — P1-5 (opening balances in dashboard AR/AP KPI)
+### P4 — Accessibility (4 items)
+- `prefers-reduced-motion` media query for `.animate-slide-up`
+- `LoadingSpinner` or spinner text during `isPending` on 12 form pages
+- `role="alert" aria-live="polite"` on 15 error containers
+- `focus-visible:ring-2 focus-visible:ring-primary-container` on critical interactive elements
 
-## Session: 2026-05-21 — P2-14 & P2-15 Accounts Forms Fix
+### P5 — Design Alignment (25 screens)
+Aligned all mobile pages with `designs/{name}_mobile/code.html` mockups:
 
-### Changes
-- **P2-14**: Removed inline deposit/transfer forms from `accounts/page.tsx`, replaced with Deposit + Transfer buttons in the header
-- **P2-15**: Created `accounts/deposit/page.tsx` with breadcrumb navigation, form (account select, amount, date, note), validation, loading/error states, redirect on success
+| Area | Pages | Key Changes |
+|------|-------|-------------|
+| Auth | login, register | Forgot password link, password visibility toggles, always-visible strength meter |
+| Dashboard | `/` | Card styling to `surface-container-lowest`, KPI/financial card polish |
+| Accounts | overview | Horizontal snap-scroll account cards, type badges (CASH/BANK/MFS), transfer button, transaction cards |
+| Inventory | stock, subtypes, scrap, consumables, ledger | Subtype cards with status/FAB, scrap pool cards, consumables log bottom sheet, ledger mobile list |
+| Purchases | list, new, detail, vendors | Summary strip, card actions (View/Pay/Pay Now), payment progress bar, vendor cards with due |
+| Sales | list, new, quick, detail, customers | Sale cards with Collect button, payment settlement radio, customer cards with due badges |
+| HR | workers, profile, payroll | Profile KPI grid, advance cards, payroll summary bar, worker payroll cards |
+| Reports | list, generate, saved | Generate CTA card, export PDF buttons, result banner with metrics |
+| Settings | settings, team | Pill-style tabs, member cards with role badges + status dots, delete button |
 
-### Files modified
-- `src/app/(dashboard)/accounts/page.tsx` — removed inline forms, added Deposit/Transfer/Link buttons
-- `src/app/(dashboard)/accounts/deposit/page.tsx` — **created** new deposit form page
+### ESLint Fix
+- Added `ignores: [".next/**", "next-env.d.ts", "src/lib/db/migrations/**"]` to `eslint.config.mjs`
+- Eliminated 3860 false-positive errors + 11997 warnings from generated files
+- `npx eslint "src/"` now passes with **zero errors, zero warnings**
+
+### Files modified (across all P0-P5 + ESLint fix)
+- 42 files from the plan, plus InventoryClient.tsx, ledger, consumables/use
+- Design: dozens of token replacements (`bg-white` → `bg-surface-container-lowest`, `border-gray` → `border-outline-variant`, etc.)
+- New files: `animation.ts`, `PageTransitionWrapper.tsx`
+
+### Commits (on `ui-polish-master`)
+| Hash | Message |
+|------|---------|
+| `9a03b7a` | ui: P0-P4 complete - mobile responsiveness + animations + a11y |
+| `c7f4b06` | design: P5 complete - align 25 mobile views with design mockups |
+| `dcebfd6` | fix: remaining P1/P2/P5 gaps — ledger mobile cards, form UX attrs, h-[44px] |
+| `bccde05` | chore: add ignores config to eslint flat config |
 
 ### Quality Gates
 - `npx tsc --noEmit` — zero errors
-- `npx eslint src/app/(dashboard)/accounts/` — zero new errors
-- `npx next build` — succeeded
+- `npx eslint "src/"` — zero errors, zero warnings
+- `npx next build` — compiled successfully (61 static pages)
 
 ## Session: 2026-05-21 — P2-7 Purchase Dynamic Other Expenses
 

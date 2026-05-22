@@ -1,15 +1,34 @@
-content.js:236 Hello content.
-react-dom-client.development.js:25631 Download the React DevTools for a better development experience: https://react.dev/link/react-devtools
-content.js:236 Is Medium site: false
-content.js:236 Is Medium site: false
-hot-reloader-app.js:197 [Fast Refresh] rebuilding
-report-hmr-latency.js:14 [Fast Refresh] done in 298ms
-hot-reloader-app.js:197 [Fast Refresh] rebuilding
-report-hmr-latency.js:14 [Fast Refresh] done in 390ms
-api/sales?page=1&limit=15:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
-content.js:236 Is Medium site: false
-content.js:236 Is Medium site: false
-api/sales?page=1&limit=15:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
-api/sales?page=1&limit=15:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
-api/sales?page=1&limit=15:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
-Unable to add filesystem: <illegal path>
+# Error Log — UI Polish Test Session
+
+## 1. [WARNING] Unsupported `viewport` in metadata export
+- **File**: Every layout/page that has `metadata` with `viewport`
+- **Root Layout**: `src/app/layout.tsx`
+- **Other pages**: `/login`, `/register`, `/settings`, `/settings/team`, `/accounts`, `/accounts/new`, `/purchases`, `/purchases/vendors`, `/sales`, `/sales/customers`, `/inventory`
+- **Issue**: Next.js 15 deprecated `viewport` inside `metadata` export. Must use separate `viewport` export.
+- **Log**: `⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.`
+- **Severity**: Warning (will become error in future Next.js versions)
+
+## 2. [BUG 500] Sales API — invalid enum value `"all"`
+- **File**: `src/app/api/sales/route.ts`
+- **Issue**: Frontend sends `?status=all` as filter, but PostgreSQL enum `payment_status` has no value `'all'`. Causes `22P02` invalid input value error.
+- **Log**:
+  ```
+  Error fetching sales: [Error [PostgresError]: invalid input value for enum payment_status: "all"] {
+    code: '22P02',
+    routine: 'enum_in'
+  }
+  GET /api/sales?status=all&page=1&limit=15 500
+  ```
+- **Repro**: Click "All" filter tab on Sales list page
+- **Severity**: HIGH — breaks the sales list filter
+
+## 3. [BUG 500] Multiple API endpoints — DB timeout
+- **Endpoints affected**:
+  - `GET /api/accounts` (10s+ response → 500)
+  - `GET /api/purchases/vendors` (10s+ → 500)
+  - `GET /api/purchases?page=1&limit=10` (10s+ → 500)
+  - `GET /api/sales/customers` (10s+ → 500)
+  - `GET /api/sales/customers/{id}` (10s+ → 500)
+  - `GET /api/sales?page=1&limit=15` (10s+ → 500)
+- **Issue**: Consistent 10+ second response times followed by 500. Likely DB query timeout or connection pool exhaustion. Only occurs on some requests while others complete instantly.
+- **Severity**: HIGH — intermittent but breaks core features randomly
