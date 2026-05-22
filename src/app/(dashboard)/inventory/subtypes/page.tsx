@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InventoryNav } from "@/components/InventoryNav";
@@ -94,47 +93,27 @@ export default function SubtypesPage() {
     });
   }
 
-  const subtypeCount = (catId: string) =>
-    subtypes.filter((st) => st.category_id === catId).length;
-
-  const avgPrice =
-    subtypes.length > 0
-      ? subtypes.reduce((acc, st) => acc + st.wac, 0) / subtypes.length
-      : 0;
-
-  const topSubtype =
-    subtypes.length > 0
-      ? subtypes.reduce((best, st) => (st.current_stock_kg > best.current_stock_kg ? st : best), subtypes[0])
-      : null;
-
-  const totalStock = subtypes.reduce((acc, st) => acc + st.current_stock_kg, 0);
-
   return (
-    <>
-      {/* Breadcrumbs & Header (desktop) */}
-      <div className="hidden md:block px-8 pt-8 pb-4">
-        <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Inventory', href: '/inventory' }, { label: 'Sub-types', href: null }]} />
-        <h1 className="font-display text-2xl font-bold text-primary-container tracking-tight">
-          Inventory Management
-        </h1>
-      </div>
+    <div className="p-4 md:p-8">
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Inventory', href: '/inventory' }, { label: 'Sub-types', href: null }]} />
+      <h1 className="font-display text-2xl md:text-3xl font-bold text-primary-container tracking-tight mb-2">
+        Sub-types Management
+      </h1>
 
-      <div className="px-8">
-        <InventoryNav active="subtypes" />
-      </div>
+      <InventoryNav active="subtypes" />
 
-      {/* Mobile: Horizontal Category Chips */}
-      <div className="md:hidden flex gap-2 overflow-x-auto py-4 px-4 hide-scrollbar">
+      {/* Category filter chips */}
+      <div className="flex gap-1 bg-surface-container-high p-1 rounded-lg mb-6 overflow-x-auto">
         {categories.map((cat) => {
           const isSelected = cat.id === selectedCategoryId;
           return (
             <button
               key={cat.id}
               onClick={() => setSelectedCategoryId(cat.id)}
-              className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`whitespace-nowrap px-3 py-1.5 text-xs font-bold rounded transition-all ${
                 isSelected
-                  ? "bg-on-tertiary-fixed text-tertiary border border-tertiary"
-                  : "bg-surface-container-low text-secondary border border-outline-variant/50 hover:bg-surface-container"
+                  ? "bg-primary-container text-white"
+                  : "text-secondary hover:bg-white"
               }`}
             >
               {cat.name}
@@ -143,213 +122,77 @@ export default function SubtypesPage() {
         })}
       </div>
 
-      {/* Mobile: Page Title & FAB */}
-      <div className="md:hidden flex justify-between items-center px-4 mb-4">
-        <h2 className="font-display font-bold text-lg text-primary-container">
-          {selectedCategory ? `${selectedCategory.name} — Sub-types` : "Sub-types"}
-        </h2>
-        {selectedCategory && (
-          <button
-            onClick={() => setShowModal(true)}
-            className="w-10 h-10 rounded-full bg-primary-container text-white flex items-center justify-center shadow-md active:scale-95 transition-transform"
-          >
-            <span className="material-symbols-outlined">add</span>
-          </button>
-        )}
-      </div>
-
-      {/* Two-Panel Content (desktop) */}
-      <div className="hidden md:flex flex-1 p-8 grid grid-cols-12 gap-6 bg-background">
-        {/* Left Panel: Categories */}
-        <section className="col-span-4 flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-display font-bold text-lg text-primary-container">Categories</h3>
-            <Link href="/inventory/categories" className="flex items-center gap-1 text-tertiary hover:bg-tertiary/10 px-2 py-1 rounded transition-colors text-xs font-semibold">
-              <span className="material-symbols-outlined text-[18px]">add</span>
-              Add
-            </Link>
-          </div>
-          <div className="flex flex-col gap-2">
-            {categories.map((cat) => {
-              const isSelected = cat.id === selectedCategoryId;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategoryId(cat.id)}
-                  className={`flex items-center justify-between p-4 rounded-lg border-l-4 shadow-sm group text-left transition-all hover:translate-x-1 ${
-                    isSelected
-                      ? "bg-white border-l-tertiary"
-                      : "bg-surface-container-low border-l-transparent hover:bg-surface-container"
-                  }`}
-                >
-                  <div>
-                    <p className={`text-sm font-bold ${isSelected ? "text-primary-container" : "text-secondary"}`}>{cat.name}</p>
-                    <p className="text-xs text-secondary">{subtypeCount(cat.id)} sub-types</p>
-                  </div>
-                  <span className={`material-symbols-outlined text-outline ${isSelected ? "text-primary-container" : "group-hover:text-primary-container"}`}>
-                    chevron_right
-                  </span>
-                </button>
-              );
-            })}
-            {categories.length === 0 && (
-              <div className="text-center py-8 text-xs text-secondary">No categories yet</div>
-            )}
-            <Link href="/inventory/categories" className="flex items-center justify-center p-4 bg-transparent border-2 border-dashed border-outline-variant rounded-lg hover:border-tertiary hover:bg-tertiary/5 transition-all group mt-2">
-              <div className="flex items-center gap-2 text-outline group-hover:text-tertiary">
-                <span className="material-symbols-outlined">add_circle</span>
-                <span className="text-sm font-medium">Add Category</span>
-              </div>
-            </Link>
-          </div>
-        </section>
-
-        {/* Right Panel: Sub-types Table */}
-        <section className="col-span-8 flex flex-col gap-4">
-          <div className="flex items-center justify-between gap-4">
-            <h3 className="font-display font-bold text-lg text-primary-container min-w-0 flex-shrink">
-              {selectedCategory ? (
-                <>{selectedCategory.name} — <span className="text-secondary">Sub-types</span></>
-              ) : "Select a category"}
-            </h3>
-            {selectedCategory && (
-              <button onClick={() => setShowModal(true)} className="flex-shrink-0 flex items-center gap-2 bg-primary-container text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm text-sm">
+      {/* Main content card */}
+      <div className="bg-white rounded-lg border border-outline-variant/30 shadow-sm overflow-hidden">
+        {selectedCategory ? (
+          <>
+            <div className="px-5 md:px-6 py-4 border-b border-outline-variant/30 flex items-center justify-between">
+              <h2 className="font-display font-bold text-lg">
+                {selectedCategory.name} — Sub-types
+              </h2>
+              <button
+                onClick={() => setShowModal(true)}
+                className="flex items-center gap-2 bg-primary-container text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm text-sm"
+              >
                 <span className="material-symbols-outlined text-[20px]">add</span>
                 Add Sub-type
               </button>
-            )}
-          </div>
+            </div>
 
-          {selectedCategory ? (
-            subtypes.length === 0 ? (
-              <div className="bg-white rounded-xl shadow-sm border border-outline-variant/30 py-12 text-center text-secondary text-sm">
+            {subtypes.length === 0 ? (
+              <div className="p-6 text-center text-secondary text-sm">
                 No sub-types in this category yet
               </div>
             ) : (
-              <div className="bg-white rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
-                <table className="w-full text-left">
-                  <thead className="bg-surface-container-low border-b border-outline-variant/30">
-                    <tr>
-                      <th className="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Sub-type Name</th>
-                      <th className="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Default Price</th>
-                      <th className="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Unit</th>
-                      <th className="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider text-right">Actions</th>
+              <table className="w-full text-left">
+                <thead className="bg-surface-container-high border-b border-outline-variant">
+                  <tr>
+                    <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Sub-type Name</th>
+                    <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Default Price</th>
+                    <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Unit</th>
+                    <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Status</th>
+                    <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-outline-variant/20">
+                  {subtypes.map((st) => (
+                    <tr key={st.id} className="hover:bg-background transition-colors group">
+                      <td className={`px-5 md:px-6 py-4 text-sm font-medium ${st.is_active ? "text-primary-container" : "text-secondary/60"}`}>{st.name}</td>
+                      <td className="px-5 md:px-6 py-4 font-mono text-sm text-secondary">
+                        {st.default_price_per_kg ? Number(st.default_price_per_kg).toLocaleString("en-IN") + " tk" : "—"}
+                      </td>
+                      <td className="px-5 md:px-6 py-4 text-sm text-secondary">{st.unit || "kg"}</td>
+                      <td className="px-5 md:px-6 py-4">
+                        {st.is_active ? (
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold">
+                            <span className="w-1.5 h-1.5 rounded-full bg-success" /> Active
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary/10 text-secondary text-[11px] font-bold">
+                            <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> Inactive
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-5 md:px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button className="p-1 hover:text-tertiary transition-colors">
+                            <span className="material-symbols-outlined text-[18px]">edit</span>
+                          </button>
+                          <button className="p-1 hover:text-error transition-colors">
+                            <span className="material-symbols-outlined text-[18px]">{st.is_active ? "block" : "check_circle"}</span>
+                          </button>
+                        </div>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-outline-variant/20">
-                    {subtypes.map((st) => (
-                      <tr key={st.id} className="hover:bg-background transition-colors group">
-                        <td className={`px-6 py-4 text-sm font-medium ${st.is_active ? "text-primary-container" : "text-secondary/60"}`}>{st.name}</td>
-                        <td className="px-6 py-4 font-mono text-sm text-secondary">
-                          ৳{st.default_price_per_kg ? Number(st.default_price_per_kg).toFixed(2) : "—"}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-secondary">{st.unit || "kg"}</td>
-                        <td className="px-6 py-4">
-                          {st.is_active ? (
-                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold">
-                              <span className="w-1.5 h-1.5 rounded-full bg-success" /> Active
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary/10 text-secondary text-[11px] font-bold">
-                              <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> Inactive
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button className="p-1 hover:text-tertiary transition-colors">
-                              <span className="material-symbols-outlined text-[18px]">edit</span>
-                            </button>
-                            <button className="p-1 hover:text-error transition-colors">
-                              <span className="material-symbols-outlined text-[18px]">{st.is_active ? "block" : "check_circle"}</span>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )
-          ) : (
-            <div className="bg-white rounded-xl shadow-sm border border-outline-variant/30 py-16 text-center">
-              <span className="material-symbols-outlined text-5xl text-outline-variant block mb-4">category</span>
-              <p className="text-secondary text-sm">Select a category to view sub-types</p>
-            </div>
-          )}
-
-          {/* Desktop Stats Row */}
-          {selectedCategory && subtypes.length > 0 && (
-            <div className="hidden md:grid grid-cols-3 gap-4 mt-2">
-              <div className="p-4 bg-on-tertiary-fixed text-white rounded-lg flex items-center justify-between border-l-4 border-tertiary shadow-sm">
-                <div>
-                  <p className="text-[10px] uppercase font-bold tracking-wider opacity-70">Top Sub-type</p>
-                  <p className="text-sm font-bold">{topSubtype?.name || "—"}</p>
-                </div>
-                <span className="material-symbols-outlined text-tertiary" style={{ fontVariationSettings: "'FILL' 1" }}>trending_up</span>
-              </div>
-              <div className="p-4 bg-white border border-outline-variant/30 rounded-lg flex items-center justify-between shadow-sm">
-                <div>
-                  <p className="text-[10px] uppercase font-bold text-secondary tracking-wider">Avg Price</p>
-                  <p className="text-sm font-mono font-bold text-primary-container">৳{avgPrice.toFixed(2)} /kg</p>
-                </div>
-                <span className="material-symbols-outlined text-secondary">payments</span>
-              </div>
-              <div className="p-4 bg-white border border-outline-variant/30 rounded-lg flex items-center justify-between shadow-sm">
-                <div>
-                  <p className="text-[10px] uppercase font-bold text-secondary tracking-wider">Total Stock</p>
-                  <p className="text-sm font-mono font-bold text-primary-container">{totalStock.toLocaleString("en-IN")} kg</p>
-                </div>
-                <span className="material-symbols-outlined text-secondary">inventory_2</span>
-              </div>
-            </div>
-          )}
-        </section>
-      </div>
-
-      {/* Mobile: Sub-type Cards */}
-      <div className="md:hidden px-4 pb-8">
-        {selectedCategory && subtypes.length > 0 ? (
-          <div className="space-y-3">
-            {subtypes.map((st) => (
-              <div key={st.id} className="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex flex-col gap-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-sm font-semibold text-primary-container">{st.name}</h3>
-                    <span className="text-xs text-secondary">Unit: {st.unit || "kg"}</span>
-                  </div>
-                  {st.is_active ? (
-                    <span className="px-2 py-1 bg-on-tertiary-fixed text-tertiary text-[10px] font-bold rounded-sm flex items-center gap-1 uppercase">
-                      <span className="w-1.5 h-1.5 rounded-full bg-tertiary" /> Active
-                    </span>
-                  ) : (
-                    <span className="px-2 py-1 bg-surface-container-highest text-secondary text-[10px] font-bold rounded-sm flex items-center gap-1 uppercase">
-                      <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> Inactive
-                    </span>
-                  )}
-                </div>
-                <div className="flex justify-between items-end border-t border-dashed border-outline-variant/50 pt-3">
-                  <div>
-                    <p className="text-[10px] uppercase text-secondary font-medium tracking-wider">Default Price</p>
-                    <p className="font-mono text-lg font-bold text-primary-container">
-                      ৳{st.default_price_per_kg ? Number(st.default_price_per_kg).toFixed(2) : "—"}/kg
-                    </p>
-                  </div>
-                  <button className="text-secondary">
-                    <span className="material-symbols-outlined text-xl">edit</span>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : selectedCategory && subtypes.length === 0 ? (
-          <div className="text-center py-12 text-secondary text-sm bg-white rounded-xl border border-outline-variant/30">
-            No sub-types in this category yet
-          </div>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </>
         ) : (
-          <div className="text-center py-12 text-secondary text-sm bg-white rounded-xl border border-outline-variant/30">
-            Select a category to view sub-types
+          <div className="p-12 text-center">
+            <span className="material-symbols-outlined text-5xl text-outline-variant block mb-4">category</span>
+            <p className="text-secondary text-sm">Select a category to view sub-types</p>
           </div>
         )}
       </div>
@@ -376,11 +219,8 @@ export default function SubtypesPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-bold text-primary-container">Default Price per kg</label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-outline">৳</span>
-                    <input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
-                      className="w-full h-[42px] pl-8 border border-outline-variant focus:border-tertiary focus:ring-0 rounded text-sm font-mono outline-none" />
-                  </div>
+                  <input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
+                    className="w-full h-[42px] px-4 border border-outline-variant focus:border-tertiary focus:ring-0 rounded text-sm font-mono outline-none" />
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-bold text-primary-container">Unit</label>
@@ -420,7 +260,7 @@ export default function SubtypesPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-secondary uppercase tracking-wider">Default Price (৳)</label>
+                  <label className="text-xs font-bold text-secondary uppercase tracking-wider">Default Price (tk)</label>
                   <input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
                     className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary-container focus:border-transparent outline-none font-mono"
                     placeholder="0.00" />
@@ -446,6 +286,6 @@ export default function SubtypesPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

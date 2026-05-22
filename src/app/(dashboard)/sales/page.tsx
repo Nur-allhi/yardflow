@@ -36,13 +36,6 @@ const SALE_TYPES = [
   { value: "scrap", label: "Scrap" },
 ] as const;
 
-const STATUSES = [
-  { value: "", label: "All" },
-  { value: "paid", label: "Paid" },
-  { value: "partial", label: "Partial" },
-  { value: "due", label: "Due" },
-] as const;
-
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return "—";
   const d = new Date(dateStr);
@@ -83,8 +76,8 @@ function SaleTypeBadge({
     { border: string; text: string; label: string }
   > = {
     fabricated: {
-      border: "border-[#191c1e]",
-      text: "text-[#191c1e]",
+      border: "border-primary-container",
+      text: "text-primary-container",
       label: "Fabricated",
     },
     raw_passthrough: {
@@ -93,8 +86,8 @@ function SaleTypeBadge({
       label: "Raw",
     },
     scrap: {
-      border: "border-[#069669]",
-      text: "text-[#069669]",
+      border: "border-tertiary",
+      text: "text-tertiary",
       label: "Scrap",
     },
   };
@@ -126,9 +119,9 @@ function StatusBadge({ status }: { status: string }) {
       label: "Partial",
     },
     due: {
-      bg: "bg-[#ba1a1a]/10",
-      text: "text-[#ba1a1a]",
-      dot: "bg-[#ba1a1a]",
+      bg: "bg-error/10",
+      text: "text-error",
+      dot: "bg-error",
       label: "Due",
     },
   };
@@ -218,27 +211,27 @@ export default function SalesPage() {
 
       {/* Header */}
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
-        <h1 className="font-display text-3xl font-bold text-[#191c1e] tracking-tight">
+        <h1 className="font-display text-3xl font-bold text-primary-container tracking-tight">
           Sales
         </h1>
         <div className="flex gap-3">
           <Link
             href="/sales/customers"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#191c1e] text-[#191c1e] font-bold hover:bg-surface-container-low transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-primary-container text-primary-container font-bold hover:bg-surface-container-low transition-all active:scale-95"
           >
             <span className="material-symbols-outlined text-lg">people</span>
             Customers
           </Link>
           <Link
             href="/sales/scrap/new"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#069669] text-[#069669] font-bold hover:bg-[#069669]/5 transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-tertiary text-tertiary font-bold hover:bg-tertiary/5 transition-all active:scale-95"
           >
             <span className="material-symbols-outlined text-lg">recycling</span>
             Scrap Sale
           </Link>
           <Link
             href="/sales/new/quick"
-            className="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-[#191c1e] text-[#191c1e] font-bold hover:bg-surface-container-low transition-all active:scale-95"
+            className="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-primary-container text-primary-container font-bold hover:bg-surface-container-low transition-all active:scale-95"
           >
             <span className="material-symbols-outlined text-lg">receipt_long</span>
             + Quick Cash Sale
@@ -263,13 +256,13 @@ export default function SalesPage() {
             <p className="text-xs font-bold text-secondary uppercase tracking-wider">
               Total Sales
             </p>
-            <p className="text-xl font-mono font-bold text-[#191c1e]">
+            <p className="text-xl font-mono font-bold text-primary-container">
               {data?.summary ? data.summary.total_sales.toLocaleString("en-IN") : "—"}
             </p>
           </div>
         </div>
         <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-outline-variant p-5 rounded-lg shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-[#85f8c4] rounded-lg text-[#069669]">
+          <div className="p-3 bg-tertiary/10 rounded-lg text-tertiary">
             <span className="material-symbols-outlined">account_balance_wallet</span>
           </div>
           <div>
@@ -282,7 +275,7 @@ export default function SalesPage() {
           </div>
         </div>
         <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-outline-variant p-5 rounded-lg shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-[#ffdad6] rounded-lg text-[#ba1a1a]">
+          <div className="p-3 bg-error-container rounded-lg text-error">
             <span className="material-symbols-outlined">pending_actions</span>
           </div>
           <div>
@@ -302,7 +295,7 @@ export default function SalesPage() {
             <p className="text-xs font-bold text-secondary uppercase tracking-wider">
               Today&apos;s Sales
             </p>
-            <p className="text-xl font-mono font-bold text-[#191c1e]">
+            <p className="text-xl font-mono font-bold text-primary-container">
               {data?.summary ? formatMoney(data.summary.this_month) : "—"}
             </p>
           </div>
@@ -310,96 +303,88 @@ export default function SalesPage() {
       </section>
 
       {/* Filter Bar */}
-      <div className="bg-surface-container-low p-3 md:p-4 rounded-xl border border-outline-variant/50 mb-6 flex flex-wrap items-center gap-5">
-        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-outline-variant rounded-lg">
-          <span className="material-symbols-outlined text-secondary text-sm">calendar_today</span>
-          <input
-            type="date"
-            value={dateFrom}
-            onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
-            className="bg-transparent border-none text-sm focus:ring-0 p-0 w-28 outline-none"
-          />
-        </div>
-        <span className="text-secondary text-xs">—</span>
-        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-outline-variant rounded-lg">
-          <span className="material-symbols-outlined text-secondary text-sm">calendar_today</span>
-          <input
-            type="date"
-            value={dateTo}
-            onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
-            className="bg-transparent border-none text-sm focus:ring-0 p-0 w-28 outline-none"
-          />
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-secondary uppercase tracking-tighter ml-1 px-1.5">Customer</label>
+        <div className="bg-surface-container-low p-3 md:p-4 rounded-xl border border-outline-variant/50 mb-6 flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2 bg-white px-3 py-2 border border-outline-variant rounded-lg">
+            <span className="material-symbols-outlined text-secondary text-sm">calendar_today</span>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
+              className="bg-transparent border-none text-sm focus:ring-0 p-0 w-28 outline-none"
+            />
+          </div>
+          <span className="text-secondary text-xs">—</span>
+          <div className="flex items-center gap-2 bg-white px-3 py-2 border border-outline-variant rounded-lg">
+            <span className="material-symbols-outlined text-secondary text-sm">calendar_today</span>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
+              className="bg-transparent border-none text-sm focus:ring-0 p-0 w-28 outline-none"
+            />
+          </div>
           <select
             value={customerFilter}
             onChange={(e) => { setCustomerFilter(e.target.value); setPage(1); }}
-            className="bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
+            className="bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-8 text-sm focus:ring-0 outline-none"
           >
             <option value="">All Customers</option>
             {(data?.customers ?? []).map((c: CustomerOption) => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
           </select>
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-secondary uppercase tracking-tighter ml-1 px-1.5">Sale Type</label>
           <select
             value={saleTypeFilter}
             onChange={(e) => { setSaleTypeFilter(e.target.value); setPage(1); }}
-            className="bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
+            className="bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-8 text-sm focus:ring-0 outline-none"
           >
             {SALE_TYPES.map((st) => (
               <option key={st.value} value={st.value}>{st.label}</option>
             ))}
           </select>
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-secondary uppercase tracking-tighter ml-1 px-1.5">Status</label>
-          <select
-            value={statusFilter}
-            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-            className="bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none"
-          >
-            {STATUSES.map((st) => (
-              <option key={st.value} value={st.value}>{st.label}</option>
+          <div className="flex gap-1 bg-surface-container-high p-1 rounded-lg">
+            {["all", "paid", "partial", "due"].map((s) => (
+              <button
+                key={s}
+                onClick={() => setStatusFilter(s)}
+                className={`px-3 py-1.5 text-xs font-bold rounded transition-all ${
+                  statusFilter === s
+                    ? "bg-primary-container text-white"
+                    : "text-secondary hover:bg-white"
+                }`}
+              >
+                {s === "all" ? "All" : s.charAt(0).toUpperCase() + s.slice(1)}
+              </button>
             ))}
-          </select>
+          </div>
+          <div className="relative flex-1 min-w-[160px]">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-lg">
+              search
+            </span>
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") { setPage(1); refetch(); } }}
+              className="w-full pl-10 pr-4 py-2 bg-white border border-outline-variant rounded-lg text-sm outline-none focus:ring-0"
+              placeholder="Search customer..."
+            />
+          </div>
         </div>
-        <button
-          onClick={() => refetch()}
-          className="p-2 hover:bg-white border border-transparent hover:border-outline-variant rounded-lg transition-colors text-secondary"
-          title="Apply filters"
-        >
-          <span className="material-symbols-outlined">filter_list</span>
-        </button>
-        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-outline-variant rounded-lg ml-auto flex-1 min-w-[160px]">
-          <span className="material-symbols-outlined text-secondary text-sm">search</span>
-          <input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") { setPage(1); refetch(); } }}
-            className="bg-transparent border-none text-sm focus:ring-0 p-0 w-full outline-none"
-            placeholder="Search..."
-          />
-        </div>
-      </div>
 
       {/* Loading State */}
       {isLoading && <SkeletonTable />}
 
       {/* Error State */}
       {!isLoading && error && (
-        <div className="bg-[#ffdad6] border border-[#ba1a1a]/20 rounded-lg p-8 text-center max-w-md mx-auto">
-          <span className="material-symbols-outlined text-5xl text-[#ba1a1a] block mb-4">
+        <div className="bg-error-container border border-error/20 rounded-lg p-8 text-center max-w-md mx-auto">
+          <span className="material-symbols-outlined text-5xl text-error block mb-4">
             error_outline
           </span>
-          <p className="text-[#ba1a1a] font-bold mb-2">Failed to Load Sales</p>
-          <p className="text-[#93000a] text-sm mb-6">{error instanceof Error ? error.message : error}</p>
+          <p className="text-error font-bold mb-2">Failed to Load Sales</p>
+          <p className="text-on-error-container text-sm mb-6">{error instanceof Error ? error.message : error}</p>
           <button
             onClick={() => refetch()}
-            className="px-6 py-2.5 bg-[#ba1a1a] text-white rounded-lg text-sm font-bold hover:bg-[#ba1a1a]/90 transition-all"
+            className="px-6 py-2.5 bg-error text-white rounded-lg text-sm font-bold hover:bg-error/90 transition-all"
           >
             Try Again
           </button>
@@ -473,10 +458,10 @@ export default function SalesPage() {
                       <td className="px-6 py-4 text-xs font-mono">
                         {formatDate(s.sale_date)}
                       </td>
-                      <td className="px-6 py-4 text-xs font-bold font-mono text-[#191c1e]">
+                      <td className="px-6 py-4 text-xs font-bold font-mono text-primary-container">
                         {getSaleIdDisplay(s)}
                       </td>
-                      <td className="px-6 py-4 text-sm font-medium text-[#191c1e]">
+                      <td className="px-6 py-4 text-sm font-medium text-primary-container">
                         {s.customer_name || "Cash Sale"}
                       </td>
                       <td className="px-6 py-4">
@@ -516,14 +501,14 @@ export default function SalesPage() {
                             <>
                               <Link
                                 href={`/sales/${s.id}`}
-                                className="text-[#069669] font-bold text-[10px] uppercase tracking-tighter hover:underline"
+                                className="text-tertiary font-bold text-[10px] uppercase tracking-tighter hover:underline"
                               >
                                 View
                               </Link>
                               {s.due_amount > 0 && (
                                 <Link
                                   href={`/sales/${s.id}`}
-                                  className="text-[#069669] font-bold text-[10px] uppercase tracking-tighter border-b border-[#069669] hover:bg-[#069669] hover:text-white transition-colors px-1"
+                                  className="text-tertiary font-bold text-[10px] uppercase tracking-tighter border-b border-tertiary hover:bg-tertiary hover:text-white transition-colors px-1"
                                 >
                                   Collect
                                 </Link>
@@ -542,12 +527,12 @@ export default function SalesPage() {
             <div className="bg-surface-container-low px-6 py-4 flex items-center justify-between border-t border-outline-variant">
               <p className="text-xs text-secondary">
                 Showing{" "}
-                <span className="font-bold text-[#191c1e]">
+                <span className="font-bold text-primary-container">
                   {(page - 1) * PER_PAGE + 1} -{" "}
                   {Math.min(page * PER_PAGE, data?.totalCount ?? 0)}
                 </span>{" "}
                 of{" "}
-                <span className="font-bold text-[#191c1e]">
+                <span className="font-bold text-primary-container">
                   {(data?.totalCount ?? 0).toLocaleString("en-IN")}
                 </span>{" "}
                 records
@@ -611,7 +596,7 @@ export default function SalesPage() {
                 {/* Top row */}
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="font-headline text-sm font-bold text-[#191c1e]">
+                    <h4 className="font-headline text-sm font-bold text-primary-container">
                       {s.customer_name || "Cash Sale"}
                     </h4>
                     <p className="font-mono text-[10px] text-secondary">
@@ -630,13 +615,13 @@ export default function SalesPage() {
                     <p className="text-[10px] text-secondary font-medium">
                       {formatKg(s.total_kg)}
                     </p>
-                    <p className="font-mono text-lg font-bold text-[#191c1e]">
+                    <p className="font-mono text-lg font-bold text-primary-container">
                       {formatMoney(s.total_amount)}
                     </p>
                   </div>
                   <div className="text-right">
                     {s.due_amount > 0 && (
-                      <p className="text-[10px] font-bold text-[#ba1a1a] bg-[#ffdad6] px-2 py-0.5 rounded mb-1">
+                      <p className="text-[10px] font-bold text-error bg-error-container px-2 py-0.5 rounded mb-1">
                         Due: {formatMoney(s.due_amount)}
                       </p>
                     )}
@@ -660,14 +645,14 @@ export default function SalesPage() {
                     <>
                       <Link
                         href={`/sales/${s.id}`}
-                        className="flex-1 py-2 text-xs font-bold rounded-lg bg-surface-container-highest text-[#191c1e] hover:bg-outline-variant transition-colors text-center"
+                        className="flex-1 py-2 text-xs font-bold rounded-lg bg-surface-container-highest text-primary-container hover:bg-outline-variant transition-colors text-center"
                       >
                         View Details
                       </Link>
                       {s.due_amount > 0 && (
                         <Link
                           href={`/sales/${s.id}`}
-                          className="flex-1 py-2 text-xs font-bold rounded-lg bg-[#069669] text-white hover:bg-[#069669]/90 transition-colors text-center"
+                          className="flex-1 py-2 text-xs font-bold rounded-lg bg-tertiary text-white hover:bg-tertiary/90 transition-colors text-center"
                         >
                           Collect
                         </Link>
@@ -684,7 +669,7 @@ export default function SalesPage() {
       {/* Mobile FAB */}
       <Link
         href="/sales/new"
-        className="md:hidden fixed bottom-6 right-4 w-14 h-14 bg-[#069669] text-white rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40"
+        className="md:hidden fixed bottom-6 right-4 w-14 h-14 bg-tertiary text-white rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40"
       >
         <span className="material-symbols-outlined text-3xl">add</span>
       </Link>
