@@ -17,6 +17,8 @@ export default function RegisterPage() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   function update(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -359,7 +361,7 @@ export default function RegisterPage() {
           >
             <section className="flex flex-col gap-lg">
               <div className="flex items-center gap-sm">
-                <span className="material-symbols-outlined text-primary-container">
+                <span className="material-symbols-outlined text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
                   corporate_fare
                 </span>
                 <h2 className="text-h3 font-h3">Organization Details</h2>
@@ -423,7 +425,7 @@ export default function RegisterPage() {
 
             <section className="flex flex-col gap-lg">
               <div className="flex items-center gap-sm">
-                <span className="material-symbols-outlined text-primary-container">
+                <span className="material-symbols-outlined text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
                   account_circle
                 </span>
                 <h2 className="text-h3 font-h3">Owner Account</h2>
@@ -472,35 +474,44 @@ export default function RegisterPage() {
                   >
                     Password
                   </label>
-                  <input
-                    id="pass-mobile"
-                    type="password"
-                    required
-                    minLength={6}
-                    value={form.password}
-                    onChange={(e) => update("password", e.target.value)}
-                    className="h-[42px] px-md rounded border border-border-base focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline-variant bg-surface"
-                    placeholder="••••••••"
-                  />
-                  {form.password && (
-                    <div className="mt-xs">
-                      <div className="w-full bg-surface-container h-[4px] rounded-full overflow-hidden">
-                        <div
-                          className="h-full transition-all duration-300 rounded-full"
-                          style={{
-                            width: strength.width,
-                            backgroundColor: strength.color,
-                          }}
-                        />
-                      </div>
-                      <span
-                        className="text-caption font-caption mt-[2px] block"
-                        style={{ color: strength.textColor }}
-                      >
-                        Strength: {strength.label}
+                  <div className="relative">
+                    <input
+                      id="pass-mobile"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      minLength={6}
+                      value={form.password}
+                      onChange={(e) => update("password", e.target.value)}
+                      className="w-full h-[42px] px-md pr-[44px] rounded border border-border-base focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline-variant bg-surface"
+                      placeholder="••••••••"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary-container transition-colors"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">
+                        {showPassword ? "visibility_off" : "visibility"}
                       </span>
+                    </button>
+                  </div>
+                  <div className="mt-xs">
+                    <div className="w-full bg-surface-container-high h-[4px] rounded-full overflow-hidden">
+                      <div
+                        className="h-full transition-all duration-300 rounded-full"
+                        style={{
+                          width: strength.width,
+                          backgroundColor: strength.color || "#c6c6cd",
+                        }}
+                      />
                     </div>
-                  )}
+                    <span
+                      className="text-caption font-caption mt-[2px] block"
+                      style={{ color: strength.textColor }}
+                    >
+                      Strength: {strength.label}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-xs">
@@ -510,16 +521,27 @@ export default function RegisterPage() {
                   >
                     Confirm Password
                   </label>
-                  <input
-                    id="confirm-mobile"
-                    type="password"
-                    required
-                    minLength={6}
-                    value={form.confirm_password}
-                    onChange={(e) => update("confirm_password", e.target.value)}
-                    className="h-[42px] px-md rounded border border-border-base focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline-variant bg-surface"
-                    placeholder="••••••••"
-                  />
+                  <div className="relative">
+                    <input
+                      id="confirm-mobile"
+                      type={showConfirmPassword ? "text" : "password"}
+                      required
+                      minLength={6}
+                      value={form.confirm_password}
+                      onChange={(e) => update("confirm_password", e.target.value)}
+                      className="w-full h-[42px] px-md pr-[44px] rounded border border-border-base focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline-variant bg-surface"
+                      placeholder="••••••••"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary-container transition-colors"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">
+                        {showConfirmPassword ? "visibility_off" : "visibility"}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </section>

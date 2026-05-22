@@ -31,7 +31,7 @@ interface StockData {
 function getStatusInfo(kg: number) {
   if (kg <= 0) return { label: "Out of Stock", color: "bg-error/10 text-error", dot: "bg-error", badgeBg: "bg-error/10 text-error border border-error/20" };
   if (kg < 1000) return { label: "Low Stock", color: "bg-warning/10 text-warning", dot: "bg-warning animate-pulse", badgeBg: "bg-warning/10 text-warning border border-warning/20" };
-  return { label: "In Stock", color: "bg-success/10 text-success", dot: "bg-success", badgeBg: "bg-tertiary/10 text-tertiary border border-tertiary/20" };
+  return { label: "In Stock", color: "bg-success/10 text-success", dot: "bg-success", badgeBg: "bg-on-tertiary-container/10 text-on-tertiary-container border border-on-tertiary-container/20" };
 }
 
 function formatTk(amount: number | null | undefined): string {
@@ -100,12 +100,12 @@ function CategorySection({
       </header>
 
       {/* Mobile: category header inline */}
-      <div className="md:hidden px-4 py-3 bg-surface-container-low flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <span className="w-1 h-5 bg-primary-container rounded-full" />
-          <h3 className="font-display font-bold text-primary-container">{category.name}</h3>
-        </div>
-        <Link href="/inventory/subtypes" className="text-tertiary text-xs font-bold uppercase">
+      <div className="md:hidden flex items-center justify-between mb-3 px-4 pt-2">
+        <h2 className="font-display font-semibold text-on-surface flex items-center gap-2">
+          <span className="w-1 h-5 bg-primary rounded-full" />
+          {category.name}
+        </h2>
+        <Link href="/inventory/subtypes" className="text-on-tertiary-container text-xs font-bold uppercase">
           View All
         </Link>
       </div>
@@ -156,23 +156,23 @@ function CategorySection({
             {category.subtypes.map((st) => {
               const status = getStatusInfo(st.current_stock_kg);
               return (
-                <div key={st.id} className="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm">
+                <div key={st.id} className="bg-surface p-4 rounded-xl border border-outline-variant shadow-sm">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-display font-semibold text-sm text-primary-container">{st.name}</h3>
+                    <h3 className="font-display font-semibold text-sm text-primary">{st.name}</h3>
                     <span className={`px-2 py-0.5 rounded-sm ${status.badgeBg} text-[10px] font-bold uppercase tracking-tight`}>
                       {status.label}
                     </span>
                   </div>
                   <div className="flex items-end justify-between">
                     <div>
-                      <p className="text-secondary text-[10px] uppercase font-bold tracking-widest mb-0.5">Current Stock</p>
-                      <p className="font-mono text-xl md:text-2xl text-primary-container font-medium tracking-tighter">
+                      <p className="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest mb-0.5">Current Stock</p>
+                      <p className="font-mono text-xl md:text-2xl text-primary font-medium tracking-tighter">
                         {st.current_stock_kg.toLocaleString("en-IN")} <span className="text-sm font-normal">kg</span>
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-secondary text-[10px] uppercase font-bold tracking-widest mb-0.5">WAC</p>
-                      <p className="font-mono text-sm text-secondary">৳{st.wac.toFixed(2)}</p>
+                      <p className="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest mb-0.5">WAC</p>
+                      <p className="font-mono text-sm text-on-surface-variant">৳{st.wac.toFixed(2)}</p>
                     </div>
                   </div>
                 </div>
@@ -214,37 +214,37 @@ export function InventoryClient({ data }: { data: StockData | null }) {
     <>
       {/* Summary Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-10">
-        <div className="bg-white p-3 md:p-6 rounded-lg md:rounded-lg shadow-sm border border-outline-variant/30">
-          <p className="text-secondary text-[10px] md:text-sm font-medium mb-1 uppercase tracking-wider md:normal-case">
+        <div className="bg-surface-container-lowest p-3 md:p-6 rounded-lg md:rounded-lg border border-outline-variant shadow-sm">
+          <p className="text-on-surface-variant text-[10px] md:text-sm font-medium mb-1 uppercase tracking-wider md:normal-case">
             Total Stock
           </p>
           <div className="flex items-baseline gap-1 md:gap-2 mt-1 md:mt-2">
-            <h2 className="text-lg md:text-3xl font-bold font-display text-primary-container">
+            <h2 className="text-lg md:text-3xl font-bold font-display text-primary">
               {(data.total_stock_kg ?? 0).toLocaleString("en-IN")}
             </h2>
-            <span className="text-[10px] md:text-sm text-secondary font-mono">kg</span>
+            <span className="text-[10px] md:text-sm text-on-surface-variant font-mono">kg</span>
           </div>
         </div>
-        <div className="bg-white p-3 md:p-6 rounded-lg md:rounded-lg shadow-sm border border-outline-variant/30">
-          <p className="text-secondary text-[10px] md:text-sm font-medium mb-1 uppercase tracking-wider md:normal-case">
+        <div className="bg-surface-container-lowest p-3 md:p-6 rounded-lg md:rounded-lg border border-outline-variant shadow-sm">
+          <p className="text-on-surface-variant text-[10px] md:text-sm font-medium mb-1 uppercase tracking-wider md:normal-case">
             Total Value
           </p>
           <div className="flex items-baseline gap-1 mt-1 md:mt-2">
-            <span className="text-sm md:text-xl font-bold text-primary-container">৳</span>
-            <h2 className="text-lg md:text-3xl font-bold font-display text-primary-container">
+            <span className="text-sm md:text-xl font-bold text-primary">৳</span>
+            <h2 className="text-lg md:text-3xl font-bold font-display text-primary">
               {(data.total_stock_value ?? 0).toLocaleString("en-IN", { maximumFractionDigits: 0 })}
             </h2>
           </div>
         </div>
-        <div className="bg-white p-3 md:p-6 rounded-lg md:rounded-lg shadow-sm border border-outline-variant/30">
-          <p className="text-secondary text-[10px] md:text-sm font-medium mb-1 uppercase tracking-wider md:normal-case">
+        <div className="bg-surface-container-lowest p-3 md:p-6 rounded-lg md:rounded-lg border border-outline-variant shadow-sm">
+          <p className="text-on-surface-variant text-[10px] md:text-sm font-medium mb-1 uppercase tracking-wider md:normal-case">
             Scrap Pool
           </p>
           <div className="flex items-baseline gap-1 mt-1 md:mt-2">
-            <h2 className="text-lg md:text-3xl font-bold font-display text-primary-container">
+            <h2 className="text-lg md:text-3xl font-bold font-display text-primary">
               {(data.scrap_pool_kg ?? 0).toLocaleString("en-IN")}
             </h2>
-            <span className="text-[10px] md:text-sm text-secondary font-mono">kg</span>
+            <span className="text-[10px] md:text-sm text-on-surface-variant font-mono">kg</span>
           </div>
         </div>
         <div className="bg-error-container p-3 md:p-6 rounded-lg md:rounded-lg shadow-sm border border-error/20">

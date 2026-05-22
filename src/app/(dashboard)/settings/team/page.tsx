@@ -200,9 +200,10 @@ export default function TeamPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-primary-container tracking-tight">
+          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-primary tracking-tight">
             Team Management
           </h1>
+          <p className="font-body text-on-surface-variant text-sm">{filtered.length} member{filtered.length !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex gap-3">
           <button
@@ -210,7 +211,7 @@ export default function TeamPage() {
               resetForm();
               setInviteOpen(true);
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-container text-white font-semibold rounded-lg hover:bg-primary-container/90 transition-all text-sm shadow-sm active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary font-semibold rounded-lg hover:bg-primary/90 transition-all text-sm shadow-sm active:scale-95"
           >
             <span className="material-symbols-outlined text-lg">person_add</span>
             Invite Member
@@ -218,26 +219,16 @@ export default function TeamPage() {
         </div>
       </div>
 
-      {/* Sub-tabs */}
-      <div className="flex items-center gap-1 mb-6 border-b border-outline-variant/50">
-        <Link
-          href="/settings"
-          className="px-4 py-3 text-sm text-secondary hover:text-primary-container transition-colors"
-        >
-          Settings
-        </Link>
-        <Link
-          href="/settings/team"
-          className="px-4 py-3 text-sm font-bold text-tertiary border-b-2 border-tertiary"
-        >
-          Team
-        </Link>
+      {/* Pill Navigation */}
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+        <Link href="/settings" className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-colors">General</Link>
+        <span className="px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap bg-primary text-on-primary">Team Members</span>
       </div>
 
       {/* Search Bar */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="relative flex-1 max-w-md">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-lg">
+      <div className="flex gap-2 mb-6">
+        <div className="relative flex-1">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">
             search
           </span>
           <input
@@ -245,10 +236,14 @@ export default function TeamPage() {
             onChange={(e) => setSearch(e.target.value)}
             autoComplete="off"
             enterKeyHint="search"
-            className="w-full h-[44px] pl-10 pr-4 bg-white border border-outline-variant rounded-lg text-sm outline-none focus:ring-0"
+            className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-10 pr-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
             placeholder="Search members..."
           />
         </div>
+        <button className="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant px-3 py-2.5 rounded-lg text-sm font-medium text-on-surface-variant">
+          <span className="material-symbols-outlined text-lg">filter_list</span>
+          All Roles
+        </button>
       </div>
 
       {/* Loading */}
@@ -408,72 +403,55 @@ export default function TeamPage() {
       {/* Mobile Card List */}
       {!loading && !(error || loadError) && filtered.length > 0 && (
         <div className="md:hidden space-y-3">
-          <div className="flex justify-between items-center">
-            <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-secondary">
-              Team Members
-            </h2>
-          </div>
           {filtered.map((m) => (
             <div
               key={m.id}
-              className="block bg-white rounded-lg p-4 shadow-sm border border-outline-variant/20"
+              className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm"
             >
-              <div className="flex items-start gap-3 mb-3">
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${
-                    m.is_active
-                      ? "bg-secondary-container text-primary-container"
-                      : "bg-surface-container-highest text-secondary"
-                  }`}
-                >
-                  {getInitials(m.name)}
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-display font-bold text-sm ${
+                    m.role === "owner"
+                      ? "bg-primary-container text-on-primary"
+                      : m.role === "manager"
+                        ? "bg-secondary-container text-on-secondary-container"
+                        : "bg-surface-container-highest text-on-surface-variant"
+                  }`}>
+                    {getInitials(m.name)}
+                  </div>
+                  <div>
+                    <h3 className="font-display font-bold text-on-surface leading-tight">{m.name}</h3>
+                    <p className="text-xs font-code text-on-surface-variant">{m.email}</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-display font-bold text-primary-container text-base truncate">
-                    {m.name}
-                  </h3>
-                  <p className="text-xs text-secondary font-medium truncate">
-                    {m.email}
-                  </p>
-                </div>
-                <StatusBadge active={m.is_active} />
+                <button className="p-1 hover:bg-surface-container-high rounded-full transition-colors">
+                  <span className="material-symbols-outlined text-on-surface-variant">more_vert</span>
+                </button>
               </div>
-              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-outline-variant/30">
-                <div>
-                  <p className="text-[11px] text-secondary font-medium mb-0.5">
-                    Role
-                  </p>
-                  <p className="text-sm font-bold text-primary-container">
+              <div className="flex items-center justify-between mt-4 pt-3 border-t border-outline-variant/50">
+                <div className="flex items-center gap-2">
+                  <span className={`px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-wider ${
+                    m.role === "owner"
+                      ? "bg-primary-container text-on-primary"
+                      : m.role === "manager"
+                        ? "bg-secondary text-on-secondary"
+                        : "bg-surface-container-high text-on-surface-variant"
+                  }`}>
                     {handleRoleLabel(m.role)}
-                  </p>
+                  </span>
+                  <div className="flex items-center gap-1.5 ml-2">
+                    <span className={`w-2 h-2 rounded-full ${m.is_active ? "bg-success" : "bg-outline"}`} />
+                    <span className="text-[11px] font-medium text-on-surface-variant">{m.is_active ? "Active" : "Inactive"}</span>
+                  </div>
                 </div>
-                <div className="flex gap-1 justify-end items-end">
+                {m.role !== "owner" && (
                   <button
-                    onClick={() => handleToggle(m)}
-                    disabled={toggleMutation.isPending}
-                    className={`px-3 py-1.5 text-xs font-bold rounded-lg ${
-                      m.is_active
-                        ? "bg-warning/10 text-warning"
-                        : "bg-success/10 text-success"
-                    } disabled:opacity-50`}
+                    onClick={() => setDeleteConfirm(m.id)}
+                    className="p-1 hover:bg-error/10 rounded-full transition-colors"
                   >
-                    {toggleMutation.isPending
-                      ? "..."
-                      : m.is_active
-                        ? "Deactivate"
-                        : "Activate"}
+                    <span className="material-symbols-outlined text-error">delete</span>
                   </button>
-                  {m.role !== "owner" && (
-                    <button
-                      onClick={() => setDeleteConfirm(m.id)}
-                      className="p-1.5 text-xs font-bold rounded-lg bg-error/10 text-error"
-                    >
-                      <span className="material-symbols-outlined text-lg">
-                        delete
-                      </span>
-                    </button>
-                  )}
-                </div>
+                )}
               </div>
             </div>
           ))}

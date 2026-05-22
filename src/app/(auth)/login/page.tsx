@@ -195,7 +195,7 @@ export default function LoginPage() {
             <span className="material-symbols-outlined text-white text-[48px] mb-md">
               precision_manufacturing
             </span>
-            <h1 className="text-h1-mobile font-h1 text-white tracking-tight mb-xs">
+            <h1 className="text-h1-mobile font-h1-mobile text-white tracking-tight mb-xs">
               YardFlow ERP
             </h1>
             <p className="text-body-sm font-body-sm text-surface-container-highest opacity-90 max-w-[280px]">
@@ -241,7 +241,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full h-[42px] px-md border border-border-base rounded bg-white text-body-sm font-body-sm focus:outline-none focus:border-primary-container focus:ring-3 focus:ring-primary-container/20 transition-all"
-                placeholder="name@company.com"
+                placeholder="admin@shiprecycle.com"
               />
             </div>
 
@@ -265,13 +265,22 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-1 top-1/2 -translate-y-1/2 min-w-[44px] min-h-[44px] flex items-center justify-center text-on-surface-variant hover:text-primary-container"
+                  className="absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary-container transition-colors"
                 >
                   <span className="material-symbols-outlined text-[20px]">
                     {showPassword ? "visibility_off" : "visibility"}
                   </span>
                 </button>
               </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Link
+                href="#"
+                className="text-body-sm font-body-sm text-tertiary-container font-medium hover:underline"
+              >
+                Forgot password?
+              </Link>
             </div>
 
             <button

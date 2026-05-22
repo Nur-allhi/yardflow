@@ -172,19 +172,19 @@ export default async function DashboardPage() {
           Quick Entry
         </h2>
         <div className="grid grid-cols-2 gap-3">
-          <Link href="/sales/new" className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-outline-variant/30 shadow-sm active:scale-95 transition-all">
+          <Link href="/sales/new" className="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
             <span className="material-symbols-outlined text-tertiary bg-tertiary-fixed/30 text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>add_shopping_cart</span>
             <span className="text-sm font-medium text-primary-container">New Sale</span>
           </Link>
-          <Link href="/inventory/subtypes" className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-outline-variant/30 shadow-sm active:scale-95 transition-all">
+          <Link href="/inventory/subtypes" className="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
             <span className="material-symbols-outlined text-on-primary-fixed-variant bg-primary-container/10 text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>inventory_2</span>
             <span className="text-sm font-medium text-primary-container">Add Stock</span>
           </Link>
-          <Link href="/hr" className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-outline-variant/30 shadow-sm active:scale-95 transition-all">
+          <Link href="/hr" className="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
             <span className="material-symbols-outlined text-on-secondary-fixed-variant bg-secondary-container text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>engineering</span>
             <span className="text-sm font-medium text-primary-container">Labor Entry</span>
           </Link>
-          <Link href="/sales/new" className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-outline-variant/30 shadow-sm active:scale-95 transition-all">
+          <Link href="/sales/new" className="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
             <span className="material-symbols-outlined text-error bg-error-container text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>local_shipping</span>
             <span className="text-sm font-medium text-primary-container">Dispatch</span>
           </Link>
@@ -198,7 +198,7 @@ export default async function DashboardPage() {
 
       {/* ── KPI Stat Cards ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-        <div className="bg-white border border-outline-variant/30 md:border-outline-variant rounded-lg md:rounded-lg p-4 md:p-5 shadow-sm">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl md:rounded-lg p-4 md:p-5 shadow-sm">
           <div className="flex justify-between items-start mb-3 md:mb-4">
             <span className="text-on-surface-variant text-[10px] md:text-xs font-bold uppercase tracking-widest">
               Total Stock
@@ -213,7 +213,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white border border-outline-variant/30 md:border-outline-variant rounded-lg md:rounded-lg p-4 md:p-5 shadow-sm">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl md:rounded-lg p-4 md:p-5 shadow-sm">
           <div className="flex justify-between items-start mb-3 md:mb-4">
             <span className="text-on-surface-variant text-[10px] md:text-xs font-bold uppercase tracking-widest">
               Today Sales
@@ -232,7 +232,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white border border-outline-variant/30 md:border-outline-variant rounded-lg md:rounded-lg p-4 md:p-5 shadow-sm">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl md:rounded-lg p-4 md:p-5 shadow-sm">
           <div className="flex justify-between items-start mb-3 md:mb-4">
             <span className="text-on-surface-variant text-[10px] md:text-xs font-bold uppercase tracking-widest">
               Customers Owe
@@ -246,7 +246,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white border border-outline-variant/30 md:border-outline-variant rounded-lg md:rounded-lg p-4 md:p-5 shadow-sm">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl md:rounded-lg p-4 md:p-5 shadow-sm">
           <div className="flex justify-between items-start mb-3 md:mb-4">
             <span className="text-on-surface-variant text-[10px] md:text-xs font-bold uppercase tracking-widest">
               We Owe Vendors
@@ -362,7 +362,7 @@ export default async function DashboardPage() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-4 bg-white border border-outline-variant/30 rounded-xl">
+          <div className="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl">
             <div className="flex items-center gap-2 mb-2">
               <span className="material-symbols-outlined text-warning text-xl">
                 pending_actions
@@ -374,7 +374,7 @@ export default async function DashboardPage() {
             <p className="font-mono text-lg font-bold text-primary-container">{formatMoney(arTotal)}</p>
             <p className="text-[10px] text-secondary mt-1">{arTotal > 0 ? "Outstanding customer dues" : "No outstanding dues"}</p>
           </div>
-          <div className="p-4 bg-white border border-outline-variant/30 rounded-xl">
+          <div className="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl">
             <div className="flex items-center gap-2 mb-2">
               <span className="material-symbols-outlined text-error text-xl">
                 payments
@@ -406,7 +406,7 @@ export default async function DashboardPage() {
           </Link>
         </div>
         {recentSales.length === 0 ? (
-          <div className="p-10 text-center text-on-surface-variant text-sm bg-white rounded-xl border border-outline-variant/30">
+          <div className="p-10 text-center text-on-surface-variant text-sm bg-surface-container-lowest rounded-xl border border-outline-variant">
             <span className="material-symbols-outlined text-4xl block mb-2 text-outline-variant">
               shopping_cart
             </span>
@@ -415,7 +415,7 @@ export default async function DashboardPage() {
         ) : (
           <div className="space-y-2">
             {recentSales.slice(0, 3).map((s) => (
-              <Link key={s.id} href={`/sales/${s.id}`} className="block bg-white p-4 rounded-xl border border-outline-variant/30">
+              <Link key={s.id} href={`/sales/${s.id}`} className="block bg-surface-container-lowest p-4 rounded-xl border border-outline-variant">
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="text-sm font-bold text-primary-container">{s.customer_name || "Cash Sale"}</p>
@@ -514,7 +514,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* ── Mobile: Stock Trend Placeholder ── */}
-      <section className="md:hidden h-48 w-full bg-surface-container rounded-xl overflow-hidden relative border border-outline-variant/30 mb-4">
+      <section className="md:hidden h-48 w-full bg-surface-container rounded-xl overflow-hidden relative border border-outline-variant mb-4">
         <div className="absolute inset-0 bg-gradient-to-t from-surface-container-highest to-transparent opacity-50" />
         <div className="absolute top-4 left-4">
           <p className="text-[10px] font-bold text-secondary uppercase">

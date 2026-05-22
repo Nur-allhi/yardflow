@@ -243,6 +243,31 @@ export default function SaleDetailPage() {
         </div>
       </div>
 
+      {/* Mobile Payment Summary */}
+      <div className="md:hidden bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant mb-4">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <p className="text-[10px] text-on-surface-variant font-medium uppercase tracking-tight">Total Amount</p>
+            <h2 className="font-headline font-bold text-2xl text-primary font-mono tracking-tight">{formatMoney(sale.total_amount)}</h2>
+          </div>
+          <div className="text-right">
+            <p className="text-[10px] text-on-surface-variant font-medium uppercase tracking-tight">Balance Due</p>
+            <p className={`font-headline font-bold text-lg font-mono tracking-tight ${sale.due_amount > 0 ? "text-warning" : "text-success"}`}>
+              {formatMoney(sale.due_amount)}
+            </p>
+          </div>
+        </div>
+        <div className="space-y-2">
+          <div className="flex justify-between text-[10px] font-bold">
+            <span className="text-success">Received: {formatMoney(sale.paid_amount)}</span>
+            <span className="text-on-surface-variant">{paidPercent}% Paid</span>
+          </div>
+          <div className="w-full bg-surface-container-high h-2.5 rounded-full overflow-hidden flex">
+            <div className="bg-success h-full transition-all duration-1000 ease-out" style={{ width: `${paidPercent}%` }} />
+          </div>
+        </div>
+      </div>
+
       {/* Desktop: Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* LEFT */}
@@ -365,36 +390,28 @@ export default function SaleDetailPage() {
             </div>
 
             {/* Mobile Items */}
-            <div className="md:hidden space-y-3 p-4">
-              {sale.items.map((item) => (
+            <div className="md:hidden bg-surface rounded-xl border border-outline-variant overflow-hidden">
+              {sale.items.map((item, idx) => (
                 <div
                   key={item.id}
-                  className="bg-white rounded-lg p-4 border border-outline-variant/30"
+                  className={`p-4 ${idx < sale.items.length - 1 ? "border-b border-outline-variant" : ""}`}
                 >
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-bold text-primary-container text-sm">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-headline font-bold text-sm text-primary">
                       {item.subtype_name || "—"}
                     </h4>
-                    <span className="font-mono text-sm font-bold">
+                    <span className="font-mono font-bold text-primary">
                       {formatMoney(item.total_amount)}
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <p className="text-[10px] text-secondary uppercase font-bold">
-                        Quantity
-                      </p>
-                      <p className="font-mono text-sm">
-                        {item.quantity_kg.toFixed(3)} kg
-                      </p>
+                  <div className="flex justify-between text-xs text-on-surface-variant">
+                    <div className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-sm">scale</span>
+                      <span>{item.quantity_kg.toFixed(3)} kg</span>
                     </div>
-                    <div className="text-right">
-                      <p className="text-[10px] text-secondary uppercase font-bold">
-                        Price/kg
-                      </p>
-                      <p className="font-mono text-sm">
-                        {formatMoney(item.price_per_kg)}
-                      </p>
+                    <div className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-sm">sell</span>
+                      <span>{formatMoney(item.price_per_kg)}</span>
                     </div>
                   </div>
                 </div>
@@ -518,14 +535,14 @@ export default function SaleDetailPage() {
       </div>
 
       {/* Mobile: Fixed Bottom Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 shadow-lg">
+      <div className="md:hidden fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 shadow-lg">
         <button
           onClick={openPaymentModal}
           disabled={sale.status === "paid"}
-          className="w-full h-12 bg-tertiary text-white font-bold rounded-lg flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
+          className="w-full h-12 bg-on-tertiary-container text-on-tertiary font-headline font-bold rounded-lg flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-all disabled:opacity-40"
         >
-          <span className="material-symbols-outlined">add_card</span>
-          {sale.status === "paid" ? "Fully Paid" : "Record Payment"}
+          <span className="material-symbols-outlined">payments</span>
+          {sale.status === "paid" ? "Fully Paid" : "Collect Payment"}
         </button>
       </div>
 

@@ -113,8 +113,8 @@ const { data: transactionsData } = useQuery<Transaction[]>({
         </div>
       </div>
 
-      {/* Account Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+      {/* Desktop: Account Cards Grid */}
+      <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         {(accountsData ?? []).length === 0 && (
           <div className="col-span-full text-center py-12 text-secondary">
             <span className="material-symbols-outlined text-5xl block mb-4">
@@ -164,24 +164,84 @@ const { data: transactionsData } = useQuery<Transaction[]>({
         })}
       </div>
 
+      {/* Mobile: Account Cards Horizontal Scroll */}
+      <div className="md:hidden">
+        {(accountsData ?? []).length === 0 ? (
+          <div className="text-center py-12 text-secondary">
+            <span className="material-symbols-outlined text-5xl block mb-4">
+              account_balance
+            </span>
+            <p>No accounts yet. Add your first account to get started.</p>
+          </div>
+        ) : (
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6">
+            {(accountsData ?? []).map((acc) => {
+              const isCash = acc.type === "cash";
+              return (
+                <Link
+                  key={acc.id}
+                  href={`/accounts/${acc.id}`}
+                  className={`min-w-[280px] snap-center p-5 rounded-xl shadow-md border flex flex-col justify-between shrink-0 ${isCash ? "bg-primary-container text-white border-primary-container/20" : "bg-surface-container-highest border-outline-variant"}`}
+                >
+                  <div>
+                    <div className="flex justify-between items-start mb-4">
+                      <span className={`text-[10px] font-bold tracking-widest px-2 py-0.5 rounded-sm uppercase ${isCash ? "bg-on-primary-container text-primary-container" : "bg-secondary text-white"}`}>
+                        {isCash ? "CASH" : "BANK"}
+                      </span>
+                      <span className={`material-symbols-outlined ${isCash ? "text-white/60" : "text-secondary"}`}>
+                        {isCash ? "payments" : "account_balance"}
+                      </span>
+                    </div>
+                    <h2 className="font-display text-lg font-medium">
+                      {acc.name}
+                    </h2>
+                  </div>
+                  <div className={`font-code text-2xl font-bold mt-4 ${isCash ? "text-white" : "text-primary"}`}>
+                    {formatMoney(acc.current_balance)}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
       {/* Total Bar */}
       {(accountsData ?? []).length > 0 && (
-        <div className="bg-primary-container p-4 md:p-6 rounded-lg flex justify-center items-center gap-2 md:gap-4 text-center border-l-4 border-tertiary-fixed shadow-lg">
-          <span className="text-on-primary-container font-headline font-semibold text-sm md:text-lg">
-            Total Across All Accounts:
-          </span>
-          <span className="text-xl md:text-3xl font-mono font-bold text-white">
-            {formatMoney(totalBalance)}
-          </span>
-        </div>
+        <>
+          <div className="hidden md:flex bg-primary-container p-4 md:p-6 rounded-lg justify-center items-center gap-2 md:gap-4 text-center border-l-4 border-tertiary-fixed shadow-lg">
+            <span className="text-on-primary-container font-display font-semibold text-sm md:text-lg">
+              Total Across All Accounts:
+            </span>
+            <span className="text-xl md:text-3xl font-code font-bold text-white">
+              {formatMoney(totalBalance)}
+            </span>
+          </div>
+          <div className="md:hidden w-full bg-surface-container-low border-y border-outline-variant py-3 px-4 flex justify-between items-center">
+            <span className="text-caption text-on-surface-variant font-medium">Total Across All Accounts</span>
+            <span className="font-code font-bold text-primary text-base">{formatMoney(totalBalance)}</span>
+          </div>
+        </>
       )}
+
+      {/* Mobile: Transfer Funds Button */}
+      <div className="md:hidden">
+        <Link
+          href="/accounts/transfer"
+          className="w-full bg-primary text-white py-4 rounded-lg font-display font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-sm"
+        >
+          <span className="material-symbols-outlined">swap_horiz</span>
+          Transfer Funds
+        </Link>
+      </div>
 
       {/* Recent Transactions */}
       <div className="bg-white rounded-lg shadow-sm border border-outline-variant/30 overflow-hidden">
         <div className="p-4 md:p-6 border-b border-outline-variant/20 flex justify-between items-center bg-surface-container-low/50">
-          <h2 className="font-headline font-semibold text-primary-container">
-            Recent Transactions — All Accounts
+          <h2 className="font-display font-semibold text-primary-container">
+            Recent Transactions
           </h2>
+          <span className="text-tertiary-container text-caption font-bold">View All</span>
         </div>
         {(transactionsData ?? []).length === 0 ? (
           <div className="p-8 text-center text-secondary text-sm">
@@ -268,42 +328,29 @@ const { data: transactionsData } = useQuery<Transaction[]>({
             {(transactionsData ?? []).map((tx) => {
               const isCredit = tx.type === "credit";
               return (
-                <div key={tx.id} className="bg-white rounded-lg border border-outline-variant/20 p-4 shadow-sm">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <p className="text-xs text-secondary">{formatDate(tx.transaction_date)}</p>
-                      <p className="text-sm font-medium text-primary-container">{tx.account_name}</p>
-                    </div>
-                    <div className={`font-mono font-bold flex items-center gap-1 shrink-0 ${isCredit ? "text-success" : "text-error"}`}>
-                      <span className="material-symbols-outlined text-xs">
-                        {isCredit ? "arrow_upward" : "arrow_downward"}
-                      </span>
-                      {formatMoney(tx.amount)}
-                    </div>
+                <div key={tx.id} className="bg-surface p-4 rounded-lg border border-outline-variant shadow-sm flex items-center gap-4 active:bg-surface-container-low transition-colors">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isCredit ? "bg-success/10 text-success" : "bg-error/10 text-error"}`}>
+                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      {isCredit ? "arrow_upward" : "arrow_downward"}
+                    </span>
                   </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span>
-                      {tx.reference_id ? (
-                        <span className="text-tertiary font-medium">
-                          #
-                          {tx.reference_type === "purchase_payment"
-                            ? "PUR"
-                            : tx.reference_type === "sale_payment"
-                              ? "SAL"
-                              : tx.reference_type === "salary"
-                                ? "SLR"
-                                : tx.reference_type === "transfer"
-                                  ? "TRF"
-                                  : "REF"}
-                          -{tx.reference_id.slice(0, 8)}
-                        </span>
-                      ) : (
-                        <span className="text-outline">&mdash;</span>
-                      )}
-                    </span>
-                    <span className="text-secondary truncate ml-2 max-w-[50%]">
-                      {tx.note || <span className="text-outline">&mdash;</span>}
-                    </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start">
+                      <h4 className="font-bold text-on-surface text-sm truncate">
+                        {tx.reference_id ? (
+                          <>{tx.reference_type === "purchase_payment" ? "Purchase" : tx.reference_type === "sale_payment" ? "Sale" : tx.reference_type === "salary" ? "Salary" : tx.reference_type === "transfer" ? "Transfer" : "Ref"} #{tx.reference_id.slice(0, 8)}</>
+                        ) : "Transaction"}
+                      </h4>
+                      <span className={`font-code text-sm font-bold shrink-0 ${isCredit ? "text-tertiary-container" : "text-error"}`}>
+                        {isCredit ? "+" : "-"}{formatMoney(tx.amount)}
+                      </span>
+                    </div>
+                    <p className="text-caption text-on-surface-variant">{tx.note || "No description"}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-[10px] text-outline uppercase font-bold">{formatDate(tx.transaction_date)}</span>
+                      <span className="w-1 h-1 rounded-full bg-outline-variant" />
+                      <span className="text-[10px] text-outline uppercase font-bold">{tx.account_name}</span>
+                    </div>
                   </div>
                 </div>
               );

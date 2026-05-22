@@ -48,6 +48,7 @@ export default function NewSalePage() {
   const [saleDate, setSaleDate] = useState(
     new Date().toISOString().split("T")[0],
   );
+  const [payType, setPayType] = useState<"full" | "partial">("partial");
   const [amountReceived, setAmountReceived] = useState("");
   const [accountId, setAccountId] = useState("");
   const [note, setNote] = useState("");
@@ -506,13 +507,44 @@ export default function NewSalePage() {
             <section className="bg-white rounded-lg border border-outline-variant/50 shadow-sm p-5 md:p-6">
               <div className="flex items-center gap-2 mb-5">
                 <span className="material-symbols-outlined text-primary-container">account_balance_wallet</span>
-                <h2 className="font-display text-lg font-semibold">Payment</h2>
+                <h2 className="font-display text-lg font-semibold">Settlement</h2>
               </div>
               <div className="space-y-4">
+                {/* Payment Type Toggle */}
+                <div className="space-y-2">
+                  <label className="block border border-outline-variant rounded-lg p-3 flex items-center gap-3 cursor-pointer has-[:checked]:border-primary-container has-[:checked]:bg-primary-container/5 transition-colors">
+                    <input
+                      type="radio"
+                      name="pay_type"
+                      value="full"
+                      checked={payType === "full"}
+                      onChange={() => { setPayType("full"); setAmountReceived(String(grandTotal)); }}
+                      className="text-primary-container focus:ring-primary-container"
+                    />
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-primary-container">Pay Full Amount</p>
+                      <p className="text-xs text-secondary">Clears invoice balance immediately</p>
+                    </div>
+                  </label>
+                  <label className="block border-2 border-outline-variant rounded-lg p-3 flex items-center gap-3 cursor-pointer has-[:checked]:border-primary-container has-[:checked]:bg-primary-container/5 transition-colors">
+                    <input
+                      type="radio"
+                      name="pay_type"
+                      value="partial"
+                      checked={payType === "partial"}
+                      onChange={() => setPayType("partial")}
+                      className="text-primary-container focus:ring-primary-container"
+                    />
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-primary-container">Pay Partial Amount</p>
+                      <p className="text-xs text-secondary">Remaining balance goes to credit</p>
+                    </div>
+                  </label>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-wider text-secondary">
-                      Amount Received (optional)
+                      Amount Received
                     </label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-secondary font-mono">৳</span>
@@ -533,7 +565,7 @@ export default function NewSalePage() {
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-wider text-secondary">
-                      Pay From Account
+                      Payment Account
                     </label>
                     <select
                       value={accountId}
@@ -549,6 +581,29 @@ export default function NewSalePage() {
                     </select>
                   </div>
                 </div>
+                {/* Mobile Payment Summary */}
+                {payAmount > 0 && (
+                  <div className="md:hidden bg-primary-container text-white rounded-xl p-4 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-white/70">Receiving Now</span>
+                      <span className="font-mono font-bold">{formatMoney(payAmount)}</span>
+                    </div>
+                    <div className="flex justify-between items-center border-t border-white/10 pt-3">
+                      <span className="text-xs text-white/70">Remaining Due</span>
+                      <span className={`font-mono font-bold text-lg ${remainingDue > 0 ? "text-warning" : "text-tertiary-fixed"}`}>
+                        {formatMoney(remainingDue)}
+                      </span>
+                    </div>
+                    {remainingDue === 0 && (
+                      <div className="flex justify-end">
+                        <span className="px-2 py-1 bg-on-tertiary-container text-[10px] font-bold rounded uppercase tracking-widest flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[12px]">verified</span>
+                          PAID
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </section>
           </div>
@@ -619,31 +674,33 @@ export default function NewSalePage() {
         )}
 
         {/* Mobile: Sticky Bottom Bar */}
-        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 flex items-center justify-between shadow-lg">
-          <div className="flex flex-col">
-            <span className="text-[10px] text-secondary font-bold uppercase tracking-tight">
-              {validItemsCount} Items
-            </span>
-            <span className="font-mono font-bold text-primary-container">{formatMoney(grandTotal)}</span>
+        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 shadow-lg">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/sales"
+              className="flex-1 h-12 border border-primary-container text-primary-container font-bold rounded-lg flex items-center justify-center active:scale-95 transition-all"
+            >
+              Cancel
+            </Link>
+            <button
+              type="submit"
+              disabled={submitting}
+              enterKeyHint="send"
+              className="flex-[2] h-12 bg-primary-container text-white font-bold rounded-lg flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
+            >
+              {submitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Creating...
+                </span>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined text-sm">save</span>
+                  Save Sale
+                </>
+              )}
+            </button>
           </div>
-          <button
-            type="submit"
-            disabled={submitting}
-            enterKeyHint="send"
-            className="bg-primary-container text-white px-6 py-3 rounded-lg font-bold text-sm flex items-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
-          >
-            {submitting ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Creating...
-              </span>
-            ) : (
-              <>
-                Save Sale
-                <span className="material-symbols-outlined text-sm">send</span>
-              </>
-            )}
-          </button>
         </div>
       </form>
 

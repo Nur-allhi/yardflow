@@ -103,17 +103,17 @@ export default function SubtypesPage() {
       <InventoryNav active="subtypes" />
 
       {/* Category filter chips */}
-      <div className="flex gap-1 bg-surface-container-high p-1 rounded-lg mb-6 overflow-x-auto">
+      <div className="flex gap-2 overflow-x-auto hide-scrollbar mb-6">
         {categories.map((cat) => {
           const isSelected = cat.id === selectedCategoryId;
           return (
             <button
               key={cat.id}
               onClick={() => setSelectedCategoryId(cat.id)}
-              className={`whitespace-nowrap px-3 py-1.5 text-xs font-bold rounded transition-all ${
+              className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 isSelected
-                  ? "bg-primary-container text-white"
-                  : "text-secondary hover:bg-white"
+                  ? "bg-tertiary-container text-on-tertiary-container border border-on-tertiary-container"
+                  : "bg-surface-container-low text-on-surface-variant border border-outline-variant"
               }`}
             >
               {cat.name}
@@ -122,11 +122,24 @@ export default function SubtypesPage() {
         })}
       </div>
 
+      {/* Mobile title & FAB */}
+      <div className="md:hidden flex justify-between items-center mb-4">
+        <h2 className="font-display font-bold text-lg text-on-surface">
+          {selectedCategory ? `${selectedCategory.name} — Sub-types` : "Sub-types"}
+        </h2>
+        <button
+          onClick={() => setShowModal(true)}
+          className="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md active:scale-95 transition-transform"
+        >
+          <span className="material-symbols-outlined">add</span>
+        </button>
+      </div>
+
       {/* Main content card */}
       <div className="bg-white rounded-lg border border-outline-variant/30 shadow-sm overflow-hidden">
         {selectedCategory ? (
           <>
-            <div className="px-5 md:px-6 py-4 border-b border-outline-variant/30 flex items-center justify-between">
+            <div className="hidden md:flex px-5 md:px-6 py-4 border-b border-outline-variant/30 items-center justify-between">
               <h2 className="font-display font-bold text-lg">
                 {selectedCategory.name} — Sub-types
               </h2>
@@ -144,49 +157,89 @@ export default function SubtypesPage() {
                 No sub-types in this category yet
               </div>
             ) : (
-              <table className="w-full text-left">
-                <thead className="bg-surface-container-high border-b border-outline-variant">
-                  <tr>
-                    <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Sub-type Name</th>
-                    <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Default Price</th>
-                    <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Unit</th>
-                    <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Status</th>
-                    <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-outline-variant/20">
+              <>
+                {/* Desktop table */}
+                <div className="hidden md:block">
+                  <table className="w-full text-left">
+                    <thead className="bg-surface-container-high border-b border-outline-variant">
+                      <tr>
+                        <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Sub-type Name</th>
+                        <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Default Price</th>
+                        <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Unit</th>
+                        <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Status</th>
+                        <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-outline-variant/20">
+                      {subtypes.map((st) => (
+                        <tr key={st.id} className="hover:bg-background transition-colors group">
+                          <td className={`px-5 md:px-6 py-4 text-sm font-medium ${st.is_active ? "text-primary-container" : "text-secondary/60"}`}>{st.name}</td>
+                          <td className="px-5 md:px-6 py-4 font-mono text-sm text-secondary">
+                            {st.default_price_per_kg ? Number(st.default_price_per_kg).toLocaleString("en-IN") + " tk" : "—"}
+                          </td>
+                          <td className="px-5 md:px-6 py-4 text-sm text-secondary">{st.unit || "kg"}</td>
+                          <td className="px-5 md:px-6 py-4">
+                            {st.is_active ? (
+                              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold">
+                                <span className="w-1.5 h-1.5 rounded-full bg-success" /> Active
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary/10 text-secondary text-[11px] font-bold">
+                                <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> Inactive
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-5 md:px-6 py-4 text-right">
+                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button className="p-1 hover:text-tertiary transition-colors">
+                                <span className="material-symbols-outlined text-[18px]">edit</span>
+                              </button>
+                              <button className="p-1 hover:text-error transition-colors">
+                                <span className="material-symbols-outlined text-[18px]">{st.is_active ? "block" : "check_circle"}</span>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile cards */}
+                <div className="md:hidden space-y-3 p-4">
                   {subtypes.map((st) => (
-                    <tr key={st.id} className="hover:bg-background transition-colors group">
-                      <td className={`px-5 md:px-6 py-4 text-sm font-medium ${st.is_active ? "text-primary-container" : "text-secondary/60"}`}>{st.name}</td>
-                      <td className="px-5 md:px-6 py-4 font-mono text-sm text-secondary">
-                        {st.default_price_per_kg ? Number(st.default_price_per_kg).toLocaleString("en-IN") + " tk" : "—"}
-                      </td>
-                      <td className="px-5 md:px-6 py-4 text-sm text-secondary">{st.unit || "kg"}</td>
-                      <td className="px-5 md:px-6 py-4">
+                    <div key={st.id} className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-3">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="text-sm font-semibold text-on-surface">{st.name}</h3>
+                        </div>
                         {st.is_active ? (
-                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold">
-                            <span className="w-1.5 h-1.5 rounded-full bg-success" /> Active
+                          <span className="px-2 py-1 bg-tertiary-container text-on-tertiary-container text-[10px] font-bold rounded-sm flex items-center gap-1 uppercase">
+                            <span className="w-1.5 h-1.5 rounded-full bg-on-tertiary-container" />
+                            Active
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary/10 text-secondary text-[11px] font-bold">
-                            <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> Inactive
+                          <span className="px-2 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-bold rounded-sm flex items-center gap-1 uppercase">
+                            <span className="w-1.5 h-1.5 rounded-full bg-on-surface-variant" />
+                            Archived
                           </span>
                         )}
-                      </td>
-                      <td className="px-5 md:px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button className="p-1 hover:text-tertiary transition-colors">
-                            <span className="material-symbols-outlined text-[18px]">edit</span>
-                          </button>
-                          <button className="p-1 hover:text-error transition-colors">
-                            <span className="material-symbols-outlined text-[18px]">{st.is_active ? "block" : "check_circle"}</span>
-                          </button>
+                      </div>
+                      <div className="flex justify-between items-end border-t border-dashed border-outline-variant pt-3">
+                        <div>
+                          <p className="text-[10px] uppercase text-on-surface-variant font-medium tracking-wider">Default Price</p>
+                          <p className="font-mono text-lg font-bold text-primary">
+                            {st.default_price_per_kg ? `৳${Number(st.default_price_per_kg).toLocaleString("en-IN")}/kg` : "—"}
+                          </p>
                         </div>
-                      </td>
-                    </tr>
+                        <button className="text-on-surface-variant">
+                          <span className="material-symbols-outlined text-xl">edit</span>
+                        </button>
+                      </div>
+                    </div>
                   ))}
-                </tbody>
-              </table>
+                </div>
+              </>
             )}
           </>
         ) : (
@@ -211,21 +264,21 @@ export default function SubtypesPage() {
             </div>
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-bold text-primary-container">Sub-type Name</label>
+                <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Sub-type Name</label>
                 <input required value={name} onChange={(e) => setName(e.target.value)}
-                  className="w-full h-[42px] border border-outline-variant focus:border-tertiary focus:ring-0 rounded text-sm px-4 outline-none"
+                  className="w-full h-[42px] border border-outline-variant focus:border-primary focus:ring-0 rounded text-sm px-4 outline-none"
                   placeholder="e.g. 30mm Ultra Thick" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-bold text-primary-container">Default Price per kg</label>
+                  <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Default Price per kg</label>
                   <input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
-                    className="w-full h-[42px] px-4 border border-outline-variant focus:border-tertiary focus:ring-0 rounded text-sm font-mono outline-none" />
+                    className="w-full h-[42px] px-4 border border-outline-variant focus:border-primary focus:ring-0 rounded text-sm font-mono outline-none" />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-bold text-primary-container">Unit</label>
+                  <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Unit</label>
                   <select value={unit} onChange={(e) => setUnit(e.target.value)}
-                    className="w-full h-[42px] border border-outline-variant focus:border-tertiary focus:ring-0 rounded text-sm px-4 outline-none">
+                    className="w-full h-[42px] border border-outline-variant focus:border-primary focus:ring-0 rounded text-sm px-4 outline-none">
                     <option value="kg">kg</option>
                     <option value="ton">ton</option>
                   </select>
@@ -233,9 +286,9 @@ export default function SubtypesPage() {
               </div>
               <div className="flex items-center gap-3 pt-4">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="flex-1 h-[42px] bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded">Cancel</button>
+                  className="flex-1 h-[42px] bg-transparent text-on-surface-variant hover:bg-surface-container-low transition-colors font-bold text-sm rounded">Cancel</button>
                 <button type="submit" disabled={loading}
-                  className="flex-1 h-[42px] bg-primary-container text-white hover:bg-primary-container/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40">
+                  className="flex-1 h-[42px] bg-primary text-on-primary hover:bg-primary/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40">
                   {loading ? "Saving..." : "Save Sub-type"}</button>
               </div>
             </form>
@@ -253,22 +306,22 @@ export default function SubtypesPage() {
             <h2 className="font-display font-bold text-xl text-primary-container">Add Sub-type</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-secondary uppercase tracking-wider">Sub-type Name</label>
+                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Sub-type Name</label>
                 <input required value={name} onChange={(e) => setName(e.target.value)}
-                  className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary-container focus:border-transparent outline-none"
+                  className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                   placeholder="e.g., 20mm Super Heavy" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-secondary uppercase tracking-wider">Default Price (tk)</label>
+                  <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Default Price (tk)</label>
                   <input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
-                    className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary-container focus:border-transparent outline-none font-mono"
+                    className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none font-mono"
                     placeholder="0.00" />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-secondary uppercase tracking-wider">Unit</label>
+                  <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Unit</label>
                   <select value={unit} onChange={(e) => setUnit(e.target.value)}
-                    className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary-container outline-none">
+                    className="w-full h-[42px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary outline-none">
                     <option value="kg">kg</option>
                     <option value="ton">Metric Ton</option>
                   </select>
@@ -276,10 +329,10 @@ export default function SubtypesPage() {
               </div>
               <div className="flex flex-col gap-3 mt-4">
                 <button type="submit" disabled={loading}
-                  className="w-full h-12 bg-primary-container text-white font-bold rounded-lg shadow-md active:scale-[0.98] transition-all">
+                  className="w-full h-12 bg-primary text-on-primary font-bold rounded-lg shadow-md active:scale-[0.98] transition-all">
                   {loading ? "Saving..." : "Save Sub-type"}</button>
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="w-full h-12 bg-transparent text-secondary font-medium rounded-lg hover:bg-surface-container-low transition-colors">Cancel</button>
+                  className="w-full h-12 bg-transparent text-on-surface-variant font-medium rounded-lg hover:bg-surface-container transition-colors">Cancel</button>
               </div>
             </form>
             <div className="h-6" />

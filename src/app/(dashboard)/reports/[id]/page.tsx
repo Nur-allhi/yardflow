@@ -138,9 +138,29 @@ export default function ReportDetailPage() {
         </div>
       </div>
 
-      {/* Result Banner */}
-      <section className="mb-8">
-        <div className="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden flex items-stretch">
+      {/* Mobile: Inline header */}
+      <div className="md:hidden mb-6 flex flex-col gap-4">
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="font-display font-bold text-h2 text-on-surface">Period Report — {dateLabel}</h1>
+            <span className={`inline-flex items-center px-2 py-0.5 rounded-sm font-display font-bold text-[10px] tracking-wider uppercase ${isProfit ? "bg-tertiary-container text-on-tertiary" : "bg-error/10 text-error"}`}>
+              {isProfit ? "PROFIT" : "LOSS"}
+            </span>
+          </div>
+          <p className="font-body text-on-surface-variant text-sm mt-1">Generated: {formatDate(report.generated_at)}</p>
+        </div>
+        <button
+          onClick={() => generateReportPdf(report)}
+          className="w-full bg-primary text-on-primary h-[42px] flex items-center justify-center gap-2 rounded font-display font-semibold text-sm active:opacity-70 transition-opacity"
+        >
+          <span className="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+          Export PDF
+        </button>
+      </div>
+
+      {/* Result Banner - Desktop */}
+      <section className="hidden md:block mb-8">
+        <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex items-stretch">
           <div className={`w-2 ${isProfit ? "bg-tertiary" : "bg-[#ba1a1a]"}`} />
           <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between flex-1 gap-6">
             <div>
@@ -153,7 +173,7 @@ export default function ReportDetailPage() {
               <div className="mt-2 flex items-center gap-2 text-secondary">
                 <span className="material-symbols-outlined text-lg">{isProfit ? "trending_up" : "trending_down"}</span>
                 <span className="text-sm font-medium">
-                  Profit per kg: <span className="font-mono font-semibold text-[#191c1e]">{formatMoney(report.profit_per_kg)}</span>
+                  Profit per kg: <span className="font-mono font-semibold text-on-surface">{formatMoney(report.profit_per_kg)}</span>
                 </span>
               </div>
             </div>
@@ -164,7 +184,7 @@ export default function ReportDetailPage() {
               </div>
               <div>
                 <p className="text-secondary text-[10px] font-bold uppercase tracking-wider">Total Cost</p>
-                <p className="font-mono text-xl font-semibold text-[#ba1a1a]">{formatMoney(report.total_cost)}</p>
+                <p className="font-mono text-xl font-semibold text-error">{formatMoney(report.total_cost)}</p>
               </div>
             </div>
           </div>
@@ -175,7 +195,7 @@ export default function ReportDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Volume Analysis (Left) */}
         <div className="lg:col-span-5">
-          <div className="bg-white border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
             <div className="px-5 md:px-6 py-4 border-b border-outline-variant/50 bg-surface-container-low">
               <h3 className="font-display font-bold text-primary-container flex items-center gap-2">
                 <span className="material-symbols-outlined">scale</span>
@@ -217,7 +237,7 @@ export default function ReportDetailPage() {
         {/* Financial Analysis (Right) */}
         <div className="lg:col-span-7 space-y-6">
           {/* Income Section */}
-          <div className="bg-white border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
             <div className="px-5 md:px-6 py-4 border-b border-outline-variant/50 bg-surface-container-low flex items-center gap-2">
               <span className="material-symbols-outlined text-tertiary">trending_up</span>
               <h3 className="font-display font-bold text-primary-container">Income</h3>
@@ -234,7 +254,7 @@ export default function ReportDetailPage() {
           </div>
 
           {/* Costs Section */}
-          <div className="bg-white border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
             <div className="px-5 md:px-6 py-4 border-b border-outline-variant/50 bg-surface-container-low flex items-center gap-2">
               <span className="material-symbols-outlined text-[#ba1a1a]">trending_down</span>
               <h3 className="font-display font-bold text-primary-container">Costs</h3>
@@ -251,27 +271,57 @@ export default function ReportDetailPage() {
             </div>
           </div>
 
-          {/* Net Result Card */}
-          <div className={`rounded-xl border-l-[12px] p-6 md:p-8 flex items-center justify-between shadow-sm ${
+          {/* Mobile Result Box */}
+          <div className="md:hidden bg-surface-container-lowest border-l-4 border-on-tertiary-container rounded-lg p-5 shadow-sm">
+            <p className="text-on-surface-variant font-body text-xs uppercase tracking-widest font-bold mb-1">{isProfit ? "Net Profit" : "Net Loss"}</p>
+            <div className={`font-code text-[28px] font-bold leading-none mb-6 ${isProfit ? "text-on-tertiary-container" : "text-error"}`}>
+              {formatMoney(report.net_profit)}
+            </div>
+            <div className="grid grid-cols-3 gap-2 pt-4 border-t border-outline-variant">
+              <div className="flex flex-col">
+                <span className="text-[10px] text-on-surface-variant font-bold uppercase">Yield Eff.</span>
+                <span className="font-code text-sm font-semibold text-primary">{formatMoney(report.profit_per_kg)}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] text-on-surface-variant font-bold uppercase">G. Margin</span>
+                <span className="font-code text-sm font-semibold text-primary">
+                  {parseFloat(report.net_profit) > 0 && parseFloat(report.total_income) > 0
+                    ? ((parseFloat(report.net_profit) / parseFloat(report.total_income)) * 100).toFixed(1) + "%"
+                    : "—"}
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] text-on-surface-variant font-bold uppercase">Opex Ratio</span>
+                <span className="font-code text-sm font-semibold text-primary">
+                  {parseFloat(report.total_cost) > 0 && parseFloat(report.total_income) > 0
+                    ? ((parseFloat(report.total_cost) / parseFloat(report.total_income)) * 100).toFixed(1) + "%"
+                    : "—"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Net Result Card */}
+          <div className={`hidden md:flex rounded-xl border-l-[12px] p-6 md:p-8 items-center justify-between shadow-sm ${
             isProfit
               ? "bg-tertiary/5 border-tertiary"
-              : "bg-[#ba1a1a]/5 border-[#ba1a1a]"
+              : "bg-error/5 border-error"
           }`}>
             <div>
               <p className={`text-xs font-bold uppercase tracking-widest mb-1 ${
-                isProfit ? "text-tertiary/70" : "text-[#ba1a1a]/70"
+                isProfit ? "text-tertiary/70" : "text-error/70"
               }`}>
                 {isProfit ? "Net Profit" : "Net Loss"}
               </p>
               <h2 className={`font-mono text-3xl md:text-4xl font-bold tracking-tight ${
-                isProfit ? "text-tertiary" : "text-[#ba1a1a]"
+                isProfit ? "text-tertiary" : "text-error"
               }`}>
                 {formatMoney(report.net_profit)}
               </h2>
             </div>
             <div className="text-right">
               <p className="text-[10px] font-bold uppercase tracking-widest text-secondary">Profit per kg</p>
-              <p className="font-mono text-xl font-semibold text-[#191c1e]">{formatMoney(report.profit_per_kg)}</p>
+              <p className="font-mono text-xl font-semibold text-on-surface">{formatMoney(report.profit_per_kg)}</p>
             </div>
           </div>
 

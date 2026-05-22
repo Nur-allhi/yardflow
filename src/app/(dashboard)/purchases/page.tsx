@@ -54,7 +54,7 @@ function StatusChip({ status }: { status: string }) {
   const s = map[status] || map.due;
   return (
     <span
-      className={`px-2 py-1 ${s.bg} ${s.text} text-[10px] font-bold rounded uppercase tracking-wider`}
+      className={`px-2.5 py-1 ${s.bg} ${s.text} text-[10px] font-bold rounded-full uppercase tracking-tighter`}
     >
       {s.label}
     </span>
@@ -143,7 +143,7 @@ export default function PurchasesPage() {
 
       {/* Summary Cards */}
       <div className="flex md:grid md:grid-cols-4 gap-3 md:gap-6 mb-6 overflow-x-auto hide-scrollbar pb-2 md:pb-0">
-        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-outline-variant/30 md:border-outline-variant shadow-sm">
+        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
           <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
             Total Purchases
           </p>
@@ -151,7 +151,7 @@ export default function PurchasesPage() {
             {data?.summary ? data.summary.total_purchases.toLocaleString("en-IN") : "—"}
           </p>
         </div>
-        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-outline-variant/30 md:border-outline-variant shadow-sm">
+        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
           <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
             Total Paid
           </p>
@@ -159,7 +159,7 @@ export default function PurchasesPage() {
             {data?.summary ? formatMoney(data.summary.total_paid) : "—"}
           </p>
         </div>
-        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-outline-variant/30 md:border-outline-variant shadow-sm">
+        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
           <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
             Total Due
           </p>
@@ -167,7 +167,7 @@ export default function PurchasesPage() {
             {data?.summary ? formatMoney(data.summary.total_due) : "—"}
           </p>
         </div>
-        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-outline-variant/30 md:border-outline-variant shadow-sm">
+        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
           <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
             This Month
           </p>
@@ -455,12 +455,12 @@ export default function PurchasesPage() {
       {!isLoading && !error && (data?.purchases ?? []).length > 0 && (
         <div className="md:hidden space-y-3">
           <div className="flex justify-between items-center">
-            <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-secondary">
+            <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-on-surface-variant">
               Record List
             </h2>
             <Link
               href="/purchases/new"
-              className="flex items-center gap-2 px-4 py-2 bg-primary-container text-white rounded-lg text-sm font-bold active:scale-95 transition-transform"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-bold active:scale-95 transition-transform"
             >
               <span className="material-symbols-outlined text-[18px]">add</span>
               New
@@ -469,14 +469,14 @@ export default function PurchasesPage() {
           {(data?.purchases ?? []).map((p) => (
             <div
               key={p.id}
-              className="bg-white rounded-lg p-4 shadow-sm border border-outline-variant/20"
+              className="bg-surface-container-lowest rounded-lg p-4 shadow-sm border border-outline-variant/20"
             >
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <h3 className="font-display font-bold text-primary-container text-base">
+                  <h3 className="font-display font-bold text-on-surface text-base">
                     {p.vendor_name || "Unknown Vendor"}
                   </h3>
-                  <p className="text-xs text-secondary font-medium">
+                  <p className="text-xs text-on-surface-variant font-medium">
                     {p.id.startsWith("ob-") ? "Opening Balance" : formatDate(p.purchase_date)}
                   </p>
                 </div>
@@ -484,10 +484,10 @@ export default function PurchasesPage() {
               </div>
               <div className="flex justify-between items-end mb-4">
                 <div>
-                  <p className="text-[11px] text-secondary font-medium mb-0.5">
+                  <p className="text-[11px] text-on-surface-variant font-medium mb-0.5">
                     Total
                   </p>
-                  <p className="font-mono text-lg font-bold text-primary-container">
+                  <p className="font-mono text-lg font-bold text-on-surface">
                     {formatMoney(p.total_amount)}
                   </p>
                 </div>
@@ -506,7 +506,7 @@ export default function PurchasesPage() {
                 <div className="flex gap-2 pt-3 border-t border-outline-variant/30">
                   <Link
                     href={`/purchases/vendors/${p.vendor_id}`}
-                    className="flex-1 py-2 bg-primary-container text-white font-bold text-sm rounded-lg text-center"
+                    className="flex-1 py-2 bg-primary text-on-primary font-bold text-sm rounded-lg text-center"
                   >
                     View Vendor
                   </Link>
@@ -515,16 +515,16 @@ export default function PurchasesPage() {
                 <div className="flex gap-2 pt-3 border-t border-outline-variant/30">
                   <Link
                     href={`/purchases/${p.id}`}
-                    className="flex-1 py-2 text-tertiary font-bold text-sm bg-tertiary/5 rounded-lg text-center"
+                    className="flex-1 py-2 text-on-surface font-bold text-sm bg-surface-container-high/50 rounded-lg text-center"
                   >
                     View
                   </Link>
                   {p.status !== "paid" && (
                     <Link
                       href={`/purchases/${p.id}`}
-                      className="flex-1 py-2 bg-primary-container text-white font-bold text-sm rounded-lg text-center"
+                      className="flex-1 py-2 bg-primary text-on-primary font-bold text-sm rounded-lg text-center"
                     >
-                      Pay
+                      {p.status === "due" ? "Pay Now" : "Pay"}
                     </Link>
                   )}
                 </div>
@@ -535,7 +535,7 @@ export default function PurchasesPage() {
         )}
       <Link
         href="/purchases/new"
-        className="md:hidden fixed bottom-20 right-4 z-50 w-14 h-14 rounded-full bg-primary-container text-white flex items-center justify-center shadow-xl active:scale-95 transition-transform"
+        className="md:hidden fixed bottom-20 right-4 z-50 w-14 h-14 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-xl active:scale-95 transition-transform"
       >
         <span className="material-symbols-outlined text-2xl">add</span>
       </Link>

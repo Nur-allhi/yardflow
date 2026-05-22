@@ -220,6 +220,37 @@ export default function PurchaseDetailPage() {
         </div>
       </div>
 
+      {/* Mobile: Payment Summary Card */}
+      <div className="md:hidden bg-surface-container-lowest p-5 rounded-xl shadow-sm border border-outline-variant mb-6">
+        <h2 className="font-display text-h4 font-semibold text-on-surface mb-4">Payment Summary</h2>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-on-surface-variant text-sm">Total Amount</span>
+            <span className="font-code font-medium text-on-surface">{formatMoney(purchase.total_amount)}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-tertiary-container text-sm">Total Paid</span>
+            <span className="font-code font-bold text-tertiary-container">{formatMoney(purchase.paid_amount)}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-warning text-sm">Balance Due</span>
+            <span className="font-code font-bold text-warning">{formatMoney(purchase.due_amount)}</span>
+          </div>
+          <div className="pt-2">
+            <div className="w-full h-3 bg-surface-container-high rounded-full overflow-hidden flex">
+              <div
+                className="h-full bg-tertiary-container rounded-full transition-all duration-500"
+                style={{ width: `${paidPercent}%` }}
+              />
+            </div>
+            <div className="flex justify-between mt-1 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+              <span>Paid ({paidPercent}%)</span>
+              <span>Due</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Desktop: Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* LEFT */}
@@ -336,30 +367,30 @@ export default function PurchaseDetailPage() {
               {purchase.items.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-white rounded-lg p-4 border border-outline-variant/30"
+                  className="bg-surface-container-lowest rounded-lg p-4 border border-outline-variant shadow-sm"
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-bold text-primary-container text-sm">
+                    <h4 className="font-bold text-on-surface text-sm">
                       {item.subtype_name || "—"}
                     </h4>
-                    <span className="font-mono text-sm font-bold">
+                    <span className="font-code text-on-surface-variant text-sm font-bold">
                       {formatMoney(item.total_amount)}
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-[10px] text-secondary uppercase font-bold">
+                      <p className="text-[10px] text-on-surface-variant uppercase font-bold tracking-tight">
                         Quantity
                       </p>
-                      <p className="font-mono text-sm">
+                      <p className="font-code text-sm">
                         {item.quantity_kg.toFixed(3)} kg
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] text-secondary uppercase font-bold">
+                      <p className="text-[10px] text-on-surface-variant uppercase font-bold tracking-tight">
                         Price/kg
                       </p>
-                      <p className="font-mono text-sm">
+                      <p className="font-code text-sm">
                         {formatMoney(item.price_per_kg)}
                       </p>
                     </div>
@@ -485,11 +516,11 @@ export default function PurchaseDetailPage() {
       </div>
 
       {/* Mobile: Fixed Bottom Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 shadow-lg">
+      <div className="md:hidden fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
         <button
           onClick={openPaymentModal}
           disabled={purchase.status === "paid"}
-          className="w-full h-12 bg-tertiary text-white font-bold rounded-lg flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
+          className="w-full h-12 bg-tertiary-container text-white font-bold rounded-lg flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg disabled:opacity-40"
         >
           <span className="material-symbols-outlined">add_card</span>
           {purchase.status === "paid" ? "Fully Paid" : "Record Payment"}

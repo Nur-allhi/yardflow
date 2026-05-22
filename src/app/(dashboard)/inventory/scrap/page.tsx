@@ -172,101 +172,81 @@ export default function ScrapPoolPage() {
       </div>
 
       {/* Mobile Top AppBar */}
-      <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-outline-variant sticky top-0 z-30">
+      <div className="md:hidden flex items-center justify-between px-4 py-3 bg-surface border-b border-outline-variant sticky top-0 z-30">
         <div className="flex items-center gap-3">
-          <button className="text-primary-container">
+          <button className="text-on-surface">
             <span className="material-symbols-outlined">menu</span>
           </button>
-          <h1 className="font-display text-lg font-bold text-primary-container">
+          <h1 className="font-headline font-bold text-lg text-primary tracking-tight">
             Scrap Pool
           </h1>
         </div>
-        <div className="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-xs font-bold text-primary-container">
-          RM
+        <div className="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+          <div className="w-full h-full flex items-center justify-center text-xs font-bold text-on-surface-variant">
+            RM
+          </div>
         </div>
       </div>
 
       <div className="p-4 md:p-8">
         {/* KPI Cards */}
-        <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 mb-8 overflow-x-auto hide-scrollbar pb-2 md:pb-0 -mx-4 md:mx-0 px-4 md:px-0">
+        <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 mb-8 overflow-x-auto hide-scrollbar snap-x snap-mandatory pb-2 md:pb-0 -mx-4 md:mx-0 px-4 md:px-0">
           {/* Card 1: Current Scrap Pool */}
-          <div className="min-w-[180px] md:min-w-0 bg-white p-5 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between flex-shrink-0">
-            <div className="flex items-center justify-between">
-              <span className="text-secondary text-xs md:text-sm font-medium">
+          <div className="min-w-[280px] md:min-w-0 bg-primary-container p-5 rounded-xl text-on-primary shadow-md flex flex-col justify-between flex-shrink-0 snap-center">
+            <div className="flex items-center justify-between mb-4">
+              <span className="material-symbols-outlined text-tertiary-fixed">layers</span>
+              <span className="text-xs font-mono text-on-primary-container">Updated live</span>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-on-primary-container">
                 Current Scrap Pool
-              </span>
-              <span className="material-symbols-outlined text-tertiary text-xl">
-                database
-              </span>
-            </div>
-            <div className="mt-3 md:mt-4">
-              <span className="text-2xl md:text-4xl font-mono font-bold text-tertiary">
+              </p>
+              <h3 className="text-3xl font-mono font-bold mt-1 tracking-tighter">
                 {(data.current_kg).toLocaleString("en-IN", {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0,
-                })}
-              </span>
-              <span className="text-tertiary font-medium ml-1 text-sm md:text-base">
-                kg
-              </span>
-            </div>
-            <div className="text-[10px] text-secondary uppercase tracking-wider flex items-center gap-1 mt-2">
-              <span className="material-symbols-outlined text-[12px] text-tertiary">
-                trending_up
-              </span>
-              Updated live
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}<span className="text-lg ml-1 font-normal opacity-70">kg</span>
+              </h3>
             </div>
           </div>
 
           {/* Card 2: Estimated Value */}
-          <div className="min-w-[180px] md:min-w-0 bg-white p-5 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between flex-shrink-0">
-            <div className="flex items-center justify-between">
-              <span className="text-secondary text-xs md:text-sm font-medium">
+          <div className="min-w-[280px] md:min-w-0 bg-surface-container-lowest p-5 rounded-xl border border-outline-variant shadow-sm flex flex-col justify-between flex-shrink-0 snap-center">
+            <div className="flex items-center justify-between mb-4">
+              <span className="material-symbols-outlined text-on-tertiary-container">payments</span>
+              <span className="text-xs font-mono text-on-tertiary-container">@ {formatTk(data.estimated_price_per_kg)}/kg</span>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-on-surface-variant">
                 Estimated Value
-              </span>
-              <span className="material-symbols-outlined text-secondary text-xl">
-                payments
-              </span>
-            </div>
-            <div className="mt-3 md:mt-4">
-              <span className="text-2xl md:text-4xl font-mono font-bold text-primary-container">
+              </p>
+              <h3 className="text-3xl font-mono font-bold mt-1 tracking-tighter">
                 {formatTk(data.estimated_value)}
-              </span>
-            </div>
-            <div className="text-xs md:text-sm text-secondary font-mono bg-surface-container-low px-2 py-0.5 rounded w-fit mt-2">
-              @ {formatTk(data.estimated_price_per_kg)}/kg
+              </h3>
             </div>
           </div>
 
           {/* Card 3: Last Scrap Sale */}
-          <div className="min-w-[180px] md:min-w-0 bg-white p-5 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 flex flex-col justify-between flex-shrink-0">
-            <div className="flex items-center justify-between">
-              <span className="text-secondary text-xs md:text-sm font-medium">
-                Last Scrap Sale
-              </span>
-              <span className="material-symbols-outlined text-secondary text-xl">
-                history
-              </span>
+          <div className="min-w-[280px] md:min-w-0 bg-surface-container-lowest p-5 rounded-xl border border-outline-variant shadow-sm flex flex-col justify-between flex-shrink-0 snap-center">
+            <div className="flex items-center justify-between mb-4">
+              <span className="material-symbols-outlined text-on-surface-variant">history</span>
+              <span className="text-xs font-mono text-on-surface-variant">{data.last_sale_date ? formatDate(data.last_sale_date) : "No sales"}</span>
             </div>
-            <div className="mt-3 md:mt-4">
+            <div>
+              <p className="text-sm font-medium text-on-surface-variant">
+                Last Scrap Sale
+              </p>
               {data.days_since_last_sale !== null ? (
-                <>
-                  <span className="text-2xl md:text-4xl font-mono font-bold text-primary-container">
-                    {data.days_since_last_sale}
-                  </span>
-                  <span className="text-secondary font-medium ml-1 text-sm md:text-base">
-                    days ago
-                  </span>
-                </>
+                <h3 className="text-3xl font-mono font-bold mt-1 tracking-tighter">
+                  {data.days_since_last_sale}<span className="text-lg ml-1 font-normal opacity-70 text-on-surface-variant">days ago</span>
+                </h3>
               ) : (
-                <span className="text-lg md:text-xl font-medium text-secondary">
-                  No sales yet
-                </span>
+                <p className="text-lg font-medium text-on-surface-variant mt-1">No sales yet</p>
               )}
             </div>
             {data.last_sale_kg > 0 && (
-              <div className="text-xs md:text-sm text-secondary flex items-center gap-2 mt-2">
-                <span className="font-mono">{formatKg(data.last_sale_kg)} sold</span>
+              <div className="text-xs text-on-surface-variant font-mono mt-2">
+                {formatKg(data.last_sale_kg)} sold
               </div>
             )}
           </div>
@@ -387,56 +367,44 @@ export default function ScrapPoolPage() {
                   {data.movements.map((m) => (
                     <div
                       key={m.id}
-                      className="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm"
+                      className="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant flex flex-col gap-3"
                     >
-                      <div className="flex items-start justify-between mb-2">
-                        <span className="font-mono text-xs text-secondary">
-                          {formatDate(m.movement_date)}
-                        </span>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="text-[10px] font-mono uppercase text-on-surface-variant tracking-widest">
+                            {formatDate(m.movement_date)}
+                          </p>
+                          <h4 className="font-bold text-on-surface mt-0.5">
+                            {m.note || (m.movement_type === "in" ? "Scrap Generation" : "Scrap Sale")}
+                          </h4>
+                        </div>
                         {m.movement_type === "in" ? (
-                          <span className="bg-tertiary/10 text-tertiary px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">
-                            Added
+                          <span className="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold uppercase tracking-tighter">
+                            ADDED
                           </span>
                         ) : (
-                          <span className="bg-primary-container text-white px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-tighter">
-                            Sold
+                          <span className="px-2 py-0.5 rounded bg-error-container text-on-error-container text-[10px] font-bold uppercase tracking-tighter">
+                            SOLD
                           </span>
                         )}
                       </div>
-                      <div className="flex items-end justify-between">
+                      <div className="grid grid-cols-2 gap-4 pt-2 border-t border-outline-variant/30">
                         <div>
-                          <p className="text-lg font-mono font-bold">
-                            <span
-                              className={
-                                m.movement_type === "in"
-                                  ? "text-tertiary"
-                                  : "text-error"
-                              }
-                            >
-                              {m.movement_type === "in" ? "+" : "-"}
-                              {m.quantity_kg.toLocaleString("en-IN", {
-                                minimumFractionDigits: 3,
-                                maximumFractionDigits: 3,
-                              })}
-                            </span>
-                          </p>
-                          <p className="text-[10px] text-secondary mt-0.5">
-                            {m.note ||
-                              (m.movement_type === "in"
-                                ? "Period addition"
-                                : "Scrap sale")}
+                          <p className="text-[10px] text-on-surface-variant uppercase">Quantity</p>
+                          <p className={`font-mono font-bold ${m.movement_type === "in" ? "text-on-tertiary-container" : "text-error"}`}>
+                            {m.movement_type === "in" ? "+" : "-"}{m.quantity_kg.toLocaleString("en-IN", {
+                              minimumFractionDigits: 3,
+                              maximumFractionDigits: 3,
+                            })} kg
                           </p>
                         </div>
-                        <div className="text-right">
-                          <p className="text-[10px] text-secondary uppercase tracking-wider font-medium">
-                            Balance
-                          </p>
-                          <p className="font-mono text-sm font-bold text-primary-container">
+                        <div>
+                          <p className="text-[10px] text-on-surface-variant uppercase text-right">Balance</p>
+                          <p className="font-mono font-bold text-on-surface text-right">
                             {m.balance.toLocaleString("en-IN", {
                               minimumFractionDigits: 3,
                               maximumFractionDigits: 3,
-                            })}{" "}
-                            kg
+                            })} kg
                           </p>
                         </div>
                       </div>
@@ -563,12 +531,13 @@ export default function ScrapPoolPage() {
       </div>
 
       {/* Mobile FAB */}
-      <div className="md:hidden fixed bottom-20 right-6 z-40">
+      <div className="md:hidden fixed bottom-24 right-6 z-40">
         <Link
           href="/sales/scrap/new"
-          className="w-14 h-14 rounded-full bg-primary-container text-white flex items-center justify-center shadow-lg hover:bg-primary-container/90 active:scale-95 transition-all"
+          className="bg-primary text-on-primary h-14 pl-5 pr-6 rounded-full flex items-center gap-2 shadow-lg active:scale-95 duration-150"
         >
-          <span className="material-symbols-outlined text-2xl">add</span>
+          <span className="material-symbols-outlined">add_shopping_cart</span>
+          <span className="font-bold text-sm">+ Sell Scrap</span>
         </Link>
       </div>
     </>

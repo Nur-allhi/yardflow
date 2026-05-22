@@ -317,9 +317,10 @@ export default function ConsumablesPage() {
   return (
     <div className="p-4 md:p-8">
       <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Inventory', href: '/inventory' }, { label: 'Consumables', href: null }]} />
-      <h1 className="font-display text-2xl md:text-3xl font-bold text-primary-container tracking-tight mb-2">
+      <h1 className="font-display text-2xl md:text-3xl font-bold text-primary-container tracking-tight mb-1">
         Consumables Log
       </h1>
+      <p className="text-body-sm text-on-surface-variant mb-2">Track shipyard operational supplies and expenses</p>
 
       <div className="flex items-center justify-between gap-4">
         <InventoryNav active="consumables" />
@@ -334,8 +335,8 @@ export default function ConsumablesPage() {
 
       {/* Top Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 md:mb-8">
-        <div className="bg-white p-4 md:p-6 rounded-lg border border-outline-variant/30 shadow-sm">
-          <p className="text-secondary text-xs font-bold uppercase tracking-wider mb-2">
+        <div className="bg-surface-container-low p-4 md:p-6 rounded-xl border border-outline-variant shadow-sm">
+          <p className="text-on-surface-variant text-xs font-bold uppercase tracking-wider mb-2">
             This Month Spent
           </p>
           <div className="flex items-baseline gap-2">
@@ -344,23 +345,23 @@ export default function ConsumablesPage() {
             </span>
           </div>
         </div>
-        <div className="bg-white p-4 md:p-6 rounded-lg border border-outline-variant/30 shadow-sm">
-          <p className="text-secondary text-xs font-bold uppercase tracking-wider mb-2">
+        <div className="bg-surface-container-low p-4 md:p-6 rounded-xl border border-outline-variant shadow-sm">
+          <p className="text-on-surface-variant text-xs font-bold uppercase tracking-wider mb-2">
             Total Items Logged
           </p>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-mono font-bold text-primary-container">
+            <span className="text-2xl font-mono font-bold text-primary">
               {data?.summary.total_items ?? 0}
             </span>
-            <span className="text-[10px] text-secondary">entries total</span>
+            <span className="text-[10px] text-on-surface-variant">entries total</span>
           </div>
         </div>
-        <div className="bg-white p-4 md:p-6 rounded-lg border border-outline-variant/30 shadow-sm">
-          <p className="text-secondary text-xs font-bold uppercase tracking-wider mb-2">
+        <div className="bg-surface-container-low p-4 md:p-6 rounded-xl border border-outline-variant shadow-sm">
+          <p className="text-on-surface-variant text-xs font-bold uppercase tracking-wider mb-2">
             Most Used Item
           </p>
           <div className="flex items-center justify-between">
-            <span className="text-lg font-bold font-display text-primary-container">
+            <span className="text-lg font-bold font-display text-primary">
               {data?.summary.most_used_item ?? "—"}
             </span>
             {data?.summary.most_used_item && (
@@ -511,42 +512,37 @@ export default function ConsumablesPage() {
       </div>
 
       {/* Mobile: Stats (horizontal scroll) */}
-      <div className="md:hidden -mx-4 px-4 mb-4">
-        <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
-          <div className="bg-white p-4 rounded-lg border border-outline-variant/30 shadow-sm min-w-[160px] flex-shrink-0">
-            <p className="text-secondary text-[10px] font-bold uppercase tracking-wider mb-1">
-              This Month
-            </p>
-            <span className="text-lg font-mono font-bold text-warning">
-              {formatTk(data?.summary.total_spent_this_month ?? 0)}
-            </span>
-          </div>
-          <div className="bg-white p-4 rounded-lg border border-outline-variant/30 shadow-sm min-w-[160px] flex-shrink-0">
-            <p className="text-secondary text-[10px] font-bold uppercase tracking-wider mb-1">
-              Total Items
-            </p>
-            <span className="text-lg font-mono font-bold text-primary-container">
-              {data?.summary.total_items ?? 0}
-            </span>
-          </div>
-          <div className="bg-white p-4 rounded-lg border border-outline-variant/30 shadow-sm min-w-[160px] flex-shrink-0">
-            <p className="text-secondary text-[10px] font-bold uppercase tracking-wider mb-1">
-              Most Used
-            </p>
-            <span className="text-sm font-bold font-display text-primary-container">
-              {data?.summary.most_used_item ?? "—"}
-            </span>
-          </div>
+      <div className="md:hidden flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 hide-scrollbar mb-4">
+        <div className="flex-shrink-0 w-40 bg-surface-container-low border border-outline-variant rounded-xl p-4 shadow-sm">
+          <p className="text-caption text-on-surface-variant mb-1">This Month Spent</p>
+          <p className="text-h3 font-mono font-bold text-warning">
+            {formatTk(data?.summary.total_spent_this_month ?? 0)}
+          </p>
+        </div>
+        <div className="flex-shrink-0 w-40 bg-surface-container-low border border-outline-variant rounded-xl p-4 shadow-sm">
+          <p className="text-caption text-on-surface-variant mb-1">Total Items Logged</p>
+          <p className="text-h3 font-display font-bold text-primary">
+            {data?.summary.total_items ?? 0}
+          </p>
+        </div>
+        <div className="flex-shrink-0 w-40 bg-surface-container-low border border-outline-variant rounded-xl p-4 shadow-sm">
+          <p className="text-caption text-on-surface-variant mb-1">Most Used</p>
+          <p className="text-body font-bold text-primary truncate">
+            {data?.summary.most_used_item ?? "—"}
+          </p>
         </div>
       </div>
 
       {/* Mobile: Recent Entries */}
-      <div className="md:hidden">
-        <h2 className="font-display font-bold text-lg text-primary-container mb-4">
-          Recent Entries
-        </h2>
+      <div className="md:hidden mt-4">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="font-display font-semibold text-lg text-on-surface">
+            Recent Entries
+          </h3>
+          <span className="material-symbols-outlined text-on-surface-variant">filter_list</span>
+        </div>
         {!data || data.entries.length === 0 ? (
-          <div className="bg-white rounded-xl border border-outline-variant/30 py-12 text-center text-secondary text-sm">
+          <div className="bg-surface border border-outline-variant rounded-lg py-12 text-center text-on-surface-variant text-sm">
             <span className="material-symbols-outlined text-4xl block mb-2">
               inventory
             </span>
@@ -557,31 +553,29 @@ export default function ConsumablesPage() {
             {data.entries.map((entry) => (
               <div
                 key={entry.id}
-                className="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm flex items-center gap-4"
+                className="bg-surface border border-outline-variant rounded-lg p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors"
               >
-                <div className="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center flex-shrink-0">
-                  <span className="material-symbols-outlined text-tertiary text-xl">
-                    inventory
-                  </span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-sm text-primary-container truncate">
-                    {entry.item_name}
-                  </h3>
-                  <p className="text-[10px] text-secondary">
-                    {formatDateFull(entry.purchase_date)}
-                    {entry.vendor_name && ` · ${entry.vendor_name}`}
-                  </p>
+                <div className="flex items-center gap-4">
+                  <div className="bg-surface-container-highest w-12 h-12 rounded-lg flex items-center justify-center">
+                    <span className="material-symbols-outlined text-primary">
+                      construction
+                    </span>
+                  </div>
+                  <div>
+                    <p className="font-bold text-on-surface">{entry.item_name}</p>
+                    <p className="text-caption text-on-surface-variant">
+                      {formatDateFull(entry.purchase_date)}
+                      {entry.vendor_name && ` · ${entry.vendor_name}`}
+                    </p>
+                  </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-mono font-bold text-sm text-primary-container">
+                  <p className="font-mono font-medium text-on-surface">
                     {formatTk(entry.total_price)}
                   </p>
-                  <p className="text-[10px] text-secondary">
-                    {entry.quantity != null
-                      ? `${entry.quantity} ${entry.unit || ""}`
-                      : "—"}
-                  </p>
+                  <span className="text-[10px] uppercase tracking-tighter text-on-tertiary-container bg-tertiary-fixed-dim/30 px-1.5 rounded">
+                    Verified
+                  </span>
                 </div>
               </div>
             ))}
@@ -615,33 +609,32 @@ export default function ConsumablesPage() {
       {/* Mobile FAB */}
       <button
         onClick={() => setShowMobileForm(true)}
-        className="md:hidden fixed bottom-20 right-4 z-50 w-14 h-14 rounded-full bg-primary-container text-white flex items-center justify-center shadow-xl active:scale-95 transition-transform"
+        className="md:hidden fixed bottom-24 right-6 w-14 h-14 bg-on-tertiary-container text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform duration-150 z-40"
       >
-        <span className="material-symbols-outlined text-2xl">add</span>
+        <span className="material-symbols-outlined text-3xl">add</span>
       </button>
 
       {/* Mobile Bottom Sheet Form */}
       {showMobileForm && (
         <div className="md:hidden fixed inset-0 z-[60]">
           <div
-            className="absolute inset-0 bg-primary-container/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-primary/40 backdrop-blur-sm"
             onClick={() => setShowMobileForm(false)}
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-2xl p-6 flex flex-col gap-6 max-h-[85vh] overflow-y-auto">
-            <div className="w-12 h-1 bg-outline-variant rounded-full mx-auto mb-2" />
-            <div className="flex items-center justify-between">
-              <h2 className="font-display font-bold text-xl text-primary-container">
+          <div className="absolute bottom-0 left-0 right-0 bg-surface rounded-t-2xl shadow-2xl p-6 pb-10 max-h-[85vh] overflow-y-auto">
+            <div className="w-12 h-1.5 bg-outline-variant rounded-full mx-auto mb-6" />
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-display font-bold text-xl text-primary">
                 Log Consumable
               </h2>
               <button
                 onClick={() => setShowMobileForm(false)}
-                className="text-secondary"
+                className="text-on-surface-variant"
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
             {formContent(submitting)}
-            <div className="h-6" />
           </div>
         </div>
       )}

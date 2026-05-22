@@ -247,57 +247,76 @@ export default function SalesPage() {
       </header>
 
       {/* Summary Strip */}
-      <section className="flex md:grid md:grid-cols-4 gap-3 md:gap-4 mb-6 overflow-x-auto no-scrollbar pb-2 md:pb-0">
-        <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-outline-variant p-5 rounded-lg shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-secondary-container rounded-lg text-secondary">
-            <span className="material-symbols-outlined">payments</span>
+      <section className="mb-6">
+        <h2 className="md:hidden font-headline text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3 px-1">Sales Overview</h2>
+        <div className="flex md:grid md:grid-cols-4 gap-3 md:gap-4 overflow-x-auto no-scrollbar pb-2 md:pb-0">
+          <div className="flex-shrink-0 w-[140px] md:min-w-0 bg-surface-container md:bg-white md:border border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+            {data?.summary && (
+              <>
+                <div className="hidden md:flex p-3 bg-secondary-container rounded-lg text-secondary">
+                  <span className="material-symbols-outlined">payments</span>
+                </div>
+                <div>
+                  <p className="text-[10px] md:text-xs font-medium md:font-bold text-on-surface-variant md:text-secondary uppercase mb-0.5 md:mb-1">
+                    Total Sales
+                  </p>
+                  <p className="font-mono text-base md:text-xl font-bold text-primary md:text-primary-container">
+                    {data.summary.total_sales.toLocaleString("en-IN")}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
-          <div>
-            <p className="text-xs font-bold text-secondary uppercase tracking-wider">
-              Total Sales
-            </p>
-            <p className="text-xl font-mono font-bold text-primary-container">
-              {data?.summary ? data.summary.total_sales.toLocaleString("en-IN") : "—"}
-            </p>
+          <div className="flex-shrink-0 w-[140px] md:min-w-0 bg-surface-container md:bg-white md:border border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+            {data?.summary && (
+              <>
+                <div className="hidden md:flex p-3 bg-tertiary/10 rounded-lg text-tertiary">
+                  <span className="material-symbols-outlined">account_balance_wallet</span>
+                </div>
+                <div>
+                  <p className="text-[10px] md:text-xs font-medium md:font-bold text-on-surface-variant md:text-secondary uppercase mb-0.5 md:mb-1">
+                    Received
+                  </p>
+                  <p className="font-mono text-base md:text-xl font-bold text-on-tertiary-container md:text-success">
+                    {formatMoney(data.summary.total_paid)}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
-        </div>
-        <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-outline-variant p-5 rounded-lg shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-tertiary/10 rounded-lg text-tertiary">
-            <span className="material-symbols-outlined">account_balance_wallet</span>
+          <div className="flex-shrink-0 w-[140px] md:min-w-0 bg-error-container md:bg-white md:border border-on-error-container/10 md:border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+            {data?.summary && (
+              <>
+                <div className="hidden md:flex p-3 bg-error-container rounded-lg text-error">
+                  <span className="material-symbols-outlined">pending_actions</span>
+                </div>
+                <div>
+                  <p className="text-[10px] md:text-xs font-medium md:font-bold text-on-error-container md:text-secondary uppercase mb-0.5 md:mb-1">
+                    Total Due
+                  </p>
+                  <p className="font-mono text-base md:text-xl font-bold text-error">
+                    {formatMoney(data.summary.total_due)}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
-          <div>
-            <p className="text-xs font-bold text-secondary uppercase tracking-wider">
-              Total Received
-            </p>
-            <p className="text-xl font-mono font-bold text-success">
-              {data?.summary ? formatMoney(data.summary.total_paid) : "—"}
-            </p>
-          </div>
-        </div>
-        <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-outline-variant p-5 rounded-lg shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-error-container rounded-lg text-error">
-            <span className="material-symbols-outlined">pending_actions</span>
-          </div>
-          <div>
-            <p className="text-xs font-bold text-secondary uppercase tracking-wider">
-              Total Due
-            </p>
-            <p className="text-xl font-mono font-bold text-warning">
-              {data?.summary ? formatMoney(data.summary.total_due) : "—"}
-            </p>
-          </div>
-        </div>
-        <div className="flex-shrink-0 min-w-[150px] md:min-w-0 bg-white border border-outline-variant p-5 rounded-lg shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-surface-container-highest rounded-lg text-secondary">
-            <span className="material-symbols-outlined">today</span>
-          </div>
-          <div>
-            <p className="text-xs font-bold text-secondary uppercase tracking-wider">
-              Today&apos;s Sales
-            </p>
-            <p className="text-xl font-mono font-bold text-primary-container">
-              {data?.summary ? formatMoney(data.summary.this_month) : "—"}
-            </p>
+          <div className="flex-shrink-0 w-[140px] md:min-w-0 bg-secondary-container md:bg-white md:border border-on-secondary-container/10 md:border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+            {data?.summary && (
+              <>
+                <div className="hidden md:flex p-3 bg-surface-container-highest rounded-lg text-secondary">
+                  <span className="material-symbols-outlined">today</span>
+                </div>
+                <div>
+                  <p className="text-[10px] md:text-xs font-medium md:font-bold text-on-secondary-container md:text-secondary uppercase mb-0.5 md:mb-1">
+                    Today
+                  </p>
+                  <p className="font-mono text-base md:text-xl font-bold text-on-secondary-fixed md:text-primary-container">
+                    {formatMoney(data.summary.this_month)}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -587,52 +606,65 @@ export default function SalesPage() {
           </div>
 
           {/* Mobile Cards */}
-          <div className="md:hidden space-y-3">
+          <div className="md:hidden">
+            <div className="flex items-center justify-between px-1 mb-3">
+              <h3 className="font-headline text-sm font-semibold text-on-surface">Recent Transactions</h3>
+              <Link href="/sales" className="text-xs font-medium text-secondary">Show all</Link>
+            </div>
+            <div className="space-y-3">
             {(data?.sales ?? []).map((s: Sale) => (
               <div
                 key={s.id}
-                className="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm space-y-3"
+                className="bg-surface p-4 rounded-xl border border-outline-variant shadow-sm space-y-3 active:scale-[0.98] transition-transform"
               >
-                {/* Top row */}
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="font-headline text-sm font-bold text-primary-container">
+                    <h4 className="font-headline text-sm font-bold text-on-surface">
                       {s.customer_name || "Cash Sale"}
                     </h4>
-                    <p className="font-mono text-[10px] text-secondary">
+                    <p className="font-mono text-[10px] text-on-surface-variant">
                       {getSaleIdDisplay(s)}
                     </p>
                   </div>
-                  <SaleTypeBadge
-                    type={s.sale_type}
-                    isQuickCash={isQuickCash(s)}
-                  />
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-high text-on-surface">
+                    {s.is_quick_cash_sale
+                      ? "Quick Cash"
+                      : s.sale_type === "fabricated"
+                        ? "Fabricated"
+                        : s.sale_type === "raw_passthrough"
+                          ? "Raw"
+                          : "Scrap"}
+                  </span>
                 </div>
-
-                {/* Middle row */}
                 <div className="flex justify-between items-end">
                   <div>
                     <p className="text-[10px] text-secondary font-medium">
                       {formatKg(s.total_kg)}
                     </p>
-                    <p className="font-mono text-lg font-bold text-primary-container">
+                    <p className="font-mono text-lg font-bold text-primary">
                       {formatMoney(s.total_amount)}
                     </p>
                   </div>
                   <div className="text-right">
                     {s.due_amount > 0 && (
-                      <p className="text-[10px] font-bold text-error bg-error-container px-2 py-0.5 rounded mb-1">
+                      <p className="text-[10px] font-bold text-on-error-container bg-error-container px-2 py-0.5 rounded mb-1">
                         Due: {formatMoney(s.due_amount)}
                       </p>
                     )}
-                    <StatusBadge status={s.status} />
-                    <p className="text-[10px] text-secondary mt-1">
+                    <span className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                      s.status === "paid"
+                        ? "bg-tertiary-fixed text-on-tertiary-fixed"
+                        : s.status === "partial"
+                          ? "bg-secondary-container text-on-secondary-container uppercase"
+                          : "bg-error/10 text-error"
+                    }`}>
+                      {s.status === "paid" ? "Paid" : s.status === "partial" ? "Partial" : "Due"}
+                    </span>
+                    <p className="text-[10px] text-on-surface-variant mt-1">
                       {formatDate(s.sale_date)}
                     </p>
                   </div>
                 </div>
-
-                {/* Actions */}
                 <div className="pt-2 flex gap-2">
                   {s.id.startsWith("ob-") ? (
                     <Link
@@ -643,18 +675,27 @@ export default function SalesPage() {
                     </Link>
                   ) : (
                     <>
-                      <Link
-                        href={`/sales/${s.id}`}
-                        className="flex-1 py-2 text-xs font-bold rounded-lg bg-surface-container-highest text-primary-container hover:bg-outline-variant transition-colors text-center"
-                      >
-                        View Details
-                      </Link>
-                      {s.due_amount > 0 && (
+                      {s.due_amount > 0 ? (
+                        <>
+                          <Link
+                            href={`/sales/${s.id}`}
+                            className="flex-1 py-2 text-xs font-bold rounded-lg border border-outline-variant text-primary text-center"
+                          >
+                            View
+                          </Link>
+                          <Link
+                            href={`/sales/${s.id}`}
+                            className="flex-1 py-2 text-xs font-bold rounded-lg bg-on-tertiary-container text-on-tertiary text-center"
+                          >
+                            Collect
+                          </Link>
+                        </>
+                      ) : (
                         <Link
                           href={`/sales/${s.id}`}
-                          className="flex-1 py-2 text-xs font-bold rounded-lg bg-tertiary text-white hover:bg-tertiary/90 transition-colors text-center"
+                          className="flex-1 py-2 text-xs font-bold rounded-lg bg-surface-container-highest text-primary hover:bg-outline-variant transition-colors text-center"
                         >
-                          Collect
+                          View Details
                         </Link>
                       )}
                     </>
@@ -663,13 +704,14 @@ export default function SalesPage() {
               </div>
             ))}
           </div>
-        </>
+        </div>
+      </>
       )}
 
       {/* Mobile FAB */}
       <Link
         href="/sales/new"
-        className="md:hidden fixed bottom-6 right-4 w-14 h-14 bg-tertiary text-white rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40"
+        className="md:hidden fixed bottom-24 right-4 w-14 h-14 bg-on-tertiary-container text-on-tertiary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40"
       >
         <span className="material-symbols-outlined text-3xl">add</span>
       </Link>

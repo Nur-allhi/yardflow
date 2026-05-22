@@ -381,70 +381,65 @@ export default function PayrollPage() {
         </div>
       )}
 
+      {/* Mobile Summary Bar */}
+      {!isLoading && !error && payroll && payroll.workers.length > 0 && (
+        <div className="md:hidden overflow-x-auto mb-4 -mx-4 px-4 pb-2">
+          <div className="flex gap-3 min-w-max">
+            <div className="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+              <span className="text-xs font-medium text-on-surface-variant">Total Payroll</span>
+              <span className="font-code text-base font-semibold text-primary tracking-tight">{formatMoney(payroll.summary.total_salary)}</span>
+            </div>
+            <div className="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+              <span className="text-xs font-medium text-on-surface-variant">Total Advances</span>
+              <span className="font-code text-base font-semibold text-warning tracking-tight">{formatMoney(payroll.summary.total_advances)}</span>
+            </div>
+            <div className="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-1">
+              <span className="text-xs font-medium text-on-tertiary-container">Net Payable</span>
+              <span className="font-code text-base font-bold text-on-tertiary-container tracking-tight">{formatMoney(payroll.summary.total_payable)}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mobile Cards */}
       {!isLoading && !error && payroll && payroll.workers.length > 0 && (
         <div className="md:hidden space-y-3">
-          <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-secondary">
-            {MONTH_NAMES[selectedMonth - 1]} {selectedYear}
-          </h2>
+          <h3 className="font-display text-sm font-bold text-on-surface-variant uppercase tracking-widest px-1">
+            Worker Records ({payroll.workers.length})
+          </h3>
           {payroll.workers.map((row) => (
             <div
               key={row.worker_id}
-              className="bg-white rounded-lg p-4 shadow-sm border border-outline-variant/20"
+              className="bg-surface rounded-xl border border-outline-variant p-4 shadow-sm active:scale-[0.98] transition-transform duration-150"
             >
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-secondary-container text-primary-container flex items-center justify-center font-bold text-sm">
-                  {getInitials(row.worker_name)}
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <h4 className="font-display text-base font-bold text-primary">{row.worker_name}</h4>
+                  <span className="text-xs font-medium text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full uppercase">{row.designation || "—"}</span>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-display font-bold text-primary-container text-base truncate">
-                    {row.worker_name}
-                  </h3>
-                  <p className="text-xs text-secondary font-medium">
-                    {row.designation || "—"}
-                  </p>
+                <div className="flex flex-col items-end">
+                  <StatusChip status={row.status} />
+                  <span className="text-[10px] text-outline mt-1 font-code tracking-tighter">ID: {row.worker_id.slice(0, 8).toUpperCase()}</span>
                 </div>
-                <StatusChip status={row.status} />
               </div>
-              <div className="grid grid-cols-3 gap-3 pt-3 border-t border-outline-variant/30">
-                <div>
-                  <p className="text-[11px] text-secondary font-medium">Salary</p>
-                  <p className="font-mono text-sm font-bold">
-                    {formatMoney(row.base_salary)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[11px] text-secondary font-medium">Advances</p>
-                  <p className="font-mono text-sm font-bold text-warning">
-                    {formatMoney(row.advances_taken)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[11px] text-secondary font-medium">Payable</p>
+              <div className="flex justify-between items-center mt-4">
+                <div className="flex flex-col">
+                  <span className="text-xs text-on-surface-variant">Net Payable</span>
                   {row.net_payable < 0 ? (
-                    <div className="flex flex-col gap-0.5">
-                      <span className="font-mono text-sm font-bold text-warning">
-                        {formatMoney(row.net_payable)}
-                      </span>
-                      <span className="self-start px-1.5 py-0.5 bg-[#FEF3C7] text-[#92400E] text-[9px] font-bold rounded uppercase tracking-wider whitespace-nowrap">
-                        Over-advanced — carry forward
-                      </span>
-                    </div>
+                    <span className="font-code text-xl font-bold text-warning">{formatMoney(row.net_payable)}</span>
                   ) : (
-                    <p className="font-mono text-sm font-bold text-tertiary">
-                      {formatMoney(row.net_payable)}
-                    </p>
+                    <span className="font-code text-xl font-bold text-on-tertiary-container">{formatMoney(row.net_payable)}</span>
                   )}
                 </div>
+                {row.status !== "paid" && (
+                  <button
+                    onClick={() => openPayModal(row)}
+                    className="bg-primary text-on-primary font-display text-sm font-semibold px-6 py-2 rounded-lg hover:bg-primary transition-colors active:opacity-90 shadow-sm"
+                  >
+                    Pay
+                  </button>
+                )}
               </div>
-              {row.status !== "paid" && (
-                <button
-                  onClick={() => openPayModal(row)}
-                  className="w-full mt-3 py-2.5 bg-primary-container text-white font-bold text-sm rounded-lg active:scale-95 transition-transform"
-                >
-                  Pay {Math.max(0, row.net_payable - row.paid_amount) > 0 ? formatMoney(row.net_payable - row.paid_amount) : formatMoney(0)}
-                </button>
-              )}
             </div>
           ))}
         </div>

@@ -733,12 +733,12 @@ export default function NewPurchasePage() {
         )}
 
         {/* Mobile: Sticky Bottom Bar */}
-        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 flex items-center justify-between shadow-lg">
+        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 flex items-center justify-between shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
           <div className="flex flex-col">
-            <span className="text-[10px] text-secondary font-bold uppercase tracking-tight">
-              {items.filter((i) => i.subtype_id).length} Items
+            <span className="text-[10px] text-on-surface-variant font-bold uppercase tracking-tight">
+              {items.filter((i) => i.subtype_id).length} Items Summary
             </span>
-            <span className="font-mono font-bold text-primary-container">
+            <span className="font-mono font-bold text-on-surface">
               {formatMoney(grandTotal)}
             </span>
           </div>
@@ -746,7 +746,7 @@ export default function NewPurchasePage() {
             type="submit"
             disabled={mutation.isPending}
             enterKeyHint="send"
-            className="bg-primary-container text-white px-6 py-3 rounded-lg font-bold text-sm flex items-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
+            className="bg-primary text-on-primary px-6 py-3 rounded-lg font-bold text-sm flex items-center gap-2 active:scale-95 transition-all shadow-md disabled:opacity-40"
           >
             {mutation.isPending ? (
               <span className="flex items-center justify-center gap-2">
@@ -755,7 +755,7 @@ export default function NewPurchasePage() {
               </span>
             ) : (
               <>
-                Create Purchase
+                Save Purchase
                 <span className="material-symbols-outlined text-sm">send</span>
               </>
             )}

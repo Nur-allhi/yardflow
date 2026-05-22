@@ -332,91 +332,81 @@ export default function CustomersPage() {
       {/* Mobile */}
       <div className="md:hidden px-4 pb-24">
         {/* Summary Cards - Horizontal Scroll */}
-        <section className="flex overflow-x-auto gap-4 -mx-4 px-4 py-4 hide-scrollbar">
-          <div className="flex-shrink-0 w-56 bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">Total Customers</span>
-              <span className="material-symbols-outlined text-secondary text-lg">groups</span>
-            </div>
-            <p className="font-display text-xl font-bold text-primary-container">{totalCustomers}</p>
+        <section className="flex overflow-x-auto gap-3 -mx-4 px-4 py-4 no-scrollbar">
+          <div className="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl border border-outline-variant flex flex-col gap-1 shadow-sm">
+            <span className="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">Total Count</span>
+            <span className="font-mono font-medium text-2xl text-on-surface">{totalCustomers}</span>
           </div>
-          <div className="flex-shrink-0 w-56 bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">Total Receivable</span>
-              <span className="material-symbols-outlined text-warning text-lg">payments</span>
+          <div className="min-w-[200px] bg-tertiary-container/5 p-4 rounded-xl border border-on-tertiary-container/20 flex flex-col gap-1 shadow-sm">
+            <div className="flex items-center gap-1">
+              <span className="text-[10px] font-bold text-on-tertiary-container uppercase tracking-wider">Total Receivable</span>
+              <span className="material-symbols-outlined text-xs text-on-tertiary-container">trending_up</span>
             </div>
-            <p className="font-mono text-lg font-bold text-warning">{formatMoney(totalReceivable)}</p>
+            <span className="font-mono font-bold text-2xl text-on-tertiary-container">{formatMoney(totalReceivable)}</span>
           </div>
-          <div className="flex-shrink-0 w-56 bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">Settled Customers</span>
-              <span className="material-symbols-outlined text-tertiary text-lg">check_circle</span>
-            </div>
-            <p className="font-display text-xl font-bold text-success">{settledCustomers}</p>
+          <div className="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl border border-outline-variant flex flex-col gap-1 shadow-sm">
+            <span className="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">Settled</span>
+            <span className="font-mono font-medium text-2xl text-on-surface">{settledCustomers}</span>
           </div>
         </section>
 
-        <div className="flex justify-between items-center mb-4 mt-2">
-          <h2 className="font-display font-bold text-lg text-primary-container">Customer Accounts</h2>
-        </div>
-
-        {customers.length === 0 ? (
-          <div className="text-center py-16 text-secondary bg-white rounded-xl border border-outline-variant/30">
-            <span className="material-symbols-outlined text-4xl text-outline-variant block mb-3">groups</span>
-            <p className="text-sm font-medium mb-1">No customers yet</p>
-            <p className="text-xs">Tap + to add your first customer</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {customers.map((c) => {
-              const typeChip = getTypeChip(c.type);
-              return (
-                <div key={c.id} className="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm space-y-3">
-                  <div className="flex justify-between items-start">
-                      <div className="space-y-1.5">
-                        <Link href={`/sales/customers/${c.id}`} className="font-display font-bold text-base text-primary-container hover:text-tertiary transition-colors">
-                          {c.name}
-                        </Link>
-                      <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase ${typeChip.bg} ${typeChip.text}`}>
+        <div className="mt-4 flex flex-col gap-3">
+          {customers.length === 0 ? (
+            <div className="text-center py-16 text-secondary bg-surface-container-lowest rounded-xl border border-outline-variant">
+              <span className="material-symbols-outlined text-4xl text-outline-variant block mb-3">groups</span>
+              <p className="text-sm font-medium mb-1">No customers yet</p>
+              <p className="text-xs">Tap + to add your first customer</p>
+            </div>
+          ) : (
+            <>
+              {customers.map((c) => {
+                const typeChip = getTypeChip(c.type);
+                return (
+                  <div key={c.id} className={`bg-surface-container-lowest rounded-xl border p-4 flex flex-col gap-4 shadow-sm ${
+                    c.due_balance > 0
+                      ? "border-l-4 border-l-warning border-outline-variant"
+                      : "border-outline-variant"
+                  }`}>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-headline font-semibold text-base text-on-surface">{c.name}</h3>
+                        <p className="text-[11px] text-on-surface-variant">{c.phone || "—"}</p>
+                      </div>
+                      <span className={`px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-wide ${typeChip.bg} ${typeChip.text}`}>
                         {typeChip.label}
                       </span>
                     </div>
-                    <div className="text-right">
-                      <p className="text-[10px] font-bold text-secondary uppercase tracking-wider mb-1">Due Amount</p>
-                      <p className={`font-mono text-base font-bold ${c.due_balance > 0 ? "text-warning" : "text-primary-container"}`}>
-                        {formatMoney(c.due_balance)}
-                      </p>
+                    <div className="flex items-end justify-between border-t border-dashed border-outline-variant pt-3">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-on-surface-variant uppercase font-bold tracking-tighter">Current Due</span>
+                        <span className={`font-mono text-lg font-medium ${c.due_balance > 0 ? "text-warning" : "text-on-surface"}`}>
+                          {formatMoney(c.due_balance)}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {c.due_balance <= 0 && (
+                          <span className="text-[10px] font-bold text-on-tertiary-container bg-tertiary-fixed-dim/20 px-2 py-1 rounded-full flex items-center gap-1">
+                            <span className="material-symbols-outlined text-xs">check_circle</span>
+                            SETTLED
+                          </span>
+                        )}
+                        <Link href={`/sales/customers/${c.id}`} className="bg-surface-container-high text-on-surface px-4 py-2 rounded-lg text-sm font-bold">
+                          View
+                        </Link>
+                        {c.due_balance > 0 && (
+                          <Link href={`/sales?customer_id=${c.id}&status=due`} className="bg-on-tertiary-container text-on-primary px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-1 shadow-sm active:scale-95 transition-transform">
+                            <span className="material-symbols-outlined text-sm">payments</span>
+                            Collect
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-[11px] text-secondary pt-2 border-t border-outline-variant/20">
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[14px]">call</span>
-                      {c.phone || "—"}
-                    </div>
-                    <div className="flex items-center justify-end gap-1">
-                      <span className="material-symbols-outlined text-[14px]">receipt_long</span>
-                      {c.total_purchases} sale{c.total_purchases !== 1 ? "s" : ""}
-                    </div>
-                  </div>
-                  <div className="flex gap-2 pt-1">
-                    <Link href={`/sales/customers/${c.id}`} className="block flex-1 py-2.5 rounded-lg border border-primary-container text-primary-container font-bold text-sm transition-colors hover:bg-surface-container-low active:scale-[0.98] text-center">
-                      View
-                    </Link>
-                    {c.due_balance > 0 ? (
-                      <Link href={`/sales?customer_id=${c.id}&status=due`} className="block flex-1 py-2.5 rounded-lg bg-primary-container text-white font-bold text-sm transition-colors hover:bg-primary-container/90 active:scale-[0.98] text-center">
-                        Receive Payment
-                      </Link>
-                    ) : (
-                      <button disabled className="flex-1 py-2.5 rounded-lg bg-surface-container-highest text-secondary font-bold text-sm cursor-not-allowed">
-                        Paid
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </>
+          )}
+        </div>
 
         {/* Mobile FAB */}
         <button

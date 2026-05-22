@@ -112,10 +112,11 @@ export default function GenerateReportPage() {
       <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
         {/* Left: Configuration */}
         <div className="lg:col-span-4 space-y-6">
-          <div>
+          <div className="flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-on-primary text-[12px] font-bold">1</span>
             <h3 className="font-display text-lg font-semibold text-primary-container">Select Report Period</h3>
-            <p className="text-sm text-secondary">Choose the duration for financial and volume analysis.</p>
           </div>
+          <p className="text-sm text-secondary">Choose the duration for financial and volume analysis.</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Period Type Chips */}
@@ -127,10 +128,10 @@ export default function GenerateReportPage() {
               ] as const).map((opt) => (
                 <label
                   key={opt.value}
-                  className={`relative flex items-center p-4 bg-white rounded-xl cursor-pointer transition-all shadow-sm ${
+                  className={`relative flex items-center p-4 bg-surface-container-lowest rounded-xl cursor-pointer transition-all shadow-sm ${
                     periodType === opt.value
-                      ? "border-2 border-primary-container"
-                      : "border border-outline-variant hover:border-[#76777d]"
+                      ? "border-2 border-primary"
+                      : "border border-outline-variant hover:border-primary"
                   }`}
                 >
                   <input
@@ -142,16 +143,16 @@ export default function GenerateReportPage() {
                     className="hidden"
                   />
                   <div className="flex-1">
-                    <p className="font-semibold text-primary-container">{opt.label}</p>
+                    <p className="font-display font-semibold text-on-surface">{opt.label}</p>
                     <p className="text-sm text-secondary">{opt.desc}</p>
                   </div>
                   <span
                     className={`material-symbols-outlined ${
-                      periodType === opt.value ? "text-primary-container" : "text-outline-variant"
+                      periodType === opt.value ? "text-on-tertiary-container" : "text-outline"
                     }`}
                     style={{ fontVariationSettings: periodType === opt.value ? "'FILL' 1" : "'FILL' 0" }}
                   >
-                    {periodType === opt.value ? "check_circle" : "radio_button_unchecked"}
+                    {periodType === opt.value ? "check_circle" : "circle"}
                   </span>
                 </label>
               ))}
@@ -238,7 +239,7 @@ export default function GenerateReportPage() {
             </div>
 
             {/* Other Expenses */}
-            <div className="bg-white rounded-xl border border-outline-variant p-4 shadow-sm">
+            <div className="bg-surface-container-lowest rounded-xl border border-outline-variant p-4 shadow-sm">
               <label className="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1 block">
                 Other Expenses (tk)
               </label>
@@ -257,9 +258,9 @@ export default function GenerateReportPage() {
             </div>
 
             {/* Selected Summary */}
-            <div className="bg-white rounded-xl border border-outline-variant p-4 shadow-sm">
+            <div className="bg-surface-container-lowest rounded-xl border border-outline-variant p-4 shadow-sm">
               <p className="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1">Selected Period</p>
-              <p className="font-display font-bold text-lg text-primary-container">{selectedLabel}</p>
+              <p className="font-display font-bold text-lg text-on-surface">{selectedLabel}</p>
             </div>
 
             {error && (
@@ -270,7 +271,7 @@ export default function GenerateReportPage() {
               type="submit"
               disabled={mutation.isPending}
               enterKeyHint="send"
-              className="w-full h-12 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 shadow-sm"
+              className="w-full h-12 bg-primary text-on-primary font-display font-bold rounded-lg hover:bg-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 shadow-sm"
             >
               {mutation.isPending ? (
                 <span className="flex items-center justify-center gap-2">

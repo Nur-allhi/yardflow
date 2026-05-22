@@ -474,10 +474,21 @@ export default function QuickCashSalePage() {
             </div>
           </section>
 
-          {/* Info + Submit */}
-          <div className="bg-tertiary/5 border border-tertiary/20 rounded-lg p-4 flex items-start gap-3">
-            <span className="material-symbols-outlined text-tertiary text-lg">info</span>
-            <p className="text-sm font-medium text-tertiary">
+          {/* Mobile Total Amount Display */}
+          <div className="md:hidden bg-on-tertiary-container/5 rounded-xl p-5 border border-on-tertiary-container/10 flex flex-col items-center justify-center">
+            <span className="text-xs font-bold text-on-tertiary-container uppercase tracking-[0.2em] mb-1">Total Amount Due</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-mono font-bold text-on-tertiary-container">৳</span>
+              <span className="text-[36px] font-mono font-bold text-on-tertiary-container tracking-tighter">
+                {grandTotal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span>
+            </div>
+          </div>
+
+          {/* Info */}
+          <div className="bg-tertiary-fixed-dim/20 rounded-lg p-3 flex items-start gap-3 border border-tertiary-fixed-dim/30">
+            <span className="material-symbols-outlined text-on-tertiary-container text-lg">info</span>
+            <p className="text-[13px] font-medium text-on-tertiary-container leading-snug">
               This sale will be recorded as <strong>PAID</strong> immediately. No invoice will be pending.
             </p>
           </div>
@@ -507,12 +518,12 @@ export default function QuickCashSalePage() {
           </button>
 
           {/* Mobile Fixed Submit */}
-          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-outline-variant/50 px-4 py-3 z-50 shadow-lg">
+          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-50 shadow-lg">
           <button
             type="submit"
             disabled={submitting}
             enterKeyHint="send"
-            className="w-full h-12 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40 flex items-center justify-center gap-2"
+            className="w-full h-12 bg-primary text-on-primary font-bold rounded-lg shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
           >
             {submitting ? (
               <span className="flex items-center justify-center gap-2">

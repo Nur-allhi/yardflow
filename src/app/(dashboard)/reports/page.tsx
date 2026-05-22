@@ -209,41 +209,55 @@ export default function ReportsPage() {
 
       {/* Mobile Cards */}
       {!isLoading && !error && reports.length > 0 && (
-        <div className="md:hidden space-y-3">
+        <div className="md:hidden space-y-4">
+          {/* Generate CTA */}
+          <Link
+            href="/reports/generate"
+            className="w-full h-[52px] bg-primary text-on-primary rounded-lg font-display font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-sm"
+          >
+            <span className="material-symbols-outlined text-lg">add</span>
+            <span>+ Generate New Report</span>
+          </Link>
+
+          {/* Section title */}
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-lg font-semibold text-primary">Historical Log</h2>
+            <span className="text-caption text-secondary font-medium">Sort: Newest</span>
+          </div>
+
           {reports.map((r) => (
-            <div key={r.id} className="bg-white rounded-lg p-4 shadow-sm border border-outline-variant/20">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <h3 className="font-display font-bold text-primary-container text-base">
-                    {PeriodLabel(r)}
-                  </h3>
-                  <p className="text-xs text-secondary">{DateRangeLabel(r)}</p>
-                </div>
-                <ResultBadge result={r.result} />
+            <div key={r.id} className="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant/30 space-y-3">
+              <div className="flex justify-between items-start">
+                <h3 className="font-display text-lg font-semibold">{PeriodLabel(r)}</h3>
+                <span className="px-2 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-bold rounded-sm uppercase tracking-wider">
+                  {typeLabel[r.period_type] || r.period_type}
+                </span>
               </div>
-              <div className="grid grid-cols-3 gap-2 mb-3">
-                <div>
-                  <p className="text-[10px] text-secondary font-bold uppercase tracking-wider">Income</p>
-                  <p className="font-mono text-sm font-semibold text-primary-container">{formatMoney(r.total_income)}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] text-secondary font-bold uppercase tracking-wider">Cost</p>
-                  <p className="font-mono text-sm text-secondary">{formatMoney(r.total_cost)}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[10px] text-secondary font-bold uppercase tracking-wider">Profit</p>
-                  <p className={`font-mono text-sm font-bold ${r.result === "profit" ? "text-tertiary" : "text-[#ba1a1a]"}`}>
-                    {formatMoney(r.net_profit)}
-                  </p>
+              <div className="py-2">
+                <p className={`font-code text-2xl font-bold tracking-tight ${r.result === "profit" ? "text-success" : "text-error"}`}>
+                  {r.result === "profit" ? "৳+" : "৳-"}{formatMoney(r.net_profit).replace(" tk", "")}
+                </p>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className={`px-2 py-0.5 text-[10px] font-bold rounded-sm border ${r.result === "profit" ? "bg-success/10 text-success border-success/20" : "bg-error/10 text-error border-error/20"}`}>
+                    {r.result === "profit" ? "PROFIT" : "LOSS"}
+                  </span>
+                  <span className="text-[11px] text-secondary">Generated: {formatDate(r.generated_at)}</span>
                 </div>
               </div>
-              <Link
-                href={`/reports/${r.id}`}
-                className="flex items-center justify-center gap-1 py-2 text-tertiary font-bold text-sm bg-tertiary/5 rounded-lg"
-              >
-                <span className="material-symbols-outlined text-sm">visibility</span>
-                View Report
-              </Link>
+              <div className="pt-2 flex gap-2 border-t border-outline-variant/20">
+                <Link
+                  href={`/reports/${r.id}`}
+                  className="flex-1 h-9 bg-white border border-primary text-primary text-sm font-semibold rounded flex items-center justify-center hover:bg-primary/5 transition-colors"
+                >
+                  View
+                </Link>
+                <button className="flex-1 h-9 bg-white border border-primary text-primary text-sm font-semibold rounded flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors">
+                  <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
+                  Export PDF
+                </button>
+              </div>
             </div>
           ))}
         </div>

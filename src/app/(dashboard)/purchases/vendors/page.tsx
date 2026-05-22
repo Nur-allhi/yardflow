@@ -331,35 +331,45 @@ export default function VendorsPage() {
       <div className="md:hidden px-4 pb-24">
         {/* Summary Cards - Horizontal Scroll */}
         <section className="flex overflow-x-auto gap-4 -mx-4 px-4 py-4 hide-scrollbar">
-          <div className="flex-shrink-0 w-56 bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm">
+          <div className="flex-shrink-0 w-64 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">Total Vendors</span>
-              <span className="material-symbols-outlined text-secondary text-lg">store</span>
+              <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Total Vendors</span>
+              <span className="material-symbols-outlined text-secondary text-lg" style={{fontVariationSettings: "'FILL' 1"}}>groups</span>
             </div>
-            <p className="font-display text-xl font-bold text-primary-container">{totalVendors}</p>
+            <p className="font-display text-2xl font-bold text-on-surface">{totalVendors}</p>
+            <p className="text-success text-xs font-medium mt-1 flex items-center">
+              <span className="material-symbols-outlined text-[14px] mr-1">trending_up</span>
+              Active accounts
+            </p>
           </div>
-          <div className="flex-shrink-0 w-56 bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm">
+          <div className="flex-shrink-0 w-64 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">Total Payable</span>
-              <span className="material-symbols-outlined text-warning text-lg">payments</span>
+              <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Total Payable</span>
+              <span className="material-symbols-outlined text-warning text-lg" style={{fontVariationSettings: "'FILL' 1"}}>payments</span>
             </div>
-            <p className="font-mono text-lg font-bold text-warning">{formatMoney(totalPayable)}</p>
+            <p className="font-mono text-xl font-bold text-on-surface">{formatMoney(totalPayable)}</p>
+            <p className="text-on-surface-variant text-xs font-medium mt-1">Pending Settlements</p>
           </div>
-          <div className="flex-shrink-0 w-56 bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm">
+          <div className="flex-shrink-0 w-64 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">Settled Vendors</span>
-              <span className="material-symbols-outlined text-tertiary text-lg">check_circle</span>
+              <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Settled Vendors</span>
+              <span className="material-symbols-outlined text-tertiary-container text-lg" style={{fontVariationSettings: "'FILL' 1"}}>check_circle</span>
             </div>
-            <p className="font-display text-xl font-bold text-success">{settledVendors}</p>
+            <p className="font-display text-2xl font-bold text-on-surface">{settledVendors}</p>
+            <p className="text-on-surface-variant text-xs font-medium mt-1">{vendors.length > 0 ? ((settledVendors / vendors.length) * 100).toFixed(1) : 0}% of total</p>
           </div>
         </section>
 
         <div className="flex justify-between items-center mb-4 mt-2">
-          <h2 className="font-display font-bold text-lg text-primary-container">Vendor Accounts</h2>
+          <h2 className="font-display font-bold text-lg text-on-surface">Active Accounts</h2>
+          <button className="text-tertiary-container flex items-center text-xs font-semibold">
+            <span className="material-symbols-outlined text-[18px] mr-1">filter_list</span>
+            Filter
+          </button>
         </div>
 
         {vendors.length === 0 ? (
-          <div className="text-center py-16 text-secondary bg-white rounded-xl border border-outline-variant/30">
+          <div className="text-center py-16 text-secondary bg-surface-container-lowest rounded-xl border border-outline-variant">
             <span className="material-symbols-outlined text-4xl text-outline-variant block mb-3">storefront</span>
             <p className="text-sm font-medium mb-1">No vendors yet</p>
             <p className="text-xs">Tap + to add your first vendor</p>
@@ -369,24 +379,24 @@ export default function VendorsPage() {
             {vendors.map((v) => {
               const typeChip = getTypeChip(v.type);
               return (
-                <div key={v.id} className="bg-white p-4 rounded-xl border border-outline-variant/30 shadow-sm space-y-3">
+                <div key={v.id} className="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant space-y-3">
                   <div className="flex justify-between items-start">
-                      <div className="space-y-1.5">
-                        <Link href={`/purchases/vendors/${v.id}`} className="font-display font-bold text-base text-primary-container hover:text-tertiary transition-colors">
+                      <div className="space-y-1">
+                        <Link href={`/purchases/vendors/${v.id}`} className="font-display font-bold text-lg text-on-surface hover:text-tertiary-container transition-colors">
                           {v.name}
                         </Link>
-                      <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase ${typeChip.bg} ${typeChip.text}`}>
+                      <span className={`inline-flex px-2 py-0.5 rounded-sm text-[10px] font-bold tracking-wider uppercase ${typeChip.bg} ${typeChip.text}`}>
                         {typeChip.label}
                       </span>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] font-bold text-secondary uppercase tracking-wider mb-1">Due Amount</p>
-                      <p className={`font-mono text-base font-bold ${v.due_balance > 0 ? "text-warning" : "text-primary-container"}`}>
+                      <p className="text-xs text-on-surface-variant font-medium mb-1">Due Amount</p>
+                      <p className={`font-mono text-lg font-bold ${v.due_balance > 0 ? "text-warning" : "text-on-surface"}`}>
                         {formatMoney(v.due_balance)}
                       </p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-[11px] text-secondary pt-2 border-t border-outline-variant/20">
+                  <div className="grid grid-cols-2 gap-2 text-xs text-on-surface-variant pt-2 border-t border-surface-container">
                     <div className="flex items-center gap-1">
                       <span className="material-symbols-outlined text-[14px]">call</span>
                       {v.phone || "—"}
@@ -397,16 +407,16 @@ export default function VendorsPage() {
                     </div>
                   </div>
                   <div className="flex gap-2 pt-1">
-                    <Link href={`/purchases/vendors/${v.id}`} className="block flex-1 py-2.5 rounded-lg border border-primary-container text-primary-container font-bold text-sm transition-colors hover:bg-surface-container-low active:scale-[0.98] text-center">
+                    <Link href={`/purchases/vendors/${v.id}`} className="block flex-1 py-2 rounded-lg border border-primary text-primary font-bold text-sm transition-colors hover:bg-surface-container-low active:scale-[0.98] text-center">
                       View
                     </Link>
                     {v.due_balance > 0 ? (
-                      <Link href={`/purchases?vendor_id=${v.id}&status=due`} className="block flex-1 py-2.5 rounded-lg bg-primary-container text-white font-bold text-sm transition-colors hover:bg-primary-container/90 active:scale-[0.98] text-center">
+                      <Link href={`/purchases?vendor_id=${v.id}&status=due`} className="block flex-1 py-2 rounded-lg bg-primary text-on-primary font-bold text-sm transition-colors hover:opacity-90 active:scale-[0.98] text-center">
                         Pay
                       </Link>
                     ) : (
-                      <button disabled className="flex-1 py-2.5 rounded-lg bg-surface-container-highest text-secondary font-bold text-sm cursor-not-allowed">
-                        Paid
+                      <button disabled className="flex-1 py-2 rounded-lg bg-surface-container-high text-on-surface-variant font-bold text-sm cursor-not-allowed">
+                        Settled
                       </button>
                     )}
                   </div>
@@ -419,7 +429,7 @@ export default function VendorsPage() {
         {/* Mobile FAB */}
         <button
           onClick={() => { resetForm(); setShowModal(true); }}
-          className="fixed bottom-6 right-4 w-14 h-14 bg-primary-container text-white rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40"
+          className="fixed bottom-6 right-4 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40"
         >
           <span className="material-symbols-outlined text-2xl">add</span>
         </button>

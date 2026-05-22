@@ -295,59 +295,49 @@ export default function WorkersPage() {
       {/* Mobile Card List */}
       {!isLoading && !error && filtered.length > 0 && (
         <div className="md:hidden space-y-3">
-          <div className="flex justify-between items-center">
-            <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-secondary">
-              Workers
-            </h2>
-          </div>
           {filtered.map((w) => (
             <div
               key={w.id}
               onClick={() => window.location.href = `/hr/workers/${w.id}`}
-              className="block bg-white rounded-lg p-4 shadow-sm border border-outline-variant/20 cursor-pointer"
+              className="bg-surface-container-lowest rounded-lg border border-outline-variant/50 shadow-sm p-4 flex flex-col space-y-4 cursor-pointer"
             >
-              <div className="flex items-start gap-3 mb-3">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${w.is_active ? 'bg-secondary-container text-primary-container' : 'bg-surface-container-highest text-secondary'}`}>
-                  {getInitials(w.name)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-display font-bold text-primary-container text-base truncate">
-                    {w.name}
-                  </h3>
-                  <p className="text-xs text-secondary font-medium">
-                    {w.designation || "—"}
-                  </p>
-                </div>
-                <StatusBadge active={w.is_active} />
-              </div>
-              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-outline-variant/30">
+              <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-[11px] text-secondary font-medium mb-0.5">
-                    Salary
-                  </p>
-                  <p className="font-mono text-sm font-bold text-primary-container">
-                    {formatMoney(w.monthly_salary)}
-                  </p>
+                  <h3 className="font-display font-bold text-on-surface text-lg">{w.name}</h3>
+                  <p className="font-body text-secondary text-sm">{w.designation || "—"}</p>
+                  {w.phone && <p className="font-body text-on-surface-variant text-xs mt-0.5">{w.phone}</p>}
                 </div>
-                <div>
-                  <p className="text-[11px] text-secondary font-medium mb-0.5">
-                    Advances
-                  </p>
-                  <p className={`font-mono text-sm font-bold ${w.this_month_advances > 0 ? 'text-warning' : 'text-outline'}`}>
-                    {w.this_month_advances > 0 ? formatMoney(w.this_month_advances) : "0 tk"}
-                  </p>
+                <div className="flex flex-col items-end">
+                  <span className="font-code font-bold text-on-surface text-base">{formatMoney(w.monthly_salary)}</span>
+                  <span className={`px-2 py-0.5 rounded-sm text-[10px] uppercase font-bold mt-1 ${
+                    w.is_active
+                      ? "bg-success/10 text-success"
+                      : "bg-surface-container-high text-on-surface-variant"
+                  }`}>
+                    {w.is_active ? "Active" : "Inactive"}
+                  </span>
                 </div>
               </div>
-              <div className="flex gap-2 mt-3 pt-3 border-t border-outline-variant/30" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center gap-2">
+                {w.this_month_advances > 0 ? (
+                  <div className="inline-flex items-center bg-warning/10 text-warning px-2 py-1 rounded-sm border border-warning/20">
+                    <span className="material-symbols-outlined text-[14px] mr-1">payments</span>
+                    <span className="font-code text-xs font-bold">{formatMoney(w.this_month_advances)} Advances</span>
+                  </div>
+                ) : (
+                  <span className="text-secondary text-xs italic">No pending advances</span>
+                )}
+              </div>
+              <div className="pt-2 flex gap-3" onClick={(e) => e.stopPropagation()}>
                 <Link
                   href={`/hr/workers/${w.id}`}
-                  className="flex-1 py-2 text-tertiary font-bold text-sm bg-tertiary/5 rounded-lg text-center"
+                  className="flex-1 py-2 rounded-lg border border-primary text-primary font-bold text-sm text-center hover:bg-primary/5"
                 >
                   View
                 </Link>
                 <Link
                   href={`/hr/advances/new?worker_id=${w.id}`}
-                  className="flex-1 py-2 bg-primary-container text-white font-bold text-sm rounded-lg text-center"
+                  className="flex-1 py-2 rounded-lg bg-primary text-on-primary font-bold text-sm text-center hover:bg-primary/90"
                 >
                   Advance
                 </Link>
