@@ -66,63 +66,63 @@ export default function NewWorkerPage() {
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/hr/workers"
-          className="w-9 h-9 flex items-center justify-center rounded-full border border-[#c6c6cd] text-[#505f76] hover:bg-[#f2f4f6] transition-colors"
+          className="w-9 h-9 flex items-center justify-center rounded-full border border-outline-variant text-secondary hover:bg-surface-container-low transition-colors"
         >
           <span className="material-symbols-outlined">arrow_back</span>
         </Link>
-        <h1 className="font-display text-xl md:text-2xl font-bold text-[#0F172A]">
+        <h1 className="font-display text-xl md:text-2xl font-bold text-primary-container">
           Add Worker
         </h1>
       </div>
 
       <form onSubmit={handleSubmit} className="max-w-2xl">
-        <div className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm p-5 md:p-6 space-y-5">
+        <div className="bg-white rounded-lg border border-outline-variant/50 shadow-sm p-5 md:p-6 space-y-5">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-              Name <span className="text-[#EF4444]">*</span>
+            <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+              Name <span className="text-error">*</span>
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+              className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
               placeholder="Full name"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+            <label className="text-xs font-bold uppercase tracking-wider text-secondary">
               Phone
             </label>
             <input
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+              className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
               placeholder="015xxxxxxxx"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+            <label className="text-xs font-bold uppercase tracking-wider text-secondary">
               Designation
             </label>
             <input
               type="text"
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}
-              className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+              className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
               placeholder="e.g. Welder, Helper, Manager"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-              Monthly Salary (৳) <span className="text-[#EF4444]">*</span>
+            <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+              Monthly Salary (৳) <span className="text-error">*</span>
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm text-[#505f76]">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm text-secondary">
                 ৳
               </span>
               <input
@@ -132,7 +132,7 @@ export default function NewWorkerPage() {
                 value={monthlySalary}
                 onChange={(e) => setMonthlySalary(e.target.value)}
                 required
-                className="w-full h-[42px] pl-8 pr-3 border border-[#c6c6cd] rounded bg-white text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                className="w-full h-[42px] pl-8 pr-3 border border-outline-variant rounded bg-white text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
                 placeholder="0.00"
               />
             </div>
@@ -140,22 +140,22 @@ export default function NewWorkerPage() {
 
           {error && (
             <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-[#EF4444] text-sm font-medium">{error}</p>
+              <p className="text-error text-sm font-medium">{error}</p>
             </div>
           )}
 
           {/* Desktop: Submit */}
-          <div className="hidden md:flex items-center gap-3 pt-4 border-t border-[#c6c6cd]/50">
+          <div className="hidden md:flex items-center gap-3 pt-4 border-t border-outline-variant/50">
             <Link
               href="/hr/workers"
-              className="px-5 py-2.5 bg-transparent text-[#505f76] hover:bg-[#f2f4f6] transition-colors font-bold text-sm rounded-lg"
+              className="px-5 py-2.5 bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded-lg"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="px-5 py-2.5 bg-[#0F172A] text-white font-bold text-sm rounded-lg hover:bg-[#0F172A]/90 transition-all active:scale-95 shadow-sm disabled:opacity-40"
+              className="px-5 py-2.5 bg-primary-container text-white font-bold text-sm rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40"
             >
               {mutation.isPending ? "Saving..." : "Save Worker"}
             </button>
@@ -163,17 +163,17 @@ export default function NewWorkerPage() {
         </div>
 
         {/* Mobile: Sticky Bottom Bar */}
-        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-[#c6c6cd] px-4 py-3 z-40 flex items-center gap-3 shadow-lg">
+        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 flex items-center gap-3 shadow-lg">
           <Link
             href="/hr/workers"
-            className="flex-1 h-12 flex items-center justify-center bg-transparent text-[#505f76] hover:bg-[#f2f4f6] transition-colors font-bold text-sm rounded-lg border border-[#c6c6cd]"
+            className="flex-1 h-12 flex items-center justify-center bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded-lg border border-outline-variant"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="flex-1 h-12 flex items-center justify-center bg-[#0F172A] text-white font-bold text-sm rounded-lg active:scale-95 transition-all shadow-md disabled:opacity-40"
+            className="flex-1 h-12 flex items-center justify-center bg-primary-container text-white font-bold text-sm rounded-lg active:scale-95 transition-all shadow-md disabled:opacity-40"
           >
             {mutation.isPending ? "Saving..." : "Save Worker"}
           </button>

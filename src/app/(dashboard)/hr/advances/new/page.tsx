@@ -8,7 +8,7 @@ import { useAccounts } from "@/hooks/useAccounts";
 import { useWorkers } from "@/hooks/useWorkers";
 
 function formatMoney(n: number) {
-  return "\u09F3" + (n ?? 0).toLocaleString("en-IN");
+  return (n ?? 0).toLocaleString("en-IN") + " tk";
 }
 
 const MONTH_NAMES = [
@@ -98,8 +98,8 @@ export default function NewAdvancePage() {
   if (loading) {
     return (
       <div className="p-4 md:p-8 animate-pulse">
-        <div className="h-6 bg-[#e6e8ea] rounded w-1/3 mb-6" />
-        <div className="h-96 bg-[#e6e8ea] rounded-xl" />
+        <div className="h-6 bg-surface-container-high rounded w-1/3 mb-6" />
+        <div className="h-96 bg-surface-container-high rounded-xl" />
       </div>
     );
   }
@@ -110,26 +110,26 @@ export default function NewAdvancePage() {
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/hr/workers"
-          className="w-9 h-9 flex items-center justify-center rounded-full border border-[#c6c6cd] text-[#505f76] hover:bg-[#f2f4f6] transition-colors"
+          className="w-9 h-9 flex items-center justify-center rounded-full border border-outline-variant text-secondary hover:bg-surface-container-low transition-colors"
         >
           <span className="material-symbols-outlined">arrow_back</span>
         </Link>
-        <h1 className="font-display text-xl md:text-2xl font-bold text-[#0F172A]">
+        <h1 className="font-display text-xl md:text-2xl font-bold text-primary-container">
           Record Salary Advance
         </h1>
       </div>
 
       <form onSubmit={handleSubmit} className="max-w-2xl">
-        <div className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm p-5 md:p-6 space-y-5">
+        <div className="bg-white rounded-lg border border-outline-variant/50 shadow-sm p-5 md:p-6 space-y-5">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-              Worker <span className="text-[#EF4444]">*</span>
+            <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+              Worker <span className="text-error">*</span>
             </label>
             <select
               value={workerId}
               onChange={(e) => setWorkerId(e.target.value)}
               required
-              className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+              className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
             >
               <option value="">Select worker</option>
               {workers.map((w) => (
@@ -142,11 +142,11 @@ export default function NewAdvancePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                Amount (৳) <span className="text-[#EF4444]">*</span>
+              <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+                Amount (৳) <span className="text-error">*</span>
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm text-[#505f76]">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm text-secondary">
                   ৳
                 </span>
                 <input
@@ -156,21 +156,21 @@ export default function NewAdvancePage() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   required
-                  className="w-full h-[42px] pl-8 pr-3 border border-[#c6c6cd] rounded bg-white text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                  className="w-full h-[42px] pl-8 pr-3 border border-outline-variant rounded bg-white text-sm font-mono focus:border-primary-container focus:ring-0 outline-none transition-all"
                   placeholder="0.00"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                Pay From Account <span className="text-[#EF4444]">*</span>
+              <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+                Pay From Account <span className="text-error">*</span>
               </label>
               <select
                 value={accountId}
                 onChange={(e) => setAccountId(e.target.value)}
                 required
-                className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
               >
                 <option value="">Select account</option>
                 {accounts.map((a) => (
@@ -182,62 +182,62 @@ export default function NewAdvancePage() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                Date <span className="text-[#EF4444]">*</span>
+              <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+                Date <span className="text-error">*</span>
               </label>
               <input
                 type="date"
                 value={advanceDate}
                 onChange={(e) => setAdvanceDate(e.target.value)}
                 required
-                className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all"
+                className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+              <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                 Month/Year
               </label>
               <input
                 type="text"
                 value={`${monthLabel} ${year}`}
                 readOnly
-                className="w-full h-[42px] border border-[#c6c6cd] rounded bg-[#f2f4f6] px-3 text-sm font-medium text-[#0F172A] cursor-not-allowed"
+                className="w-full h-[42px] border border-outline-variant rounded bg-surface-container-low px-3 text-sm font-medium text-primary-container cursor-not-allowed"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+            <label className="text-xs font-bold uppercase tracking-wider text-secondary">
               Note
             </label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={3}
-              className="w-full border border-[#c6c6cd] rounded bg-white p-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none transition-all resize-none"
+              className="w-full border border-outline-variant rounded bg-white p-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all resize-none"
               placeholder="Additional details..."
             />
           </div>
 
           {error && (
             <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-[#EF4444] text-sm font-medium">{error}</p>
+              <p className="text-error text-sm font-medium">{error}</p>
             </div>
           )}
 
           {/* Desktop: Submit */}
-          <div className="hidden md:flex items-center gap-3 pt-4 border-t border-[#c6c6cd]/50">
+          <div className="hidden md:flex items-center gap-3 pt-4 border-t border-outline-variant/50">
             <Link
               href="/hr/workers"
-              className="px-5 py-2.5 bg-transparent text-[#505f76] hover:bg-[#f2f4f6] transition-colors font-bold text-sm rounded-lg"
+              className="px-5 py-2.5 bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded-lg"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="px-5 py-2.5 bg-[#0F172A] text-white font-bold text-sm rounded-lg hover:bg-[#0F172A]/90 transition-all active:scale-95 shadow-sm disabled:opacity-40"
+              className="px-5 py-2.5 bg-primary-container text-white font-bold text-sm rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm disabled:opacity-40"
             >
               {mutation.isPending ? "Recording..." : "Record Advance"}
             </button>
@@ -245,17 +245,17 @@ export default function NewAdvancePage() {
         </div>
 
         {/* Mobile: Sticky Bottom Bar */}
-        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-[#c6c6cd] px-4 py-3 z-40 flex items-center gap-3 shadow-lg">
+        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 flex items-center gap-3 shadow-lg">
           <Link
             href="/hr/workers"
-            className="flex-1 h-12 flex items-center justify-center bg-transparent text-[#505f76] hover:bg-[#f2f4f6] transition-colors font-bold text-sm rounded-lg border border-[#c6c6cd]"
+            className="flex-1 h-12 flex items-center justify-center bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded-lg border border-outline-variant"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="flex-1 h-12 flex items-center justify-center bg-[#0F172A] text-white font-bold text-sm rounded-lg active:scale-95 transition-all shadow-md disabled:opacity-40"
+            className="flex-1 h-12 flex items-center justify-center bg-primary-container text-white font-bold text-sm rounded-lg active:scale-95 transition-all shadow-md disabled:opacity-40"
           >
             {mutation.isPending ? "Recording..." : "Record Advance"}
           </button>

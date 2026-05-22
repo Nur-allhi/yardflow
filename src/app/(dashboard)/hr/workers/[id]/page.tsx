@@ -35,7 +35,7 @@ function formatDate(dateStr: string) {
 }
 
 function formatMoney(n: number) {
-  return "\u09F3" + (n ?? 0).toLocaleString("en-IN");
+  return (n ?? 0).toLocaleString("en-IN") + " tk";
 }
 
 function getInitials(name: string) {
@@ -73,9 +73,9 @@ export default function WorkerDetailPage() {
   if (isLoading) {
     return (
       <div className="p-4 md:p-8 space-y-6 animate-pulse">
-        <div className="h-6 bg-[#e6e8ea] rounded w-1/3" />
-        <div className="h-12 bg-[#e6e8ea] rounded w-1/2" />
-        <div className="h-64 bg-[#e6e8ea] rounded-xl" />
+        <div className="h-6 bg-surface-container-high rounded w-1/3" />
+        <div className="h-12 bg-surface-container-high rounded w-1/2" />
+        <div className="h-64 bg-surface-container-high rounded-xl" />
       </div>
     );
   }
@@ -85,12 +85,12 @@ export default function WorkerDetailPage() {
     return (
       <div className="p-4 md:p-8">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
-          <p className="text-[#EF4444] font-medium text-lg mb-2">
+          <p className="text-error font-medium text-lg mb-2">
             {error?.message || "Worker not found"}
           </p>
           <Link
             href="/hr/workers"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary-container text-white text-sm rounded-lg"
           >
             <span className="material-symbols-outlined text-lg">arrow_back</span>
             Back to Workers
@@ -107,15 +107,15 @@ export default function WorkerDetailPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/hr/workers"
-            className="w-9 h-9 flex items-center justify-center rounded-full border border-[#c6c6cd] text-[#505f76] hover:bg-[#f2f4f6] transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-full border border-outline-variant text-secondary hover:bg-surface-container-low transition-colors"
           >
             <span className="material-symbols-outlined">arrow_back</span>
           </Link>
           <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${worker.is_active ? 'bg-[#d0e1fb] text-[#0F172A]' : 'bg-[#e0e3e5] text-[#505f76]'}`}>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${worker.is_active ? 'bg-secondary-container text-primary-container' : 'bg-surface-container-highest text-secondary'}`}>
               {getInitials(worker.name)}
             </div>
-            <h1 className="font-display text-lg md:text-xl font-bold text-[#0F172A]">
+            <h1 className="font-display text-lg md:text-xl font-bold text-primary-container">
               {worker.name}
             </h1>
           </div>
@@ -123,7 +123,7 @@ export default function WorkerDetailPage() {
         <div className="md:ml-auto flex gap-3">
           <Link
             href={`/hr/advances/new?worker_id=${worker.id}`}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#0F172A] text-white font-bold text-sm rounded-lg hover:bg-[#0F172A]/90 transition-all active:scale-95 shadow-sm"
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary-container text-white font-bold text-sm rounded-lg hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm"
           >
             <span className="material-symbols-outlined text-sm">add</span>
             Record Advance
@@ -135,9 +135,9 @@ export default function WorkerDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* LEFT: Worker Info */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-white border border-[#c6c6cd]/50 rounded-xl shadow-sm overflow-hidden">
-            <div className="px-5 md:px-6 py-4 border-b border-[#c6c6cd]/50 bg-[#f2f4f6]">
-              <h3 className="font-display font-bold text-[#0F172A] flex items-center gap-2">
+          <div className="bg-white border border-outline-variant/50 rounded-xl shadow-sm overflow-hidden">
+            <div className="px-5 md:px-6 py-4 border-b border-outline-variant/50 bg-surface-container-low">
+              <h3 className="font-display font-bold text-primary-container flex items-center gap-2">
                 <span className="material-symbols-outlined">person</span>
                 Worker Information
               </h3>
@@ -145,40 +145,40 @@ export default function WorkerDetailPage() {
             <div className="p-5 md:p-6 space-y-5">
               <div className="grid grid-cols-2 gap-y-5">
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">
+                  <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
                     Phone
                   </p>
-                  <p className="font-medium text-[#0F172A] text-sm">
+                  <p className="font-medium text-primary-container text-sm">
                     {worker.phone || "—"}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">
+                  <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
                     Designation
                   </p>
-                  <p className="font-medium text-[#0F172A] text-sm">
+                  <p className="font-medium text-primary-container text-sm">
                     {worker.designation || "—"}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">
+                  <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
                     Monthly Salary
                   </p>
-                  <p className="font-mono font-bold text-[#0F172A] text-sm">
+                  <p className="font-mono font-bold text-primary-container text-sm">
                     {formatMoney(worker.monthly_salary)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">
+                  <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
                     Join Date
                   </p>
-                  <p className="font-medium text-[#0F172A] text-sm">
+                  <p className="font-medium text-primary-container text-sm">
                     {worker.join_date ? formatDate(worker.join_date) : "—"}
                   </p>
                 </div>
               </div>
-              <div className="pt-4 border-t border-[#c6c6cd]/30">
-                <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">
+              <div className="pt-4 border-t border-outline-variant/30">
+                <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
                   Status
                 </p>
                 <span className={`px-2 py-1 text-[10px] font-black uppercase rounded-sm border ${
@@ -195,17 +195,17 @@ export default function WorkerDetailPage() {
 
         {/* RIGHT: Advance History */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="bg-white border border-[#c6c6cd]/50 rounded-xl shadow-sm overflow-hidden">
-            <div className="px-5 md:px-6 py-4 border-b border-[#c6c6cd]/50 bg-[#f2f4f6] flex justify-between items-center">
-              <h3 className="font-display font-bold text-[#0F172A] flex items-center gap-2">
+          <div className="bg-white border border-outline-variant/50 rounded-xl shadow-sm overflow-hidden">
+            <div className="px-5 md:px-6 py-4 border-b border-outline-variant/50 bg-surface-container-low flex justify-between items-center">
+              <h3 className="font-display font-bold text-primary-container flex items-center gap-2">
                 <span className="material-symbols-outlined">history</span>
                 Advance History
               </h3>
             </div>
 
             {worker.advances.length === 0 ? (
-              <div className="p-8 text-center text-[#505f76] text-sm">
-                <span className="material-symbols-outlined text-4xl block mb-3 text-[#c6c6cd]">
+              <div className="p-8 text-center text-secondary text-sm">
+                <span className="material-symbols-outlined text-4xl block mb-3 text-outline-variant">
                   account_balance_wallet
                 </span>
                 No advances recorded
@@ -215,41 +215,41 @@ export default function WorkerDetailPage() {
                 {/* Desktop Table */}
                 <div className="hidden md:block overflow-x-auto">
                   <table className="w-full text-left border-collapse">
-                    <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
+                    <thead className="bg-surface-container-high border-b border-outline-variant">
                       <tr>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider">
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">
                           Date
                         </th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider text-right">
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider text-right">
                           Amount
                         </th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider">
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">
                           Month/Year
                         </th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider">
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">
                           Note
                         </th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider">
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">
                           Account
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#c6c6cd]/30">
+                    <tbody className="divide-y divide-outline-variant/30">
                       {worker.advances.map((a) => (
-                        <tr key={a.id} className="hover:bg-[#F8FAFC]">
+                        <tr key={a.id} className="hover:bg-background">
                           <td className="px-6 py-4 text-sm">
                             {formatDate(a.advance_date)}
                           </td>
-                          <td className="px-6 py-4 font-mono text-sm font-bold text-right text-[#EAB308]">
+                          <td className="px-6 py-4 font-mono text-sm font-bold text-right text-warning">
                             {formatMoney(a.amount)}
                           </td>
                           <td className="px-6 py-4 text-sm">
                             {MONTH_NAMES[a.month - 1]} {a.year}
                           </td>
-                          <td className="px-6 py-4 text-sm text-[#505f76] max-w-[200px] truncate">
+                          <td className="px-6 py-4 text-sm text-secondary max-w-[200px] truncate">
                             {a.note || "—"}
                           </td>
-                          <td className="px-6 py-4 text-sm text-[#505f76]">
+                          <td className="px-6 py-4 text-sm text-secondary">
                             {a.account_name || "—"}
                           </td>
                         </tr>
@@ -263,22 +263,22 @@ export default function WorkerDetailPage() {
                   {worker.advances.map((a) => (
                     <div
                       key={a.id}
-                      className="bg-white rounded-lg p-4 border border-[#c6c6cd]/30"
+                      className="bg-white rounded-lg p-4 border border-outline-variant/30"
                     >
                       <div className="flex justify-between items-start mb-2">
-                        <p className="text-xs text-[#505f76] font-medium">
+                        <p className="text-xs text-secondary font-medium">
                           {formatDate(a.advance_date)}
                         </p>
-                        <span className="font-mono font-bold text-[#EAB308]">
+                        <span className="font-mono font-bold text-warning">
                           {formatMoney(a.amount)}
                         </span>
                       </div>
-                      <div className="flex justify-between text-xs text-[#505f76]">
+                      <div className="flex justify-between text-xs text-secondary">
                         <span>{MONTH_NAMES[a.month - 1]} {a.year}</span>
                         <span>{a.account_name || ""}</span>
                       </div>
                       {a.note && (
-                        <p className="text-xs text-[#505f76] italic mt-1">
+                        <p className="text-xs text-secondary italic mt-1">
                           &ldquo;{a.note}&rdquo;
                         </p>
                       )}
