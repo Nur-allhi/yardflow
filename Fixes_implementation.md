@@ -35,7 +35,7 @@
 
 | # | Task | Action | Files | Status |
 |---|------|--------|-------|--------|
-| 6 | **Global command palette (Cmd+K)** | Create modal component triggered by `Cmd+K`/`Ctrl+K`. Groups: Navigation (all routes), Recent (last 5 entities via localStorage), Quick Actions (New Sale, New Purchase, etc.), Entities (vendor/customer/worker search via API). Use `cmdk` library. Add to dashboard layout. | `src/components/CommandPalette.tsx` (new), `src/app/(dashboard)/layout.tsx`, `src/app/api/command-palette/route.ts` (new) | ⬜ |
+| 6 | **Global command palette (Cmd+K)** | Create modal component triggered by `Cmd+K`/`Ctrl+K`. Groups: Navigation (all routes), Recent (last 5 entities via localStorage), Quick Actions (New Sale, New Purchase, etc.), Entities (vendor/customer/worker search via API). Use `cmdk` library. Add to dashboard layout. | `src/components/CommandPalette.tsx` (new), `src/app/(dashboard)/layout.tsx`, `src/app/api/command-palette/route.ts` (new) | ✅ |
 
 ---
 
@@ -51,4 +51,4 @@
 
 ---
 
-**Total: 6 items** · P0: 2 ⬜ · P1: 2 ⬜ · P2: 1 ⬜ · P3: 1 ⬜
+**Total: 6 items** · P0: 2 ⬜ · P1: 2 ⬜ · P2: 1 ⬜ · P3: 1 ✅
