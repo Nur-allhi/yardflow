@@ -1,7 +1,9 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { staggerContainer, navItemVariants, activeIndicatorVariants, springSnap } from "@/lib/animation";
 
 const navItems = [
   { href: "/", icon: "dashboard", label: "Dashboard" },
@@ -34,30 +36,46 @@ export default function Sidebar() {
         </p>
       </div>
 
-      <nav className="flex-1 space-y-1">
+      <motion.nav
+        className="flex-1 space-y-1"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
         {navItems.map((item) => {
           const active = isActive(item.href);
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all ${
-                active
-                  ? "bg-on-primary-fixed-variant text-white"
-                  : "text-on-primary-container hover:bg-on-primary-fixed-variant hover:text-white"
-              }`}
-            >
-              <span
-                className="material-symbols-outlined"
-                style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}
+            <motion.div key={item.href} variants={navItemVariants} whileHover={{ x: 4 }} whileTap={{ scale: 0.97 }} className="relative">
+              <Link
+                href={item.href}
+                className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all ${
+                  active
+                    ? "bg-on-primary-fixed-variant text-white"
+                    : "text-on-primary-container hover:bg-on-primary-fixed-variant hover:text-white"
+                }`}
               >
-                {item.icon}
-              </span>
-              <span className="text-sm font-medium">{item.label}</span>
-            </Link>
+                <span
+                  className="material-symbols-outlined"
+                  style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}
+                >
+                  {item.icon}
+                </span>
+                <span className="text-sm font-medium">{item.label}</span>
+              </Link>
+              {active && (
+                <motion.div
+                  className="absolute left-0 top-1 bottom-1 w-[3px] rounded-r-full bg-white"
+                  layoutId="sidebar-active"
+                  variants={activeIndicatorVariants}
+                  initial="inactive"
+                  animate="active"
+                  transition={springSnap}
+                />
+              )}
+            </motion.div>
           );
         })}
-      </nav>
+      </motion.nav>
 
       <div className="mt-auto space-y-1 pt-4 border-t border-on-primary-fixed-variant/30">
         {bottomItems.map((item) => {

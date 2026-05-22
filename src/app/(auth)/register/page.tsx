@@ -334,7 +334,7 @@ export default function RegisterPage() {
 
       {/* MOBILE LAYOUT */}
       <div className="lg:hidden bg-background min-h-screen">
-        <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md px-[20px] py-md border-b border-border-base">
+        <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md px-[20px] py-md border-b border-border-base" style={{ paddingTop: "calc(16px + env(safe-area-inset-top, 0px))" }}>
           <div className="flex flex-col gap-xs">
             <span className="text-h3 font-h3 text-primary-container tracking-tight">
               YardFlow ERP
@@ -345,7 +345,7 @@ export default function RegisterPage() {
           </div>
         </header>
 
-        <main className="px-[20px] pt-lg pb-[120px]">
+        <main className="px-[20px] pt-lg pb-[120px]" style={{ paddingBottom: "calc(120px + env(safe-area-inset-bottom, 0px))" }}>
           {error && (
             <div className="mb-md rounded border border-red-200 bg-red-50 px-md py-sm text-body-sm font-body-sm text-red-700">
               {error}
@@ -538,7 +538,7 @@ export default function RegisterPage() {
           </form>
         </main>
 
-        <footer className="fixed bottom-0 left-0 right-0 bg-surface border-t border-border-base px-[20px] py-lg shadow-[0_-4px_12px_rgba(15,23,42,0.05)]">
+        <footer className="sticky bottom-0 left-0 right-0 bg-surface border-t border-border-base px-[20px] py-lg shadow-[0_-4px_12px_rgba(15,23,42,0.05)]" style={{ paddingBottom: "calc(16px + env(safe-area-inset-bottom, 0px))" }}>
           <button
             type="submit"
             form="registerForm"

@@ -15,6 +15,11 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: "YardFlow ERP",
   description: "Iron & Workshop Management",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    viewportFit: "cover",
+  },
 };
 
 export default function RootLayout({

@@ -163,13 +163,11 @@ export default function LoginPage() {
                 <div className="flex-grow border-t border-border-base" />
               </div>
 
-              <Link href="/register">
-                <button
-                  type="button"
-                  className="w-full h-12 border border-primary-container text-primary-container font-body font-bold rounded-lg hover:bg-surface-container-low transition-all"
-                >
-                  Register your business
-                </button>
+              <Link
+                href="/register"
+                className="w-full h-12 border border-primary-container text-primary-container font-body font-bold rounded-lg hover:bg-surface-container-low transition-all flex items-center justify-center"
+              >
+                Register your business
               </Link>
             </form>
 
@@ -184,7 +182,7 @@ export default function LoginPage() {
 
       {/* MOBILE LAYOUT */}
       <div className="lg:hidden flex flex-col min-h-screen bg-primary-container">
-        <header className="h-[353px] w-full flex flex-col items-center justify-center text-center p-lg relative overflow-hidden">
+        <header className="min-h-[220px] w-full flex flex-col items-center justify-center text-center p-lg relative overflow-hidden">
           <div
             className="absolute inset-0"
             style={{
@@ -267,7 +265,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary-container"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 min-w-[44px] min-h-[44px] flex items-center justify-center text-on-surface-variant hover:text-primary-container"
                 >
                   <span className="material-symbols-outlined text-[20px]">
                     {showPassword ? "visibility_off" : "visibility"}
@@ -301,14 +299,12 @@ export default function LoginPage() {
               <div className="h-[1px] flex-grow bg-surface-container-high" />
             </div>
 
-            <Link href="/register">
-              <button
-                type="button"
-                className="w-full h-[48px] bg-transparent border-2 border-primary-container text-primary-container font-bold rounded hover:bg-surface-container-low transition-colors"
+              <Link
+                href="/register"
+                className="w-full h-[48px] bg-transparent border-2 border-primary-container text-primary-container font-bold rounded hover:bg-surface-container-low transition-colors flex items-center justify-center"
               >
                 Register your business
-              </button>
-            </Link>
+              </Link>
 
             <footer className="mt-auto pt-2xl pb-lg text-center">
               <p className="text-caption font-caption text-on-surface-variant/70 flex items-center justify-center gap-xs">

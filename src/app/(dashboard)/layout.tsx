@@ -5,6 +5,7 @@ import MobileSidebar from "@/components/MobileSidebar";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import QueryProvider from "@/components/QueryProvider";
 import CommandPalette from "@/components/CommandPalette";
+import PageTransitionWrapper from "@/components/PageTransitionWrapper";
 
 export default async function DashboardLayout({
   children,
@@ -55,7 +56,9 @@ export default async function DashboardLayout({
         </header>
 
         {/* Content Canvas */}
-        <main className="flex-1 pb-20 md:pb-0">{children}</main>
+        <main className="flex-1 pb-20 md:pb-0">
+          <PageTransitionWrapper>{children}</PageTransitionWrapper>
+        </main>
 
         {/* Mobile Bottom Nav */}
         <MobileBottomNav />
