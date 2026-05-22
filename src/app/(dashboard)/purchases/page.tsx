@@ -111,35 +111,35 @@ export default function PurchasesPage() {
   return (
     <div className="p-4 md:p-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-[#0F172A]">
+      <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
+        <Link href="/" className="hover:text-primary-container">
           Dashboard
         </Link>
         <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-[#0F172A] font-bold">Purchases</span>
+        <span className="text-primary-container font-bold">Purchases</span>
       </nav>
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-[#0F172A] tracking-tight">
+          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-primary-container tracking-tight">
             Purchases
           </h1>
-          <p className="text-[#505f76] text-sm hidden md:block">
+          <p className="text-secondary text-sm hidden md:block">
             Manage incoming raw materials and vendor transactions.
           </p>
         </div>
         <div className="flex gap-3">
           <Link
             href="/purchases/vendors"
-            className="flex items-center gap-2 px-4 py-2 border border-[#0F172A] text-[#0F172A] font-semibold rounded-lg hover:bg-[#0F172A]/5 transition-all text-sm"
+            className="flex items-center gap-2 px-4 py-2 border border-primary-container text-primary-container font-semibold rounded-lg hover:bg-primary-container/5 transition-all text-sm"
           >
             <span className="material-symbols-outlined text-lg">people</span>
             Vendors
           </Link>
           <Link
             href="/purchases/new"
-            className="flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white font-semibold rounded-lg hover:bg-[#0F172A]/90 transition-all text-sm shadow-sm active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-primary-container text-white font-semibold rounded-lg hover:bg-primary-container/90 transition-all text-sm shadow-sm active:scale-95"
           >
             <span className="material-symbols-outlined text-lg">add</span>
             New Purchase
@@ -149,44 +149,44 @@ export default function PurchasesPage() {
 
       {/* Summary Cards */}
       <div className="flex md:grid md:grid-cols-4 gap-3 md:gap-6 mb-6 overflow-x-auto hide-scrollbar pb-2 md:pb-0">
-        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-[#c6c6cd]/30 md:border-[#c6c6cd] shadow-sm">
-          <p className="text-[#505f76] text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
+        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-outline-variant/30 md:border-outline-variant shadow-sm">
+          <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
             Total Purchases
           </p>
-          <p className="font-mono text-lg md:text-2xl font-bold text-[#0F172A]">
+          <p className="font-mono text-lg md:text-2xl font-bold text-primary-container">
             {data?.summary ? data.summary.total_purchases.toLocaleString("en-IN") : "—"}
           </p>
         </div>
-        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-[#c6c6cd]/30 md:border-[#c6c6cd] shadow-sm">
-          <p className="text-[#505f76] text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
+        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-outline-variant/30 md:border-outline-variant shadow-sm">
+          <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
             Total Paid
           </p>
-          <p className="font-mono text-lg md:text-2xl font-bold text-[#059669]">
+          <p className="font-mono text-lg md:text-2xl font-bold text-tertiary">
             {data?.summary ? formatMoney(data.summary.total_paid) : "—"}
           </p>
         </div>
-        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-[#c6c6cd]/30 md:border-[#c6c6cd] shadow-sm">
-          <p className="text-[#505f76] text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
+        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-outline-variant/30 md:border-outline-variant shadow-sm">
+          <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
             Total Due
           </p>
-          <p className="font-mono text-lg md:text-2xl font-bold text-[#EF4444]">
+          <p className="font-mono text-lg md:text-2xl font-bold text-error">
             {data?.summary ? formatMoney(data.summary.total_due) : "—"}
           </p>
         </div>
-        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-[#c6c6cd]/30 md:border-[#c6c6cd] shadow-sm">
-          <p className="text-[#505f76] text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
+        <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-white p-4 md:p-6 rounded-xl border border-outline-variant/30 md:border-outline-variant shadow-sm">
+          <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
             This Month
           </p>
-          <p className="font-mono text-lg md:text-2xl font-bold text-[#505f76]">
+          <p className="font-mono text-lg md:text-2xl font-bold text-secondary">
             {data?.summary ? data.summary.this_month.toLocaleString("en-IN") : "—"}
           </p>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-[#f2f4f6] p-3 md:p-4 rounded-xl border border-[#c6c6cd]/50 mb-6 flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-[#c6c6cd] rounded-lg">
-          <span className="material-symbols-outlined text-[#505f76] text-sm">
+      <div className="bg-surface-container-low p-3 md:p-4 rounded-xl border border-outline-variant/50 mb-6 flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-outline-variant rounded-lg">
+          <span className="material-symbols-outlined text-secondary text-sm">
             calendar_today
           </span>
           <input
@@ -197,9 +197,9 @@ export default function PurchasesPage() {
             placeholder="From"
           />
         </div>
-        <span className="text-[#505f76] text-xs">—</span>
-        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-[#c6c6cd] rounded-lg">
-          <span className="material-symbols-outlined text-[#505f76] text-sm">
+        <span className="text-secondary text-xs">—</span>
+        <div className="flex items-center gap-2 bg-white px-3 py-2 border border-outline-variant rounded-lg">
+          <span className="material-symbols-outlined text-secondary text-sm">
             calendar_today
           </span>
           <input
@@ -213,7 +213,7 @@ export default function PurchasesPage() {
         <select
           value={vendorFilter}
           onChange={(e) => setVendorFilter(e.target.value)}
-          className="bg-white border border-[#c6c6cd] rounded-lg py-2 pl-3 pr-8 text-sm focus:ring-0 outline-none"
+          className="bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-8 text-sm focus:ring-0 outline-none"
         >
           <option value="">All Vendors</option>
           {(data?.vendors ?? []).map((v) => (
@@ -222,15 +222,15 @@ export default function PurchasesPage() {
             </option>
           ))}
         </select>
-        <div className="flex gap-1 bg-[#e6e8ea] p-1 rounded-lg">
+        <div className="flex gap-1 bg-surface-container-high p-1 rounded-lg">
           {["all", "paid", "partial", "due"].map((s) => (
             <button
               key={s}
               onClick={() => setStatusFilter(s)}
               className={`px-3 py-1.5 text-xs font-bold rounded transition-all ${
                 statusFilter === s
-                  ? "bg-[#0F172A] text-white"
-                  : "text-[#505f76] hover:bg-white"
+                  ? "bg-primary-container text-white"
+                  : "text-secondary hover:bg-white"
               }`}
             >
               {s === "all" ? "All" : s.charAt(0).toUpperCase() + s.slice(1)}
@@ -238,13 +238,13 @@ export default function PurchasesPage() {
           ))}
         </div>
         <div className="relative flex-1 min-w-[160px]">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#505f76] text-lg">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-lg">
             search
           </span>
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-white border border-[#c6c6cd] rounded-lg text-sm outline-none focus:ring-0"
+            className="w-full pl-10 pr-4 py-2 bg-white border border-outline-variant rounded-lg text-sm outline-none focus:ring-0"
             placeholder="Search vendor..."
           />
         </div>
@@ -256,10 +256,10 @@ export default function PurchasesPage() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="bg-white rounded-xl border border-[#c6c6cd]/30 p-6 animate-pulse"
+              className="bg-white rounded-xl border border-outline-variant/30 p-6 animate-pulse"
             >
-              <div className="h-4 bg-[#e6e8ea] rounded w-1/3 mb-3" />
-              <div className="h-4 bg-[#e6e8ea] rounded w-1/2" />
+              <div className="h-4 bg-surface-container-high rounded w-1/3 mb-3" />
+              <div className="h-4 bg-surface-container-high rounded w-1/2" />
             </div>
           ))}
         </div>
@@ -268,10 +268,10 @@ export default function PurchasesPage() {
       {/* Error */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <p className="text-[#EF4444] font-medium text-sm">{error?.message ?? "Something went wrong"}</p>
+          <p className="text-error font-medium text-sm">{error?.message ?? "Something went wrong"}</p>
           <button
             onClick={() => refetch()}
-            className="mt-3 px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
+            className="mt-3 px-4 py-2 bg-primary-container text-white text-sm rounded-lg"
           >
             Retry
           </button>
@@ -280,19 +280,19 @@ export default function PurchasesPage() {
 
       {/* Empty State */}
       {!isLoading && !error && (data?.purchases ?? []).length === 0 && (
-        <div className="bg-white rounded-xl border border-[#c6c6cd]/30 p-12 text-center">
-          <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">
+        <div className="bg-white rounded-xl border border-outline-variant/30 p-12 text-center">
+          <span className="material-symbols-outlined text-5xl text-outline-variant block mb-4">
             shopping_cart
           </span>
-          <p className="text-[#505f76] text-sm font-medium mb-1">
+          <p className="text-secondary text-sm font-medium mb-1">
             No purchases yet
           </p>
-          <p className="text-[#505f76] text-xs">
+          <p className="text-secondary text-xs">
             Start by creating your first purchase
           </p>
           <Link
             href="/purchases/new"
-            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-[#0F172A] text-white text-sm font-semibold rounded-lg"
+            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-primary-container text-white text-sm font-semibold rounded-lg"
           >
             <span className="material-symbols-outlined text-lg">add</span>
             New Purchase
@@ -302,48 +302,48 @@ export default function PurchasesPage() {
 
       {/* Desktop Table */}
       {!isLoading && !error && (data?.purchases ?? []).length > 0 && (
-        <div className="hidden md:block bg-white rounded-xl border border-[#c6c6cd] overflow-hidden shadow-sm">
+        <div className="hidden md:block bg-white rounded-xl border border-outline-variant overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
+            <thead className="bg-surface-container-high border-b border-outline-variant">
               <tr>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
                   Date
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
                   Purchase #
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
                   Vendor
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
                   Total
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
                   Paid
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
                   Due
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider text-right">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider text-right">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#c6c6cd]/50">
+            <tbody className="divide-y divide-outline-variant/50">
               {(data?.purchases ?? []).map((p) => (
                 <tr
                   key={p.id}
-                  className="hover:bg-[#F8FAFC] transition-colors group"
+                  className="hover:bg-background transition-colors group"
                 >
                   <td className="px-6 py-4 text-sm font-medium">
                     {formatDate(p.purchase_date)}
                   </td>
-                  <td className="px-6 py-4 text-sm font-bold text-[#0F172A]">
+                  <td className="px-6 py-4 text-sm font-bold text-primary-container">
                     {p.id.startsWith("ob-") ? (
-                      <span className="text-[#505f76]">Opening Balance</span>
+                      <span className="text-secondary">Opening Balance</span>
                     ) : (
                       <Link
                         href={`/purchases/${p.id}`}
@@ -364,7 +364,7 @@ export default function PurchasesPage() {
                   </td>
                   <td
                     className={`px-6 py-4 font-mono text-sm ${
-                      p.due_amount > 0 ? "text-[#EF4444]" : ""
+                      p.due_amount > 0 ? "text-error" : ""
                     }`}
                   >
                     {formatMoney(p.due_amount)}
@@ -376,7 +376,7 @@ export default function PurchasesPage() {
                     {p.id.startsWith("ob-") ? (
                       <Link
                         href={`/purchases/vendors/${p.vendor_id}`}
-                        className="text-[#0F172A] font-bold text-sm hover:underline"
+                        className="text-primary-container font-bold text-sm hover:underline"
                       >
                         View Vendor
                       </Link>
@@ -384,14 +384,14 @@ export default function PurchasesPage() {
                       <>
                         <Link
                           href={`/purchases/${p.id}`}
-                          className="text-[#059669] font-bold text-sm hover:underline"
+                          className="text-tertiary font-bold text-sm hover:underline"
                         >
                           View
                         </Link>
                         {p.status !== "paid" && (
                           <Link
                             href={`/purchases/${p.id}`}
-                            className="text-[#0F172A] font-bold text-sm hover:underline"
+                            className="text-primary-container font-bold text-sm hover:underline"
                           >
                             Pay
                           </Link>
@@ -404,8 +404,8 @@ export default function PurchasesPage() {
             </tbody>
           </table>
           {/* Pagination */}
-          <div className="px-6 py-4 bg-[#f2f4f6] border-t border-[#c6c6cd] flex items-center justify-between">
-            <span className="text-sm text-[#505f76]">
+          <div className="px-6 py-4 bg-surface-container-low border-t border-outline-variant flex items-center justify-between">
+            <span className="text-sm text-secondary">
               Showing {(page - 1) * perPage + 1}–
               {Math.min(page * perPage, data?.totalCount ?? 0)} of {data?.totalCount ?? 0}
             </span>
@@ -413,7 +413,7 @@ export default function PurchasesPage() {
               <button
                 disabled={page <= 1}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="w-8 h-8 flex items-center justify-center border border-[#c6c6cd] rounded bg-white hover:bg-[#e6e8ea] transition-colors disabled:opacity-50"
+                className="w-8 h-8 flex items-center justify-center border border-outline-variant rounded bg-white hover:bg-surface-container-high transition-colors disabled:opacity-50"
               >
                 <span className="material-symbols-outlined text-sm">
                   chevron_left
@@ -427,7 +427,7 @@ export default function PurchasesPage() {
                 .map((p, _idx, arr) => (
                   <span key={p} className="contents">
                     {_idx > 0 && arr[_idx - 1] !== p - 1 && (
-                      <span className="w-8 h-8 flex items-center justify-center text-xs text-[#505f76]">
+                      <span className="w-8 h-8 flex items-center justify-center text-xs text-secondary">
                         ...
                       </span>
                     )}
@@ -435,8 +435,8 @@ export default function PurchasesPage() {
                       onClick={() => setPage(p)}
                       className={`w-8 h-8 flex items-center justify-center text-xs font-bold rounded ${
                         page === p
-                          ? "bg-[#0F172A] text-white"
-                          : "border border-[#c6c6cd] bg-white hover:bg-[#e6e8ea]"
+                          ? "bg-primary-container text-white"
+                          : "border border-outline-variant bg-white hover:bg-surface-container-high"
                       }`}
                     >
                       {p}
@@ -446,7 +446,7 @@ export default function PurchasesPage() {
               <button
                 disabled={page >= totalPages}
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                className="w-8 h-8 flex items-center justify-center border border-[#c6c6cd] rounded bg-white hover:bg-[#e6e8ea] transition-colors disabled:opacity-50"
+                className="w-8 h-8 flex items-center justify-center border border-outline-variant rounded bg-white hover:bg-surface-container-high transition-colors disabled:opacity-50"
               >
                 <span className="material-symbols-outlined text-sm">
                   chevron_right
@@ -461,12 +461,12 @@ export default function PurchasesPage() {
       {!isLoading && !error && (data?.purchases ?? []).length > 0 && (
         <div className="md:hidden space-y-3">
           <div className="flex justify-between items-center">
-            <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-[#505f76]">
+            <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-secondary">
               Record List
             </h2>
             <Link
               href="/purchases/new"
-              className="flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white rounded-lg text-sm font-bold active:scale-95 transition-transform"
+              className="flex items-center gap-2 px-4 py-2 bg-primary-container text-white rounded-lg text-sm font-bold active:scale-95 transition-transform"
             >
               <span className="material-symbols-outlined text-[18px]">add</span>
               New
@@ -475,14 +475,14 @@ export default function PurchasesPage() {
           {(data?.purchases ?? []).map((p) => (
             <div
               key={p.id}
-              className="bg-white rounded-lg p-4 shadow-sm border border-[#c6c6cd]/20"
+              className="bg-white rounded-lg p-4 shadow-sm border border-outline-variant/20"
             >
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <h3 className="font-display font-bold text-[#0F172A] text-base">
+                  <h3 className="font-display font-bold text-primary-container text-base">
                     {p.vendor_name || "Unknown Vendor"}
                   </h3>
-                  <p className="text-xs text-[#505f76] font-medium">
+                  <p className="text-xs text-secondary font-medium">
                     {p.id.startsWith("ob-") ? "Opening Balance" : formatDate(p.purchase_date)}
                   </p>
                 </div>
@@ -490,45 +490,45 @@ export default function PurchasesPage() {
               </div>
               <div className="flex justify-between items-end mb-4">
                 <div>
-                  <p className="text-[11px] text-[#505f76] font-medium mb-0.5">
+                  <p className="text-[11px] text-secondary font-medium mb-0.5">
                     Total
                   </p>
-                  <p className="font-mono text-lg font-bold text-[#0F172A]">
+                  <p className="font-mono text-lg font-bold text-primary-container">
                     {formatMoney(p.total_amount)}
                   </p>
                 </div>
                 {p.due_amount > 0 && (
                   <div className="text-right">
-                    <p className="text-[11px] text-[#EAB308] font-medium mb-0.5">
+                    <p className="text-[11px] text-warning font-medium mb-0.5">
                       Due
                     </p>
-                    <p className="font-mono text-sm font-bold text-[#EAB308]">
+                    <p className="font-mono text-sm font-bold text-warning">
                       {formatMoney(p.due_amount)}
                     </p>
                   </div>
                 )}
               </div>
               {p.id.startsWith("ob-") ? (
-                <div className="flex gap-2 pt-3 border-t border-[#c6c6cd]/30">
+                <div className="flex gap-2 pt-3 border-t border-outline-variant/30">
                   <Link
                     href={`/purchases/vendors/${p.vendor_id}`}
-                    className="flex-1 py-2 bg-[#0F172A] text-white font-bold text-sm rounded-lg text-center"
+                    className="flex-1 py-2 bg-primary-container text-white font-bold text-sm rounded-lg text-center"
                   >
                     View Vendor
                   </Link>
                 </div>
               ) : (
-                <div className="flex gap-2 pt-3 border-t border-[#c6c6cd]/30">
+                <div className="flex gap-2 pt-3 border-t border-outline-variant/30">
                   <Link
                     href={`/purchases/${p.id}`}
-                    className="flex-1 py-2 text-[#059669] font-bold text-sm bg-[#059669]/5 rounded-lg text-center"
+                    className="flex-1 py-2 text-tertiary font-bold text-sm bg-tertiary/5 rounded-lg text-center"
                   >
                     View
                   </Link>
                   {p.status !== "paid" && (
                     <Link
                       href={`/purchases/${p.id}`}
-                      className="flex-1 py-2 bg-[#0F172A] text-white font-bold text-sm rounded-lg text-center"
+                      className="flex-1 py-2 bg-primary-container text-white font-bold text-sm rounded-lg text-center"
                     >
                       Pay
                     </Link>
