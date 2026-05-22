@@ -26,7 +26,7 @@ function formatDate(dateStr: string) {
 
 function formatMoney(n: number | string) {
   const val = typeof n === "string" ? parseFloat(n) : n;
-  return "৳" + val.toLocaleString("en-IN");
+  return val.toLocaleString("en-IN") + " tk";
 }
 
 function ResultBadge({ result }: { result: string }) {
@@ -79,25 +79,25 @@ export default function ReportsPage() {
   return (
     <div className="p-4 md:p-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-[#0F172A]">ERP</Link>
+      <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
+        <Link href="/" className="hover:text-primary-container">ERP</Link>
         <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-[#0F172A] font-bold">Reports</span>
+        <span className="text-primary-container font-bold">Reports</span>
       </nav>
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-[#0F172A] tracking-tight">
+          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-primary-container tracking-tight">
             Reports
           </h1>
-          <p className="text-[#505f76] text-sm hidden md:block">
+          <p className="text-secondary text-sm hidden md:block">
             Review historical yard performance and financial statements.
           </p>
         </div>
         <Link
           href="/reports/generate"
-          className="flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white font-semibold rounded-lg hover:bg-[#0F172A]/90 transition-all text-sm shadow-sm active:scale-95"
+          className="flex items-center gap-2 px-4 py-2 bg-primary-container text-white font-semibold rounded-lg hover:bg-primary-container/90 transition-all text-sm shadow-sm active:scale-95"
         >
           <span className="material-symbols-outlined text-lg">add_chart</span>
           Generate Report
@@ -108,9 +108,9 @@ export default function ReportsPage() {
       {isLoading && (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white rounded-xl border border-[#c6c6cd]/30 p-6 animate-pulse">
-              <div className="h-4 bg-[#e6e8ea] rounded w-1/3 mb-3" />
-              <div className="h-4 bg-[#e6e8ea] rounded w-1/2" />
+            <div key={i} className="bg-white rounded-xl border border-outline-variant/30 p-6 animate-pulse">
+              <div className="h-4 bg-surface-container-high rounded w-1/3 mb-3" />
+              <div className="h-4 bg-surface-container-high rounded w-1/2" />
             </div>
           ))}
         </div>
@@ -119,10 +119,10 @@ export default function ReportsPage() {
       {/* Error */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <p className="text-[#EF4444] font-medium text-sm">{error?.message}</p>
+          <p className="text-error font-medium text-sm">{error?.message}</p>
           <button
             onClick={() => refetch()}
-            className="mt-3 px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
+            className="mt-3 px-4 py-2 bg-primary-container text-white text-sm rounded-lg"
           >
             Retry
           </button>
@@ -131,19 +131,19 @@ export default function ReportsPage() {
 
       {/* Empty State */}
       {!isLoading && !error && reports.length === 0 && (
-        <div className="bg-white rounded-xl border border-[#c6c6cd]/30 p-12 text-center">
-          <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">
+        <div className="bg-white rounded-xl border border-outline-variant/30 p-12 text-center">
+          <span className="material-symbols-outlined text-5xl text-outline-variant block mb-4">
             analytics
           </span>
-          <p className="text-[#505f76] text-sm font-medium mb-1">
+          <p className="text-secondary text-sm font-medium mb-1">
             No reports generated yet
           </p>
-          <p className="text-[#505f76] text-xs">
+          <p className="text-secondary text-xs">
             Create your first period report to see financial and volume analysis.
           </p>
           <Link
             href="/reports/generate"
-            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-[#0F172A] text-white text-sm font-semibold rounded-lg"
+            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-primary-container text-white text-sm font-semibold rounded-lg"
           >
             <span className="material-symbols-outlined text-lg">add_chart</span>
             Generate Report
@@ -153,31 +153,31 @@ export default function ReportsPage() {
 
       {/* Desktop Table */}
       {!isLoading && !error && reports.length > 0 && (
-        <div className="hidden md:block bg-white rounded-xl border border-[#c6c6cd] overflow-hidden shadow-sm">
+        <div className="hidden md:block bg-white rounded-xl border border-outline-variant overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
+            <thead className="bg-surface-container-high border-b border-outline-variant">
               <tr>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">Period</th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">Type</th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">Date Range</th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider text-right">Income</th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider text-right">Cost</th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider text-right">Profit</th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">Result</th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">Generated At</th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider text-right">Actions</th>
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">Period</th>
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">Type</th>
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">Date Range</th>
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider text-right">Income</th>
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider text-right">Cost</th>
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider text-right">Profit</th>
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">Result</th>
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">Generated At</th>
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#c6c6cd]/50">
+            <tbody className="divide-y divide-outline-variant/50">
               {reports.map((r) => (
-                <tr key={r.id} className="hover:bg-[#F8FAFC] transition-colors group">
-                  <td className="px-6 py-4 text-sm font-bold text-[#0F172A]">
+                <tr key={r.id} className="hover:bg-background transition-colors group">
+                  <td className="px-6 py-4 text-sm font-bold text-primary-container">
                     {PeriodLabel(r)}
                   </td>
-                  <td className="px-6 py-4 text-sm text-[#505f76]">
+                  <td className="px-6 py-4 text-sm text-secondary">
                     {typeLabel[r.period_type] || r.period_type}
                   </td>
-                  <td className="px-6 py-4 text-sm text-[#505f76]">
+                  <td className="px-6 py-4 text-sm text-secondary">
                     {DateRangeLabel(r)}
                   </td>
                   <td className="px-6 py-4 font-mono text-sm text-right">
@@ -192,13 +192,13 @@ export default function ReportsPage() {
                   <td className="px-6 py-4">
                     <ResultBadge result={r.result} />
                   </td>
-                  <td className="px-6 py-4 text-sm text-[#505f76]">
+                  <td className="px-6 py-4 text-sm text-secondary">
                     {formatDate(r.generated_at)}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <Link
                       href={`/reports/${r.id}`}
-                      className="text-[#059669] font-bold text-sm hover:underline inline-flex items-center gap-1"
+                      className="text-tertiary font-bold text-sm hover:underline inline-flex items-center gap-1"
                     >
                       <span className="material-symbols-outlined text-sm">visibility</span>
                       View
@@ -215,35 +215,35 @@ export default function ReportsPage() {
       {!isLoading && !error && reports.length > 0 && (
         <div className="md:hidden space-y-3">
           {reports.map((r) => (
-            <div key={r.id} className="bg-white rounded-lg p-4 shadow-sm border border-[#c6c6cd]/20">
+            <div key={r.id} className="bg-white rounded-lg p-4 shadow-sm border border-outline-variant/20">
               <div className="flex justify-between items-start mb-2">
                 <div>
-                  <h3 className="font-display font-bold text-[#0F172A] text-base">
+                  <h3 className="font-display font-bold text-primary-container text-base">
                     {PeriodLabel(r)}
                   </h3>
-                  <p className="text-xs text-[#505f76]">{DateRangeLabel(r)}</p>
+                  <p className="text-xs text-secondary">{DateRangeLabel(r)}</p>
                 </div>
                 <ResultBadge result={r.result} />
               </div>
               <div className="grid grid-cols-3 gap-2 mb-3">
                 <div>
-                  <p className="text-[10px] text-[#505f76] font-bold uppercase tracking-wider">Income</p>
-                  <p className="font-mono text-sm font-semibold text-[#0F172A]">{formatMoney(r.total_income)}</p>
+                  <p className="text-[10px] text-secondary font-bold uppercase tracking-wider">Income</p>
+                  <p className="font-mono text-sm font-semibold text-primary-container">{formatMoney(r.total_income)}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-[#505f76] font-bold uppercase tracking-wider">Cost</p>
-                  <p className="font-mono text-sm text-[#505f76]">{formatMoney(r.total_cost)}</p>
+                  <p className="text-[10px] text-secondary font-bold uppercase tracking-wider">Cost</p>
+                  <p className="font-mono text-sm text-secondary">{formatMoney(r.total_cost)}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] text-[#505f76] font-bold uppercase tracking-wider">Profit</p>
-                  <p className={`font-mono text-sm font-bold ${r.result === "profit" ? "text-[#059669]" : "text-[#ba1a1a]"}`}>
+                  <p className="text-[10px] text-secondary font-bold uppercase tracking-wider">Profit</p>
+                  <p className={`font-mono text-sm font-bold ${r.result === "profit" ? "text-tertiary" : "text-[#ba1a1a]"}`}>
                     {formatMoney(r.net_profit)}
                   </p>
                 </div>
               </div>
               <Link
                 href={`/reports/${r.id}`}
-                className="flex items-center justify-center gap-1 py-2 text-[#059669] font-bold text-sm bg-[#059669]/5 rounded-lg"
+                className="flex items-center justify-center gap-1 py-2 text-tertiary font-bold text-sm bg-tertiary/5 rounded-lg"
               >
                 <span className="material-symbols-outlined text-sm">visibility</span>
                 View Report
