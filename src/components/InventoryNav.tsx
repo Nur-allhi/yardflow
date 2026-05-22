@@ -23,8 +23,8 @@ export function InventoryNav({ active }: InventoryNavProps) {
             href={item.href}
             className={`px-4 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${
               item.key === active
-                ? "bg-[#0F172A] text-white"
-                : "text-[#505f76] hover:bg-[#f2f4f6]"
+                ? "bg-primary-container text-white"
+                : "text-secondary hover:bg-surface-container-low"
             }`}
           >
             {item.label}
@@ -38,8 +38,8 @@ export function InventoryNav({ active }: InventoryNavProps) {
             href={item.href}
             className={`px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap transition-colors ${
               item.key === active
-                ? "bg-[#0F172A] text-white"
-                : "bg-[#f2f4f6] text-[#505f76]"
+                ? "bg-primary-container text-white"
+                : "bg-surface-container-low text-secondary"
             }`}
           >
             {item.label}

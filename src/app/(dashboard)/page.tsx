@@ -17,7 +17,7 @@ import {
 import { eq, and, sql, gte } from "drizzle-orm";
 
 function formatMoney(n: number) {
-  return "৳" + n.toLocaleString("en-IN");
+  return n.toLocaleString("en-IN") + " tk";
 }
 
 export default async function DashboardPage() {
@@ -137,29 +137,29 @@ export default async function DashboardPage() {
       {/* ── Desktop: Quick Actions Bar ── */}
       <div className="hidden md:flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-display text-[#0F172A]">
+          <h1 className="text-2xl font-bold font-display text-primary-container">
             Operational Dashboard
           </h1>
-          <p className="text-[#475569] text-sm">
+          <p className="text-on-surface-variant text-sm">
             Real-time overview for YardFlow
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href="/reports"
-            className="px-4 py-2 text-[#475569] text-sm font-medium hover:bg-[#e6e8ea] rounded transition-colors"
+            className="px-4 py-2 text-on-surface-variant text-sm font-medium hover:bg-surface-container-high rounded transition-colors"
           >
             Generate Report
           </Link>
           <Link
             href="/purchases/new"
-            className="px-4 py-2 border border-[#0F172A] text-[#0F172A] text-sm font-medium hover:bg-[#0F172A]/5 rounded transition-colors"
+            className="px-4 py-2 border border-primary-container text-primary-container text-sm font-medium hover:bg-primary-container/5 rounded transition-colors"
           >
             + New Purchase
           </Link>
           <Link
             href="/sales/new"
-            className="px-4 py-2 bg-[#0F172A] text-white text-sm font-bold rounded hover:bg-[#0F172A]/90 transition-colors"
+            className="px-4 py-2 bg-primary-container text-white text-sm font-bold rounded hover:bg-primary-container/90 transition-colors"
           >
             + New Sale
           </Link>
@@ -168,131 +168,131 @@ export default async function DashboardPage() {
 
       {/* ── Mobile: Quick Entry 2x2 Grid ── */}
       <section className="md:hidden">
-        <h2 className="font-display font-semibold text-lg mb-3 px-1 text-[#0F172A]">
+        <h2 className="font-display font-semibold text-lg mb-3 px-1 text-primary-container">
           Quick Entry
         </h2>
         <div className="grid grid-cols-2 gap-3">
-          <Link href="/sales/new" className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-[#c6c6cd]/30 shadow-sm active:scale-95 transition-all">
-            <span className="material-symbols-outlined text-[#059669] bg-[#85f8c4]/30 text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>add_shopping_cart</span>
-            <span className="text-sm font-medium text-[#0F172A]">New Sale</span>
+          <Link href="/sales/new" className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-outline-variant/30 shadow-sm active:scale-95 transition-all">
+            <span className="material-symbols-outlined text-tertiary bg-tertiary-fixed/30 text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>add_shopping_cart</span>
+            <span className="text-sm font-medium text-primary-container">New Sale</span>
           </Link>
-          <Link href="/inventory/subtypes" className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-[#c6c6cd]/30 shadow-sm active:scale-95 transition-all">
-            <span className="material-symbols-outlined text-[#3f465c] bg-[#131B2E]/10 text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>inventory_2</span>
-            <span className="text-sm font-medium text-[#0F172A]">Add Stock</span>
+          <Link href="/inventory/subtypes" className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-outline-variant/30 shadow-sm active:scale-95 transition-all">
+            <span className="material-symbols-outlined text-on-primary-fixed-variant bg-primary-container/10 text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>inventory_2</span>
+            <span className="text-sm font-medium text-primary-container">Add Stock</span>
           </Link>
-          <Link href="/hr" className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-[#c6c6cd]/30 shadow-sm active:scale-95 transition-all">
-            <span className="material-symbols-outlined text-[#38485d] bg-[#d0e1fb] text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>engineering</span>
-            <span className="text-sm font-medium text-[#0F172A]">Labor Entry</span>
+          <Link href="/hr" className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-outline-variant/30 shadow-sm active:scale-95 transition-all">
+            <span className="material-symbols-outlined text-on-secondary-fixed-variant bg-secondary-container text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>engineering</span>
+            <span className="text-sm font-medium text-primary-container">Labor Entry</span>
           </Link>
-          <Link href="/sales/new" className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-[#c6c6cd]/30 shadow-sm active:scale-95 transition-all">
-            <span className="material-symbols-outlined text-[#ba1a1a] bg-[#ffdad6] text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>local_shipping</span>
-            <span className="text-sm font-medium text-[#0F172A]">Dispatch</span>
+          <Link href="/sales/new" className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-outline-variant/30 shadow-sm active:scale-95 transition-all">
+            <span className="material-symbols-outlined text-error bg-error-container text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>local_shipping</span>
+            <span className="text-sm font-medium text-primary-container">Dispatch</span>
           </Link>
         </div>
       </section>
 
       {/* ── Desktop Title (mobile hidden) ── */}
       <div className="md:hidden">
-        <h1 className="text-xl font-bold font-display text-[#0F172A]">Dashboard</h1>
+        <h1 className="text-xl font-bold font-display text-primary-container">Dashboard</h1>
       </div>
 
       {/* ── KPI Stat Cards ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-        <div className="bg-white border border-[#c6c6cd]/30 md:border-[#c6c6cd] rounded-lg md:rounded-lg p-4 md:p-5 shadow-sm">
+        <div className="bg-white border border-outline-variant/30 md:border-outline-variant rounded-lg md:rounded-lg p-4 md:p-5 shadow-sm">
           <div className="flex justify-between items-start mb-3 md:mb-4">
-            <span className="text-[#475569] text-[10px] md:text-xs font-bold uppercase tracking-widest">
+            <span className="text-on-surface-variant text-[10px] md:text-xs font-bold uppercase tracking-widest">
               Total Stock
             </span>
-            <span className="material-symbols-outlined text-[#0F172A]/40 text-xl md:text-2xl">
+            <span className="material-symbols-outlined text-primary-container/40 text-xl md:text-2xl">
               warehouse
             </span>
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-xl md:text-2xl font-mono font-bold text-[#0F172A]">{stockKg.toFixed(1)}</span>
-            <span className="text-xs md:text-sm text-[#475569]">kg</span>
+            <span className="text-xl md:text-2xl font-mono font-bold text-primary-container">{stockKg.toFixed(1)}</span>
+            <span className="text-xs md:text-sm text-on-surface-variant">kg</span>
           </div>
         </div>
 
-        <div className="bg-white border border-[#c6c6cd]/30 md:border-[#c6c6cd] rounded-lg md:rounded-lg p-4 md:p-5 shadow-sm">
+        <div className="bg-white border border-outline-variant/30 md:border-outline-variant rounded-lg md:rounded-lg p-4 md:p-5 shadow-sm">
           <div className="flex justify-between items-start mb-3 md:mb-4">
-            <span className="text-[#475569] text-[10px] md:text-xs font-bold uppercase tracking-widest">
+            <span className="text-on-surface-variant text-[10px] md:text-xs font-bold uppercase tracking-widest">
               Today Sales
             </span>
-            <span className="material-symbols-outlined text-[#059669] text-xl md:text-2xl">
+            <span className="material-symbols-outlined text-tertiary text-xl md:text-2xl">
               payments
             </span>
           </div>
-          <div className="flex items-baseline gap-1 text-[#059669]">
+          <div className="flex items-baseline gap-1 text-tertiary">
             <span className="text-xl md:text-2xl font-mono font-bold">{
               todaySales > 0 ? formatMoney(todaySales) : "৳0"
             }</span>
           </div>
-          <div className="mt-1 md:mt-2 text-[10px] md:text-xs text-[#475569]">
+          <div className="mt-1 md:mt-2 text-[10px] md:text-xs text-on-surface-variant">
             <span>{todaySales > 0 ? "Today's revenue" : "No transactions yet"}</span>
           </div>
         </div>
 
-        <div className="bg-white border border-[#c6c6cd]/30 md:border-[#c6c6cd] rounded-lg md:rounded-lg p-4 md:p-5 shadow-sm">
+        <div className="bg-white border border-outline-variant/30 md:border-outline-variant rounded-lg md:rounded-lg p-4 md:p-5 shadow-sm">
           <div className="flex justify-between items-start mb-3 md:mb-4">
-            <span className="text-[#475569] text-[10px] md:text-xs font-bold uppercase tracking-widest">
+            <span className="text-on-surface-variant text-[10px] md:text-xs font-bold uppercase tracking-widest">
               Customers Owe
             </span>
-            <span className="material-symbols-outlined text-[#EAB308] text-xl md:text-2xl">
+            <span className="material-symbols-outlined text-warning text-xl md:text-2xl">
               account_balance_wallet
             </span>
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-xl md:text-2xl font-mono font-bold text-[#EAB308]">{formatMoney(arTotal)}</span>
+            <span className="text-xl md:text-2xl font-mono font-bold text-warning">{formatMoney(arTotal)}</span>
           </div>
         </div>
 
-        <div className="bg-white border border-[#c6c6cd]/30 md:border-[#c6c6cd] rounded-lg md:rounded-lg p-4 md:p-5 shadow-sm">
+        <div className="bg-white border border-outline-variant/30 md:border-outline-variant rounded-lg md:rounded-lg p-4 md:p-5 shadow-sm">
           <div className="flex justify-between items-start mb-3 md:mb-4">
-            <span className="text-[#475569] text-[10px] md:text-xs font-bold uppercase tracking-widest">
+            <span className="text-on-surface-variant text-[10px] md:text-xs font-bold uppercase tracking-widest">
               We Owe Vendors
             </span>
-            <span className="material-symbols-outlined text-[#475569] text-xl md:text-2xl">
+            <span className="material-symbols-outlined text-on-surface-variant text-xl md:text-2xl">
               receipt_long
             </span>
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-xl md:text-2xl font-mono font-bold text-[#EAB308]">{formatMoney(apTotal)}</span>
+            <span className="text-xl md:text-2xl font-mono font-bold text-warning">{formatMoney(apTotal)}</span>
           </div>
         </div>
       </div>
 
       {/* ── Desktop: Recent Sales + Stock Overview ── */}
       <div className="hidden md:grid grid-cols-1 lg:grid-cols-10 gap-6">
-        <div className="lg:col-span-6 bg-white border border-[#c6c6cd] rounded-lg overflow-hidden shadow-sm">
-          <div className="p-5 border-b border-[#c6c6cd] flex justify-between items-center">
-            <h3 className="font-display font-bold text-[#0F172A]">
+        <div className="lg:col-span-6 bg-white border border-outline-variant rounded-lg overflow-hidden shadow-sm">
+          <div className="p-5 border-b border-outline-variant flex justify-between items-center">
+            <h3 className="font-display font-bold text-primary-container">
               Recent Sales
             </h3>
             <Link
               href="/sales"
-              className="text-[#0F172A] text-xs font-bold hover:underline"
+              className="text-primary-container text-xs font-bold hover:underline"
             >
               View All
             </Link>
           </div>
           {recentSales.length === 0 ? (
-            <div className="p-10 text-center text-[#475569] text-sm">
+            <div className="p-10 text-center text-on-surface-variant text-sm">
               <span className="material-symbols-outlined text-4xl block mb-2">
                 shopping_cart
               </span>
               No sales recorded yet
             </div>
           ) : (
-            <div className="divide-y divide-[#c6c6cd]/30">
+            <div className="divide-y divide-outline-variant/30">
               {recentSales.map((s) => (
-                <Link key={s.id} href={`/sales/${s.id}`} className="flex items-center justify-between px-5 py-4 hover:bg-[#f2f4f6] transition-colors">
+                <Link key={s.id} href={`/sales/${s.id}`} className="flex items-center justify-between px-5 py-4 hover:bg-surface-container-low transition-colors">
                   <div>
-                    <p className="text-sm font-bold text-[#0F172A]">{s.customer_name || "Cash Sale"}</p>
-                    <p className="text-[11px] text-[#475569]">{new Date(s.sale_date).toLocaleDateString("en-IN")}</p>
+                    <p className="text-sm font-bold text-primary-container">{s.customer_name || "Cash Sale"}</p>
+                    <p className="text-[11px] text-on-surface-variant">{new Date(s.sale_date).toLocaleDateString("en-IN")}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-mono font-bold">{formatMoney(Number(s.total_amount))}</p>
-                    <span className={`text-[10px] font-bold uppercase ${s.status === "paid" ? "text-[#16A34A]" : s.status === "partial" ? "text-[#CA8A04]" : "text-[#DC2626]"}`}>{s.status}</span>
+                    <span className={`text-[10px] font-bold uppercase ${s.status === "paid" ? "text-success" : s.status === "partial" ? "text-warning" : "text-error"}`}>{s.status}</span>
                   </div>
                 </Link>
               ))}
@@ -300,31 +300,31 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        <div className="lg:col-span-4 bg-white border border-[#c6c6cd] rounded-lg p-5 shadow-sm">
-          <h3 className="font-display font-bold text-[#0F172A] mb-6">
+        <div className="lg:col-span-4 bg-white border border-outline-variant rounded-lg p-5 shadow-sm">
+          <h3 className="font-display font-bold text-primary-container mb-6">
             Stock Overview
           </h3>
           <div className="space-y-3">
             {categoryStock.length === 0 ? (
-              <div className="text-xs text-[#475569] text-center py-2">
+              <div className="text-xs text-on-surface-variant text-center py-2">
                 No categories added
               </div>
             ) : (
               categoryStock.slice(0, 5).map((c) => (
                 <div key={c.name} className="space-y-1">
                   <div className="flex justify-between text-xs">
-                    <span className="font-bold text-[#0F172A]">{c.name}</span>
-                    <span className="font-mono text-[#475569]">{c.kg.toFixed(1)} kg</span>
+                    <span className="font-bold text-primary-container">{c.name}</span>
+                    <span className="font-mono text-on-surface-variant">{c.kg.toFixed(1)} kg</span>
                   </div>
-                  <div className="w-full h-1.5 bg-[#e6e8ea] rounded-full overflow-hidden">
-                    <div className="h-full bg-[#059669] rounded-full" style={{ width: `${Math.min(100, (c.kg / (stockKg || 1)) * 100)}%` }} />
+                  <div className="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+                    <div className="h-full bg-tertiary rounded-full" style={{ width: `${Math.min(100, (c.kg / (stockKg || 1)) * 100)}%` }} />
                   </div>
                 </div>
               ))
             )}
             <Link
               href="/inventory"
-              className="block w-full py-2 bg-[#f2f4f6] text-[#0F172A] text-xs font-bold rounded border border-[#c6c6cd] hover:bg-[#e6e8ea] transition-colors text-center"
+              className="block w-full py-2 bg-surface-container-low text-primary-container text-xs font-bold rounded border border-outline-variant hover:bg-surface-container-high transition-colors text-center"
             >
               Go to Inventory
             </Link>
@@ -334,11 +334,11 @@ export default async function DashboardPage() {
 
       {/* ── Mobile: Financial Overview (Bento style) ── */}
       <section className="md:hidden space-y-3">
-        <h2 className="font-display font-semibold text-lg px-1 text-[#0F172A]">
+        <h2 className="font-display font-semibold text-lg px-1 text-primary-container">
           Financial Overview
         </h2>
-        <div className="p-5 bg-[#131B2E] text-white rounded-xl shadow-md relative overflow-hidden">
-          <div className="absolute -right-10 -top-10 w-40 h-40 bg-[#3f465c]/20 rounded-full blur-3xl" />
+        <div className="p-5 bg-primary-container text-white rounded-xl shadow-md relative overflow-hidden">
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-on-primary-fixed-variant/20 rounded-full blur-3xl" />
           <div className="flex justify-between items-start mb-4">
             <div>
               <p className="text-[10px] uppercase text-white/80 mb-1 font-medium">
@@ -362,29 +362,29 @@ export default async function DashboardPage() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-4 bg-white border border-[#c6c6cd]/30 rounded-xl">
+          <div className="p-4 bg-white border border-outline-variant/30 rounded-xl">
             <div className="flex items-center gap-2 mb-2">
-              <span className="material-symbols-outlined text-[#EAB308] text-xl">
+              <span className="material-symbols-outlined text-warning text-xl">
                 pending_actions
               </span>
-              <p className="text-[10px] text-[#505f76] uppercase font-bold">
+              <p className="text-[10px] text-secondary uppercase font-bold">
                 Pending Dues
               </p>
             </div>
-            <p className="font-mono text-lg font-bold text-[#0F172A]">{formatMoney(arTotal)}</p>
-            <p className="text-[10px] text-[#505f76] mt-1">{arTotal > 0 ? "Outstanding customer dues" : "No outstanding dues"}</p>
+            <p className="font-mono text-lg font-bold text-primary-container">{formatMoney(arTotal)}</p>
+            <p className="text-[10px] text-secondary mt-1">{arTotal > 0 ? "Outstanding customer dues" : "No outstanding dues"}</p>
           </div>
-          <div className="p-4 bg-white border border-[#c6c6cd]/30 rounded-xl">
+          <div className="p-4 bg-white border border-outline-variant/30 rounded-xl">
             <div className="flex items-center gap-2 mb-2">
-              <span className="material-symbols-outlined text-[#ba1a1a] text-xl">
+              <span className="material-symbols-outlined text-error text-xl">
                 payments
               </span>
-              <p className="text-[10px] text-[#505f76] uppercase font-bold">
+              <p className="text-[10px] text-secondary uppercase font-bold">
                 Salaries
               </p>
             </div>
-            <p className="font-mono text-lg font-bold text-[#0F172A]">{pendingSalaryCount}</p>
-            <p className="text-[10px] text-[#505f76] mt-1">{pendingSalaryCount > 0 ? `${pendingSalaryCount} worker${pendingSalaryCount > 1 ? "s" : ""} unpaid` : "No pending salaries"}</p>
+            <p className="font-mono text-lg font-bold text-primary-container">{pendingSalaryCount}</p>
+            <p className="text-[10px] text-secondary mt-1">{pendingSalaryCount > 0 ? `${pendingSalaryCount} worker${pendingSalaryCount > 1 ? "s" : ""} unpaid` : "No pending salaries"}</p>
           </div>
         </div>
       </section>
@@ -392,12 +392,12 @@ export default async function DashboardPage() {
       {/* ── Mobile: Recent Sales Card List ── */}
       <section className="md:hidden">
         <div className="flex justify-between items-center mb-4 px-1">
-          <h2 className="font-display font-semibold text-lg text-[#0F172A]">
+          <h2 className="font-display font-semibold text-lg text-primary-container">
             Recent Sales
           </h2>
           <Link
             href="/sales"
-            className="text-[#059669] text-xs font-bold flex items-center"
+            className="text-tertiary text-xs font-bold flex items-center"
           >
             View All
             <span className="material-symbols-outlined text-sm ml-1">
@@ -406,8 +406,8 @@ export default async function DashboardPage() {
           </Link>
         </div>
         {recentSales.length === 0 ? (
-          <div className="p-10 text-center text-[#475569] text-sm bg-white rounded-xl border border-[#c6c6cd]/30">
-            <span className="material-symbols-outlined text-4xl block mb-2 text-[#c6c6cd]">
+          <div className="p-10 text-center text-on-surface-variant text-sm bg-white rounded-xl border border-outline-variant/30">
+            <span className="material-symbols-outlined text-4xl block mb-2 text-outline-variant">
               shopping_cart
             </span>
             No sales recorded yet
@@ -415,15 +415,15 @@ export default async function DashboardPage() {
         ) : (
           <div className="space-y-2">
             {recentSales.slice(0, 3).map((s) => (
-              <Link key={s.id} href={`/sales/${s.id}`} className="block bg-white p-4 rounded-xl border border-[#c6c6cd]/30">
+              <Link key={s.id} href={`/sales/${s.id}`} className="block bg-white p-4 rounded-xl border border-outline-variant/30">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="text-sm font-bold text-[#0F172A]">{s.customer_name || "Cash Sale"}</p>
-                    <p className="text-xs text-[#475569]">{new Date(s.sale_date).toLocaleDateString("en-IN")}</p>
+                    <p className="text-sm font-bold text-primary-container">{s.customer_name || "Cash Sale"}</p>
+                    <p className="text-xs text-on-surface-variant">{new Date(s.sale_date).toLocaleDateString("en-IN")}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-mono font-bold">{formatMoney(Number(s.total_amount))}</p>
-                    <span className={`text-[10px] font-bold uppercase ${s.status === "paid" ? "text-[#16A34A]" : s.status === "partial" ? "text-[#CA8A04]" : "text-[#DC2626]"}`}>{s.status}</span>
+                    <span className={`text-[10px] font-bold uppercase ${s.status === "paid" ? "text-success" : s.status === "partial" ? "text-warning" : "text-error"}`}>{s.status}</span>
                   </div>
                 </div>
               </Link>
@@ -434,17 +434,17 @@ export default async function DashboardPage() {
 
       {/* ── Desktop: Account Balances, Pending Dues, Pending Salaries ── */}
       <div className="hidden md:grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white border border-[#c6c6cd] rounded-lg p-5 shadow-sm">
+        <div className="bg-white border border-outline-variant rounded-lg p-5 shadow-sm">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="font-display font-bold text-[#0F172A]">
+            <h3 className="font-display font-bold text-primary-container">
               Account Balances
             </h3>
-            <span className="material-symbols-outlined text-[#76777d]">
+            <span className="material-symbols-outlined text-outline">
               account_balance
             </span>
           </div>
           {accountList.length === 0 ? (
-          <div className="text-center text-[#475569] text-sm py-6">
+          <div className="text-center text-on-surface-variant text-sm py-6">
             <span className="material-symbols-outlined text-3xl block mb-2">
               account_balance
             </span>
@@ -453,82 +453,82 @@ export default async function DashboardPage() {
         ) : (
           <div className="space-y-3">
             {accountList.map((a) => (
-              <div key={a.id} className="flex justify-between items-center py-2 border-b border-[#c6c6cd]/20 last:border-0">
+              <div key={a.id} className="flex justify-between items-center py-2 border-b border-outline-variant/20 last:border-0">
                 <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${a.type === "cash" ? "bg-[#059669]" : "bg-[#0F172A]"}`} />
-                  <span className="text-sm font-medium text-[#0F172A]">{a.name}</span>
+                  <span className={`w-2 h-2 rounded-full ${a.type === "cash" ? "bg-tertiary" : "bg-primary-container"}`} />
+                  <span className="text-sm font-medium text-primary-container">{a.name}</span>
                 </div>
                 <span className="text-sm font-mono font-bold">{formatMoney(Number(a.current_balance))}</span>
               </div>
             ))}
-            <div className="flex justify-between items-center pt-2 border-t border-[#0F172A]/20">
-              <span className="text-sm font-bold text-[#0F172A]">Total</span>
-              <span className="text-sm font-mono font-bold text-[#059669]">{formatMoney(grandTotal)}</span>
+            <div className="flex justify-between items-center pt-2 border-t border-primary-container/20">
+              <span className="text-sm font-bold text-primary-container">Total</span>
+              <span className="text-sm font-mono font-bold text-tertiary">{formatMoney(grandTotal)}</span>
             </div>
           </div>
         )}
         </div>
 
-        <div className="bg-white border border-[#c6c6cd] rounded-lg p-5 shadow-sm">
+        <div className="bg-white border border-outline-variant rounded-lg p-5 shadow-sm">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="font-display font-bold text-[#0F172A]">
+            <h3 className="font-display font-bold text-primary-container">
               Pending Dues
             </h3>
-            <span className="material-symbols-outlined text-[#76777d]">
+            <span className="material-symbols-outlined text-outline">
               pending_actions
             </span>
           </div>
           <div className="space-y-3">
             <div className="flex justify-between items-center py-2">
-              <span className="text-sm text-[#475569]">Customers owe us</span>
-              <span className="text-sm font-mono font-bold text-[#EAB308]">{formatMoney(arTotal)}</span>
+              <span className="text-sm text-on-surface-variant">Customers owe us</span>
+              <span className="text-sm font-mono font-bold text-warning">{formatMoney(arTotal)}</span>
             </div>
-            <div className="flex justify-between items-center py-2 border-t border-[#c6c6cd]/20">
-              <span className="text-sm text-[#475569]">We owe vendors</span>
-              <span className="text-sm font-mono font-bold text-[#EAB308]">{formatMoney(apTotal)}</span>
+            <div className="flex justify-between items-center py-2 border-t border-outline-variant/20">
+              <span className="text-sm text-on-surface-variant">We owe vendors</span>
+              <span className="text-sm font-mono font-bold text-warning">{formatMoney(apTotal)}</span>
             </div>
             {arTotal === 0 && apTotal === 0 && (
-              <div className="text-center text-[#475569] text-sm py-4">No pending dues</div>
+              <div className="text-center text-on-surface-variant text-sm py-4">No pending dues</div>
             )}
           </div>
         </div>
 
-        <div className="bg-white border border-[#c6c6cd] rounded-lg p-5 shadow-sm">
+        <div className="bg-white border border-outline-variant rounded-lg p-5 shadow-sm">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="font-display font-bold text-[#0F172A]">
+            <h3 className="font-display font-bold text-primary-container">
               Pending Salaries
             </h3>
-            <span className="material-symbols-outlined text-[#76777d]">
+            <span className="material-symbols-outlined text-outline">
               groups
             </span>
           </div>
           {pendingSalaryCount > 0 ? (
             <div className="text-center py-6">
-              <p className="text-3xl font-mono font-bold text-[#DC2626]">{pendingSalaryCount}</p>
-              <p className="text-sm text-[#475569] mt-1">worker{pendingSalaryCount > 1 ? "s" : ""} not yet paid</p>
+              <p className="text-3xl font-mono font-bold text-error">{pendingSalaryCount}</p>
+              <p className="text-sm text-on-surface-variant mt-1">worker{pendingSalaryCount > 1 ? "s" : ""} not yet paid</p>
             </div>
           ) : (
-            <div className="text-center text-[#475569] text-sm py-6">No pending salaries</div>
+            <div className="text-center text-on-surface-variant text-sm py-6">No pending salaries</div>
           )}
         </div>
       </div>
 
       {/* ── Mobile: Stock Trend Placeholder ── */}
-      <section className="md:hidden h-48 w-full bg-[#eceef0] rounded-xl overflow-hidden relative border border-[#c6c6cd]/30 mb-4">
-        <div className="absolute inset-0 bg-gradient-to-t from-[#e0e3e5] to-transparent opacity-50" />
+      <section className="md:hidden h-48 w-full bg-surface-container rounded-xl overflow-hidden relative border border-outline-variant/30 mb-4">
+        <div className="absolute inset-0 bg-gradient-to-t from-surface-container-highest to-transparent opacity-50" />
         <div className="absolute top-4 left-4">
-          <p className="text-[10px] font-bold text-[#505f76] uppercase">
+          <p className="text-[10px] font-bold text-secondary uppercase">
             Stock Trend (7 Days)
           </p>
         </div>
         <div className="absolute bottom-4 left-0 right-0 h-24 flex items-end justify-around px-4">
-          <div className="w-8 bg-[#0F172A] rounded-t-sm h-[40%]" />
-          <div className="w-8 bg-[#0F172A] rounded-t-sm h-[60%]" />
-          <div className="w-8 bg-[#0F172A] rounded-t-sm h-[55%]" />
-          <div className="w-8 bg-[#0F172A] rounded-t-sm h-[80%]" />
-          <div className="w-8 bg-[#0F172A] rounded-t-sm h-[70%]" />
-          <div className="w-8 bg-[#68dba9] rounded-t-sm h-[95%]" />
-          <div className="w-8 bg-[#bec6e0] rounded-t-sm h-[65%]" />
+          <div className="w-8 bg-primary-container rounded-t-sm h-[40%]" />
+          <div className="w-8 bg-primary-container rounded-t-sm h-[60%]" />
+          <div className="w-8 bg-primary-container rounded-t-sm h-[55%]" />
+          <div className="w-8 bg-primary-container rounded-t-sm h-[80%]" />
+          <div className="w-8 bg-primary-container rounded-t-sm h-[70%]" />
+          <div className="w-8 bg-tertiary-fixed-dim rounded-t-sm h-[95%]" />
+          <div className="w-8 bg-primary-fixed-dim rounded-t-sm h-[65%]" />
         </div>
       </section>
     </div>

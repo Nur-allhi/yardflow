@@ -32,10 +32,10 @@ export default function MobileSidebar() {
       {/* Hamburger Button */}
       <button
         onClick={() => setOpen(true)}
-        className="md:hidden fixed top-[14px] left-4 z-50 p-2 hover:bg-[#f2f4f6] rounded-lg transition-colors"
+        className="md:hidden fixed top-[14px] left-4 z-50 p-2 hover:bg-surface-container-low rounded-lg transition-colors"
         aria-label="Open menu"
       >
-        <span className="material-symbols-outlined text-[#0F172A]">menu</span>
+        <span className="material-symbols-outlined text-primary-container">menu</span>
       </button>
 
       {/* Overlay */}
@@ -48,23 +48,23 @@ export default function MobileSidebar() {
 
       {/* Drawer */}
       <aside
-        className={`fixed top-0 left-0 h-full w-[280px] bg-[#131B2E] flex flex-col py-6 px-3 z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed top-0 left-0 h-full w-[280px] bg-primary-container flex flex-col py-6 px-3 z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="mb-8 px-4 flex items-center justify-between">
           <div>
             <h1 className="font-display text-2xl font-bold text-white">YardFlow</h1>
-            <p className="text-[#7c839b] text-xs uppercase tracking-widest mt-1">
+            <p className="text-on-primary-container text-xs uppercase tracking-widest mt-1">
               Industrial ERP
             </p>
           </div>
           <button
             onClick={() => setOpen(false)}
-            className="p-2 hover:bg-[#3f465c] rounded-lg transition-colors"
+            className="p-2 hover:bg-on-primary-fixed-variant rounded-lg transition-colors"
             aria-label="Close menu"
           >
-            <span className="material-symbols-outlined text-[#7c839b]">close</span>
+            <span className="material-symbols-outlined text-on-primary-container">close</span>
           </button>
         </div>
 
@@ -78,8 +78,8 @@ export default function MobileSidebar() {
                 onClick={() => setOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all ${
                   active
-                    ? "bg-[#3f465c] text-white"
-                    : "text-[#7c839b] hover:bg-[#3f465c] hover:text-white"
+                    ? "bg-on-primary-fixed-variant text-white"
+                    : "text-on-primary-container hover:bg-on-primary-fixed-variant hover:text-white"
                 }`}
               >
                 <span
@@ -94,7 +94,7 @@ export default function MobileSidebar() {
           })}
         </nav>
 
-        <div className="mt-auto space-y-1 pt-4 border-t border-[#3f465c]/30">
+        <div className="mt-auto space-y-1 pt-4 border-t border-on-primary-fixed-variant/30">
           {bottomItems.map((item) => {
             const active = isActive(item.href);
             return (
@@ -104,8 +104,8 @@ export default function MobileSidebar() {
                 onClick={() => setOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all ${
                   active
-                    ? "bg-[#3f465c] text-white"
-                    : "text-[#7c839b] hover:bg-[#3f465c] hover:text-white"
+                    ? "bg-on-primary-fixed-variant text-white"
+                    : "text-on-primary-container hover:bg-on-primary-fixed-variant hover:text-white"
                 }`}
               >
                 <span className="material-symbols-outlined">{item.icon}</span>
@@ -120,7 +120,7 @@ export default function MobileSidebar() {
                 window.location.href = "/login";
               });
             }}
-            className="flex items-center gap-3 px-4 py-3 rounded-md transition-all text-[#7c839b] hover:bg-[#3f465c] hover:text-white w-full text-left"
+            className="flex items-center gap-3 px-4 py-3 rounded-md transition-all text-on-primary-container hover:bg-on-primary-fixed-variant hover:text-white w-full text-left"
           >
             <span className="material-symbols-outlined">logout</span>
             <span className="text-sm font-medium">Logout</span>
