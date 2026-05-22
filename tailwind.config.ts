@@ -62,9 +62,10 @@ const config: Config = {
         "on-secondary": "#ffffff",
       },
       borderRadius: {
-        DEFAULT: "0.25rem",
-        lg: "0.5rem",
-        xl: "0.75rem",
+        sm: "4px",
+        DEFAULT: "8px",
+        md: "12px",
+        lg: "16px",
         full: "9999px",
       },
       spacing: {
@@ -77,15 +78,15 @@ const config: Config = {
         "3xl": "64px",
       },
       fontFamily: {
-        display: ["Plus Jakarta Sans", "sans-serif"],
-        h1: ["Plus Jakarta Sans", "sans-serif"],
-        h2: ["Plus Jakarta Sans", "sans-serif"],
-        h3: ["Plus Jakarta Sans", "sans-serif"],
-        h4: ["Plus Jakarta Sans", "sans-serif"],
-        body: ["DM Sans", "sans-serif"],
-        "body-lg": ["DM Sans", "sans-serif"],
-        "body-sm": ["DM Sans", "sans-serif"],
-        caption: ["DM Sans", "sans-serif"],
+        display: ["var(--font-display)", "Plus Jakarta Sans", "sans-serif"],
+        h1: ["var(--font-display)", "Plus Jakarta Sans", "sans-serif"],
+        h2: ["var(--font-display)", "Plus Jakarta Sans", "sans-serif"],
+        h3: ["var(--font-display)", "Plus Jakarta Sans", "sans-serif"],
+        h4: ["var(--font-display)", "Plus Jakarta Sans", "sans-serif"],
+        body: ["var(--font-body)", "DM Sans", "sans-serif"],
+        "body-lg": ["var(--font-body)", "DM Sans", "sans-serif"],
+        "body-sm": ["var(--font-body)", "DM Sans", "sans-serif"],
+        caption: ["var(--font-body)", "DM Sans", "sans-serif"],
         code: ["Fira Code", "monospace"],
       },
       fontSize: {
@@ -102,9 +103,10 @@ const config: Config = {
         code: ["14px", { lineHeight: "1.6", fontWeight: "400" }],
       },
       boxShadow: {
-        card: "0 4px 24px rgba(15, 23, 42, 0.05)",
-        elevated: "0 8px 32px rgba(15, 23, 42, 0.07)",
-        modal: "0 12px 48px rgba(15, 23, 42, 0.1)",
+        sm: "0 1px 3px rgba(15, 23, 42, 0.03)",
+        DEFAULT: "0 2px 6px rgba(15, 23, 42, 0.05)",
+        md: "0 4px 16px rgba(15, 23, 42, 0.07)",
+        lg: "0 8px 32px rgba(15, 23, 42, 0.10)",
       },
       keyframes: {
         "slide-up": {
