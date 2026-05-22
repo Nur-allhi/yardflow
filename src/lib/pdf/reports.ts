@@ -29,8 +29,8 @@ interface ReportData {
 
 function fmtMoney(n: number | string): string {
   const val = typeof n === "string" ? parseFloat(n) : n;
-  if (isNaN(val)) return "৳0";
-  return "৳" + val.toLocaleString("en-IN");
+  if (isNaN(val)) return "0 tk";
+  return val.toLocaleString("en-IN") + " tk";
 }
 
 function fmtKg(n: number | string): string {
