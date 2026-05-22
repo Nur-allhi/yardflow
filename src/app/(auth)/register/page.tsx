@@ -95,21 +95,21 @@ export default function RegisterPage() {
   return (
     <>
       {/* DESKTOP LAYOUT */}
-      <div className="hidden lg:flex min-h-screen items-center justify-center bg-[#F8FAFC] py-2xl px-md">
-        <main className="w-full max-w-[560px] bg-white rounded-lg shadow-card p-10 flex flex-col gap-xl">
+      <div className="hidden lg:flex min-h-screen items-center justify-center bg-background py-2xl px-md">
+        <main className="w-full max-w-[560px] bg-surface rounded-lg shadow-card p-10 flex flex-col gap-xl">
           <header className="text-center flex flex-col items-center">
             <div className="flex items-center gap-sm mb-md">
-              <div className="bg-black p-1.5 rounded-sm">
+              <div className="bg-primary-container p-1.5 rounded-sm">
                 <span className="material-symbols-outlined text-white text-[20px]">
                   factory
                 </span>
               </div>
-              <h2 className="text-h3 font-h3 text-black">YardFlow ERP</h2>
+              <h2 className="text-h3 font-h3 text-primary-container">YardFlow ERP</h2>
             </div>
-            <h1 className="text-h1-mobile font-h1 text-black mb-xs">
+            <h1 className="text-h1-mobile font-h1 text-primary-container mb-xs">
               Register your business
             </h1>
-            <p className="text-body-sm font-body-sm text-[#475569]">
+            <p className="text-body-sm font-body-sm text-on-surface-variant">
               Set up your organization in 2 minutes
             </p>
           </header>
@@ -122,13 +122,13 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-xl">
             <fieldset className="flex flex-col gap-md p-0 m-0 border-none">
-              <legend className="text-h4 font-h4 text-black mb-sm">
+              <legend className="text-h4 font-h4 text-primary-container mb-sm">
                 Organization Details
               </legend>
 
               <div className="flex flex-col gap-xs">
                 <label
-                  className="text-body-sm font-body-sm font-bold text-[#0F172A]"
+                  className="text-body-sm font-body-sm font-bold text-primary-container"
                   htmlFor="business_name"
                 >
                   Business Name <span className="text-error">*</span>
@@ -138,14 +138,14 @@ export default function RegisterPage() {
                   required
                   value={form.company_name}
                   onChange={(e) => update("company_name", e.target.value)}
-                  className="h-[42px] px-md border border-border-base rounded bg-white text-body-sm font-body-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none transition-all"
+                  className="h-[42px] px-md border border-border-base rounded bg-surface text-body-sm font-body-sm focus:border-primary-container focus:ring-2 focus:ring-primary-container/10 outline-none transition-all"
                   placeholder="e.g. Atlantic Scrap & Recovery"
                 />
               </div>
 
               <div className="flex flex-col gap-xs">
                 <label
-                  className="text-body-sm font-body-sm font-bold text-[#0F172A]"
+                  className="text-body-sm font-body-sm font-bold text-primary-container"
                   htmlFor="phone_number"
                 >
                   Phone Number
@@ -155,14 +155,14 @@ export default function RegisterPage() {
                   type="tel"
                   value={form.phone}
                   onChange={(e) => update("phone", e.target.value)}
-                  className="h-[42px] px-md border border-border-base rounded bg-white text-body-sm font-body-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none transition-all"
+                  className="h-[42px] px-md border border-border-base rounded bg-surface text-body-sm font-body-sm focus:border-primary-container focus:ring-2 focus:ring-primary-container/10 outline-none transition-all"
                   placeholder="+880 1XXX XXXXXXX"
                 />
               </div>
 
               <div className="flex flex-col gap-xs">
                 <label
-                  className="text-body-sm font-body-sm font-bold text-[#0F172A]"
+                  className="text-body-sm font-body-sm font-bold text-primary-container"
                   htmlFor="business_address"
                 >
                   Business Address
@@ -172,7 +172,7 @@ export default function RegisterPage() {
                   value={form.address}
                   onChange={(e) => update("address", e.target.value)}
                   rows={3}
-                  className="p-md border border-border-base rounded bg-white text-body-sm font-body-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none transition-all resize-none"
+                  className="p-md border border-border-base rounded bg-surface text-body-sm font-body-sm focus:border-primary-container focus:ring-2 focus:ring-primary-container/10 outline-none transition-all resize-none"
                   placeholder="Enter full registered address..."
                 />
               </div>
@@ -181,13 +181,13 @@ export default function RegisterPage() {
             <hr className="border-t border-border-base" />
 
             <fieldset className="flex flex-col gap-md p-0 m-0 border-none">
-              <legend className="text-h4 font-h4 text-black mb-sm">
+              <legend className="text-h4 font-h4 text-primary-container mb-sm">
                 Owner Account
               </legend>
 
               <div className="flex flex-col gap-xs">
                 <label
-                  className="text-body-sm font-body-sm font-bold text-[#0F172A]"
+                  className="text-body-sm font-body-sm font-bold text-primary-container"
                   htmlFor="full_name"
                 >
                   Your Full Name
@@ -197,14 +197,14 @@ export default function RegisterPage() {
                   required
                   value={form.owner_name}
                   onChange={(e) => update("owner_name", e.target.value)}
-                  className="h-[42px] px-md border border-border-base rounded bg-white text-body-sm font-body-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none transition-all"
+                  className="h-[42px] px-md border border-border-base rounded bg-surface text-body-sm font-body-sm focus:border-primary-container focus:ring-2 focus:ring-primary-container/10 outline-none transition-all"
                   placeholder="John Doe"
                 />
               </div>
 
               <div className="flex flex-col gap-xs">
                 <label
-                  className="text-body-sm font-body-sm font-bold text-[#0F172A]"
+                  className="text-body-sm font-body-sm font-bold text-primary-container"
                   htmlFor="email"
                 >
                   Email Address
@@ -215,7 +215,7 @@ export default function RegisterPage() {
                   required
                   value={form.email}
                   onChange={(e) => update("email", e.target.value)}
-                  className="h-[42px] px-md border border-border-base rounded bg-white text-body-sm font-body-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none transition-all"
+                  className="h-[42px] px-md border border-border-base rounded bg-surface text-body-sm font-body-sm focus:border-primary-container focus:ring-2 focus:ring-primary-container/10 outline-none transition-all"
                   placeholder="john@company.com"
                 />
               </div>
@@ -223,7 +223,7 @@ export default function RegisterPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
                 <div className="flex flex-col gap-xs">
                   <label
-                    className="text-body-sm font-body-sm font-bold text-[#0F172A]"
+                    className="text-body-sm font-body-sm font-bold text-primary-container"
                     htmlFor="password"
                   >
                     Password
@@ -235,7 +235,7 @@ export default function RegisterPage() {
                     minLength={6}
                     value={form.password}
                     onChange={(e) => update("password", e.target.value)}
-                    className="h-[42px] px-md border border-border-base rounded bg-white text-body-sm font-body-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none transition-all"
+                    className="h-[42px] px-md border border-border-base rounded bg-surface text-body-sm font-body-sm focus:border-primary-container focus:ring-2 focus:ring-primary-container/10 outline-none transition-all"
                     placeholder="••••••••"
                   />
                   {form.password && (
@@ -248,7 +248,7 @@ export default function RegisterPage() {
                           Strength: {strength.label}
                         </span>
                       </div>
-                      <div className="h-1.5 w-full bg-[#eceef0] rounded-full overflow-hidden">
+                      <div className="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
                         <div
                           className="h-full transition-all duration-300"
                           style={{
@@ -263,7 +263,7 @@ export default function RegisterPage() {
 
                 <div className="flex flex-col gap-xs">
                   <label
-                    className="text-body-sm font-body-sm font-bold text-[#0F172A]"
+                    className="text-body-sm font-body-sm font-bold text-primary-container"
                     htmlFor="confirm_password"
                   >
                     Confirm Password
@@ -275,7 +275,7 @@ export default function RegisterPage() {
                     minLength={6}
                     value={form.confirm_password}
                     onChange={(e) => update("confirm_password", e.target.value)}
-                    className="h-[42px] px-md border border-border-base rounded bg-white text-body-sm font-body-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/10 outline-none transition-all"
+                    className="h-[42px] px-md border border-border-base rounded bg-surface text-body-sm font-body-sm focus:border-primary-container focus:ring-2 focus:ring-primary-container/10 outline-none transition-all"
                     placeholder="••••••••"
                   />
                 </div>
@@ -286,7 +286,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 bg-black text-white font-body font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-sm disabled:opacity-40"
+                className="w-full h-12 bg-primary-container text-white font-body font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-sm disabled:opacity-40"
               >
                 {loading ? (
                   "Creating..."
@@ -302,7 +302,7 @@ export default function RegisterPage() {
               <div className="text-center">
                 <Link
                   href="/login"
-                  className="text-body-sm font-body-sm font-medium text-[#059669] hover:underline inline-flex items-center gap-xs"
+                  className="text-body-sm font-body-sm font-medium text-tertiary hover:underline inline-flex items-center gap-xs"
                 >
                   Already registered? Sign in &rarr;
                 </Link>
@@ -333,13 +333,13 @@ export default function RegisterPage() {
       </div>
 
       {/* MOBILE LAYOUT */}
-      <div className="lg:hidden bg-[#F8FAFC] min-h-screen">
-        <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md px-[20px] py-md border-b border-border-base">
+      <div className="lg:hidden bg-background min-h-screen">
+        <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md px-[20px] py-md border-b border-border-base">
           <div className="flex flex-col gap-xs">
-            <span className="text-h3 font-h3 text-[#0F172A] tracking-tight">
+            <span className="text-h3 font-h3 text-primary-container tracking-tight">
               YardFlow ERP
             </span>
-            <h1 className="text-h1-mobile font-h1 text-[#0F172A]">
+            <h1 className="text-h1-mobile font-h1 text-primary-container">
               Register your business
             </h1>
           </div>
@@ -359,7 +359,7 @@ export default function RegisterPage() {
           >
             <section className="flex flex-col gap-lg">
               <div className="flex items-center gap-sm">
-                <span className="material-symbols-outlined text-[#0F172A]">
+                <span className="material-symbols-outlined text-primary-container">
                   corporate_fare
                 </span>
                 <h2 className="text-h3 font-h3">Organization Details</h2>
@@ -368,7 +368,7 @@ export default function RegisterPage() {
               <div className="grid gap-md">
                 <div className="flex flex-col gap-xs">
                   <label
-                    className="text-body-sm font-body-sm font-bold text-[#475569]"
+                    className="text-body-sm font-body-sm font-bold text-on-surface-variant"
                     htmlFor="biz-mobile"
                   >
                     Business Name
@@ -378,14 +378,14 @@ export default function RegisterPage() {
                     required
                     value={form.company_name}
                     onChange={(e) => update("company_name", e.target.value)}
-                    className="h-[42px] px-md rounded border border-border-base focus:border-[#059669] focus:ring-1 focus:ring-[#059669] outline-none transition-all placeholder:text-[#c6c6cd] bg-white"
+                    className="h-[42px] px-md rounded border border-border-base focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline-variant bg-surface"
                     placeholder="e.g. Atlantic Scrap Metal Ltd."
                   />
                 </div>
 
                 <div className="flex flex-col gap-xs">
                   <label
-                    className="text-body-sm font-body-sm font-bold text-[#475569]"
+                    className="text-body-sm font-body-sm font-bold text-on-surface-variant"
                     htmlFor="phone-mobile"
                   >
                     Phone Number
@@ -395,14 +395,14 @@ export default function RegisterPage() {
                     type="tel"
                     value={form.phone}
                     onChange={(e) => update("phone", e.target.value)}
-                    className="h-[42px] px-md rounded border border-border-base focus:border-[#059669] focus:ring-1 focus:ring-[#059669] outline-none transition-all placeholder:text-[#c6c6cd] bg-white"
+                    className="h-[42px] px-md rounded border border-border-base focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline-variant bg-surface"
                     placeholder="+880 1XXX XXXXXXX"
                   />
                 </div>
 
                 <div className="flex flex-col gap-xs">
                   <label
-                    className="text-body-sm font-body-sm font-bold text-[#475569]"
+                    className="text-body-sm font-body-sm font-bold text-on-surface-variant"
                     htmlFor="address-mobile"
                   >
                     Business Address
@@ -412,18 +412,18 @@ export default function RegisterPage() {
                     value={form.address}
                     onChange={(e) => update("address", e.target.value)}
                     rows={3}
-                    className="p-md rounded border border-border-base focus:border-[#059669] focus:ring-1 focus:ring-[#059669] outline-none transition-all placeholder:text-[#c6c6cd] bg-white resize-none"
+                    className="p-md rounded border border-border-base focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline-variant bg-surface resize-none"
                     placeholder="Enter full address..."
                   />
                 </div>
               </div>
             </section>
 
-            <div className="h-[1px] bg-[#c6c6cd]/30" />
+            <div className="h-[1px] bg-outline-variant/30" />
 
             <section className="flex flex-col gap-lg">
               <div className="flex items-center gap-sm">
-                <span className="material-symbols-outlined text-[#0F172A]">
+                <span className="material-symbols-outlined text-primary-container">
                   account_circle
                 </span>
                 <h2 className="text-h3 font-h3">Owner Account</h2>
@@ -432,7 +432,7 @@ export default function RegisterPage() {
               <div className="grid gap-md">
                 <div className="flex flex-col gap-xs">
                   <label
-                    className="text-body-sm font-body-sm font-bold text-[#475569]"
+                    className="text-body-sm font-body-sm font-bold text-on-surface-variant"
                     htmlFor="name-mobile"
                   >
                     Full Name
@@ -442,14 +442,14 @@ export default function RegisterPage() {
                     required
                     value={form.owner_name}
                     onChange={(e) => update("owner_name", e.target.value)}
-                    className="h-[42px] px-md rounded border border-border-base focus:border-[#059669] focus:ring-1 focus:ring-[#059669] outline-none transition-all placeholder:text-[#c6c6cd] bg-white"
+                    className="h-[42px] px-md rounded border border-border-base focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline-variant bg-surface"
                     placeholder="John Doe"
                   />
                 </div>
 
                 <div className="flex flex-col gap-xs">
                   <label
-                    className="text-body-sm font-body-sm font-bold text-[#475569]"
+                    className="text-body-sm font-body-sm font-bold text-on-surface-variant"
                     htmlFor="email-mobile"
                   >
                     Email Address
@@ -460,14 +460,14 @@ export default function RegisterPage() {
                     required
                     value={form.email}
                     onChange={(e) => update("email", e.target.value)}
-                    className="h-[42px] px-md rounded border border-border-base focus:border-[#059669] focus:ring-1 focus:ring-[#059669] outline-none transition-all placeholder:text-[#c6c6cd] bg-white"
+                    className="h-[42px] px-md rounded border border-border-base focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline-variant bg-surface"
                     placeholder="admin@company.com"
                   />
                 </div>
 
                 <div className="flex flex-col gap-xs">
                   <label
-                    className="text-body-sm font-body-sm font-bold text-[#475569]"
+                    className="text-body-sm font-body-sm font-bold text-on-surface-variant"
                     htmlFor="pass-mobile"
                   >
                     Password
@@ -479,12 +479,12 @@ export default function RegisterPage() {
                     minLength={6}
                     value={form.password}
                     onChange={(e) => update("password", e.target.value)}
-                    className="h-[42px] px-md rounded border border-border-base focus:border-[#059669] focus:ring-1 focus:ring-[#059669] outline-none transition-all placeholder:text-[#c6c6cd] bg-white"
+                    className="h-[42px] px-md rounded border border-border-base focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline-variant bg-surface"
                     placeholder="••••••••"
                   />
                   {form.password && (
                     <div className="mt-xs">
-                      <div className="w-full bg-[#eceef0] h-[4px] rounded-full overflow-hidden">
+                      <div className="w-full bg-surface-container h-[4px] rounded-full overflow-hidden">
                         <div
                           className="h-full transition-all duration-300 rounded-full"
                           style={{
@@ -505,7 +505,7 @@ export default function RegisterPage() {
 
                 <div className="flex flex-col gap-xs">
                   <label
-                    className="text-body-sm font-body-sm font-bold text-[#475569]"
+                    className="text-body-sm font-body-sm font-bold text-on-surface-variant"
                     htmlFor="confirm-mobile"
                   >
                     Confirm Password
@@ -517,20 +517,20 @@ export default function RegisterPage() {
                     minLength={6}
                     value={form.confirm_password}
                     onChange={(e) => update("confirm_password", e.target.value)}
-                    className="h-[42px] px-md rounded border border-border-base focus:border-[#059669] focus:ring-1 focus:ring-[#059669] outline-none transition-all placeholder:text-[#c6c6cd] bg-white"
+                    className="h-[42px] px-md rounded border border-border-base focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline-variant bg-surface"
                     placeholder="••••••••"
                   />
                 </div>
               </div>
             </section>
 
-            <p className="text-caption font-caption text-[#475569] text-center px-md">
+            <p className="text-caption font-caption text-on-surface-variant text-center px-md">
               By creating an account, you agree to our{" "}
-              <a href="#" className="text-[#059669] font-bold hover:underline">
+              <a href="#" className="text-tertiary font-bold hover:underline">
                 Terms of Service
               </a>{" "}
               and{" "}
-              <a href="#" className="text-[#059669] font-bold hover:underline">
+              <a href="#" className="text-tertiary font-bold hover:underline">
                 Privacy Policy
               </a>
               .
@@ -538,12 +538,12 @@ export default function RegisterPage() {
           </form>
         </main>
 
-        <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-border-base px-[20px] py-lg shadow-[0_-4px_12px_rgba(15,23,42,0.05)]">
+        <footer className="fixed bottom-0 left-0 right-0 bg-surface border-t border-border-base px-[20px] py-lg shadow-[0_-4px_12px_rgba(15,23,42,0.05)]">
           <button
             type="submit"
             form="registerForm"
             disabled={loading}
-            className="w-full h-[48px] bg-[#131B2E] text-white font-body font-bold rounded-lg flex items-center justify-center gap-sm active:scale-[0.98] transition-transform disabled:opacity-40"
+            className="w-full h-[48px] bg-primary-container text-white font-body font-bold rounded-lg flex items-center justify-center gap-sm active:scale-[0.98] transition-transform disabled:opacity-40"
           >
             {loading ? (
               "Creating..."

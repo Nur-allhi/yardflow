@@ -42,7 +42,7 @@ export default function LoginPage() {
     <>
       {/* DESKTOP LAYOUT */}
       <div className="hidden lg:flex min-h-screen w-full">
-        <section className="flex flex-col justify-center items-start w-1/2 bg-[#131B2E] px-3xl relative overflow-hidden">
+        <section className="flex flex-col justify-center items-start w-1/2 bg-primary-container px-3xl relative overflow-hidden">
           <div
             className="absolute inset-0 opacity-10 pointer-events-none"
             style={{
@@ -56,7 +56,7 @@ export default function LoginPage() {
               <h1 className="text-display font-display text-white">
                 YardFlow ERP
               </h1>
-              <p className="text-body-lg font-body-lg text-[#94A3B8]">
+              <p className="text-body-lg font-body-lg text-on-primary-container">
                 Manage your workshop. Track every kilogram.
               </p>
             </div>
@@ -67,7 +67,7 @@ export default function LoginPage() {
                 { icon: "analytics", text: "Payroll & Reports" },
               ].map((item) => (
                 <li key={item.text} className="flex items-center gap-md">
-                  <span className="material-symbols-outlined text-[#059669]">
+                  <span className="material-symbols-outlined text-tertiary-container">
                     {item.icon}
                   </span>
                   <span className="text-body-sm font-body-sm text-white">
@@ -77,16 +77,16 @@ export default function LoginPage() {
               ))}
             </ul>
           </div>
-          <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-[#059669] opacity-10 blur-[120px] rounded-full" />
+          <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-tertiary-container/10 blur-[120px] rounded-full" />
         </section>
 
-        <section className="w-1/2 flex items-center justify-center p-lg bg-[#F8FAFC]">
+        <section className="w-1/2 flex items-center justify-center p-lg bg-background">
           <div className="w-full max-w-[520px] bg-white rounded-lg shadow-card p-2xl">
             <div className="mb-xl text-center lg:text-left">
-              <h2 className="text-h2 font-h2 text-[#0F172A] mb-xs">
+              <h2 className="text-h2 font-h2 text-primary-container mb-xs">
                 Welcome back
               </h2>
-              <p className="text-body font-body text-[#64748B]">
+              <p className="text-body font-body text-on-surface-variant">
                 Sign in to your organization
               </p>
             </div>
@@ -100,7 +100,7 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-lg">
               <div className="space-y-xs">
                 <label
-                  className="block text-body-sm font-body-sm font-bold text-[#0F172A]"
+                    className="block text-body-sm font-body-sm font-bold text-primary-container"
                   htmlFor="email"
                 >
                   Email Address
@@ -111,7 +111,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-[42px] px-md border border-border-base rounded bg-white focus:ring-1 focus:ring-[#059669] focus:border-[#059669] outline-none transition-all placeholder:text-[#475569]/50"
+                  className="w-full h-[42px] px-md border border-border-base rounded bg-white focus:border-primary-container focus:ring-3 focus:ring-primary-container/20 outline-none transition-all placeholder:text-on-surface-variant/50"
                   placeholder="name@company.com"
                 />
               </div>
@@ -119,7 +119,7 @@ export default function LoginPage() {
               <div className="space-y-xs">
                 <div className="flex justify-between items-center">
                   <label
-                    className="block text-body-sm font-body-sm font-bold text-[#0F172A]"
+                  className="block text-body-sm font-body-sm font-bold text-primary-container"
                     htmlFor="password"
                   >
                     Password
@@ -132,13 +132,13 @@ export default function LoginPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full h-[42px] px-md pr-xl border border-border-base rounded bg-white focus:ring-1 focus:ring-[#059669] focus:border-[#059669] outline-none transition-all placeholder:text-[#475569]/50"
+                    className="w-full h-[42px] px-md pr-xl border border-border-base rounded bg-white focus:border-primary-container focus:ring-3 focus:ring-primary-container/20 outline-none transition-all placeholder:text-on-surface-variant/50"
                     placeholder="••••••••"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-md top-1/2 -translate-y-1/2 text-[#475569] hover:text-[#0F172A] transition-colors"
+                    className="absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary-container transition-colors"
                   >
                     <span className="material-symbols-outlined text-[20px]">
                       {showPassword ? "visibility_off" : "visibility"}
@@ -150,14 +150,14 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 bg-[#131B2E] text-white font-body font-bold rounded-lg hover:opacity-90 transition-all disabled:opacity-40 flex items-center justify-center gap-sm"
+                className="w-full h-12 bg-primary-container text-white font-body font-bold rounded-lg hover:opacity-90 transition-all disabled:opacity-40 flex items-center justify-center gap-sm"
               >
                 {loading ? "Signing in..." : "Sign In"}
               </button>
 
               <div className="relative flex items-center py-sm">
                 <div className="flex-grow border-t border-border-base" />
-                <span className="flex-shrink mx-md text-caption font-caption text-[#94A3B8] uppercase tracking-widest">
+                <span className="flex-shrink mx-md text-caption font-caption text-on-primary-container uppercase tracking-widest">
                   or
                 </span>
                 <div className="flex-grow border-t border-border-base" />
@@ -166,7 +166,7 @@ export default function LoginPage() {
               <Link href="/register">
                 <button
                   type="button"
-                  className="w-full h-12 border border-[#131B2E] text-[#131B2E] font-body font-bold rounded-lg hover:bg-[#F1F5F9] transition-all"
+                  className="w-full h-12 border border-primary-container text-primary-container font-body font-bold rounded-lg hover:bg-surface-container-low transition-all"
                 >
                   Register your business
                 </button>
@@ -174,7 +174,7 @@ export default function LoginPage() {
             </form>
 
             <footer className="mt-2xl text-center">
-              <p className="text-caption font-caption text-[#94A3B8]">
+              <p className="text-caption font-caption text-on-primary-container">
                 Multi-tenant &mdash; your data is completely private
               </p>
             </footer>
@@ -183,7 +183,7 @@ export default function LoginPage() {
       </div>
 
       {/* MOBILE LAYOUT */}
-      <div className="lg:hidden flex flex-col min-h-screen bg-[#0F172A]">
+      <div className="lg:hidden flex flex-col min-h-screen bg-primary-container">
         <header className="h-[353px] w-full flex flex-col items-center justify-center text-center p-lg relative overflow-hidden">
           <div
             className="absolute inset-0"
@@ -200,21 +200,21 @@ export default function LoginPage() {
             <h1 className="text-h1-mobile font-h1 text-white tracking-tight mb-xs">
               YardFlow ERP
             </h1>
-            <p className="text-body-sm font-body-sm text-[#e0e3e5] opacity-90 max-w-[280px]">
+            <p className="text-body-sm font-body-sm text-surface-container-highest opacity-90 max-w-[280px]">
               Manage your workshop. Track every kilogram.
             </p>
           </div>
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#059669]/10 rounded-full blur-3xl" />
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-tertiary-container/10 rounded-full blur-3xl" />
         </header>
 
         <main className="flex-grow animate-slide-up bg-white rounded-t-[16px] z-20 flex flex-col p-lg shadow-2xl">
-          <div className="w-12 h-1 bg-[#e6e8ea] rounded-full mx-auto mb-xl opacity-50" />
+          <div className="w-12 h-1 bg-surface-container-high rounded-full mx-auto mb-xl opacity-50" />
 
           <div className="mb-xl">
-            <h2 className="text-h2 font-h2 text-[#0F172A] mb-xs">
+            <h2 className="text-h2 font-h2 text-primary-container mb-xs">
               Welcome back
             </h2>
-            <p className="text-body-sm font-body-sm text-[#475569]">
+            <p className="text-body-sm font-body-sm text-on-surface-variant">
               Sign in to your organization
             </p>
           </div>
@@ -231,7 +231,7 @@ export default function LoginPage() {
           >
             <div className="space-y-xs">
               <label
-                className="text-body-sm font-body-sm font-bold text-[#0F172A]"
+                className="text-body-sm font-body-sm font-bold text-primary-container"
                 htmlFor="email-mobile"
               >
                 Email address
@@ -242,14 +242,14 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full h-[42px] px-md border border-border-base rounded bg-white text-body-sm font-body-sm focus:outline-none focus:ring-1 focus:ring-[#059669] transition-all"
+                className="w-full h-[42px] px-md border border-border-base rounded bg-white text-body-sm font-body-sm focus:outline-none focus:border-primary-container focus:ring-3 focus:ring-primary-container/20 transition-all"
                 placeholder="name@company.com"
               />
             </div>
 
             <div className="space-y-xs">
               <label
-                className="text-body-sm font-body-sm font-bold text-[#0F172A]"
+                className="text-body-sm font-body-sm font-bold text-primary-container"
                 htmlFor="password-mobile"
               >
                 Password
@@ -261,13 +261,13 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-[42px] px-md pr-[44px] border border-border-base rounded bg-white text-body-sm font-body-sm focus:outline-none focus:ring-1 focus:ring-[#059669] transition-all"
+                  className="w-full h-[42px] px-md pr-[44px] border border-border-base rounded bg-white text-body-sm font-body-sm focus:outline-none focus:border-primary-container focus:ring-3 focus:ring-primary-container/20 transition-all"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-md top-1/2 -translate-y-1/2 text-[#475569] hover:text-[#0F172A]"
+                  className="absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary-container"
                 >
                   <span className="material-symbols-outlined text-[20px]">
                     {showPassword ? "visibility_off" : "visibility"}
@@ -279,7 +279,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-[48px] bg-[#131B2E] text-white font-body font-bold rounded flex items-center justify-center gap-sm hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-40"
+              className="w-full h-[48px] bg-primary-container text-white font-body font-bold rounded flex items-center justify-center gap-sm hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-40"
             >
               {loading ? (
                 "Signing in..."
@@ -294,24 +294,24 @@ export default function LoginPage() {
             </button>
 
             <div className="flex items-center gap-md py-sm">
-              <div className="h-[1px] flex-grow bg-[#e6e8ea]" />
-              <span className="text-caption font-caption text-[#475569] uppercase tracking-widest">
+              <div className="h-[1px] flex-grow bg-surface-container-high" />
+              <span className="text-caption font-caption text-on-surface-variant uppercase tracking-widest">
                 or
               </span>
-              <div className="h-[1px] flex-grow bg-[#e6e8ea]" />
+              <div className="h-[1px] flex-grow bg-surface-container-high" />
             </div>
 
             <Link href="/register">
               <button
                 type="button"
-                className="w-full h-[48px] bg-transparent border-2 border-[#131B2E] text-[#131B2E] font-bold rounded hover:bg-[#F1F5F9] transition-colors"
+                className="w-full h-[48px] bg-transparent border-2 border-primary-container text-primary-container font-bold rounded hover:bg-surface-container-low transition-colors"
               >
                 Register your business
               </button>
             </Link>
 
             <footer className="mt-auto pt-2xl pb-lg text-center">
-              <p className="text-caption font-caption text-[#475569]/70 flex items-center justify-center gap-xs">
+              <p className="text-caption font-caption text-on-surface-variant/70 flex items-center justify-center gap-xs">
                 <span className="material-symbols-outlined text-[14px]">
                   verified_user
                 </span>
