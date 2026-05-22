@@ -195,20 +195,20 @@ export default function TeamPage() {
   return (
     <div className="p-4 md:p-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-[#0F172A]">
+      <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
+        <Link href="/" className="hover:text-primary-container">
           Dashboard
         </Link>
         <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-[#0F172A] font-bold">ERP</span>
+        <span className="text-primary-container font-bold">ERP</span>
         <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-[#0F172A] font-bold">Settings</span>
+        <span className="text-primary-container font-bold">Settings</span>
       </nav>
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-[#0F172A] tracking-tight">
+          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-primary-container tracking-tight">
             Team Management
           </h1>
         </div>
@@ -218,7 +218,7 @@ export default function TeamPage() {
               resetForm();
               setInviteOpen(true);
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white font-semibold rounded-lg hover:bg-[#0F172A]/90 transition-all text-sm shadow-sm active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-primary-container text-white font-semibold rounded-lg hover:bg-primary-container/90 transition-all text-sm shadow-sm active:scale-95"
           >
             <span className="material-symbols-outlined text-lg">person_add</span>
             Invite Member
@@ -227,16 +227,16 @@ export default function TeamPage() {
       </div>
 
       {/* Sub-tabs */}
-      <div className="flex items-center gap-1 mb-6 border-b border-[#c6c6cd]/50">
+      <div className="flex items-center gap-1 mb-6 border-b border-outline-variant/50">
         <Link
           href="/settings"
-          className="px-4 py-3 text-sm text-[#505f76] hover:text-[#0F172A] transition-colors"
+          className="px-4 py-3 text-sm text-secondary hover:text-primary-container transition-colors"
         >
           Settings
         </Link>
         <Link
           href="/settings/team"
-          className="px-4 py-3 text-sm font-bold text-[#059669] border-b-2 border-[#059669]"
+          className="px-4 py-3 text-sm font-bold text-tertiary border-b-2 border-tertiary"
         >
           Team
         </Link>
@@ -245,13 +245,13 @@ export default function TeamPage() {
       {/* Search Bar */}
       <div className="flex items-center gap-3 mb-6">
         <div className="relative flex-1 max-w-md">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#505f76] text-lg">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-lg">
             search
           </span>
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-white border border-[#c6c6cd] rounded-lg text-sm outline-none focus:ring-0"
+            className="w-full pl-10 pr-4 py-2 bg-white border border-outline-variant rounded-lg text-sm outline-none focus:ring-0"
             placeholder="Search members..."
           />
         </div>
@@ -263,11 +263,11 @@ export default function TeamPage() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="bg-white rounded-xl border border-[#c6c6cd]/30 p-6 animate-pulse"
+              className="bg-white rounded-xl border border-outline-variant/30 p-6 animate-pulse"
             >
-              <div className="h-4 bg-[#e6e8ea] rounded w-1/3 mb-3" />
-              <div className="h-4 bg-[#e6e8ea] rounded w-1/4 mb-3" />
-              <div className="h-4 bg-[#e6e8ea] rounded w-1/2" />
+              <div className="h-4 bg-surface-container-high rounded w-1/3 mb-3" />
+              <div className="h-4 bg-surface-container-high rounded w-1/4 mb-3" />
+              <div className="h-4 bg-surface-container-high rounded w-1/2" />
             </div>
           ))}
         </div>
@@ -276,10 +276,10 @@ export default function TeamPage() {
       {/* Error */}
       {(error || loadError) && !loading && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <p className="text-[#EF4444] font-medium text-sm">{error || (loadError instanceof Error ? loadError.message : "Failed to load team members")}</p>
+          <p className="text-error font-medium text-sm">{error || (loadError instanceof Error ? loadError.message : "Failed to load team members")}</p>
           <button
             onClick={() => loadData()}
-            className="mt-3 px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
+            className="mt-3 px-4 py-2 bg-primary-container text-white text-sm rounded-lg"
           >
             Retry
           </button>
@@ -288,23 +288,23 @@ export default function TeamPage() {
 
       {/* Empty State */}
       {!loading && !(error || loadError) && filtered.length === 0 && (
-        <div className="bg-white rounded-xl border border-[#c6c6cd]/30 p-12 text-center">
-          <span className="material-symbols-outlined text-5xl text-[#c6c6cd] block mb-4">
+        <div className="bg-white rounded-xl border border-outline-variant/30 p-12 text-center">
+          <span className="material-symbols-outlined text-5xl text-outline-variant block mb-4">
             group
           </span>
           {search ? (
             <>
-              <p className="text-[#505f76] text-sm font-medium mb-1">
+              <p className="text-secondary text-sm font-medium mb-1">
                 No members match your search
               </p>
-              <p className="text-[#505f76] text-xs">Try a different name or email</p>
+              <p className="text-secondary text-xs">Try a different name or email</p>
             </>
           ) : (
             <>
-              <p className="text-[#505f76] text-sm font-medium mb-1">
+              <p className="text-secondary text-sm font-medium mb-1">
                 No team members yet
               </p>
-              <p className="text-[#505f76] text-xs">
+              <p className="text-secondary text-xs">
                 Invite your first team member to get started
               </p>
               <button
@@ -312,7 +312,7 @@ export default function TeamPage() {
                   resetForm();
                   setInviteOpen(true);
                 }}
-                className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-[#0F172A] text-white text-sm font-semibold rounded-lg"
+                className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-primary-container text-white text-sm font-semibold rounded-lg"
               >
                 <span className="material-symbols-outlined text-lg">person_add</span>
                 Invite Member
@@ -324,28 +324,28 @@ export default function TeamPage() {
 
       {/* Desktop Table */}
       {!loading && !(error || loadError) && filtered.length > 0 && (
-        <div className="hidden md:block bg-white rounded-xl border border-[#c6c6cd] overflow-hidden shadow-sm">
+        <div className="hidden md:block bg-white rounded-xl border border-outline-variant overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
+            <thead className="bg-surface-container-high border-b border-outline-variant">
               <tr>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
                   Email
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
                   Role
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-[#0F172A] uppercase tracking-wider text-right">
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider text-right">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#c6c6cd]/50">
+            <tbody className="divide-y divide-outline-variant/50">
               {filtered.map((m) => (
                 <tr key={m.id} className="hover:bg-[#F8FAFC] transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -353,8 +353,8 @@ export default function TeamPage() {
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
                           m.is_active
-                            ? "bg-[#d0e1fb] text-[#0F172A]"
-                            : "bg-[#e0e3e5] text-[#505f76]"
+                            ? "bg-secondary-container text-primary-container"
+                            : "bg-surface-container-highest text-secondary"
                         }`}
                       >
                         {getInitials(m.name)}
@@ -362,11 +362,11 @@ export default function TeamPage() {
                       <span className="font-bold text-sm">{m.name}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#505f76]">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
                     {m.email}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-xs font-bold px-2 py-1 rounded bg-[#f2f4f6] text-[#505f76]">
+                    <span className="text-xs font-bold px-2 py-1 rounded bg-surface-container-low text-secondary">
                       {handleRoleLabel(m.role)}
                     </span>
                   </td>
@@ -382,7 +382,7 @@ export default function TeamPage() {
                         disabled={toggleMutation.isPending}
                         className={`text-xs font-bold px-3 py-1 rounded ${
                           m.is_active
-                            ? "bg-[#EAB308]/10 text-[#EAB308] hover:bg-[#EAB308]/20"
+                            ? "bg-warning/10 text-warning hover:bg-warning/20"
                             : "bg-success/10 text-success hover:bg-success/20"
                         } disabled:opacity-50 transition-colors`}
                       >
@@ -395,7 +395,7 @@ export default function TeamPage() {
                       {m.role !== "owner" && (
                         <button
                           onClick={() => setDeleteConfirm(m.id)}
-                          className="text-xs font-bold px-3 py-1 rounded bg-[#EF4444]/10 text-[#EF4444] hover:bg-[#EF4444]/20 transition-colors"
+                          className="text-xs font-bold px-3 py-1 rounded bg-error/10 text-error hover:bg-error/20 transition-colors"
                         >
                           <span className="material-symbols-outlined text-sm leading-none align-middle">
                             delete
@@ -415,41 +415,41 @@ export default function TeamPage() {
       {!loading && !(error || loadError) && filtered.length > 0 && (
         <div className="md:hidden space-y-3">
           <div className="flex justify-between items-center">
-            <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-[#505f76]">
+            <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-secondary">
               Team Members
             </h2>
           </div>
           {filtered.map((m) => (
             <div
               key={m.id}
-              className="block bg-white rounded-lg p-4 shadow-sm border border-[#c6c6cd]/20"
+              className="block bg-white rounded-lg p-4 shadow-sm border border-outline-variant/20"
             >
               <div className="flex items-start gap-3 mb-3">
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${
                     m.is_active
-                      ? "bg-[#d0e1fb] text-[#0F172A]"
-                      : "bg-[#e0e3e5] text-[#505f76]"
+                      ? "bg-secondary-container text-primary-container"
+                      : "bg-surface-container-highest text-secondary"
                   }`}
                 >
                   {getInitials(m.name)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-display font-bold text-[#0F172A] text-base truncate">
+                  <h3 className="font-display font-bold text-primary-container text-base truncate">
                     {m.name}
                   </h3>
-                  <p className="text-xs text-[#505f76] font-medium truncate">
+                  <p className="text-xs text-secondary font-medium truncate">
                     {m.email}
                   </p>
                 </div>
                 <StatusBadge active={m.is_active} />
               </div>
-              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-[#c6c6cd]/30">
+              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-outline-variant/30">
                 <div>
-                  <p className="text-[11px] text-[#505f76] font-medium mb-0.5">
+                  <p className="text-[11px] text-secondary font-medium mb-0.5">
                     Role
                   </p>
-                  <p className="text-sm font-bold text-[#0F172A]">
+                  <p className="text-sm font-bold text-primary-container">
                     {handleRoleLabel(m.role)}
                   </p>
                 </div>
@@ -459,7 +459,7 @@ export default function TeamPage() {
                     disabled={toggleMutation.isPending}
                     className={`px-3 py-1.5 text-xs font-bold rounded-lg ${
                       m.is_active
-                        ? "bg-[#EAB308]/10 text-[#EAB308]"
+                        ? "bg-warning/10 text-warning"
                         : "bg-success/10 text-success"
                     } disabled:opacity-50`}
                   >
@@ -472,7 +472,7 @@ export default function TeamPage() {
                   {m.role !== "owner" && (
                     <button
                       onClick={() => setDeleteConfirm(m.id)}
-                      className="p-1.5 text-xs font-bold rounded-lg bg-[#EF4444]/10 text-[#EF4444]"
+                      className="p-1.5 text-xs font-bold rounded-lg bg-error/10 text-error"
                     >
                       <span className="material-symbols-outlined text-lg">
                         delete
@@ -502,8 +502,8 @@ export default function TeamPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[#c6c6cd]/50">
-              <h2 className="font-display text-lg font-bold text-[#0F172A]">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/50">
+              <h2 className="font-display text-lg font-bold text-primary-container">
                 Invite Team Member
               </h2>
               <button
@@ -512,7 +512,7 @@ export default function TeamPage() {
                   resetForm();
                 }}
                 disabled={inviteMutation.isPending}
-                className="text-[#505f76] hover:text-[#0F172A] disabled:opacity-50"
+                className="text-secondary hover:text-primary-container disabled:opacity-50"
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
@@ -521,13 +521,13 @@ export default function TeamPage() {
             {/* Modal Body */}
             <form onSubmit={handleInvite} className="p-6 space-y-4">
               {inviteError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-[#EF4444]">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-error">
                   {inviteError}
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-bold text-[#505f76] uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-1.5">
                   Full Name
                 </label>
                 <input
@@ -536,17 +536,17 @@ export default function TeamPage() {
                     setInviteForm((f) => ({ ...f, name: e.target.value }))
                   }
                   className={`w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-0 ${
-                    formErrors.name ? "border-red-400 bg-red-50" : "border-[#c6c6cd]"
+                    formErrors.name ? "border-red-400 bg-red-50" : "border-outline-variant"
                   }`}
                   placeholder="John Doe"
                 />
                 {formErrors.name && (
-                  <p className="text-xs text-[#EF4444] mt-1">{formErrors.name}</p>
+                  <p className="text-xs text-error mt-1">{formErrors.name}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#505f76] uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-1.5">
                   Email Address
                 </label>
                 <input
@@ -556,17 +556,17 @@ export default function TeamPage() {
                     setInviteForm((f) => ({ ...f, email: e.target.value }))
                   }
                   className={`w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-0 ${
-                    formErrors.email ? "border-red-400 bg-red-50" : "border-[#c6c6cd]"
+                    formErrors.email ? "border-red-400 bg-red-50" : "border-outline-variant"
                   }`}
                   placeholder="john@example.com"
                 />
                 {formErrors.email && (
-                  <p className="text-xs text-[#EF4444] mt-1">{formErrors.email}</p>
+                  <p className="text-xs text-error mt-1">{formErrors.email}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#505f76] uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-1.5">
                   Password
                 </label>
                 <input
@@ -578,19 +578,19 @@ export default function TeamPage() {
                   className={`w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-0 ${
                     formErrors.password
                       ? "border-red-400 bg-red-50"
-                      : "border-[#c6c6cd]"
+                      : "border-outline-variant"
                   }`}
                   placeholder="Min. 6 characters"
                 />
                 {formErrors.password && (
-                  <p className="text-xs text-[#EF4444] mt-1">
+                  <p className="text-xs text-error mt-1">
                     {formErrors.password}
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#505f76] uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-1.5">
                   Role
                 </label>
                 <select
@@ -601,7 +601,7 @@ export default function TeamPage() {
                       role: e.target.value as InviteForm["role"],
                     }))
                   }
-                  className="w-full px-3 py-2 border border-[#c6c6cd] rounded-lg text-sm outline-none focus:ring-0 bg-white"
+                  className="w-full px-3 py-2 border border-outline-variant rounded-lg text-sm outline-none focus:ring-0 bg-white"
                 >
                   <option value="worker">Worker</option>
                   <option value="manager">Manager</option>
@@ -617,14 +617,14 @@ export default function TeamPage() {
                     resetForm();
                   }}
                   disabled={inviteMutation.isPending}
-                  className="flex-1 px-4 py-2 border border-[#c6c6cd] text-[#505f76] font-semibold rounded-lg text-sm hover:bg-[#f2f4f6] transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-2 border border-outline-variant text-secondary font-semibold rounded-lg text-sm hover:bg-surface-container-low transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={inviteMutation.isPending}
-                  className="flex-1 px-4 py-2 bg-[#0F172A] text-white font-semibold rounded-lg text-sm hover:bg-[#0F172A]/90 transition-all disabled:opacity-50 active:scale-95"
+                  className="flex-1 px-4 py-2 bg-primary-container text-white font-semibold rounded-lg text-sm hover:bg-primary-container/90 transition-all disabled:opacity-50 active:scale-95"
                 >
                   {inviteMutation.isPending ? "Sending..." : "Send Invite"}
                 </button>
@@ -645,21 +645,21 @@ export default function TeamPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-[#EF4444]/10 flex items-center justify-center">
-                <span className="material-symbols-outlined text-[#EF4444]">
+              <div className="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-error">
                   warning
                 </span>
               </div>
               <div>
-                <h3 className="font-display font-bold text-[#0F172A]">
+                <h3 className="font-display font-bold text-primary-container">
                   Remove Member
                 </h3>
-                <p className="text-xs text-[#505f76]">
+                <p className="text-xs text-secondary">
                   This action cannot be undone.
                 </p>
               </div>
             </div>
-            <p className="text-sm text-[#505f76] mb-6">
+            <p className="text-sm text-secondary mb-6">
               Are you sure you want to remove this team member? They will lose access
               to this organization.
             </p>
@@ -667,14 +667,14 @@ export default function TeamPage() {
               <button
                 onClick={() => setDeleteConfirm(null)}
                 disabled={deleteMutation.isPending}
-                className="flex-1 px-4 py-2 border border-[#c6c6cd] text-[#505f76] font-semibold rounded-lg text-sm hover:bg-[#f2f4f6] transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 border border-outline-variant text-secondary font-semibold rounded-lg text-sm hover:bg-surface-container-low transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
                 disabled={deleteMutation.isPending}
-                className="flex-1 px-4 py-2 bg-[#EF4444] text-white font-semibold rounded-lg text-sm hover:bg-[#EF4444]/90 transition-all disabled:opacity-50 active:scale-95"
+                className="flex-1 px-4 py-2 bg-error text-white font-semibold rounded-lg text-sm hover:bg-error/90 transition-all disabled:opacity-50 active:scale-95"
               >
                 {deleteMutation.isPending ? "Removing..." : "Remove"}
               </button>

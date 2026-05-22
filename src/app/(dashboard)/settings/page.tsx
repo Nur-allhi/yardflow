@@ -78,20 +78,20 @@ export default function SettingsPage() {
   return (
     <div className="p-4 md:p-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-[#0F172A]">
+      <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
+        <Link href="/" className="hover:text-primary-container">
           Dashboard
         </Link>
         <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-[#0F172A] font-bold">ERP</span>
+        <span className="text-primary-container font-bold">ERP</span>
         <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-[#0F172A] font-bold">Settings</span>
+        <span className="text-primary-container font-bold">Settings</span>
       </nav>
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-[#0F172A] tracking-tight">
+          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-primary-container tracking-tight">
             Organization Settings
           </h1>
         </div>
@@ -104,18 +104,18 @@ export default function SettingsPage() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex gap-4 mb-6 border-b border-[#c6c6cd]/30">
-        <span className="px-4 py-2 border-b-2 border-[#0F172A] text-[#0F172A] font-bold text-sm">General</span>
-        <Link href="/settings/team" className="px-4 py-2 text-[#505f76] font-medium text-sm hover:text-[#0F172A]">Team</Link>
+      <div className="flex gap-4 mb-6 border-b border-outline-variant/30">
+        <span className="px-4 py-2 border-b-2 border-primary-container text-primary-container font-bold text-sm">General</span>
+        <Link href="/settings/team" className="px-4 py-2 text-secondary font-medium text-sm hover:text-primary-container">Team</Link>
       </div>
 
       {/* Loading */}
       {loading && (
         <div className="max-w-2xl space-y-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white rounded-xl border border-[#c6c6cd]/30 p-6 animate-pulse">
-              <div className="h-3 bg-[#e6e8ea] rounded w-1/4 mb-3" />
-              <div className="h-10 bg-[#e6e8ea] rounded w-full" />
+            <div key={i} className="bg-white rounded-xl border border-outline-variant/30 p-6 animate-pulse">
+              <div className="h-3 bg-surface-container-high rounded w-1/4 mb-3" />
+              <div className="h-10 bg-surface-container-high rounded w-full" />
             </div>
           ))}
         </div>
@@ -124,13 +124,13 @@ export default function SettingsPage() {
       {/* Error */}
       {!loading && (error || loadError) && (
         <div className="max-w-2xl bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <span className="material-symbols-outlined text-4xl text-[#EF4444] block mb-2">
+          <span className="material-symbols-outlined text-4xl text-error block mb-2">
             error
           </span>
-          <p className="text-[#EF4444] font-medium text-sm">{error || (loadError instanceof Error ? loadError.message : "Failed to load settings")}</p>
+          <p className="text-error font-medium text-sm">{error || (loadError instanceof Error ? loadError.message : "Failed to load settings")}</p>
           <button
             onClick={() => loadData()}
-            className="mt-3 px-4 py-2 bg-[#0F172A] text-white text-sm font-semibold rounded-lg"
+            className="mt-3 px-4 py-2 bg-primary-container text-white text-sm font-semibold rounded-lg"
           >
             Retry
           </button>
@@ -140,16 +140,16 @@ export default function SettingsPage() {
       {/* Form */}
       {!loading && !(error || loadError) && (
         <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
-          <div className="bg-white rounded-xl border border-[#c6c6cd] p-6 md:p-8 shadow-sm">
+          <div className="bg-white rounded-xl border border-outline-variant p-6 md:p-8 shadow-sm">
             {/* Company Name */}
             <div className="mb-6">
-              <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-primary-container uppercase tracking-wider mb-2">
                 Company Name
               </label>
               <input
                 value={form.name}
                 onChange={handleChange("name")}
-                className="w-full px-4 py-3 bg-white border border-[#c6c6cd] rounded-lg text-sm text-[#0F172A] outline-none focus:ring-1 focus:ring-[#059669] focus:border-[#059669]"
+                className="w-full px-4 py-3 bg-white border border-outline-variant rounded-lg text-sm text-primary-container outline-none focus:ring-1 focus:ring-tertiary focus:border-tertiary"
                 placeholder="Enter company name"
                 required
               />
@@ -157,62 +157,62 @@ export default function SettingsPage() {
 
             {/* Address */}
             <div className="mb-6">
-              <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-primary-container uppercase tracking-wider mb-2">
                 Address
               </label>
               <textarea
                 value={form.address}
                 onChange={handleChange("address")}
                 rows={3}
-                className="w-full px-4 py-3 bg-white border border-[#c6c6cd] rounded-lg text-sm text-[#0F172A] outline-none focus:ring-1 focus:ring-[#059669] focus:border-[#059669] resize-none"
+                className="w-full px-4 py-3 bg-white border border-outline-variant rounded-lg text-sm text-primary-container outline-none focus:ring-1 focus:ring-tertiary focus:border-tertiary resize-none"
                 placeholder="Enter company address"
               />
             </div>
 
             {/* Phone */}
             <div className="mb-6">
-              <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-primary-container uppercase tracking-wider mb-2">
                 Phone
               </label>
               <input
                 value={form.phone}
                 onChange={handleChange("phone")}
-                className="w-full px-4 py-3 bg-white border border-[#c6c6cd] rounded-lg text-sm text-[#0F172A] outline-none focus:ring-1 focus:ring-[#059669] focus:border-[#059669]"
+                className="w-full px-4 py-3 bg-white border border-outline-variant rounded-lg text-sm text-primary-container outline-none focus:ring-1 focus:ring-tertiary focus:border-tertiary"
                 placeholder="Enter phone number"
               />
             </div>
 
             {/* Email */}
             <div className="mb-6">
-              <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-primary-container uppercase tracking-wider mb-2">
                 Email
               </label>
               <input
                 value={form.email}
                 onChange={handleChange("email")}
                 type="email"
-                className="w-full px-4 py-3 bg-white border border-[#c6c6cd] rounded-lg text-sm text-[#0F172A] outline-none focus:ring-1 focus:ring-[#059669] focus:border-[#059669]"
+                className="w-full px-4 py-3 bg-white border border-outline-variant rounded-lg text-sm text-primary-container outline-none focus:ring-1 focus:ring-tertiary focus:border-tertiary"
                 placeholder="Enter email address"
               />
             </div>
 
             {/* Divider */}
-            <hr className="border-[#c6c6cd]/50 mb-6" />
+            <hr className="border-outline-variant/50 mb-6" />
 
             {/* Plan Info */}
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold text-[#0F172A] uppercase tracking-wider mb-1">
+                <p className="text-xs font-bold text-primary-container uppercase tracking-wider mb-1">
                   Current Plan
                 </p>
-                <p className="font-mono text-sm font-bold text-[#059669] capitalize">
+                <p className="font-mono text-sm font-bold text-tertiary capitalize">
                   {org?.plan || "—"}
                 </p>
               </div>
               <button
                 type="submit"
                 disabled={mutation.isPending}
-                className="flex items-center gap-2 px-6 py-3 bg-[#0F172A] text-white font-semibold rounded-lg hover:bg-[#0F172A]/90 transition-all text-sm shadow-sm active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-6 py-3 bg-primary-container text-white font-semibold rounded-lg hover:bg-primary-container/90 transition-all text-sm shadow-sm active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {mutation.isPending ? (
                   <>
