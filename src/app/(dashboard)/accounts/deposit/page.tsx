@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAccounts } from "@/hooks/useAccounts";
 
 function formatMoney(n: number) {
-  return "৳" + n.toLocaleString("en-IN");
+  return n.toLocaleString("en-IN") + " tk";
 }
 
 export default function DepositPage() {
@@ -77,9 +77,9 @@ export default function DepositPage() {
   if (loading) {
     return (
       <div className="p-4 md:p-8 space-y-6 animate-pulse">
-        <div className="h-6 bg-[#e6e8ea] rounded w-1/3" />
-        <div className="h-12 bg-[#e6e8ea] rounded w-1/2" />
-        <div className="h-64 bg-[#e6e8ea] rounded-xl" />
+        <div className="h-6 bg-surface-container-high rounded w-1/3" />
+        <div className="h-12 bg-surface-container-high rounded w-1/2" />
+        <div className="h-64 bg-surface-container-high rounded-xl" />
       </div>
     );
   }
@@ -89,11 +89,11 @@ export default function DepositPage() {
     return (
       <div className="p-4 md:p-8">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
-          <p className="text-[#EF4444] font-medium text-lg mb-2">Failed to Load Accounts</p>
+          <p className="text-error font-medium text-lg mb-2">Failed to Load Accounts</p>
           <p className="text-sm mb-4">{error || loadError}</p>
           <button
             onClick={() => loadAccounts()}
-            className="px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
+            className="px-4 py-2 bg-primary-container text-white text-sm rounded-lg"
           >
             Try Again
           </button>
@@ -105,50 +105,50 @@ export default function DepositPage() {
   return (
     <div className="p-4 md:p-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-[#505f76] mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-[#0F172A]">Dashboard</Link>
+      <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
+        <Link href="/" className="hover:text-primary-container">Dashboard</Link>
         <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <Link href="/accounts" className="hover:text-[#0F172A]">Accounts</Link>
+        <Link href="/accounts" className="hover:text-primary-container">Accounts</Link>
         <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-[#0F172A] font-bold">Deposit</span>
+        <span className="text-primary-container font-bold">Deposit</span>
       </nav>
 
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/accounts"
-          className="w-9 h-9 flex items-center justify-center rounded-full border border-[#c6c6cd] text-[#505f76] hover:bg-[#f2f4f6] transition-colors"
+          className="w-9 h-9 flex items-center justify-center rounded-full border border-outline-variant text-secondary hover:bg-surface-container-low transition-colors"
         >
           <span className="material-symbols-outlined">arrow_back</span>
         </Link>
-        <h1 className="font-display text-xl md:text-2xl font-bold text-[#0F172A]">
+        <h1 className="font-display text-xl md:text-2xl font-bold text-primary-container">
           Deposit Money
         </h1>
       </div>
 
       <form onSubmit={handleSubmit}>
         <div className="max-w-lg mx-auto space-y-6">
-          <section className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm p-5 md:p-6">
+          <section className="bg-white rounded-lg border border-outline-variant/50 shadow-sm p-5 md:p-6">
             <div className="flex items-center gap-2 mb-5">
-              <span className="material-symbols-outlined text-[#059669]">payments</span>
+              <span className="material-symbols-outlined text-tertiary">payments</span>
               <h2 className="font-display text-lg font-semibold">Deposit Details</h2>
             </div>
 
             {error && (
-              <div className="mb-4 p-3 bg-[#ffdad6] border border-[#ba1a1a]/20 rounded-lg text-sm text-[#ba1a1a] font-medium">
+              <div className="mb-4 p-3 bg-error-container border border-error/20 rounded-lg text-sm text-error font-medium">
                 {error}
               </div>
             )}
 
             <div className="space-y-5">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                  Account <span className="text-[#ba1a1a]">*</span>
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+                  Account <span className="text-error">*</span>
                 </label>
                 <select
                   value={accountId}
                   onChange={(e) => setAccountId(e.target.value)}
                   required
-                  className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
+                  className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                 >
                   <option value="">Select account</option>
                   {accounts.map((a) => (
@@ -158,7 +158,7 @@ export default function DepositPage() {
                   ))}
                 </select>
                 {selectedAccount && (
-                  <p className="text-xs text-[#505f76] flex items-center gap-1 font-medium">
+                  <p className="text-xs text-secondary flex items-center gap-1 font-medium">
                     <span className="material-symbols-outlined text-[14px]">account_balance_wallet</span>
                     Current balance: {formatMoney(selectedAccount.current_balance)}
                   </p>
@@ -166,11 +166,11 @@ export default function DepositPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                  Amount <span className="text-[#ba1a1a]">*</span>
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+                  Amount <span className="text-error">*</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm text-[#505f76]">৳</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm text-secondary">tk </span>
                   <input
                     type="number"
                     step="0.01"
@@ -178,49 +178,49 @@ export default function DepositPage() {
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     required
-                    className="w-full h-[42px] pl-8 pr-3 border border-[#c6c6cd] rounded text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none"
+                    className="w-full h-[42px] pl-8 pr-3 border border-outline-variant rounded text-sm font-mono focus:border-primary-container focus:ring-0 outline-none"
                     placeholder="0.00"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                  Deposit Date <span className="text-[#ba1a1a]">*</span>
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+                  Deposit Date <span className="text-error">*</span>
                 </label>
                 <input
                   type="date"
                   value={depositDate}
                   onChange={(e) => setDepositDate(e.target.value)}
                   required
-                  className="w-full h-[42px] border border-[#c6c6cd] rounded bg-white px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
+                  className="w-full h-[42px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                   Note (optional)
                 </label>
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   rows={2}
-                  className="w-full border border-[#c6c6cd] rounded bg-white p-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none resize-none"
+                  className="w-full border border-outline-variant rounded bg-white p-3 text-sm focus:border-primary-container focus:ring-0 outline-none resize-none"
                   placeholder="Source of deposit..."
                 />
               </div>
 
               {/* Deposit Preview */}
               {selectedAccount && numAmount > 0 && (
-                <div className="bg-[#f2f4f6] rounded-lg p-4 space-y-2 border border-[#c6c6cd]/50">
-                  <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-widest mb-3">Deposit Preview</p>
+                <div className="bg-surface-container-low rounded-lg p-4 space-y-2 border border-outline-variant/50">
+                  <p className="text-[10px] uppercase font-bold text-secondary tracking-widest mb-3">Deposit Preview</p>
                   <div className="flex justify-between items-center text-xs">
-                    <span className="text-[#505f76]">{selectedAccount.name}</span>
-                    <span className="font-mono text-[#16A34A] font-bold">+{formatMoney(numAmount)}</span>
+                    <span className="text-secondary">{selectedAccount.name}</span>
+                    <span className="font-mono text-success font-bold">+{formatMoney(numAmount)}</span>
                   </div>
-                  <div className="border-t border-[#c6c6cd]/50 pt-2 mt-2">
+                  <div className="border-t border-outline-variant/50 pt-2 mt-2">
                     <div className="flex justify-between items-center text-xs">
-                      <span className="text-[#505f76]">New balance</span>
+                      <span className="text-secondary">New balance</span>
                       <span className="font-mono font-bold">{formatMoney(selectedAccount.current_balance + numAmount)}</span>
                     </div>
                   </div>
@@ -233,14 +233,14 @@ export default function DepositPage() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/accounts"
-              className="flex-1 h-[42px] bg-transparent text-[#505f76] hover:bg-[#f2f4f6] transition-colors font-bold text-sm rounded border border-[#c6c6cd] flex items-center justify-center"
+              className="flex-1 h-[42px] bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded border border-outline-variant flex items-center justify-center"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="flex-1 h-[42px] bg-[#059669] text-white hover:bg-[#059669]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
+              className="flex-1 h-[42px] bg-tertiary text-white hover:bg-tertiary/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
             >
               {mutation.isPending ? "Depositing..." : "Deposit"}
             </button>
@@ -248,17 +248,17 @@ export default function DepositPage() {
         </div>
 
         {/* Mobile sticky bottom bar */}
-        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-[#c6c6cd] px-4 py-3 z-40 flex items-center gap-3 shadow-lg">
+        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 flex items-center gap-3 shadow-lg">
           <Link
             href="/accounts"
-            className="flex-1 h-12 bg-transparent text-[#505f76] font-bold text-sm rounded-lg border border-[#c6c6cd] flex items-center justify-center"
+            className="flex-1 h-12 bg-transparent text-secondary font-bold text-sm rounded-lg border border-outline-variant flex items-center justify-center"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="flex-1 h-12 bg-[#059669] text-white font-bold text-sm rounded-lg shadow-md active:scale-[0.98] transition-all disabled:opacity-40"
+            className="flex-1 h-12 bg-tertiary text-white font-bold text-sm rounded-lg shadow-md active:scale-[0.98] transition-all disabled:opacity-40"
           >
             {mutation.isPending ? "Depositing..." : "Deposit"}
           </button>

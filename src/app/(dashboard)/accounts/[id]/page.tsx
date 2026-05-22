@@ -35,7 +35,7 @@ function formatDate(dateStr: string) {
 }
 
 function formatMoney(n: number) {
-  return "৳" + n.toLocaleString("en-IN");
+  return n.toLocaleString("en-IN") + " tk";
 }
 
 export default function AccountDetailPage() {
@@ -54,9 +54,9 @@ export default function AccountDetailPage() {
   if (isLoading) {
     return (
       <div className="p-4 md:p-8 space-y-6 animate-pulse">
-        <div className="h-6 bg-[#e6e8ea] rounded w-1/3" />
-        <div className="h-12 bg-[#e6e8ea] rounded w-1/2" />
-        <div className="h-64 bg-[#e6e8ea] rounded-xl" />
+        <div className="h-6 bg-surface-container-high rounded w-1/3" />
+        <div className="h-12 bg-surface-container-high rounded w-1/2" />
+        <div className="h-64 bg-surface-container-high rounded-xl" />
       </div>
     );
   }
@@ -65,12 +65,12 @@ export default function AccountDetailPage() {
     return (
       <div className="p-4 md:p-8">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
-          <p className="text-[#EF4444] font-medium text-lg mb-2">
+          <p className="text-error font-medium text-lg mb-2">
             {error?.message || "Account not found"}
           </p>
           <Link
             href="/accounts"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white text-sm rounded-lg"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary-container text-white text-sm rounded-lg"
           >
             <span className="material-symbols-outlined text-lg">arrow_back</span>
             Back to Accounts
@@ -86,15 +86,15 @@ export default function AccountDetailPage() {
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/accounts"
-          className="w-9 h-9 flex items-center justify-center rounded-full border border-[#c6c6cd] text-[#505f76] hover:bg-[#f2f4f6] transition-colors"
+          className="w-9 h-9 flex items-center justify-center rounded-full border border-outline-variant text-secondary hover:bg-surface-container-low transition-colors"
         >
           <span className="material-symbols-outlined">arrow_back</span>
         </Link>
-        <h1 className="font-display text-lg md:text-xl font-bold text-[#0F172A]">
+        <h1 className="font-display text-lg md:text-xl font-bold text-primary-container">
           {account.name}
         </h1>
-        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${account.is_active ? "bg-[#22C55E]/10 text-[#16A34A]" : "bg-[#e0e3e5] text-[#505f76]"}`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${account.is_active ? "bg-[#16A34A]" : "bg-[#505f76]"}`} />
+        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${account.is_active ? "bg-success/10 text-success" : "bg-surface-container-highest text-secondary"}`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${account.is_active ? "bg-success" : "bg-secondary"}`} />
           {account.is_active ? "Active" : "Inactive"}
         </span>
       </div>
@@ -104,17 +104,17 @@ export default function AccountDetailPage() {
         {/* LEFT: Account Info */}
         <div className="lg:col-span-7 space-y-6">
           {/* Account Details Card */}
-          <div className="bg-white border border-[#c6c6cd]/50 rounded-xl shadow-sm overflow-hidden">
-            <div className="px-5 md:px-6 py-4 border-b border-[#c6c6cd]/50 bg-[#f2f4f6]">
-              <h3 className="font-display font-bold text-[#0F172A] flex items-center gap-2">
+          <div className="bg-white border border-outline-variant/50 rounded-xl shadow-sm overflow-hidden">
+            <div className="px-5 md:px-6 py-4 border-b border-outline-variant/50 bg-surface-container-low">
+              <h3 className="font-display font-bold text-primary-container flex items-center gap-2">
                 <span className="material-symbols-outlined">info</span>
                 Account Details
               </h3>
             </div>
             <div className="p-5 md:p-6 grid grid-cols-2 gap-y-5">
               <div>
-                <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">Type</p>
-                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-semibold ${account.type === "cash" ? "bg-[#22C55E]/10 text-[#16A34A]" : "bg-[#d0e1fb] text-[#0F172A]"}`}>
+                <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">Type</p>
+                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-semibold ${account.type === "cash" ? "bg-success/10 text-success" : "bg-secondary-container text-primary-container"}`}>
                   <span className="material-symbols-outlined text-[14px]">
                     {account.type === "cash" ? "payments" : "account_balance"}
                   </span>
@@ -124,12 +124,12 @@ export default function AccountDetailPage() {
               {account.type === "bank" && (
                 <>
                   <div>
-                    <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">Bank Name</p>
-                    <p className="font-medium text-[#0F172A] text-sm">{account.bank_name || "—"}</p>
+                    <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">Bank Name</p>
+                    <p className="font-medium text-primary-container text-sm">{account.bank_name || "—"}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase font-bold text-[#505f76] tracking-wider mb-1">Account Number</p>
-                    <p className="font-medium text-[#0F172A] text-sm">{account.account_number || "—"}</p>
+                    <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">Account Number</p>
+                    <p className="font-medium text-primary-container text-sm">{account.account_number || "—"}</p>
                   </div>
                 </>
               )}
@@ -137,17 +137,17 @@ export default function AccountDetailPage() {
           </div>
 
           {/* Transaction History */}
-          <div className="bg-white border border-[#c6c6cd]/50 rounded-xl shadow-sm overflow-hidden">
-            <div className="px-5 md:px-6 py-4 border-b border-[#c6c6cd]/50 bg-[#f2f4f6]">
-              <h3 className="font-display font-bold text-[#0F172A] flex items-center gap-2">
+          <div className="bg-white border border-outline-variant/50 rounded-xl shadow-sm overflow-hidden">
+            <div className="px-5 md:px-6 py-4 border-b border-outline-variant/50 bg-surface-container-low">
+              <h3 className="font-display font-bold text-primary-container flex items-center gap-2">
                 <span className="material-symbols-outlined">receipt_long</span>
                 Transaction History
               </h3>
             </div>
 
             {account.transactions.length === 0 ? (
-              <div className="p-6 text-center text-[#505f76] text-sm">
-                <span className="material-symbols-outlined text-3xl block mb-2 text-[#c6c6cd]">
+              <div className="p-6 text-center text-secondary text-sm">
+                <span className="material-symbols-outlined text-3xl block mb-2 text-outline-variant">
                   receipt_long
                 </span>
                 No transactions yet
@@ -157,39 +157,39 @@ export default function AccountDetailPage() {
                 {/* Desktop Table */}
                 <div className="hidden md:block overflow-x-auto">
                   <table className="w-full text-left border-collapse">
-                    <thead className="bg-[#e6e8ea] border-b border-[#c6c6cd]">
+                    <thead className="bg-surface-container-high border-b border-outline-variant">
                       <tr>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider">Date</th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider">Type</th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider text-right">Amount</th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider">Reference</th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-[#505f76] tracking-wider">Note</th>
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Date</th>
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Type</th>
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider text-right">Amount</th>
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Reference</th>
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Note</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#c6c6cd]/30">
+                    <tbody className="divide-y divide-outline-variant/30">
                       {account.transactions.map((txn) => (
-                        <tr key={txn.id} className="hover:bg-[#F8FAFC]">
-                          <td className="px-6 py-4 text-sm text-[#505f76] whitespace-nowrap">
+                        <tr key={txn.id} className="hover:bg-background">
+                          <td className="px-6 py-4 text-sm text-secondary whitespace-nowrap">
                             {formatDate(txn.transaction_date)}
                           </td>
                           <td className="px-6 py-4">
                             <span className={`inline-flex px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${
                               txn.type === "credit"
-                                ? "bg-[#22C55E]/10 text-[#16A34A]"
-                                : "bg-[#EF4444]/10 text-[#DC2626]"
+                                ? "bg-success/10 text-success"
+                                : "bg-error/10 text-error"
                             }`}>
                               {txn.type === "credit" ? "Credit" : "Debit"}
                             </span>
                           </td>
                           <td className={`px-6 py-4 font-mono text-sm text-right font-semibold ${
-                            txn.type === "credit" ? "text-[#16A34A]" : "text-[#DC2626]"
+                            txn.type === "credit" ? "text-success" : "text-error"
                           }`}>
                             {txn.type === "credit" ? "+" : "-"}{formatMoney(txn.amount)}
                           </td>
-                          <td className="px-6 py-4 text-sm text-[#505f76] capitalize">
+                          <td className="px-6 py-4 text-sm text-secondary capitalize">
                             {txn.reference_type.replace(/_/g, " ")}
                           </td>
-                          <td className="px-6 py-4 text-sm text-[#505f76] italic max-w-[200px] truncate">
+                          <td className="px-6 py-4 text-sm text-secondary italic max-w-[200px] truncate">
                             {txn.note || "—"}
                           </td>
                         </tr>
@@ -201,25 +201,25 @@ export default function AccountDetailPage() {
                 {/* Mobile Transactions */}
                 <div className="md:hidden space-y-3 p-4">
                   {account.transactions.map((txn) => (
-                    <div key={txn.id} className="border border-[#c6c6cd]/30 rounded-lg p-4">
+                    <div key={txn.id} className="border border-outline-variant/30 rounded-lg p-4">
                       <div className="flex justify-between items-start mb-2">
                         <div className="space-y-1">
-                          <p className="text-xs text-[#505f76]">{formatDate(txn.transaction_date)}</p>
+                          <p className="text-xs text-secondary">{formatDate(txn.transaction_date)}</p>
                           <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
                             txn.type === "credit"
-                              ? "bg-[#22C55E]/10 text-[#16A34A]"
-                              : "bg-[#EF4444]/10 text-[#DC2626]"
+                              ? "bg-success/10 text-success"
+                              : "bg-error/10 text-error"
                           }`}>
                             {txn.type === "credit" ? "Credit" : "Debit"}
                           </span>
                         </div>
                         <p className={`font-mono text-base font-bold ${
-                          txn.type === "credit" ? "text-[#16A34A]" : "text-[#DC2626]"
+                          txn.type === "credit" ? "text-success" : "text-error"
                         }`}>
                           {txn.type === "credit" ? "+" : "-"}{formatMoney(txn.amount)}
                         </p>
                       </div>
-                      <div className="grid grid-cols-2 gap-2 text-[11px] text-[#505f76] pt-2 border-t border-[#c6c6cd]/20">
+                      <div className="grid grid-cols-2 gap-2 text-[11px] text-secondary pt-2 border-t border-outline-variant/20">
                         <div>
                           <span className="font-bold uppercase tracking-wider">Reference</span>
                           <p className="capitalize">{txn.reference_type.replace(/_/g, " ")}</p>
@@ -239,10 +239,10 @@ export default function AccountDetailPage() {
 
         {/* RIGHT: Balance Summary */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-[#0F172A] text-white rounded-xl p-6 shadow-md relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#059669]/10 blur-[60px] rounded-full -mr-16 -mt-16" />
+          <div className="bg-primary-container text-white rounded-xl p-6 shadow-md relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-tertiary/10 blur-[60px] rounded-full -mr-16 -mt-16" />
             <h3 className="font-display font-bold text-lg mb-6 flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#059669]">
+              <span className="material-symbols-outlined text-tertiary">
                 account_balance_wallet
               </span>
               Balance Summary
@@ -263,15 +263,15 @@ export default function AccountDetailPage() {
             </div>
           </div>
 
-          <div className="bg-white border border-[#c6c6cd]/50 rounded-xl shadow-sm p-6">
+          <div className="bg-white border border-outline-variant/50 rounded-xl shadow-sm p-6">
             <div className="flex items-center gap-2 mb-4">
-              <span className="material-symbols-outlined text-[#0F172A]">analytics</span>
-              <h3 className="font-display font-bold text-[#0F172A]">Quick Stats</h3>
+              <span className="material-symbols-outlined text-primary-container">analytics</span>
+              <h3 className="font-display font-bold text-primary-container">Quick Stats</h3>
             </div>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-[#505f76]">Total Credits</span>
-                <span className="font-mono font-bold text-[#16A34A]">
+                <span className="text-sm text-secondary">Total Credits</span>
+                <span className="font-mono font-bold text-success">
                   {formatMoney(
                     account.transactions
                       .filter((t) => t.type === "credit")
@@ -280,8 +280,8 @@ export default function AccountDetailPage() {
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-[#505f76]">Total Debits</span>
-                <span className="font-mono font-bold text-[#DC2626]">
+                <span className="text-sm text-secondary">Total Debits</span>
+                <span className="font-mono font-bold text-error">
                   {formatMoney(
                     account.transactions
                       .filter((t) => t.type === "debit")

@@ -65,46 +65,46 @@ export default function NewAccountPage() {
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/accounts"
-          className="w-9 h-9 flex items-center justify-center rounded-full border border-[#c6c6cd] text-[#505f76] hover:bg-[#f2f4f6] transition-colors"
+          className="w-9 h-9 flex items-center justify-center rounded-full border border-outline-variant text-secondary hover:bg-surface-container-low transition-colors"
         >
           <span className="material-symbols-outlined">arrow_back</span>
         </Link>
-        <h1 className="font-display text-xl md:text-2xl font-bold text-[#0F172A]">
+        <h1 className="font-display text-xl md:text-2xl font-bold text-primary-container">
           New Account
         </h1>
       </div>
 
       <form onSubmit={handleSubmit}>
         <div className="max-w-lg mx-auto space-y-6">
-          <section className="bg-white rounded-lg border border-[#c6c6cd]/50 shadow-sm p-5 md:p-6">
+          <section className="bg-white rounded-lg border border-outline-variant/50 shadow-sm p-5 md:p-6">
             <div className="flex items-center gap-2 mb-5">
-              <span className="material-symbols-outlined text-[#0F172A]">account_balance</span>
+              <span className="material-symbols-outlined text-primary-container">account_balance</span>
               <h2 className="font-display text-lg font-semibold">Account Details</h2>
             </div>
 
             {error && (
-              <div className="mb-4 p-3 bg-[#ffdad6] border border-[#ba1a1a]/20 rounded-lg text-sm text-[#ba1a1a] font-medium">
+              <div className="mb-4 p-3 bg-error-container border border-error/20 rounded-lg text-sm text-error font-medium">
                 {error}
               </div>
             )}
 
             <div className="space-y-5">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                  Account Name <span className="text-[#ba1a1a]">*</span>
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+                  Account Name <span className="text-error">*</span>
                 </label>
                 <input
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
+                  className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                   placeholder="e.g. Main Cash"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                  Type <span className="text-[#ba1a1a]">*</span>
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+                  Type <span className="text-error">*</span>
                 </label>
                 <div className="grid grid-cols-2 gap-4">
                   {(["cash", "bank"] as const).map((option) => (
@@ -112,8 +112,8 @@ export default function NewAccountPage() {
                       key={option}
                       className={`relative cursor-pointer rounded-lg border-2 p-4 transition-all ${
                         type === option
-                          ? "border-[#0F172A] bg-[#0F172A]/5"
-                          : "border-[#c6c6cd] hover:border-[#0F172A]"
+                          ? "border-primary-container bg-primary-container/5"
+                          : "border-outline-variant hover:border-primary-container"
                       }`}
                     >
                       <input
@@ -125,10 +125,10 @@ export default function NewAccountPage() {
                         className="sr-only"
                       />
                       <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-[#0F172A]">
+                        <span className="material-symbols-outlined text-primary-container">
                           {option === "cash" ? "payments" : "account_balance"}
                         </span>
-                        <span className="font-bold text-sm text-[#0F172A] capitalize">{option}</span>
+                        <span className="font-bold text-sm text-primary-container capitalize">{option}</span>
                       </div>
                     </label>
                   ))}
@@ -138,25 +138,25 @@ export default function NewAccountPage() {
               {type === "bank" && (
                 <>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                      Bank Name <span className="text-[#ba1a1a]">*</span>
+                    <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+                      Bank Name <span className="text-error">*</span>
                     </label>
                     <input
                       required
                       value={bankName}
                       onChange={(e) => setBankName(e.target.value)}
-                      className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
+                      className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                       placeholder="e.g. Sonali Bank"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
+                    <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                       Account Number
                     </label>
                     <input
                       value={accountNumber}
                       onChange={(e) => setAccountNumber(e.target.value)}
-                      className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm focus:border-[#0F172A] focus:ring-0 outline-none"
+                      className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container focus:ring-0 outline-none"
                       placeholder="e.g. 1234567890"
                     />
                   </div>
@@ -164,8 +164,8 @@ export default function NewAccountPage() {
               )}
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-[#505f76]">
-                  Opening Balance (৳)
+                <label className="text-xs font-bold uppercase tracking-wider text-secondary">
+                  Opening Balance (tk)
                 </label>
                 <input
                   type="number"
@@ -173,7 +173,7 @@ export default function NewAccountPage() {
                   min="0"
                   value={openingBalance}
                   onChange={(e) => setOpeningBalance(e.target.value)}
-                  className="w-full h-[42px] border border-[#c6c6cd] rounded px-3 text-sm font-mono focus:border-[#0F172A] focus:ring-0 outline-none"
+                  className="w-full h-[42px] border border-outline-variant rounded px-3 text-sm font-mono focus:border-primary-container focus:ring-0 outline-none"
                   placeholder="0.00"
                 />
               </div>
@@ -184,14 +184,14 @@ export default function NewAccountPage() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/accounts"
-              className="flex-1 h-[42px] bg-transparent text-[#505f76] hover:bg-[#f2f4f6] transition-colors font-bold text-sm rounded border border-[#c6c6cd] flex items-center justify-center"
+              className="flex-1 h-[42px] bg-transparent text-secondary hover:bg-surface-container-low transition-colors font-bold text-sm rounded border border-outline-variant flex items-center justify-center"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="flex-1 h-[42px] bg-[#0F172A] text-white hover:bg-[#0F172A]/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
+              className="flex-1 h-[42px] bg-primary-container text-white hover:bg-primary-container/90 transition-all active:scale-95 font-bold text-sm rounded shadow-md disabled:opacity-40"
             >
               {mutation.isPending ? "Saving..." : "Save Account"}
             </button>
@@ -199,17 +199,17 @@ export default function NewAccountPage() {
         </div>
 
         {/* Mobile sticky bottom bar */}
-        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-[#c6c6cd] px-4 py-3 z-40 flex items-center gap-3 shadow-lg">
+        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-outline-variant px-4 py-3 z-40 flex items-center gap-3 shadow-lg">
           <Link
             href="/accounts"
-            className="flex-1 h-12 bg-transparent text-[#505f76] font-bold text-sm rounded-lg border border-[#c6c6cd] flex items-center justify-center"
+            className="flex-1 h-12 bg-transparent text-secondary font-bold text-sm rounded-lg border border-outline-variant flex items-center justify-center"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="flex-1 h-12 bg-[#0F172A] text-white font-bold text-sm rounded-lg shadow-md active:scale-[0.98] transition-all disabled:opacity-40"
+            className="flex-1 h-12 bg-primary-container text-white font-bold text-sm rounded-lg shadow-md active:scale-[0.98] transition-all disabled:opacity-40"
           >
             {mutation.isPending ? "Saving..." : "Save Account"}
           </button>
