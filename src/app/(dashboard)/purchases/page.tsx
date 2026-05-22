@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import Breadcrumb from "@/components/Breadcrumb";
 interface Vendor {
   id: string;
   name: string;
@@ -110,14 +111,7 @@ export default function PurchasesPage() {
 
   return (
     <div className="p-4 md:p-8">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
-        <Link href="/" className="hover:text-primary-container">
-          Dashboard
-        </Link>
-        <span className="material-symbols-outlined text-xs">chevron_right</span>
-        <span className="text-primary-container font-bold">Purchases</span>
-      </nav>
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Purchases', href: null }]} />
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">

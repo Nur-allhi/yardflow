@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import Breadcrumb from "@/components/Breadcrumb";
 
 interface Sale {
   id: string;
@@ -213,12 +214,7 @@ export default function SalesPage() {
 
   return (
     <div className="p-4 md:p-8">
-      {/* Breadcrumb */}
-      <nav className="flex text-[10px] uppercase tracking-widest text-secondary mb-1 font-bold">
-        <span>ERP</span>
-        <span className="mx-2">/</span>
-        <span className="text-[#191c1e]">Sales Management</span>
-      </nav>
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Sales', href: null }]} />
 
       {/* Header */}
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">

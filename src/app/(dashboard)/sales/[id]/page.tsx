@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import Breadcrumb from "@/components/Breadcrumb";
 import { useAccounts } from "@/hooks/useAccounts";
 
 interface SaleItem {
@@ -215,6 +216,7 @@ export default function SaleDetailPage() {
 
   return (
     <div className="p-4 md:p-8">
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Sales', href: '/sales' }, { label: `Sale #${id.slice(0,4).toUpperCase()}`, href: null }]} />
       {/* Back + Title */}
       <div className="flex flex-col md:flex-row md:items-center gap-3 mb-6">
         <div className="flex items-center gap-3">
@@ -262,9 +264,12 @@ export default function SaleDetailPage() {
                   <span className="italic text-secondary text-sm">Cash Sale</span>
                 ) : (
                   <>
-                    <p className="font-medium text-primary-container text-sm">
+                    <Link
+                      href={`/sales/customers/${sale.customer_id}`}
+                      className="font-medium text-primary-container text-sm hover:underline"
+                    >
                       {sale.customer_name || "—"}
-                    </p>
+                    </Link>
                     {sale.customer_phone && (
                       <p className="text-xs text-secondary">{sale.customer_phone}</p>
                     )}

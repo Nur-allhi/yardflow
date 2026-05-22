@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Breadcrumb from "@/components/Breadcrumb";
 import { useAccounts } from "@/hooks/useAccounts";
 import { useCustomers } from "@/hooks/useCustomers";
 import { useCategories, useSubtypes } from "@/hooks/useCategories";
@@ -173,6 +174,7 @@ export default function NewSalePage() {
 
   return (
     <div className="p-4 md:p-8">
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Sales', href: '/sales' }, { label: 'New Sale', href: null }]} />
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/sales"

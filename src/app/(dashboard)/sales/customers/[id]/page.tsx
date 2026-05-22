@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import Breadcrumb from "@/components/Breadcrumb";
 import { useAccounts } from "@/hooks/useAccounts";
 
 interface CustomerSale {
@@ -243,6 +244,7 @@ export default function CustomerProfilePage() {
 
   return (
     <div className="p-4 md:p-8">
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Sales', href: '/sales' }, { label: 'Customers', href: '/sales/customers' }, { label: 'Customer Profile', href: null }]} />
       {/* Back + Title */}
       <div className="flex flex-col md:flex-row md:items-center gap-3 mb-6">
         <div className="flex items-center gap-3">

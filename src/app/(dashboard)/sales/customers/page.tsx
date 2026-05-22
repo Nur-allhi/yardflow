@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 
 interface Customer {
   id: string;
@@ -174,15 +175,9 @@ export default function CustomersPage() {
 
   return (
     <>
+      <Breadcrumb items={[{ label: 'Dashboard', href: '/' }, { label: 'Sales', href: '/sales' }, { label: 'Customers', href: null }]} />
       {/* Desktop */}
       <div className="hidden md:block p-8">
-        <nav className="flex items-center gap-2 text-xs text-secondary mb-2 font-medium tracking-wide uppercase">
-          <Link href="/" className="hover:text-primary-container">Dashboard</Link>
-          <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <Link href="/sales" className="hover:text-primary-container">Sales</Link>
-          <span className="material-symbols-outlined text-xs">chevron_right</span>
-          <span className="text-primary-container font-bold">Customers</span>
-        </nav>
 
         <div className="flex justify-between items-end mb-8">
           <h1 className="font-display text-2xl font-bold text-primary-container tracking-tight">Customers</h1>
