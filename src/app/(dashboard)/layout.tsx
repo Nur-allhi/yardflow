@@ -4,6 +4,7 @@ import Sidebar from "@/components/Sidebar";
 import MobileSidebar from "@/components/MobileSidebar";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import QueryProvider from "@/components/QueryProvider";
+import CommandPalette from "@/components/CommandPalette";
 
 export default async function DashboardLayout({
   children,
@@ -59,6 +60,7 @@ export default async function DashboardLayout({
         {/* Mobile Bottom Nav */}
         <MobileBottomNav />
       </div>
+      <CommandPalette />
     </div>
     </QueryProvider>
   );
