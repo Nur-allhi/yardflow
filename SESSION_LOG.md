@@ -636,3 +636,43 @@ Aligned all mobile pages with `designs/{name}_mobile/code.html` mockups:
 ### Quality Gates
 - `npx tsc --noEmit` — zero errors
 - `npx next build` — succeeded
+
+---
+
+## Session: 2026-05-22 — Testing & Fix Planning
+
+### Overview
+User tested the app live at `localhost:3000`. All findings and errors were logged. Server stopped at end of session.
+
+### Plan Created
+**`Fix_plan.md`** — 9 tasks (A–I) prioritized:
+- **A**: Remove `default_price_per_kg` — schema → migration → API → UI → interfaces → seeds → docs (14 files)
+- **B**: Fix green-on-green category chip — `subtypes/page.tsx` line 115
+- **C**: Wire sub-type edit functionality — `editingId` state + save mutation + inline edit
+- **D**: Fix accounts balance — shared `recordAccountTransaction()` utility → migrate all 12 routes
+- **E**: Fix sales summary cards — `w-[140px]` → `w-fit min-w-[120px]`, add border + ৳ prefix
+- **F**: Fix scrap page grid — wrap Add Scrap + Sell Scrap button in single container
+- **G**: Add missing `tertiary` color — `"tertiary": "#059669"` in `tailwind.config.ts` (fixes ~40+ files)
+- **H**: Fix HR redirect — `redirect("hr/workers")` → `redirect("/hr/workers")`
+- **I**: Restructure consumables — fix most_used_item bug, fix merge logic, refactor Use form to bottom sheet, add consumption history, align mobile cards with design
+
+### Errors Logged (`ERROR.md`)
+1. ⚠ Viewport metadata deprecation (Next.js 15, 13+ pages)
+2. 🔴 Sales API — `status=all` enum error causes 500
+3. 🔴 Multiple API endpoints intermittent DB timeout (~10s+ → 500)
+
+### Findings from User Testing
+- Sub-type edit buttons: decorative, no onClick
+- Sales "All" filter: 500 error
+- Sales summary cards: overflow on mobile
+- Scrap Add button: invisible (missing `tertiary` color)
+- Scrap Quick Scrap Sale: misplaced in grid
+- HR redirect: broken (relative → double segment)
+- Accounts dashboard: balance not updated
+- Consumables: no consumption log, merge bug, use form design mismatch
+
+### Branch
+`ui-polish-master`
+
+### Commit
+`39256c3` — docs: add fix plan and update error log from testing session
