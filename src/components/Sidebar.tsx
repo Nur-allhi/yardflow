@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { staggerContainer, navItemVariants, activeIndicatorVariants, springSnap } from "@/lib/animation";
+import { APP_VERSION, COMMIT_HASH } from "@/lib/version";
 
 const navItems = [
   { href: "/", icon: "dashboard", label: "Dashboard" },
@@ -104,7 +105,7 @@ export default function Sidebar({ role }: { role?: string }) {
           )}
           <div className="flex items-center gap-2 text-on-primary-container/50 text-[11px]">
             <span className="material-symbols-outlined text-[13px]">info</span>
-            <span className="font-mono">v1.0.0</span>
+            <span className="font-mono">v{APP_VERSION} ({COMMIT_HASH})</span>
           </div>
         </div>
         <button
