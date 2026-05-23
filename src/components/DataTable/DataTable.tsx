@@ -1,46 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import FilterPopover from "./FilterPopover";
-import type { DataTableProps, ActiveFilter, SortDir } from "./types";
-
-function ActiveFilterChips({
-  filters,
-  onRemove,
-  onClearAll,
-}: {
-  filters: ActiveFilter[];
-  onRemove: (key: string) => void;
-  onClearAll: () => void;
-}) {
-  if (filters.length === 0) return null;
-  return (
-    <div className="flex flex-wrap items-center gap-2 px-4 md:px-6 py-3 border-b border-outline-variant/20">
-      {filters.map((f) => (
-        <span
-          key={f.key}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-tertiary/10 text-tertiary text-[11px] font-semibold rounded-full"
-        >
-          {f.label}: {f.value}
-          <button
-            type="button"
-            onClick={() => onRemove(f.key)}
-            className="hover:text-tertiary-container transition-colors"
-          >
-            <span className="material-symbols-outlined text-[14px]">close</span>
-          </button>
-        </span>
-      ))}
-      <button
-        type="button"
-        onClick={onClearAll}
-        className="text-[11px] font-medium text-secondary hover:text-secondary transition-colors ml-1"
-      >
-        Clear All
-      </button>
-    </div>
-  );
-}
+import type { DataTableProps, SortDir } from "./types";
 
 function SortIcon({ dir, active }: { dir: SortDir; active: boolean }) {
   return (
@@ -58,7 +18,6 @@ export default function DataTable<T>({
   columns,
   data,
   keyExtractor,
-  onFilterChange,
   onSortChange,
   loading = false,
   emptyMessage = "No data found",
@@ -68,62 +27,12 @@ export default function DataTable<T>({
   onPageChange,
   sortBy,
   sortDir,
-  activeFilters = [],
 }: DataTableProps<T>) {
-  const [filters, setFilters] = useState<ActiveFilter[]>(activeFilters);
-
-  const buildParams = useCallback(
-    (updatedFilters: ActiveFilter[]) => {
-      const params = new URLSearchParams();
-      for (const f of updatedFilters) {
-        if (f.value.includes("date_from=")) {
-          f.value.split("&").forEach((part) => {
-            const [k, v] = part.split("=");
-            if (k && v) params.set(k, v);
-          });
-        } else {
-          params.set(f.key, f.value);
-        }
-      }
-      return params;
-    },
-    [],
-  );
-
-  function handleApplyFilter(key: string, value: string) {
-    const col = columns.find((c) => (c.filterParam || c.key) === key);
-    const label = col?.label || key;
-    const newFilters = filters.filter((f) => f.key !== key);
-    if (value) {
-      newFilters.push({ key, label, value });
-    }
-    setFilters(newFilters);
-    onFilterChange(buildParams(newFilters));
-  }
-
-  function handleRemoveFilter(key: string) {
-    const newFilters = filters.filter((f) => f.key !== key);
-    setFilters(newFilters);
-    onFilterChange(buildParams(newFilters));
-  }
-
-  function handleClearAll() {
-    setFilters([]);
-    onFilterChange(new URLSearchParams());
-  }
 
   function handleSort(colKey: string) {
     if (!onSortChange) return;
     const isAsc = sortBy === colKey && sortDir === "asc";
     onSortChange(colKey, isAsc ? "desc" : "asc");
-  }
-
-  function getFilterValue(key: string): string {
-    const paramKey = key;
-    const f = filters.find(
-      (f) => f.key === paramKey,
-    );
-    return f?.value || "";
   }
 
   if (loading) {
@@ -139,12 +48,6 @@ export default function DataTable<T>({
 
   return (
     <div className="bg-white border border-outline-variant/30 rounded-xl shadow-sm overflow-hidden">
-      <ActiveFilterChips
-        filters={filters}
-        onRemove={handleRemoveFilter}
-        onClearAll={handleClearAll}
-      />
-
       {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full border-collapse">
@@ -170,16 +73,6 @@ export default function DataTable<T>({
                       <SortIcon
                         dir="desc"
                         active={sortBy === col.key && sortDir === "desc"}
-                      />
-                    )}
-                    {col.filterable !== false && (
-                      <FilterPopover
-                        column={col}
-                        currentValue={getFilterValue(
-                          col.filterParam || col.key,
-                        )}
-                        onApply={handleApplyFilter}
-                        onClear={handleRemoveFilter}
                       />
                     )}
                   </div>

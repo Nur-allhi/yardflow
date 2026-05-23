@@ -9,7 +9,7 @@ interface TeamMember {
   id: string;
   name: string;
   email: string;
-  role: "owner" | "manager" | "worker";
+  role: "owner" | "manager";
   is_active: boolean;
   created_at: string;
 }
@@ -18,7 +18,7 @@ interface InviteForm {
   name: string;
   email: string;
   password: string;
-  role: "owner" | "manager" | "worker";
+  role: "owner" | "manager";
 }
 
 interface FormErrors {
@@ -59,7 +59,7 @@ export default function TeamPage() {
     name: "",
     email: "",
     password: "",
-    role: "worker",
+    role: "manager",
   });
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [inviteError, setInviteError] = useState<string | null>(null);
@@ -158,7 +158,7 @@ export default function TeamPage() {
   }
 
   function resetForm() {
-    setInviteForm({ name: "", email: "", password: "", role: "worker" });
+    setInviteForm({ name: "", email: "", password: "", role: "manager" });
     setFormErrors({});
     setInviteError(null);
   }
@@ -582,7 +582,6 @@ export default function TeamPage() {
                   }
                   className="w-full h-[44px] px-4 border border-outline-variant rounded-lg text-sm outline-none focus:ring-0 bg-white"
                 >
-                  <option value="worker">Worker</option>
                   <option value="manager">Manager</option>
                   <option value="owner">Owner</option>
                 </select>

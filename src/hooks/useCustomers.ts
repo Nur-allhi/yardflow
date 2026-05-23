@@ -10,6 +10,8 @@ interface Customer {
   is_active: boolean;
   total_purchases: number;
   total_paid: number;
+  total_amount: number;
+  due_balance: number;
 }
 
 async function fetchCustomers(): Promise<Customer[]> {

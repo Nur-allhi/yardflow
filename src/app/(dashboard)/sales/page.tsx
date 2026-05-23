@@ -50,6 +50,10 @@ function formatMoney(n: number): string {
   return n.toLocaleString("en-IN") + " tk";
 }
 
+function formatMoneyShort(n: number): string {
+  return n.toLocaleString("en-IN");
+}
+
 function formatKg(n: number): string {
   return n.toLocaleString("en-IN", {
     minimumFractionDigits: 3,
@@ -253,25 +257,25 @@ export default function SalesPage() {
           <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
             <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">Total Sales</p>
             <p className="font-mono text-lg md:text-2xl font-bold text-primary-container">
-              {data?.summary ? formatMoney(data.summary.total_sales) : "—"}
+              {data?.summary ? formatMoneyShort(data.summary.total_sales) : "—"}
             </p>
           </div>
           <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
             <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">Received</p>
             <p className="font-mono text-lg md:text-2xl font-bold text-tertiary">
-              {data?.summary ? formatMoney(data.summary.total_paid) : "—"}
+              {data?.summary ? formatMoneyShort(data.summary.total_paid) : "—"}
             </p>
           </div>
           <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
             <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">Total Due</p>
             <p className="font-mono text-lg md:text-2xl font-bold text-error">
-              {data?.summary ? formatMoney(data.summary.total_due) : "—"}
+              {data?.summary ? formatMoneyShort(data.summary.total_due) : "—"}
             </p>
           </div>
           <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
             <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">This Month</p>
             <p className="font-mono text-lg md:text-2xl font-bold text-secondary">
-              {data?.summary ? formatMoney(data.summary.this_month) : "—"}
+              {data?.summary ? formatMoneyShort(data.summary.this_month) : "—"}
             </p>
           </div>
         </div>
@@ -301,7 +305,8 @@ export default function SalesPage() {
           <select
             value={customerFilter}
             onChange={(e) => { setCustomerFilter(e.target.value); setPage(1); }}
-            className="bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-8 text-sm focus:ring-0 outline-none"
+            className="appearance-none bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none bg-[length:14px] bg-no-repeat"
+            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundPosition: 'right 6px center' }}
           >
             <option value="">All Customers</option>
             {(data?.customers ?? []).map((c: CustomerOption) => (
@@ -311,7 +316,8 @@ export default function SalesPage() {
           <select
             value={saleTypeFilter}
             onChange={(e) => { setSaleTypeFilter(e.target.value); setPage(1); }}
-            className="bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-8 text-sm focus:ring-0 outline-none"
+            className="appearance-none bg-white border border-outline-variant rounded-lg py-2 pl-3 pr-7 text-sm focus:ring-0 outline-none bg-[length:14px] bg-no-repeat"
+            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundPosition: 'right 6px center' }}
           >
             {SALE_TYPES.map((st) => (
               <option key={st.value} value={st.value}>{st.label}</option>

@@ -235,6 +235,9 @@ export default function WorkersPage() {
                 <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
                   This Month Advances
                 </th>
+                <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider">
+                  Net Payable
+                </th>
                 <th className="px-6 py-4 text-xs font-bold text-primary-container uppercase tracking-wider text-right">
                   Actions
                 </th>
@@ -267,6 +270,11 @@ export default function WorkersPage() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`font-mono text-sm font-bold ${w.this_month_advances > 0 ? 'text-warning' : 'text-outline'}`}>
                       {w.this_month_advances > 0 ? formatMoney(w.this_month_advances) : "0 tk"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`font-mono text-sm font-bold ${w.monthly_salary - w.this_month_advances > 0 ? 'text-tertiary' : w.monthly_salary - w.this_month_advances < 0 ? 'text-error' : 'text-outline'}`}>
+                      {formatMoney(Math.max(0, w.monthly_salary - w.this_month_advances))}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
@@ -326,6 +334,12 @@ export default function WorkersPage() {
                   </div>
                 ) : (
                   <span className="text-secondary text-xs italic">No pending advances</span>
+                )}
+                {w.monthly_salary - w.this_month_advances > 0 && (
+                  <div className="inline-flex items-center bg-tertiary/10 text-tertiary px-2 py-1 rounded-sm border border-tertiary/20">
+                    <span className="material-symbols-outlined text-[14px] mr-1">account_balance_wallet</span>
+                    <span className="font-code text-xs font-bold">{formatMoney(w.monthly_salary - w.this_month_advances)} Net</span>
+                  </div>
                 )}
               </div>
               <div className="pt-2 flex gap-3" onClick={(e) => e.stopPropagation()}>

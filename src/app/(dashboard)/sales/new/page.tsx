@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -42,6 +42,25 @@ export default function NewSalePage() {
   const { data: accountsData } = useAccounts();
   const { data: subtypesData } = useSubtypes();
 
+  const subtypeStockMap = useMemo(() => {
+    const map = new Map<string, number>();
+    if (!subtypesData) return map;
+    for (const st of subtypesData) {
+      map.set(st.id, st.current_stock_kg ?? 0);
+    }
+    return map;
+  }, [subtypesData]);
+
+  const categoryQtyMap = useMemo(() => {
+    const map = new Map<string, number>();
+    if (!subtypesData) return map;
+    for (const st of subtypesData) {
+      const current = map.get(st.category_id) ?? 0;
+      map.set(st.category_id, current + (st.current_stock_kg ?? 0));
+    }
+    return map;
+  }, [subtypesData]);
+
   const [customerId, setCustomerId] = useState("");
   const [saleType, setSaleType] = useState<"fabricated" | "raw_passthrough">("fabricated");
   const [saleDate, setSaleDate] = useState(
@@ -59,10 +78,7 @@ export default function NewSalePage() {
   ]);
   const nextKey = useRef(2);
 
-  const customers = (customersData ?? []).map((c) => ({
-    ...c,
-    due_balance: c.total_purchases - c.total_paid,
-  }));
+  const customers = customersData ?? [];
   const categories = categoriesData ?? [];
   const accounts = accountsData ?? [];
   const selectedCustomer = customers.find((c) => c.id === customerId);
@@ -258,20 +274,20 @@ export default function NewSalePage() {
                   <label className="text-xs font-bold uppercase tracking-wider text-secondary">
                     Customer
                   </label>
-                  <select
-                    value={customerId}
-                    onChange={(e) => setCustomerId(e.target.value)}
-                    required
-                    className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
-                  >
-                    <option value="">Select customer</option>
-                    {customers.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                        {c.due_balance > 0 ? ` (${formatMoney(c.due_balance)} due)` : ""}
-                      </option>
-                    ))}
-                  </select>
+                    <select
+                      value={customerId}
+                      onChange={(e) => setCustomerId(e.target.value)}
+                      required
+                      className="w-full h-[44px] border border-outline-variant rounded bg-white px-3 text-sm focus:border-primary-container focus:ring-0 outline-none transition-all"
+                    >
+                      <option value="">Select customer</option>
+                      {customers.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name}
+                          {c.due_balance > 0 ? ` (${formatMoney(c.due_balance)} due)` : c.due_balance < 0 ? ` (${formatMoney(Math.abs(c.due_balance))} credit)` : ""}
+                        </option>
+                      ))}
+                    </select>
                   {selectedCustomer && selectedCustomer.due_balance > 0 && (
                     <p className="text-xs text-warning flex items-center gap-1 font-medium">
                       <span className="material-symbols-outlined text-[14px]">warning</span>
@@ -348,9 +364,14 @@ export default function NewSalePage() {
                             className="w-full h-[38px] border border-outline-variant rounded px-2 text-sm focus:border-primary-container outline-none bg-white"
                           >
                             <option value="">Category</option>
-                            {categories.map((cat) => (
-                              <option key={cat.id} value={cat.id}>{cat.name}</option>
-                            ))}
+                            {categories.map((cat) => {
+                              const qty = categoryQtyMap.get(cat.id) ?? 0;
+                              return (
+                                <option key={cat.id} value={cat.id}>
+                                  {cat.name} ({qty.toFixed(1)} kg)
+                                </option>
+                              );
+                            })}
                           </select>
                         </td>
                         <td className="px-6 py-3">
@@ -361,9 +382,14 @@ export default function NewSalePage() {
                             className="w-full h-[38px] border border-outline-variant rounded px-2 text-sm focus:border-primary-container outline-none bg-white disabled:opacity-40"
                           >
                             <option value="">Sub-type</option>
-                            {getSubtypesFor(item).map((st) => (
-                              <option key={st.id} value={st.id}>{st.name}</option>
-                            ))}
+                            {getSubtypesFor(item).map((st) => {
+                              const qty = subtypeStockMap.get(st.id) ?? 0;
+                              return (
+                                <option key={st.id} value={st.id}>
+                                  {st.name} ({qty.toFixed(1)} kg)
+                                </option>
+                              );
+                            })}
                           </select>
                         </td>
                         <td className="px-6 py-3">
@@ -428,9 +454,14 @@ export default function NewSalePage() {
                         className="h-[38px] border border-outline-variant rounded px-2 text-sm outline-none bg-white"
                       >
                         <option value="">Category</option>
-                        {categories.map((cat) => (
-                          <option key={cat.id} value={cat.id}>{cat.name}</option>
-                        ))}
+                        {categories.map((cat) => {
+                          const qty = categoryQtyMap.get(cat.id) ?? 0;
+                          return (
+                            <option key={cat.id} value={cat.id}>
+                              {cat.name} ({qty.toFixed(1)} kg)
+                            </option>
+                          );
+                        })}
                       </select>
                       <select
                         value={item.subtype_id}
@@ -439,9 +470,14 @@ export default function NewSalePage() {
                         className="h-[38px] border border-outline-variant rounded px-2 text-sm outline-none bg-white disabled:opacity-40"
                       >
                         <option value="">Sub-type</option>
-                        {getSubtypesFor(item).map((st) => (
-                          <option key={st.id} value={st.id}>{st.name}</option>
-                        ))}
+                        {getSubtypesFor(item).map((st) => {
+                          const qty = subtypeStockMap.get(st.id) ?? 0;
+                          return (
+                            <option key={st.id} value={st.id}>
+                              {st.name} ({qty.toFixed(1)} kg)
+                            </option>
+                          );
+                        })}
                       </select>
                     </div>
                     <div className="grid grid-cols-2 gap-3">

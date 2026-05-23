@@ -39,7 +39,8 @@ function formatMoney(n: number) {
   return (n ?? 0).toLocaleString("en-IN") + " tk";
 }
 
-function getInitials(name: string) {
+function getInitials(name: string | null | undefined) {
+  if (!name) return "?";
   return name
     .split(" ")
     .map((w) => w[0])

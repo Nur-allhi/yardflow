@@ -10,6 +10,8 @@ interface Subtype {
   id: string;
   category_id: string;
   name: string;
+  current_stock_kg: number;
+  wac: number;
 }
 
 async function fetchCategories(): Promise<Category[]> {

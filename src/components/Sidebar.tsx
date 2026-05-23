@@ -19,7 +19,7 @@ const bottomItems = [
   { href: "/settings", icon: "settings", label: "Settings" },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ role }: { role?: string }) {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -95,6 +95,14 @@ export default function Sidebar() {
             </Link>
           );
         })}
+        {role && (
+          <div className="px-4 py-2 mb-1">
+            <div className="flex items-center gap-2 text-on-primary-container/70 text-xs">
+              <span className="material-symbols-outlined text-[14px]">badge</span>
+              <span className="capitalize font-medium">{role}</span>
+            </div>
+          </div>
+        )}
         <button
           onClick={() => {
             fetch("/api/auth/logout", { method: "POST" }).finally(() => {

@@ -79,45 +79,33 @@ const { data: transactionsData } = useQuery<Transaction[]>({
   },
 });
 
-  const [filterParams, setFilterParams] = useState<URLSearchParams>(new URLSearchParams());
+  const [searchQuery, setSearchQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState<"all" | "credit" | "debit">("all");
 
   const filteredTransactions = useMemo(() => {
     const txns = transactionsData ?? [];
-    const dateFrom = filterParams.get("date_from");
-    const dateTo = filterParams.get("date_to");
-    const descLike = filterParams.get("description__like")?.toLowerCase();
-    const accountLike = filterParams.get("account__like")?.toLowerCase();
+    const query = searchQuery.toLowerCase().trim();
     return txns.filter((t) => {
-      if (dateFrom && t.transaction_date < dateFrom) return false;
-      if (dateTo && t.transaction_date > dateTo) return false;
-      if (descLike && !descriptionLabel(t).toLowerCase().includes(descLike)) return false;
-      if (accountLike && !t.account_name.toLowerCase().includes(accountLike)) return false;
+      if (query && !descriptionLabel(t).toLowerCase().includes(query) && !t.note?.toLowerCase().includes(query)) return false;
+      if (typeFilter !== "all" && t.type !== typeFilter) return false;
       return true;
     });
-  }, [transactionsData, filterParams]);
+  }, [transactionsData, searchQuery, typeFilter]);
 
   const columns: ColumnDef<Transaction>[] = [
     {
       key: "transaction_date",
       label: "Date",
-      filterable: true,
-      filterType: "date-range",
       render: (t) => <span className="text-secondary whitespace-nowrap">{formatDate(t.transaction_date)}</span>,
     },
     {
       key: "account_name",
       label: "Account",
-      filterable: true,
-      filterType: "text",
-      filterParam: "account__like",
       render: (t) => <span className="text-secondary font-medium">{t.account_name}</span>,
     },
     {
       key: "description",
       label: "Description",
-      filterable: true,
-      filterType: "text",
-      filterParam: "description__like",
       render: (t) =>
         t.reference_url ? (
           <Link href={t.reference_url} className="text-tertiary hover:underline text-sm font-medium">
@@ -130,7 +118,6 @@ const { data: transactionsData } = useQuery<Transaction[]>({
     {
       key: "amount",
       label: "Amount",
-      sortable: true,
       className: "text-right",
       render: (t) => {
         const isCredit = t.type === "credit";
@@ -362,17 +349,49 @@ const { data: transactionsData } = useQuery<Transaction[]>({
 
       {/* Recent Transactions */}
       <div className="bg-white rounded-lg shadow-sm border border-outline-variant/30 overflow-hidden">
-        <div className="p-4 md:p-6 border-b border-outline-variant/20 flex justify-between items-center bg-surface-container-low/50">
+        <div className="p-4 md:p-6 border-b border-outline-variant/20 flex flex-col md:flex-row md:justify-between md:items-center gap-3 bg-surface-container-low/50">
           <h2 className="font-display font-semibold text-primary-container">
             Recent Transactions
           </h2>
           <span className="text-tertiary-container text-caption font-bold">{filteredTransactions.length} transactions</span>
         </div>
+
+        {/* Filter bar: search + type toggle */}
+        <div className="px-4 md:px-6 py-3 border-b border-outline-variant/20 flex flex-col md:flex-row gap-3">
+          <div className="relative flex-1">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">
+              search
+            </span>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search transactions..."
+              className="w-full pl-9 pr-3 py-2 border border-outline-variant rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-tertiary/30 focus:border-tertiary"
+            />
+          </div>
+          <div className="flex gap-1 bg-surface-container-high rounded-lg p-1 self-start">
+            {(["all", "credit", "debit"] as const).map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setTypeFilter(t)}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors capitalize ${
+                  typeFilter === t
+                    ? "bg-white text-primary-container shadow-sm"
+                    : "text-secondary hover:text-primary-container"
+                }`}
+              >
+                {t === "credit" ? "Credits" : t === "debit" ? "Debits" : "All"}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <DataTable
           columns={columns}
           data={filteredTransactions}
           keyExtractor={(t) => t.id}
-          onFilterChange={(params) => setFilterParams(params)}
           emptyMessage="No transactions yet."
           mobileCard={mobileTransactionCard}
         />

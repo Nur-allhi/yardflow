@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -44,6 +44,25 @@ export default function NewPurchasePage() {
   const { data: accountsData } = useAccounts();
   const { data: subtypesData } = useSubtypes();
 
+  const subtypeStockMap = useMemo(() => {
+    const map = new Map<string, number>();
+    if (!subtypesData) return map;
+    for (const st of subtypesData) {
+      map.set(st.id, st.current_stock_kg ?? 0);
+    }
+    return map;
+  }, [subtypesData]);
+
+  const categoryQtyMap = useMemo(() => {
+    const map = new Map<string, number>();
+    if (!subtypesData) return map;
+    for (const st of subtypesData) {
+      const current = map.get(st.category_id) ?? 0;
+      map.set(st.category_id, current + (st.current_stock_kg ?? 0));
+    }
+    return map;
+  }, [subtypesData]);
+
   const [vendorId, setVendorId] = useState("");
   const [purchaseDate, setPurchaseDate] = useState(
     new Date().toISOString().split("T")[0],
@@ -58,10 +77,7 @@ export default function NewPurchasePage() {
   ]);
   const nextKey = useRef(2);
 
-  const vendors = (vendorsData ?? []).map((v) => ({
-    ...v,
-    due_balance: v.total_purchases - v.total_paid,
-  }));
+  const vendors = vendorsData ?? [];
   const categories = categoriesData ?? [];
   const accounts = accountsData ?? [];
   const selectedVendor = vendors.find((v) => v.id === vendorId);
@@ -250,9 +266,7 @@ export default function NewPurchasePage() {
                     {vendors.map((v) => (
                       <option key={v.id} value={v.id}>
                         {v.name}
-                        {v.due_balance > 0
-                          ? ` (${formatMoney(v.due_balance)} due)`
-                          : ""}
+                        {v.due_balance > 0 ? ` (${formatMoney(v.due_balance)} due)` : v.due_balance < 0 ? ` (${formatMoney(Math.abs(v.due_balance))} credit)` : ""}
                       </option>
                     ))}
                   </select>
@@ -452,11 +466,14 @@ export default function NewPurchasePage() {
                             className="w-full h-[38px] border border-outline-variant rounded px-2 text-sm focus:border-primary-container outline-none bg-white"
                           >
                             <option value="">Category</option>
-                            {categories.map((cat) => (
-                              <option key={cat.id} value={cat.id}>
-                                {cat.name}
-                              </option>
-                            ))}
+                            {categories.map((cat) => {
+                              const qty = categoryQtyMap.get(cat.id) ?? 0;
+                              return (
+                                <option key={cat.id} value={cat.id}>
+                                  {cat.name} ({qty.toFixed(1)} kg)
+                                </option>
+                              );
+                            })}
                           </select>
                         </td>
                         <td className="px-6 py-3">
@@ -469,11 +486,14 @@ export default function NewPurchasePage() {
                             className="w-full h-[38px] border border-outline-variant rounded px-2 text-sm focus:border-primary-container outline-none bg-white disabled:opacity-40"
                           >
                             <option value="">Sub-type</option>
-                            {getSubtypesFor(item).map((st) => (
-                              <option key={st.id} value={st.id}>
-                                {st.name}
-                              </option>
-                            ))}
+                            {getSubtypesFor(item).map((st) => {
+                              const qty = subtypeStockMap.get(st.id) ?? 0;
+                              return (
+                                <option key={st.id} value={st.id}>
+                                  {st.name} ({qty.toFixed(1)} kg)
+                                </option>
+                              );
+                            })}
                           </select>
                         </td>
                         <td className="px-6 py-3">
@@ -563,11 +583,14 @@ export default function NewPurchasePage() {
                         className="h-[38px] border border-outline-variant rounded px-2 text-sm outline-none bg-white"
                       >
                         <option value="">Category</option>
-                        {categories.map((cat) => (
-                          <option key={cat.id} value={cat.id}>
-                            {cat.name}
-                          </option>
-                        ))}
+                        {categories.map((cat) => {
+                          const qty = categoryQtyMap.get(cat.id) ?? 0;
+                          return (
+                            <option key={cat.id} value={cat.id}>
+                              {cat.name} ({qty.toFixed(1)} kg)
+                            </option>
+                          );
+                        })}
                       </select>
                       <select
                         value={item.subtype_id}
@@ -578,11 +601,14 @@ export default function NewPurchasePage() {
                         className="h-[38px] border border-outline-variant rounded px-2 text-sm outline-none bg-white disabled:opacity-40"
                       >
                         <option value="">Sub-type</option>
-                        {getSubtypesFor(item).map((st) => (
-                          <option key={st.id} value={st.id}>
-                            {st.name}
-                          </option>
-                        ))}
+                        {getSubtypesFor(item).map((st) => {
+                          const qty = subtypeStockMap.get(st.id) ?? 0;
+                          return (
+                            <option key={st.id} value={st.id}>
+                              {st.name} ({qty.toFixed(1)} kg)
+                            </option>
+                          );
+                        })}
                       </select>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
