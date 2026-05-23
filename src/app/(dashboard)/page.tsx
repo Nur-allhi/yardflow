@@ -112,21 +112,25 @@ export default async function DashboardPage() {
     .orderBy(sql`${sales.sale_date} DESC`)
     .limit(5);
 
-  const categoryStock = await Promise.all(
-    categoryList.map(async (cat) => {
-      const [row] = await db.select({
-        kg: sql<string>`COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'in' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'out' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0)`,
-      }).from(stockLedger)
-        .innerJoin(materialSubtypes, eq(stockLedger.subtype_id, materialSubtypes.id))
-        .where(and(
-          eq(materialSubtypes.category_id, cat.id),
-          eq(stockLedger.organization_id, orgId),
-          sql`${stockLedger.deleted_at} IS NULL`,
-          sql`${materialSubtypes.deleted_at} IS NULL`,
-        ));
-      return { name: cat.name, kg: Number(row.kg) };
-    })
+  const categoryStockRows = await db.select({
+    category_id: materialSubtypes.category_id,
+    kg: sql<string>`COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'in' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'out' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0)`,
+  }).from(stockLedger)
+    .innerJoin(materialSubtypes, eq(stockLedger.subtype_id, materialSubtypes.id))
+    .where(and(
+      eq(stockLedger.organization_id, orgId),
+      sql`${stockLedger.deleted_at} IS NULL`,
+      sql`${materialSubtypes.deleted_at} IS NULL`,
+    ))
+    .groupBy(materialSubtypes.category_id);
+
+  const stockByCategory = Object.fromEntries(
+    categoryStockRows.map((r) => [r.category_id, Number(r.kg)]),
   );
+  const categoryStock = categoryList.map((cat) => ({
+    name: cat.name,
+    kg: stockByCategory[cat.id] ?? 0,
+  }));
 
   const cashTotal = accountList.filter(a => a.type === "cash").reduce((s, a) => s + Number(a.current_balance), 0);
   const bankTotal = accountList.filter(a => a.type === "bank").reduce((s, a) => s + Number(a.current_balance), 0);
