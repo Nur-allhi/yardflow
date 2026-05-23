@@ -95,14 +95,18 @@ export default function Sidebar({ role }: { role?: string }) {
             </Link>
           );
         })}
-        {role && (
-          <div className="px-4 py-2 mb-1">
+        <div className="px-4 py-2 mb-1 space-y-2">
+          {role && (
             <div className="flex items-center gap-2 text-on-primary-container/70 text-xs">
               <span className="material-symbols-outlined text-[14px]">badge</span>
               <span className="capitalize font-medium">{role}</span>
             </div>
+          )}
+          <div className="flex items-center gap-2 text-on-primary-container/50 text-[11px]">
+            <span className="material-symbols-outlined text-[13px]">info</span>
+            <span className="font-mono">v1.0.0</span>
           </div>
-        )}
+        </div>
         <button
           onClick={() => {
             fetch("/api/auth/logout", { method: "POST" }).finally(() => {
