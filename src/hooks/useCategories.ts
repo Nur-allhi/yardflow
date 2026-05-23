@@ -10,7 +10,6 @@ interface Subtype {
   id: string;
   category_id: string;
   name: string;
-  default_price_per_kg: number | null;
 }
 
 async function fetchCategories(): Promise<Category[]> {

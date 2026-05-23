@@ -176,10 +176,6 @@ export const materialSubtypes = pgTable("material_subtypes", {
     .notNull()
     .references(() => materialCategories.id),
   name: text("name").notNull(),
-  default_price_per_kg: decimal("default_price_per_kg", {
-    precision: 10,
-    scale: 2,
-  }),
   unit: weightUnitEnum("unit").default("kg"),
   is_active: boolean("is_active").default(true).notNull(),
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),

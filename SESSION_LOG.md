@@ -203,10 +203,6 @@ src/app/api/
 Also: `designs/` contains HTML + PNG for all mobile/desktop screens.
 
 ## Tools & Integrations
-- **Graphify** (`graphifyy`) installed and integrated with opencode
-  - Run `/graphify .` in a session to generate/reload the knowledge graph
-  - Run `graphify query "question"` to BFS-traverse the graph
-  - Requires an LLM API key (`GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, or `OPENAI_API_KEY`)
 - **Drizzle Kit**: `npx drizzle-kit generate` + `npx drizzle-kit migrate` for schema changes
 
 ### Phase 7 — Sales Module
@@ -676,3 +672,31 @@ User tested the app live at `localhost:3000`. All findings and errors were logge
 
 ### Commit
 `39256c3` — docs: add fix plan and update error log from testing session
+
+---
+
+## 2026-05-23 — Fix Plan Items A through I
+
+### Fixed
+- **A** — Removed `default_price_per_kg` from all 14 files (schema, routes, UI, seeds, hooks) + Drizzle migration `0005`
+- **B** — Fixed green-on-green category chip text color (`text-on-tertiary-container` → `text-white`)
+- **C** — Wired sub-type edit: `editingId`/`editName`/`editUnit` state, inline edit form on desktop rows & mobile cards, PUT mutation
+- **D** — Created `src/lib/accounts.ts` with `recordAccountTransaction()`; migrated 12 route handlers; added `refetchInterval: 30000` to accounts page
+- **E** — Fixed sales summary card overflow (`w-[140px]` → `w-fit min-w-[120px]`, `md:border` → `border`, `৳` prefix)
+- **F** — Fixed scrap page grid layout (single `lg:col-span-4` container with Add + Sell CTA, replaced stats card with styled Link)
+- **G** — Added `tertiary` color to `tailwind.config.ts`
+- **H** — HR redirect already correct (`/hr/workers`)
+- **I1-I2** — Fixed `most_used_item` query (counts from `consumptionLogs`), removed merge logic in POST handler
+- **I3** — Added Use consumable modal (desktop) + bottom sheet (mobile) with item select, quantity, date, note fields, mutation
+- **I4** — Added consumption history display (desktop table + mobile cards)
+- **I5** — Fixed mobile cards: dynamic icons per item name, subtitle "date • qty unit", removed hardcoded "Verified" badge
+
+### Side fixes
+- Fixed `subtypes/page.tsx` — removed extra `</div>` causing JSX parse errors in both desktop and mobile forms
+- Fixed `consumables/page.tsx` — removed unused `Link` import
+- Fixed `src/lib/accounts.ts` — type signature `note?: string` → `note?: string | null` for caller compatibility
+
+### Verification
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors  
+- `npx next build` — successful

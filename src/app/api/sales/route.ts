@@ -7,8 +7,6 @@ import {
   stockLedger,
   scrapPool,
   salePayments,
-  accountTransactions,
-  accounts,
 } from "@/lib/db/schema";
 import {
   eq,
@@ -21,6 +19,7 @@ import {
 import { saleSchema } from "@/lib/validations/schemas";
 import { calculateWAC } from "@/lib/calculations/wac";
 import { requireOrg } from "@/lib/auth/session";
+import { recordAccountTransaction } from "@/lib/accounts";
 
 export async function GET(request: Request) {
   try {
@@ -353,7 +352,7 @@ export async function POST(request: Request) {
           })
           .returning();
 
-        await tx.insert(accountTransactions).values({
+        await recordAccountTransaction({
           organization_id: orgId,
           account_id: parsed.data.account_id,
           type: "credit",
@@ -363,16 +362,6 @@ export async function POST(request: Request) {
           transaction_date: new Date(parsed.data.sale_date),
           note: parsed.data.note || null,
         });
-
-        await tx.execute(
-          sql`UPDATE ${accounts} SET current_balance = (
-            SELECT COALESCE(SUM(CASE WHEN type = 'credit' THEN amount::numeric ELSE 0 END), 0) -
-                   COALESCE(SUM(CASE WHEN type = 'debit' THEN amount::numeric ELSE 0 END), 0)
-            FROM ${accountTransactions}
-            WHERE account_id = ${parsed.data.account_id}
-            AND deleted_at IS NULL
-          ) WHERE id = ${parsed.data.account_id}`
-        );
       }
 
       return sale;

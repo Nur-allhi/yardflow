@@ -4,11 +4,11 @@ import {
   workers,
   salaryAdvances,
   salaryPayments,
-  accountTransactions,
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
 import { salaryPaymentSchema } from "@/lib/validations/schemas";
+import { recordAccountTransaction } from "@/lib/accounts";
 
 export async function POST(request: Request) {
   const orgId = await requireOrg();
@@ -118,7 +118,7 @@ export async function POST(request: Request) {
           .returning();
       }
 
-      await tx.insert(accountTransactions).values({
+      await recordAccountTransaction({
         organization_id: orgId,
         account_id: parsed.data.account_id,
         type: "debit",

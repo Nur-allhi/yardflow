@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { customers, accounts, accountTransactions } from "@/lib/db/schema";
+import { customers } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
+import { recordAccountTransaction } from "@/lib/accounts";
 
 export async function POST(
   request: NextRequest,
@@ -42,16 +43,6 @@ export async function POST(
         throw new Error("Amount exceeds opening balance");
       }
 
-      await tx.insert(accountTransactions).values({
-        organization_id: orgId,
-        account_id,
-        type: "credit",
-        amount: String(amount),
-        reference_type: "other",
-        transaction_date: new Date(payment_date),
-        note: note || `Opening balance received from customer: ${customer.name}`,
-      });
-
       const newOpeningBalance = currentOpeningBalance - amount;
       await tx
         .update(customers)
@@ -61,15 +52,15 @@ export async function POST(
         })
         .where(eq(customers.id, id));
 
-      await tx.execute(
-        sql`UPDATE ${accounts} SET current_balance = (
-          SELECT COALESCE(SUM(CASE WHEN type = 'credit' THEN amount::numeric ELSE 0 END), 0) -
-                 COALESCE(SUM(CASE WHEN type = 'debit' THEN amount::numeric ELSE 0 END), 0)
-          FROM ${accountTransactions}
-          WHERE account_id = ${account_id}
-          AND deleted_at IS NULL
-        ) WHERE id = ${account_id}`
-      );
+      await recordAccountTransaction({
+        organization_id: orgId,
+        account_id,
+        type: "credit",
+        amount: String(amount),
+        reference_type: "other",
+        transaction_date: new Date(payment_date),
+        note: note || `Opening balance received from customer: ${customer.name}`,
+      });
 
       return { success: true };
     });

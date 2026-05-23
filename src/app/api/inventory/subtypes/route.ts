@@ -9,7 +9,6 @@ import { requireOrg } from "@/lib/auth/session";
 const subtypeSchema = z.object({
   category_id: z.string().uuid("Invalid category"),
   name: z.string().min(1, "Name is required"),
-  default_price_per_kg: z.number().positive().optional(),
   unit: z.enum(["kg", "ton"]).optional(),
 });
 
@@ -61,9 +60,6 @@ export async function POST(request: Request) {
         organization_id: orgId,
         category_id: parsed.data.category_id,
         name: parsed.data.name,
-        default_price_per_kg: parsed.data.default_price_per_kg
-          ? String(parsed.data.default_price_per_kg)
-          : null,
         unit: parsed.data.unit || "kg",
       })
       .returning();

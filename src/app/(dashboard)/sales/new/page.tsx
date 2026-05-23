@@ -13,7 +13,6 @@ interface Subtype {
   id: string;
   name: string;
   category_id: string;
-  default_price_per_kg: number | null;
 }
 
 interface LineItem {

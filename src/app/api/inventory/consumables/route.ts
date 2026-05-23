@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import {
   consumablesLog,
+  consumptionLogs,
   accounts,
-  accountTransactions,
 } from "@/lib/db/schema";
 import { eq, and, sql, desc } from "drizzle-orm";
 import { z } from "zod";
 import { requireOrg } from "@/lib/auth/session";
+import { recordAccountTransaction } from "@/lib/accounts";
 
 const consumablesSchema = z.object({
   item_name: z.string().min(1, "Item name is required"),
@@ -88,16 +89,39 @@ export async function GET(request: Request) {
       item_name: consumablesLog.item_name,
       count: sql<number>`COUNT(*)`,
     })
-    .from(consumablesLog)
+    .from(consumptionLogs)
+    .innerJoin(consumablesLog, eq(consumptionLogs.consumable_id, consumablesLog.id))
     .where(
       and(
         eq(consumablesLog.organization_id, orgId),
         sql`${consumablesLog.deleted_at} IS NULL`,
+        sql`${consumptionLogs.deleted_at} IS NULL`,
       ),
     )
     .groupBy(consumablesLog.item_name)
     .orderBy(sql`COUNT(*) DESC`)
     .limit(1);
+
+  const consumptions = await db
+    .select({
+      id: consumptionLogs.id,
+      item_name: consumablesLog.item_name,
+      quantity: consumptionLogs.quantity,
+      unit: consumablesLog.unit,
+      used_at: consumptionLogs.used_at,
+      note: consumptionLogs.note,
+    })
+    .from(consumptionLogs)
+    .innerJoin(consumablesLog, eq(consumptionLogs.consumable_id, consumablesLog.id))
+    .where(
+      and(
+        eq(consumablesLog.organization_id, orgId),
+        sql`${consumablesLog.deleted_at} IS NULL`,
+        sql`${consumptionLogs.deleted_at} IS NULL`,
+      ),
+    )
+    .orderBy(desc(consumptionLogs.used_at))
+    .limit(10);
 
   const totalPages = Math.ceil(count / limit);
 
@@ -120,6 +144,10 @@ export async function GET(request: Request) {
       total_items: summary.total_items,
       most_used_item: mostUsed?.item_name || null,
     },
+    consumptions: consumptions.map((c) => ({
+      ...c,
+      quantity: Number(c.quantity),
+    })),
   });
 }
 
@@ -139,54 +167,26 @@ export async function POST(request: Request) {
     const entry = await db.transaction(async (tx) => {
       const qty = parsed.data.quantity ? String(parsed.data.quantity) : "0";
 
-      const existing = await tx
-        .select({ id: consumablesLog.id, stock_quantity: consumablesLog.stock_quantity })
-        .from(consumablesLog)
-        .where(
-          and(
-            eq(consumablesLog.organization_id, orgId),
-            eq(consumablesLog.item_name, parsed.data.item_name),
-            sql`${consumablesLog.deleted_at} IS NULL`,
-          ),
-        )
-        .limit(1);
+      const [log] = await tx
+        .insert(consumablesLog)
+        .values({
+          organization_id: orgId,
+          item_name: parsed.data.item_name,
+          quantity: qty,
+          stock_quantity: qty,
+          unit: parsed.data.unit || null,
+          unit_price: parsed.data.unit_price
+            ? String(parsed.data.unit_price)
+            : null,
+          total_price: String(parsed.data.total_price),
+          vendor_name: parsed.data.vendor_name || null,
+          account_id: parsed.data.account_id,
+          purchase_date: new Date(parsed.data.purchase_date),
+          note: parsed.data.note || null,
+        })
+        .returning();
 
-      let log;
-      if (existing.length > 0) {
-        [log] = await tx
-          .update(consumablesLog)
-          .set({
-            stock_quantity: sql`${consumablesLog.stock_quantity} + ${qty}`,
-            unit: parsed.data.unit || undefined,
-            vendor_name: parsed.data.vendor_name || undefined,
-            purchase_date: new Date(parsed.data.purchase_date),
-            note: parsed.data.note || undefined,
-            updated_at: new Date(),
-          })
-          .where(eq(consumablesLog.id, existing[0].id))
-          .returning();
-      } else {
-        [log] = await tx
-          .insert(consumablesLog)
-          .values({
-            organization_id: orgId,
-            item_name: parsed.data.item_name,
-            quantity: qty,
-            stock_quantity: qty,
-            unit: parsed.data.unit || null,
-            unit_price: parsed.data.unit_price
-              ? String(parsed.data.unit_price)
-              : null,
-            total_price: String(parsed.data.total_price),
-            vendor_name: parsed.data.vendor_name || null,
-            account_id: parsed.data.account_id,
-            purchase_date: new Date(parsed.data.purchase_date),
-            note: parsed.data.note || null,
-          })
-          .returning();
-      }
-
-      await tx.insert(accountTransactions).values({
+      await recordAccountTransaction({
         organization_id: orgId,
         account_id: parsed.data.account_id,
         type: "debit",

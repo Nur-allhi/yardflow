@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import { InventoryNav } from "@/components/InventoryNav";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -23,6 +22,15 @@ interface ConsumableEntry {
   created_at: string;
 }
 
+interface ConsumptionEntry {
+  id: string;
+  item_name: string;
+  quantity: number;
+  unit: string | null;
+  used_at: string;
+  note: string | null;
+}
+
 interface ConsumablesData {
   entries: ConsumableEntry[];
   pagination: {
@@ -36,6 +44,7 @@ interface ConsumablesData {
     total_items: number;
     most_used_item: string | null;
   };
+  consumptions: ConsumptionEntry[];
 }
 
 function formatTk(amount: number): string {
@@ -61,6 +70,12 @@ export default function ConsumablesPage() {
   const [page, setPage] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [showMobileForm, setShowMobileForm] = useState(false);
+  const [showUseModal, setShowUseModal] = useState(false);
+
+  const [useConsumableId, setUseConsumableId] = useState("");
+  const [useQuantity, setUseQuantity] = useState("");
+  const [useDate, setUseDate] = useState(new Date().toISOString().split("T")[0]);
+  const [useNote, setUseNote] = useState("");
 
   const [itemName, setItemName] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -93,6 +108,39 @@ export default function ConsumablesPage() {
       setAccountId(accountsData[0].id);
     }
   }, [accountsData]);
+
+  const recordUseMutation = useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
+      const res = await fetch("/api/inventory/consumables/use", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to record usage");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["consumables"] });
+      setUseConsumableId("");
+      setUseQuantity("");
+      setUseNote("");
+      setUseDate(new Date().toISOString().split("T")[0]);
+      setShowUseModal(false);
+    },
+  });
+
+  async function handleUseSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!useConsumableId) return;
+    recordUseMutation.mutate({
+      consumable_id: useConsumableId,
+      quantity: parseFloat(useQuantity) || 0,
+      used_at: useDate,
+      note: useNote || undefined,
+    });
+  }
 
   const createConsumableMutation = useMutation({
     mutationFn: async (data: Record<string, unknown>) => {
@@ -331,13 +379,13 @@ export default function ConsumablesPage() {
 
       <div className="flex items-center justify-between gap-4">
         <InventoryNav active="consumables" />
-        <Link
-          href="/inventory/consumables/use"
+        <button
+          onClick={() => setShowUseModal(true)}
           className="flex items-center gap-1.5 px-4 h-[38px] bg-error text-white text-sm font-bold rounded-lg hover:bg-error/90 transition-all flex-shrink-0 shadow-sm active:scale-[0.98]"
         >
           <span className="material-symbols-outlined text-[18px]">remove</span>
           Use Item
-        </Link>
+        </button>
       </div>
 
       {/* Top Stats Row */}
@@ -382,8 +430,8 @@ export default function ConsumablesPage() {
 
       {/* Desktop: Two-Column Layout */}
       <div className="hidden md:flex flex-col lg:flex-row gap-8 items-start">
-        {/* Left: Table */}
-        <div className="flex-1 w-full overflow-hidden">
+        {/* Left: Purchases + Consumption */}
+        <div className="flex-1 w-full overflow-hidden space-y-8">
           {!data || data.entries.length === 0 ? (
             <div className="bg-white rounded-lg border border-outline-variant/30 shadow-sm py-16 text-center text-secondary">
               <span className="material-symbols-outlined text-5xl block mb-4">
@@ -497,6 +545,40 @@ export default function ConsumablesPage() {
               </div>
             </>
           )}
+
+          {/* Consumption History */}
+          <div className="bg-white rounded-lg border border-outline-variant/30 shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-outline-variant/30 flex items-center justify-between">
+              <h3 className="font-display font-bold text-primary-container">Consumption History</h3>
+              {data?.consumptions && data.consumptions.length > 0 && (
+                <span className="text-xs text-secondary font-mono">{data.consumptions.length} entries</span>
+              )}
+            </div>
+            {!data?.consumptions || data.consumptions.length === 0 ? (
+              <div className="p-8 text-center text-secondary text-sm">No consumption recorded yet</div>
+            ) : (
+              <table className="w-full text-left border-collapse min-w-[500px]">
+                <thead className="bg-surface-container-low border-b border-outline-variant/40">
+                  <tr>
+                    <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Date</th>
+                    <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Item</th>
+                    <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Qty Used</th>
+                    <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Note</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-outline-variant/20">
+                  {data.consumptions.map((c) => (
+                    <tr key={c.id} className="hover:bg-surface-container-low/50 transition-colors">
+                      <td className="px-4 py-4 text-sm whitespace-nowrap">{formatDate(c.used_at)}</td>
+                      <td className="px-4 py-4 text-sm font-medium text-primary-container">{c.item_name}</td>
+                      <td className="px-4 py-4 text-sm font-mono text-error">{c.quantity} {c.unit || ""}</td>
+                      <td className="px-4 py-4 text-sm text-secondary italic">{c.note || "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
 
         {/* Right: Form Sidebar */}
@@ -540,11 +622,11 @@ export default function ConsumablesPage() {
         </div>
       </div>
 
-      {/* Mobile: Recent Entries */}
+        {/* Mobile: Recent Entries */}
       <div className="md:hidden mt-4">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-display font-semibold text-lg text-on-surface">
-            Recent Entries
+            Recent Purchases
           </h3>
           <span className="material-symbols-outlined text-on-surface-variant">filter_list</span>
         </div>
@@ -557,37 +639,65 @@ export default function ConsumablesPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {data.entries.map((entry) => (
-              <div
-                key={entry.id}
-                className="bg-surface border border-outline-variant rounded-lg p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="bg-surface-container-highest w-12 h-12 rounded-lg flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary">
-                      construction
-                    </span>
+            {data.entries.map((entry) => {
+              const icon = entry.item_name.toLowerCase().includes("rod") || entry.item_name.toLowerCase().includes("weld")
+                ? "bolt" : entry.item_name.toLowerCase().includes("paper") || entry.item_name.toLowerCase().includes("grind")
+                ? "auto_fix_high" : entry.item_name.toLowerCase().includes("gas") || entry.item_name.toLowerCase().includes("cylinder")
+                ? "propane_tank" : entry.item_name.toLowerCase().includes("glove") || entry.item_name.toLowerCase().includes("safety")
+                ? "security" : "construction";
+              return (
+                <div
+                  key={entry.id}
+                  className="bg-surface border border-outline-variant rounded-lg p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="bg-surface-container-highest w-12 h-12 rounded-lg flex items-center justify-center">
+                      <span className="material-symbols-outlined text-primary">
+                        {icon}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-bold text-on-surface">{entry.item_name}</p>
+                      <p className="text-caption text-on-surface-variant">
+                        {formatDateFull(entry.purchase_date)} • {entry.quantity || 0} {entry.unit || "pcs"}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-bold text-on-surface">{entry.item_name}</p>
-                    <p className="text-caption text-on-surface-variant">
-                      {formatDateFull(entry.purchase_date)}
-                      {entry.vendor_name && ` · ${entry.vendor_name}`}
+                  <div className="text-right">
+                    <p className="font-mono font-medium text-on-surface">
+                      {formatTk(entry.total_price)}
                     </p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-mono font-medium text-on-surface">
-                    {formatTk(entry.total_price)}
-                  </p>
-                  <span className="text-[10px] uppercase tracking-tighter text-on-tertiary-container bg-tertiary-fixed-dim/30 px-1.5 rounded">
-                    Verified
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
+
+        {/* Mobile: Consumption History */}
+        <div className="mt-6 mb-4">
+          <h3 className="font-display font-semibold text-lg text-on-surface mb-3">Consumption History</h3>
+          {!data?.consumptions || data.consumptions.length === 0 ? (
+            <div className="bg-surface border border-outline-variant rounded-lg py-8 text-center text-on-surface-variant text-sm">
+              No consumption recorded yet
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {data.consumptions.map((c) => (
+                <div key={c.id} className="bg-surface border border-outline-variant rounded-lg p-3 flex justify-between items-center">
+                  <div>
+                    <p className="text-sm font-medium text-on-surface">{c.item_name}</p>
+                    <p className="text-[10px] text-on-surface-variant">{formatDateFull(c.used_at)}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-mono text-sm font-bold text-error">-{c.quantity} {c.unit || "pcs"}</p>
+                    {c.note && <p className="text-[10px] text-on-surface-variant">{c.note}</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Mobile Pagination */}
         {data && data.pagination.totalPages > 1 && (
@@ -614,12 +724,131 @@ export default function ConsumablesPage() {
       </div>
 
       {/* Mobile FAB */}
-      <button
-        onClick={() => setShowMobileForm(true)}
-        className="md:hidden fixed bottom-24 right-6 w-14 h-14 bg-on-tertiary-container text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform duration-150 z-40"
-      >
-        <span className="material-symbols-outlined text-3xl">add</span>
-      </button>
+      <div className="md:hidden fixed bottom-24 right-6 flex flex-col gap-3 z-40">
+        <button
+          onClick={() => setShowUseModal(true)}
+          className="w-14 h-14 bg-error text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform duration-150"
+        >
+          <span className="material-symbols-outlined text-3xl">remove</span>
+        </button>
+        <button
+          onClick={() => setShowMobileForm(true)}
+          className="w-14 h-14 bg-on-tertiary-container text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform duration-150"
+        >
+          <span className="material-symbols-outlined text-3xl">add</span>
+        </button>
+      </div>
+
+      {/* Use Item Modal (Desktop) */}
+      {showUseModal && (
+        <div className="hidden md:flex fixed inset-0 z-[60] items-center justify-center bg-primary-container/40 backdrop-blur-sm"
+          onClick={(e) => { if (e.target === e.currentTarget) setShowUseModal(false); }}
+        >
+          <div className="bg-white w-[480px] p-8 rounded-xl shadow-lg border border-outline-variant/30">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-display font-bold text-xl text-primary-container">Record Consumption</h2>
+              <button className="text-outline hover:text-primary-container transition-colors" onClick={() => setShowUseModal(false)}>
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <form onSubmit={handleUseSubmit} className="space-y-5">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Item</label>
+                <select required value={useConsumableId} onChange={(e) => setUseConsumableId(e.target.value)}
+                  className="w-full h-[44px] border border-outline-variant rounded px-3 text-sm outline-none bg-white focus:border-primary">
+                  <option value="">Select item</option>
+                  {data?.entries.filter((e) => e.stock_quantity > 0).map((e) => (
+                    <option key={e.id} value={e.id}>{e.item_name} ({e.stock_quantity} {e.unit || "pcs"} in stock)</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Quantity Used</label>
+                <input type="number" step="any" min="0.001" required value={useQuantity}
+                  onChange={(e) => setUseQuantity(e.target.value)} placeholder="0"
+                  inputMode="decimal" autoComplete="off" enterKeyHint="next"
+                  className="w-full h-[44px] border border-outline-variant rounded px-4 text-sm font-mono outline-none focus:border-primary" />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Date</label>
+                <input type="date" required value={useDate} onChange={(e) => setUseDate(e.target.value)}
+                  autoComplete="off" enterKeyHint="next"
+                  className="w-full h-[44px] border border-outline-variant rounded px-4 text-sm outline-none focus:border-primary" />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Note (Optional)</label>
+                <textarea value={useNote} onChange={(e) => setUseNote(e.target.value)} rows={2}
+                  className="w-full border border-outline-variant rounded p-3 text-sm outline-none focus:border-primary resize-none"
+                  placeholder="Reason for usage..." />
+              </div>
+              <div className="flex items-center gap-3 pt-4">
+                <button type="button" onClick={() => setShowUseModal(false)}
+                  className="flex-1 h-[44px] bg-transparent text-on-surface-variant hover:bg-surface-container-low transition-colors font-bold text-sm rounded">Cancel</button>
+                <button type="submit" disabled={recordUseMutation.isPending || !useConsumableId || !useQuantity}
+                  className="flex-1 h-[44px] bg-error text-white hover:bg-error/90 transition-all active:scale-95 font-bold text-sm rounded disabled:opacity-40">
+                  {recordUseMutation.isPending ? "Recording..." : "Record Consumption"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Use Item Bottom Sheet (Mobile) */}
+      {showUseModal && (
+        <div className="md:hidden fixed inset-0 z-[60]">
+          <div className="absolute inset-0 bg-primary/40 backdrop-blur-sm" onClick={() => setShowUseModal(false)} />
+          <div className="absolute bottom-0 left-0 right-0 bg-surface rounded-t-2xl shadow-2xl p-6 pb-10 max-h-[85vh] overflow-y-auto">
+            <div className="w-12 h-1.5 bg-outline-variant rounded-full mx-auto mb-6" />
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-display font-bold text-xl text-primary">Record Consumption</h2>
+              <button onClick={() => setShowUseModal(false)} className="text-on-surface-variant">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <form onSubmit={handleUseSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-on-surface mb-1">Item</label>
+                <select required value={useConsumableId} onChange={(e) => setUseConsumableId(e.target.value)}
+                  className="w-full h-[44px] border border-outline-variant rounded px-4 text-sm outline-none bg-white">
+                  <option value="">Select item</option>
+                  {data?.entries.filter((e) => e.stock_quantity > 0).map((e) => (
+                    <option key={e.id} value={e.id}>{e.item_name} ({e.stock_quantity} {e.unit || "pcs"} in stock)</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-on-surface mb-1">Quantity Used</label>
+                <input type="number" step="any" min="0.001" required value={useQuantity}
+                  onChange={(e) => setUseQuantity(e.target.value)} placeholder="0"
+                  inputMode="decimal" autoComplete="off" enterKeyHint="next"
+                  className="w-full h-[44px] border border-outline-variant rounded px-4 text-sm font-mono outline-none" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-on-surface mb-1">Date</label>
+                <input type="date" required value={useDate} onChange={(e) => setUseDate(e.target.value)}
+                  autoComplete="off" enterKeyHint="next"
+                  className="w-full h-[44px] border border-outline-variant rounded px-4 text-sm outline-none" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-on-surface mb-1">Note (Optional)</label>
+                <textarea value={useNote} onChange={(e) => setUseNote(e.target.value)} rows={2}
+                  className="w-full border border-outline-variant rounded p-3 text-sm outline-none resize-none"
+                  placeholder="Reason for usage..." />
+              </div>
+              {recordUseMutation.isError && (
+                <div className="bg-error/10 text-error rounded-lg p-3 text-sm">
+                  {recordUseMutation.error instanceof Error ? recordUseMutation.error.message : "Failed to record usage"}
+                </div>
+              )}
+              <button type="submit" disabled={recordUseMutation.isPending || !useConsumableId || !useQuantity}
+                className="w-full h-[46px] bg-error text-white font-bold rounded-lg hover:bg-error/90 transition-all flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] disabled:opacity-40">
+                {recordUseMutation.isPending ? "Recording..." : "Record Consumption"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Bottom Sheet Form */}
       {showMobileForm && (

@@ -54,15 +54,15 @@ async function seed() {
   const plateST = [];
   for (const st of pData) {
     const [r] = await sql`
-      INSERT INTO material_subtypes (organization_id, category_id, name, default_price_per_kg)
-      VALUES (${orgId}, ${catPlates.id}, ${st.n}, ${st.p}) RETURNING id
+      INSERT INTO material_subtypes (organization_id, category_id, name)
+      VALUES (${orgId}, ${catPlates.id}, ${st.n}) RETURNING id
     `;
     plateST.push(r);
   }
 
   const [angleST] = await sql`
-    INSERT INTO material_subtypes (organization_id, category_id, name, default_price_per_kg)
-    VALUES (${orgId}, ${catAngle.id}, '2 inch', 95) RETURNING id
+    INSERT INTO material_subtypes (organization_id, category_id, name)
+    VALUES (${orgId}, ${catAngle.id}, '2 inch') RETURNING id
   `;
   console.log("✓ Subtypes created");
 

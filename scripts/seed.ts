@@ -74,7 +74,6 @@ async function seed() {
       organization_id: orgId,
       category_id: catPlates.id,
       name: st.name,
-      default_price_per_kg: String(st.price),
     }).returning();
     plateSubtypes.push(created);
   }
@@ -91,7 +90,6 @@ async function seed() {
       organization_id: orgId,
       category_id: catAngle.id,
       name: st.name,
-      default_price_per_kg: String(st.price),
     }).returning();
     angleSubtypes.push(created);
   }

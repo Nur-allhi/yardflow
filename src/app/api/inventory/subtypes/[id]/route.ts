@@ -8,7 +8,6 @@ import { requireOrg } from "@/lib/auth/session";
 const updateSubtypeSchema = z.object({
   category_id: z.string().uuid("Invalid category"),
   name: z.string().min(1, "Name is required"),
-  default_price_per_kg: z.number().positive().optional(),
   unit: z.enum(["kg", "ton"]).optional(),
 });
 
@@ -35,12 +34,7 @@ export async function GET(
     return NextResponse.json({ error: "Subtype not found" }, { status: 404 });
   }
 
-  return NextResponse.json({
-    ...subtype,
-    default_price_per_kg: subtype.default_price_per_kg
-      ? Number(subtype.default_price_per_kg)
-      : null,
-  });
+  return NextResponse.json(subtype);
 }
 
 export async function PUT(
@@ -81,9 +75,6 @@ export async function PUT(
       .set({
         category_id: parsed.data.category_id,
         name: parsed.data.name,
-        default_price_per_kg: parsed.data.default_price_per_kg
-          ? String(parsed.data.default_price_per_kg)
-          : null,
         unit: parsed.data.unit ?? undefined,
         updated_at: sql`NOW()`,
       })
@@ -95,12 +86,7 @@ export async function PUT(
       )
       .returning();
 
-    return NextResponse.json({
-      ...updated,
-      default_price_per_kg: updated.default_price_per_kg
-        ? Number(updated.default_price_per_kg)
-        : null,
-    });
+    return NextResponse.json(updated);
   } catch (error) {
     console.error("Error updating subtype:", error);
     return NextResponse.json(

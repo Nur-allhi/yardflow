@@ -415,7 +415,7 @@ export default function ScrapPoolPage() {
             )}
           </div>
 
-          {/* Right: Add Scrap Card */}
+          {/* Right: Add Scrap + Sell Scrap */}
           <div className="lg:col-span-4 space-y-4">
             <h3 className="font-display text-lg md:text-xl font-bold text-primary-container">Add Scrap</h3>
             <div className="bg-white p-6 rounded-lg border border-outline-variant/30 shadow-sm">
@@ -454,80 +454,14 @@ export default function ScrapPoolPage() {
                 </button>
               </form>
             </div>
-          </div>
 
-          {/* Right: New Scrap Sale Card (40%) */}
-          <div className="lg:col-span-4 space-y-4">
-            <h3 className="font-display text-lg md:text-xl font-bold text-primary-container">
-              New Scrap Sale
-            </h3>
-            <div className="bg-white p-6 rounded-lg border border-outline-variant/30 shadow-sm">
-              <div className="space-y-5">
-                <div className="flex items-center gap-3 pb-4 border-b border-dashed border-outline-variant/50">
-                  <span className="w-12 h-12 rounded-full bg-tertiary/10 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-tertiary text-2xl">
-                      sell
-                    </span>
-                  </span>
-                  <div>
-                    <p className="font-display font-semibold text-primary-container">
-                      Quick Scrap Sale
-                    </p>
-                    <p className="text-xs text-secondary">
-                      Sell accumulated scrap in bulk
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-surface-container-low rounded-lg p-3">
-                    <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
-                      Available
-                    </p>
-                    <p className="font-mono font-bold text-tertiary">
-                      {data.current_kg.toLocaleString("en-IN", {
-                        minimumFractionDigits: 3,
-                        maximumFractionDigits: 3,
-                      })}{" "}
-                      kg
-                    </p>
-                  </div>
-                  <div className="bg-surface-container-low rounded-lg p-3">
-                    <p className="text-[10px] uppercase font-bold text-secondary tracking-wider mb-1">
-                      Est. Price
-                    </p>
-                    <p className="font-mono font-bold text-primary-container">
-                      {formatTk(data.estimated_price_per_kg)}/kg
-                    </p>
-                  </div>
-                </div>
-
-                <div className="bg-tertiary/5 border border-tertiary/20 rounded-lg p-4">
-                  <p className="text-xs text-secondary mb-1">
-                    Estimated Total Value
-                  </p>
-                  <p className="text-xl font-mono font-bold text-tertiary">
-                    {formatTk(data.estimated_value)}
-                  </p>
-                </div>
-
-                <Link
-                  href="/sales/scrap/new"
-                  className="block w-full py-3 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-[0.98] text-center text-sm"
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    <span className="material-symbols-outlined text-sm">
-                      add_circle
-                    </span>
-                    Sell Scrap
-                  </span>
-                </Link>
-
-                <p className="text-[10px] text-center text-secondary">
-                  You will be redirected to the scrap sale form
-                </p>
-              </div>
-            </div>
+            <Link
+              href="/sales/scrap/new"
+              className="flex items-center justify-center gap-2 w-full py-3 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-[0.98] text-center text-sm"
+            >
+              <span className="material-symbols-outlined text-sm">add_circle</span>
+              Sell Scrap
+            </Link>
           </div>
         </div>
       </div>

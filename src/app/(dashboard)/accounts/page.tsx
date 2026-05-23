@@ -43,6 +43,7 @@ const { data: accountsData, isLoading: accountsLoading } = useQuery<Account[]>({
     if (!res.ok) throw new Error("Failed to load accounts");
     return res.json();
   },
+  refetchInterval: 30000,
 });
 
 const { data: transactionsData } = useQuery<Transaction[]>({

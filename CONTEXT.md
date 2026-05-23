@@ -509,7 +509,6 @@ id                  UUID PK
 organization_id     UUID FK
 category_id         UUID FK → material_categories
 name                TEXT NOT NULL         -- "5-8mm", "9-11mm", "25mm"
-default_price_per_kg DECIMAL(10,2)        -- Reference price, not enforced
 unit                ENUM (kg, ton) DEFAULT kg
 is_active           BOOLEAN DEFAULT true
 ```

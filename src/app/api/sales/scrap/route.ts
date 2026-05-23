@@ -5,11 +5,11 @@ import {
   saleItems,
   scrapPool,
   salePayments,
-  accountTransactions,
 } from "@/lib/db/schema";
 
 import { scrapSaleSchema } from "@/lib/validations/schemas";
 import { requireOrg } from "@/lib/auth/session";
+import { recordAccountTransaction } from "@/lib/accounts";
 
 export async function POST(request: Request) {
   const orgId = await requireOrg();
@@ -94,7 +94,7 @@ export async function POST(request: Request) {
           })
           .returning();
 
-        await tx.insert(accountTransactions).values({
+        await recordAccountTransaction({
           organization_id: orgId,
           account_id,
           type: "credit",

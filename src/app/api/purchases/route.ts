@@ -6,7 +6,6 @@ import {
   purchaseItems,
   stockLedger,
   purchaseOtherExpenses,
-  accountTransactions,
 } from "@/lib/db/schema";
 import {
   eq,
@@ -18,6 +17,7 @@ import {
 import { purchaseSchema } from "@/lib/validations/schemas";
 import { calculateWAC } from "@/lib/calculations/wac";
 import { requireOrg } from "@/lib/auth/session";
+import { recordAccountTransaction } from "@/lib/accounts";
 
 export async function GET(request: Request) {
   const orgId = await requireOrg();
@@ -246,7 +246,7 @@ export async function POST(request: Request) {
         });
 
         if (!expense.add_to_vendor_total && expense.account_id) {
-          await tx.insert(accountTransactions).values({
+          await recordAccountTransaction({
             organization_id: orgId,
             account_id: expense.account_id,
             type: "debit",

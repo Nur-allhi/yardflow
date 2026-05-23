@@ -250,7 +250,7 @@ export default function SalesPage() {
       <section className="mb-6">
         <h2 className="md:hidden font-headline text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3 px-1">Sales Overview</h2>
         <div className="flex md:grid md:grid-cols-4 gap-3 md:gap-4 overflow-x-auto no-scrollbar pb-2 md:pb-0">
-          <div className="flex-shrink-0 w-[140px] md:min-w-0 bg-surface-container md:bg-white md:border border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+          <div className="flex-shrink-0 w-fit min-w-[120px] md:min-w-0 bg-surface-container md:bg-white border border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
             {data?.summary && (
               <>
                 <div className="hidden md:flex p-3 bg-secondary-container rounded-lg text-secondary">
@@ -261,13 +261,13 @@ export default function SalesPage() {
                     Total Sales
                   </p>
                   <p className="font-mono text-base md:text-xl font-bold text-primary md:text-primary-container">
-                    {data.summary.total_sales.toLocaleString("en-IN")}
+                    ৳{data.summary.total_sales.toLocaleString("en-IN")}
                   </p>
                 </div>
               </>
             )}
           </div>
-          <div className="flex-shrink-0 w-[140px] md:min-w-0 bg-surface-container md:bg-white md:border border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+          <div className="flex-shrink-0 w-fit min-w-[120px] md:min-w-0 bg-surface-container md:bg-white border border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
             {data?.summary && (
               <>
                 <div className="hidden md:flex p-3 bg-tertiary/10 rounded-lg text-tertiary">
@@ -284,7 +284,7 @@ export default function SalesPage() {
               </>
             )}
           </div>
-          <div className="flex-shrink-0 w-[140px] md:min-w-0 bg-error-container md:bg-white md:border border-on-error-container/10 md:border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+          <div className="flex-shrink-0 w-fit min-w-[120px] md:min-w-0 bg-error-container md:bg-white border border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
             {data?.summary && (
               <>
                 <div className="hidden md:flex p-3 bg-error-container rounded-lg text-error">
@@ -301,7 +301,7 @@ export default function SalesPage() {
               </>
             )}
           </div>
-          <div className="flex-shrink-0 w-[140px] md:min-w-0 bg-secondary-container md:bg-white md:border border-on-secondary-container/10 md:border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+          <div className="flex-shrink-0 w-fit min-w-[120px] md:min-w-0 bg-secondary-container md:bg-white border border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
             {data?.summary && (
               <>
                 <div className="hidden md:flex p-3 bg-surface-container-highest rounded-lg text-secondary">

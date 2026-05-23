@@ -8,7 +8,6 @@ interface Subtype {
   name: string;
   current_stock_kg: number;
   wac: number;
-  default_price_per_kg: string | null;
   created_at: string;
 }
 

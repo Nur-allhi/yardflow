@@ -15,7 +15,6 @@ interface Subtype {
   id: string;
   name: string;
   category_id: string;
-  default_price_per_kg: string | null;
   unit: string | null;
   is_active: boolean;
   current_stock_kg: number;
@@ -29,9 +28,11 @@ export default function SubtypesPage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
   const [unit, setUnit] = useState("kg");
   const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editUnit, setEditUnit] = useState("kg");
 
   const loadCategories = useCallback(async () => {
     const res = await fetch("/api/inventory/categories");
@@ -72,7 +73,6 @@ export default function SubtypesPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["subtypes"] });
       setName("");
-      setPrice("");
       setUnit("kg");
       setShowModal(false);
       loadSubtypes();
@@ -82,13 +82,55 @@ export default function SubtypesPage() {
     },
   });
 
+  const updateSubtypeMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Record<string, unknown> }) => {
+      const res = await fetch(`/api/inventory/subtypes/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Failed to update subtype");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["subtypes"] });
+      setEditingId(null);
+      setEditName("");
+      setEditUnit("kg");
+      loadSubtypes();
+    },
+  });
+
+  function startEdit(st: Subtype) {
+    setEditingId(st.id);
+    setEditName(st.name);
+    setEditUnit(st.unit || "kg");
+  }
+
+  function handleEditSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!editingId) return;
+    updateSubtypeMutation.mutate({
+      id: editingId,
+      data: {
+        name: editName,
+        category_id: selectedCategoryId,
+        unit: editUnit,
+      },
+    });
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setEditName("");
+    setEditUnit("kg");
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     createSubtypeMutation.mutate({
       name,
       category_id: selectedCategoryId,
-      default_price_per_kg: price ? Number(price) : undefined,
       unit,
     });
   }
@@ -112,7 +154,7 @@ export default function SubtypesPage() {
               onClick={() => setSelectedCategoryId(cat.id)}
               className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 isSelected
-                  ? "bg-tertiary-container text-on-tertiary-container border border-on-tertiary-container"
+                  ? "bg-tertiary-container text-white border border-tertiary-container"
                   : "bg-surface-container-low text-on-surface-variant border border-outline-variant"
               }`}
             >
@@ -164,80 +206,132 @@ export default function SubtypesPage() {
                     <thead className="bg-surface-container-high border-b border-outline-variant">
                       <tr>
                         <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Sub-type Name</th>
-                        <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Default Price</th>
                         <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Unit</th>
                         <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider">Status</th>
                         <th className="px-5 md:px-6 py-4 text-xs font-bold text-secondary uppercase tracking-wider text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-outline-variant/20">
-                      {subtypes.map((st) => (
-                        <tr key={st.id} className="hover:bg-background transition-colors group">
-                          <td className={`px-5 md:px-6 py-4 text-sm font-medium ${st.is_active ? "text-primary-container" : "text-secondary/60"}`}>{st.name}</td>
-                          <td className="px-5 md:px-6 py-4 font-mono text-sm text-secondary">
-                            {st.default_price_per_kg ? Number(st.default_price_per_kg).toLocaleString("en-IN") + " tk" : "—"}
-                          </td>
-                          <td className="px-5 md:px-6 py-4 text-sm text-secondary">{st.unit || "kg"}</td>
-                          <td className="px-5 md:px-6 py-4">
-                            {st.is_active ? (
-                              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold">
-                                <span className="w-1.5 h-1.5 rounded-full bg-success" /> Active
-                              </span>
+                      {subtypes.map((st) => {
+                        const isEditing = editingId === st.id;
+                        return (
+                          <tr key={st.id} className="hover:bg-background transition-colors group">
+                            {isEditing ? (
+                              <>
+                                <td className="px-5 md:px-6 py-4" colSpan={4}>
+                                  <form onSubmit={handleEditSubmit} className="flex items-center gap-3">
+                                    <input required value={editName} onChange={(e) => setEditName(e.target.value)}
+                                      className="w-48 h-[38px] border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary"
+                                      placeholder="Sub-type name" />
+                                    <select value={editUnit} onChange={(e) => setEditUnit(e.target.value)}
+                                      className="w-24 h-[38px] border border-outline-variant rounded px-2 text-sm outline-none bg-white">
+                                      <option value="kg">kg</option>
+                                      <option value="ton">ton</option>
+                                    </select>
+                                    <button type="submit" disabled={updateSubtypeMutation.isPending}
+                                      className="px-4 h-[38px] bg-primary text-on-primary font-bold text-sm rounded hover:bg-primary/90 disabled:opacity-40">
+                                      {updateSubtypeMutation.isPending ? "Saving..." : "Save"}
+                                    </button>
+                                    <button type="button" onClick={cancelEdit}
+                                      className="px-4 h-[38px] border border-outline-variant text-on-surface-variant font-bold text-sm rounded hover:bg-surface-container-low">
+                                      Cancel
+                                    </button>
+                                  </form>
+                                </td>
+                              </>
                             ) : (
-                              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary/10 text-secondary text-[11px] font-bold">
-                                <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> Inactive
-                              </span>
+                              <>
+                                <td className={`px-5 md:px-6 py-4 text-sm font-medium ${st.is_active ? "text-primary-container" : "text-secondary/60"}`}>{st.name}</td>
+                                <td className="px-5 md:px-6 py-4 text-sm text-secondary">{st.unit || "kg"}</td>
+                                <td className="px-5 md:px-6 py-4">
+                                  {st.is_active ? (
+                                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-success" /> Active
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary/10 text-secondary text-[11px] font-bold">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-secondary" /> Inactive
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="px-5 md:px-6 py-4 text-right">
+                                  <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onClick={() => startEdit(st)} className="p-1 hover:text-tertiary transition-colors">
+                                      <span className="material-symbols-outlined text-[18px]">edit</span>
+                                    </button>
+                                    <button className="p-1 hover:text-error transition-colors">
+                                      <span className="material-symbols-outlined text-[18px]">{st.is_active ? "block" : "check_circle"}</span>
+                                    </button>
+                                  </div>
+                                </td>
+                              </>
                             )}
-                          </td>
-                          <td className="px-5 md:px-6 py-4 text-right">
-                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button className="p-1 hover:text-tertiary transition-colors">
-                                <span className="material-symbols-outlined text-[18px]">edit</span>
-                              </button>
-                              <button className="p-1 hover:text-error transition-colors">
-                                <span className="material-symbols-outlined text-[18px]">{st.is_active ? "block" : "check_circle"}</span>
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
 
                 {/* Mobile cards */}
                 <div className="md:hidden space-y-3 p-4">
-                  {subtypes.map((st) => (
-                    <div key={st.id} className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-3">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="text-sm font-semibold text-on-surface">{st.name}</h3>
-                        </div>
-                        {st.is_active ? (
-                          <span className="px-2 py-1 bg-tertiary-container text-on-tertiary-container text-[10px] font-bold rounded-sm flex items-center gap-1 uppercase">
-                            <span className="w-1.5 h-1.5 rounded-full bg-on-tertiary-container" />
-                            Active
-                          </span>
+                  {subtypes.map((st) => {
+                    const isEditing = editingId === st.id;
+                    return (
+                      <div key={st.id} className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm flex flex-col gap-3">
+                        {isEditing ? (
+                          <form onSubmit={handleEditSubmit} className="space-y-3">
+                            <input required value={editName} onChange={(e) => setEditName(e.target.value)}
+                              className="w-full h-[44px] border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary"
+                              placeholder="Sub-type name" />
+                            <select value={editUnit} onChange={(e) => setEditUnit(e.target.value)}
+                              className="w-full h-[44px] border border-outline-variant rounded px-3 text-sm outline-none bg-white">
+                              <option value="kg">kg</option>
+                              <option value="ton">Metric Ton</option>
+                            </select>
+                            <div className="flex gap-2">
+                              <button type="submit" disabled={updateSubtypeMutation.isPending}
+                                className="flex-1 h-11 bg-primary text-on-primary font-bold rounded-lg disabled:opacity-40">
+                                {updateSubtypeMutation.isPending ? "Saving..." : "Save"}
+                              </button>
+                              <button type="button" onClick={cancelEdit}
+                                className="flex-1 h-11 border border-outline-variant text-on-surface-variant font-bold rounded-lg">
+                                Cancel
+                              </button>
+                            </div>
+                          </form>
                         ) : (
-                          <span className="px-2 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-bold rounded-sm flex items-center gap-1 uppercase">
-                            <span className="w-1.5 h-1.5 rounded-full bg-on-surface-variant" />
-                            Archived
-                          </span>
+                          <>
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h3 className="text-sm font-semibold text-on-surface">{st.name}</h3>
+                              </div>
+                              {st.is_active ? (
+                                <span className="px-2 py-1 bg-tertiary-container text-white text-[10px] font-bold rounded-sm flex items-center gap-1 uppercase">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                                  Active
+                                </span>
+                              ) : (
+                                <span className="px-2 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-bold rounded-sm flex items-center gap-1 uppercase">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-on-surface-variant" />
+                                  Archived
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex justify-between items-end border-t border-dashed border-outline-variant pt-3">
+                              <div>
+                                <p className="text-[10px] uppercase text-on-surface-variant font-medium tracking-wider">Unit</p>
+                                <p className="font-mono text-lg font-bold text-primary">{st.unit || "kg"}</p>
+                              </div>
+                              <button onClick={() => startEdit(st)} className="text-on-surface-variant">
+                                <span className="material-symbols-outlined text-xl">edit</span>
+                              </button>
+                            </div>
+                          </>
                         )}
                       </div>
-                      <div className="flex justify-between items-end border-t border-dashed border-outline-variant pt-3">
-                        <div>
-                          <p className="text-[10px] uppercase text-on-surface-variant font-medium tracking-wider">Default Price</p>
-                          <p className="font-mono text-lg font-bold text-primary">
-                            {st.default_price_per_kg ? `৳${Number(st.default_price_per_kg).toLocaleString("en-IN")}/kg` : "—"}
-                          </p>
-                        </div>
-                        <button className="text-on-surface-variant">
-                          <span className="material-symbols-outlined text-xl">edit</span>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </>
             )}
@@ -270,22 +364,14 @@ export default function SubtypesPage() {
                   className="w-full h-[44px] border border-outline-variant focus:border-primary focus:ring-0 rounded text-sm px-4 outline-none"
                   placeholder="e.g. 30mm Ultra Thick" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Default Price per kg</label>
-                  <input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
-                    inputMode="decimal" autoComplete="off" enterKeyHint="next"
-                    className="w-full h-[44px] px-4 border border-outline-variant focus:border-primary focus:ring-0 rounded text-sm font-mono outline-none" />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Unit</label>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Unit</label>
                   <select value={unit} onChange={(e) => setUnit(e.target.value)} autoComplete="off"
                     className="w-full h-[44px] border border-outline-variant focus:border-primary focus:ring-0 rounded text-sm px-4 outline-none">
                     <option value="kg">kg</option>
                     <option value="ton">ton</option>
                   </select>
                 </div>
-              </div>
               <div className="flex items-center gap-3 pt-4">
                 <button type="button" onClick={() => setShowModal(false)}
                   className="flex-1 h-[44px] bg-transparent text-on-surface-variant hover:bg-surface-container-low transition-colors font-bold text-sm rounded">Cancel</button>
@@ -314,23 +400,14 @@ export default function SubtypesPage() {
                   className="w-full h-[44px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                   placeholder="e.g., 20mm Super Heavy" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Default Price (tk)</label>
-                  <input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
-                    inputMode="decimal" autoComplete="off" enterKeyHint="go"
-                    className="w-full h-[44px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary focus:border-transparent outline-none font-mono"
-                    placeholder="0.00" />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Unit</label>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Unit</label>
                   <select value={unit} onChange={(e) => setUnit(e.target.value)} autoComplete="off"
                     className="w-full h-[44px] px-4 rounded border border-outline focus:ring-2 focus:ring-primary outline-none">
                     <option value="kg">kg</option>
                     <option value="ton">Metric Ton</option>
                   </select>
                 </div>
-              </div>
               <div className="flex flex-col gap-3 mt-4">
                 <button type="submit" disabled={loading}
                   className="w-full h-12 bg-primary text-on-primary font-bold rounded-lg shadow-md active:scale-[0.98] transition-all">

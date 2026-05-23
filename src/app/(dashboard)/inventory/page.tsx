@@ -33,7 +33,6 @@ export default async function InventoryPage() {
     .select({
       id: materialSubtypes.id,
       name: materialSubtypes.name,
-      default_price_per_kg: materialSubtypes.default_price_per_kg,
       category_id: materialSubtypes.category_id,
       is_active: materialSubtypes.is_active,
     })
@@ -85,7 +84,7 @@ export default async function InventoryPage() {
       ),
     );
 
-  const categoryMap = new Map(categories.map((c) => [c.id, { ...c, subtypes: [] as { id: string; name: string; current_stock_kg: number; wac: number; default_price_per_kg: string | null; created_at: string }[], total_weight: 0, total_value: 0 }]));
+  const categoryMap = new Map(categories.map((c) => [c.id, { ...c, subtypes: [] as { id: string; name: string; current_stock_kg: number; wac: number; created_at: string }[], total_weight: 0, total_value: 0 }]));
   let totalStockKg = 0;
   let totalStockValue = 0;
 
@@ -99,7 +98,6 @@ export default async function InventoryPage() {
         name: st.name,
         current_stock_kg: stock.qty,
         wac,
-        default_price_per_kg: st.default_price_per_kg,
         created_at: "",
       });
       totalStockKg += stock.qty;

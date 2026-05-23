@@ -1,0 +1,1 @@
+ALTER TABLE "material_subtypes" DROP COLUMN "default_price_per_kg";

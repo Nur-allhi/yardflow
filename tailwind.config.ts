@@ -40,6 +40,7 @@ const config: Config = {
         secondary: "#505f76",
         "surface-container": "#eceef0",
         "on-primary": "#ffffff",
+        "tertiary": "#059669",
         "tertiary-container": "#059669",
         warning: "#EAB308",
         "inverse-on-surface": "#eff1f3",

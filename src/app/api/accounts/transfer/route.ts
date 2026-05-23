@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { accounts, accountTransactions } from "@/lib/db/schema";
+import { accounts } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
 import { accountTransferSchema } from "@/lib/validations/schemas";
+import { recordAccountTransaction } from "@/lib/accounts";
 
 export async function POST(request: Request) {
   const orgId = await requireOrg();
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
         throw new Error("Insufficient balance in source account");
       }
 
-      await tx.insert(accountTransactions).values({
+      await recordAccountTransaction({
         organization_id: orgId,
         account_id: from_account_id,
         type: "debit",
@@ -79,7 +80,7 @@ export async function POST(request: Request) {
         transaction_date: new Date(transfer_date),
       });
 
-      await tx.insert(accountTransactions).values({
+      await recordAccountTransaction({
         organization_id: orgId,
         account_id: to_account_id,
         type: "credit",
@@ -91,24 +92,16 @@ export async function POST(request: Request) {
       });
 
       const [updatedFrom] = await tx
-        .update(accounts)
-        .set({
-          current_balance: String(fromBalance - amount),
-          updated_at: sql`NOW()`,
-        })
+        .select()
+        .from(accounts)
         .where(eq(accounts.id, from_account_id))
-        .returning();
+        .limit(1);
 
       const [updatedTo] = await tx
-        .update(accounts)
-        .set({
-          current_balance: String(
-            Number(toAccount.current_balance) + amount,
-          ),
-          updated_at: sql`NOW()`,
-        })
+        .select()
+        .from(accounts)
         .where(eq(accounts.id, to_account_id))
-        .returning();
+        .limit(1);
 
       return {
         from_account: {
