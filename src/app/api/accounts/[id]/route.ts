@@ -4,6 +4,7 @@ import { accounts, accountTransactions } from "@/lib/db/schema";
 import { eq, and, sql, desc } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
 import { accountSchema } from "@/lib/validations/schemas";
+import { enrichTransactions } from "@/lib/accounts";
 
 export async function GET(
   _request: NextRequest,
@@ -41,12 +42,16 @@ export async function GET(
     .orderBy(desc(accountTransactions.transaction_date))
     .limit(50);
 
+  const enriched = await enrichTransactions(transactions);
+
   return NextResponse.json({
     ...account,
     current_balance: Number(account.current_balance),
-    transactions: transactions.map((t) => ({
+    transactions: transactions.map((t, i) => ({
       ...t,
       amount: Number(t.amount),
+      reference_name: enriched[i].reference_name,
+      reference_url: enriched[i].reference_url,
     })),
   });
 }

@@ -21,9 +21,30 @@ interface Transaction {
   amount: number;
   reference_type: string;
   reference_id: string | null;
+  reference_name: string | null;
+  reference_url: string | null;
   note: string | null;
   transaction_date: string;
   account_name: string;
+}
+
+function descriptionLabel(tx: Transaction): string {
+  if (tx.reference_name) {
+    const prefix =
+      tx.reference_type === "purchase_payment"
+        ? "Payment to"
+        : tx.reference_type === "sale_payment"
+          ? "Receipt from"
+          : tx.reference_type === "salary"
+            ? "Salary for"
+            : tx.reference_type === "advance"
+              ? "Advance to"
+              : tx.reference_type === "transfer"
+                ? "Transfer to"
+                : "";
+    return prefix ? `${prefix} ${tx.reference_name}` : tx.note || "Manual entry";
+  }
+  return tx.note || "Manual entry";
 }
 
 function formatDate(dateStr: string) {
@@ -261,13 +282,10 @@ const { data: transactionsData } = useQuery<Transaction[]>({
                     Account
                   </th>
                   <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-outline uppercase tracking-wider">
-                    Amount
-                  </th>
-                  <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-outline uppercase tracking-wider">
-                    Reference
-                  </th>
-                  <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-outline uppercase tracking-wider">
                     Description
+                  </th>
+                  <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-outline uppercase tracking-wider">
+                    Amount
                   </th>
                 </tr>
               </thead>
@@ -285,39 +303,28 @@ const { data: transactionsData } = useQuery<Transaction[]>({
                       <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-secondary font-medium">
                         {tx.account_name}
                       </td>
+                      <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                        {tx.reference_url ? (
+                          <Link href={tx.reference_url} className="text-tertiary hover:underline text-sm font-medium">
+                            {descriptionLabel(tx)}
+                          </Link>
+                        ) : (
+                          <span className="text-secondary text-sm">
+                            {descriptionLabel(tx)}
+                          </span>
+                        )}
+                      </td>
                       <td
-                        className={`px-4 md:px-6 py-3 md:py-4 whitespace-nowrap font-mono font-bold flex items-center gap-1 ${
+                        className={`px-4 md:px-6 py-3 md:py-4 whitespace-nowrap font-mono font-bold ${
                           isCredit ? "text-success" : "text-error"
                         }`}
                       >
-                        <span className="material-symbols-outlined text-xs">
-                          {isCredit ? "arrow_upward" : "arrow_downward"}
-                        </span>
-                        {formatMoney(tx.amount)}
-                      </td>
-                      <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                        {tx.reference_id ? (
-                          <span className="text-tertiary hover:underline text-xs font-medium">
-                            #
-                            {tx.reference_type === "purchase_payment"
-                              ? "PUR"
-                              : tx.reference_type === "sale_payment"
-                                ? "SAL"
-                                : tx.reference_type === "salary"
-                                  ? "SLR"
-                                  : tx.reference_type === "transfer"
-                                    ? "TRF"
-                                    : "REF"}
-                            -{tx.reference_id.slice(0, 8)}
+                        <span className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-xs">
+                            {isCredit ? "arrow_upward" : "arrow_downward"}
                           </span>
-                        ) : (
-                          <span className="text-outline">&mdash;</span>
-                        )}
-                      </td>
-                      <td className="px-4 md:px-6 py-3 md:py-4 text-secondary max-w-[200px] truncate">
-                        {tx.note || (
-                          <span className="text-outline">&mdash;</span>
-                        )}
+                          {formatMoney(tx.amount)}
+                        </span>
                       </td>
                     </tr>
                   );
@@ -338,15 +345,19 @@ const { data: transactionsData } = useQuery<Transaction[]>({
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start">
                       <h4 className="font-bold text-on-surface text-sm truncate">
-                        {tx.reference_id ? (
-                          <>{tx.reference_type === "purchase_payment" ? "Purchase" : tx.reference_type === "sale_payment" ? "Sale" : tx.reference_type === "salary" ? "Salary" : tx.reference_type === "transfer" ? "Transfer" : "Ref"} #{tx.reference_id.slice(0, 8)}</>
-                        ) : "Transaction"}
+                        {tx.reference_url ? (
+                          <Link href={tx.reference_url} className="hover:underline text-tertiary">
+                            {descriptionLabel(tx)}
+                          </Link>
+                        ) : (
+                          descriptionLabel(tx)
+                        )}
                       </h4>
                       <span className={`font-code text-sm font-bold shrink-0 ${isCredit ? "text-tertiary-container" : "text-error"}`}>
                         {isCredit ? "+" : "-"}{formatMoney(tx.amount)}
                       </span>
                     </div>
-                    <p className="text-caption text-on-surface-variant">{tx.note || "No description"}</p>
+                    {tx.note && <p className="text-caption text-on-surface-variant mt-0.5">{tx.note}</p>}
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-[10px] text-outline uppercase font-bold">{formatDate(tx.transaction_date)}</span>
                       <span className="w-1 h-1 rounded-full bg-outline-variant" />

@@ -22,8 +22,29 @@ interface Transaction {
   amount: number;
   reference_type: string;
   reference_id: string | null;
+  reference_name: string | null;
+  reference_url: string | null;
   note: string | null;
   transaction_date: string;
+}
+
+function descriptionLabel(tx: Transaction): string {
+  if (tx.reference_name) {
+    const prefix =
+      tx.reference_type === "purchase_payment"
+        ? "Payment to"
+        : tx.reference_type === "sale_payment"
+          ? "Receipt from"
+          : tx.reference_type === "salary"
+            ? "Salary for"
+            : tx.reference_type === "advance"
+              ? "Advance to"
+              : tx.reference_type === "transfer"
+                ? "Transfer to"
+                : "";
+    return prefix ? `${prefix} ${tx.reference_name}` : tx.note || "Manual entry";
+  }
+  return tx.note || "Manual entry";
 }
 
 function formatDate(dateStr: string) {
@@ -162,10 +183,8 @@ export default function AccountDetailPage() {
                     <thead className="bg-surface-container-high border-b border-outline-variant">
                       <tr>
                         <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Date</th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Type</th>
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Description</th>
                         <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider text-right">Amount</th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Reference</th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Note</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-outline-variant/30">
@@ -175,33 +194,22 @@ export default function AccountDetailPage() {
                             {formatDate(txn.transaction_date)}
                           </td>
                           <td className="px-6 py-4">
-                            <span className={`inline-flex px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${
-                              txn.type === "credit"
-                                ? "bg-success/10 text-success"
-                                : "bg-error/10 text-error"
-                            }`}>
-                              {txn.type === "credit" ? "Credit" : "Debit"}
-                            </span>
+                            {txn.reference_url ? (
+                              <Link href={txn.reference_url} className="text-tertiary hover:underline text-sm font-medium">
+                                {descriptionLabel(txn)}
+                                {txn.note && <span className="text-secondary font-normal ml-1">· {txn.note}</span>}
+                              </Link>
+                            ) : (
+                              <span className="text-sm text-secondary">
+                                {descriptionLabel(txn)}
+                                {txn.note && <span className="ml-1">· {txn.note}</span>}
+                              </span>
+                            )}
                           </td>
                           <td className={`px-6 py-4 font-mono text-sm text-right font-semibold ${
                             txn.type === "credit" ? "text-success" : "text-error"
                           }`}>
                             {txn.type === "credit" ? "+" : "-"}{formatMoney(txn.amount)}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-secondary capitalize">
-                            {txn.reference_id ? (
-                              <Link
-                                href={`/${txn.reference_type === "purchase" ? "purchases" : txn.reference_type === "sale" ? "sales" : "#"}/${txn.reference_id}`}
-                                className="hover:underline"
-                              >
-                                {txn.reference_type.replace(/_/g, " ")}
-                              </Link>
-                            ) : (
-                              txn.reference_type.replace(/_/g, " ")
-                            )}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-secondary italic max-w-[200px] truncate">
-                            {txn.note || "—"}
                           </td>
                         </tr>
                       ))}
@@ -216,13 +224,13 @@ export default function AccountDetailPage() {
                       <div className="flex justify-between items-start mb-2">
                         <div className="space-y-1">
                           <p className="text-xs text-secondary">{formatDate(txn.transaction_date)}</p>
-                          <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                            txn.type === "credit"
-                              ? "bg-success/10 text-success"
-                              : "bg-error/10 text-error"
-                          }`}>
-                            {txn.type === "credit" ? "Credit" : "Debit"}
-                          </span>
+                          {txn.reference_url ? (
+                            <Link href={txn.reference_url} className="text-tertiary hover:underline text-sm font-medium">
+                              {descriptionLabel(txn)}
+                            </Link>
+                          ) : (
+                            <p className="text-sm text-secondary">{descriptionLabel(txn)}</p>
+                          )}
                         </div>
                         <p className={`font-mono text-base font-bold ${
                           txn.type === "credit" ? "text-success" : "text-error"
@@ -230,25 +238,9 @@ export default function AccountDetailPage() {
                           {txn.type === "credit" ? "+" : "-"}{formatMoney(txn.amount)}
                         </p>
                       </div>
-                      <div className="grid grid-cols-2 gap-2 text-[11px] text-secondary pt-2 border-t border-outline-variant/20">
-                        <div>
-                          <span className="font-bold uppercase tracking-wider">Reference</span>
-                          {txn.reference_id ? (
-                            <Link
-                              href={`/${["purchase", "sale"].includes(txn.reference_type) ? txn.reference_type + "s" : "#"}/${txn.reference_id}`}
-                              className="hover:underline"
-                            >
-                              {txn.reference_type.replace(/_/g, " ")}
-                            </Link>
-                          ) : (
-                            <p className="capitalize">{txn.reference_type.replace(/_/g, " ")}</p>
-                          )}
-                        </div>
-                        <div className="text-right">
-                          <span className="font-bold uppercase tracking-wider">Note</span>
-                          <p className="italic">{txn.note || "—"}</p>
-                        </div>
-                      </div>
+                      {txn.note && (
+                        <p className="text-[11px] text-secondary italic pt-2 border-t border-outline-variant/20 mt-2">{txn.note}</p>
+                      )}
                     </div>
                   ))}
                 </div>

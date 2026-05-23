@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { accounts, accountTransactions } from "@/lib/db/schema";
 import { eq, and, desc, sql } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
+import { enrichTransactions } from "@/lib/accounts";
 
 export async function GET(request: Request) {
   const orgId = await requireOrg();
@@ -33,11 +34,15 @@ export async function GET(request: Request) {
     .orderBy(desc(accountTransactions.transaction_date), desc(accountTransactions.created_at))
     .limit(limit);
 
+  const enriched = await enrichTransactions(rows);
+
   return NextResponse.json(
-    rows.map((r) => ({
+    rows.map((r, i) => ({
       ...r,
       amount: Number(r.amount),
       transaction_date: r.transaction_date,
+      reference_name: enriched[i].reference_name,
+      reference_url: enriched[i].reference_url,
     })),
   );
 }

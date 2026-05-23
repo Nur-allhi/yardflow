@@ -1,6 +1,18 @@
 import { db } from "@/lib/db";
-import { accountTransactions, accounts } from "@/lib/db/schema";
-import { eq, sql } from "drizzle-orm";
+import {
+  accountTransactions,
+  accounts,
+  purchasePayments,
+  purchases,
+  vendors,
+  salePayments,
+  sales,
+  customers,
+  salaryPayments,
+  salaryAdvances,
+  workers,
+} from "@/lib/db/schema";
+import { eq, inArray, sql } from "drizzle-orm";
 
 interface RecordAccountTransactionParams {
   organization_id: string;
@@ -44,5 +56,130 @@ export async function recordAccountTransaction(params: RecordAccountTransactionP
       .where(eq(accounts.id, params.account_id));
 
     return txn;
+  });
+}
+
+interface TransactionRow {
+  id: string;
+  reference_type: string;
+  reference_id: string | null;
+}
+
+interface EnrichedInfo {
+  reference_name: string | null;
+  reference_url: string | null;
+}
+
+export async function enrichTransactions(rows: TransactionRow[]): Promise<EnrichedInfo[]> {
+  const purchaseIds: string[] = [];
+  const saleIds: string[] = [];
+  const salaryIds: string[] = [];
+  const advanceIds: string[] = [];
+  const transferIds: string[] = [];
+
+  for (const r of rows) {
+    if (!r.reference_id) continue;
+    if (r.reference_type === "purchase_payment") purchaseIds.push(r.reference_id);
+    else if (r.reference_type === "sale_payment") saleIds.push(r.reference_id);
+    else if (r.reference_type === "salary") salaryIds.push(r.reference_id);
+    else if (r.reference_type === "advance") advanceIds.push(r.reference_id);
+    else if (r.reference_type === "transfer") transferIds.push(r.reference_id);
+  }
+
+  const [purchaseMap, saleMap, salaryMap, advanceMap, transferMap] = await Promise.all([
+    purchaseIds.length
+      ? db
+          .select({
+            id: purchasePayments.id,
+            name: vendors.name,
+            purchaseId: purchases.id,
+          })
+          .from(purchasePayments)
+          .innerJoin(purchases, eq(purchasePayments.purchase_id, purchases.id))
+          .innerJoin(vendors, eq(purchases.vendor_id, vendors.id))
+          .where(inArray(purchasePayments.id, purchaseIds))
+          .then((res) =>
+            Object.fromEntries(res.map((r) => [r.id, { name: r.name, url: `/purchases/${r.purchaseId}` }])),
+          )
+      : Promise.resolve({} as Record<string, { name: string; url: string }>),
+
+    saleIds.length
+      ? db
+          .select({
+            id: salePayments.id,
+            name: customers.name,
+            saleId: sales.id,
+          })
+          .from(salePayments)
+          .innerJoin(sales, eq(salePayments.sale_id, sales.id))
+          .innerJoin(customers, eq(sales.customer_id, customers.id))
+          .where(inArray(salePayments.id, saleIds))
+          .then((res) =>
+            Object.fromEntries(res.map((r) => [r.id, { name: r.name, url: `/sales/${r.saleId}` }])),
+          )
+      : Promise.resolve({} as Record<string, { name: string; url: string }>),
+
+    salaryIds.length
+      ? db
+          .select({
+            id: salaryPayments.id,
+            name: workers.name,
+            workerId: workers.id,
+          })
+          .from(salaryPayments)
+          .innerJoin(workers, eq(salaryPayments.worker_id, workers.id))
+          .where(inArray(salaryPayments.id, salaryIds))
+          .then((res) =>
+            Object.fromEntries(res.map((r) => [r.id, { name: r.name, url: `/hr/workers/${r.workerId}` }])),
+          )
+      : Promise.resolve({} as Record<string, { name: string; url: string }>),
+
+    advanceIds.length
+      ? db
+          .select({
+            id: salaryAdvances.id,
+            name: workers.name,
+            workerId: workers.id,
+          })
+          .from(salaryAdvances)
+          .innerJoin(workers, eq(salaryAdvances.worker_id, workers.id))
+          .where(inArray(salaryAdvances.id, advanceIds))
+          .then((res) =>
+            Object.fromEntries(res.map((r) => [r.id, { name: r.name, url: `/hr/workers/${r.workerId}` }])),
+          )
+      : Promise.resolve({} as Record<string, { name: string; url: string }>),
+
+    transferIds.length
+      ? db
+          .select({
+            id: accounts.id,
+            name: accounts.name,
+          })
+          .from(accounts)
+          .where(inArray(accounts.id, transferIds))
+          .then((res) =>
+            Object.fromEntries(res.map((r) => [r.id, { name: r.name, url: `/accounts/${r.id}` }])),
+          )
+      : Promise.resolve({} as Record<string, { name: string; url: string }>),
+  ]);
+
+  return rows.map((r) => {
+    if (!r.reference_id) return { reference_name: null, reference_url: null };
+    const info =
+      r.reference_type === "purchase_payment"
+        ? purchaseMap[r.reference_id]
+        : r.reference_type === "sale_payment"
+          ? saleMap[r.reference_id]
+          : r.reference_type === "salary"
+            ? salaryMap[r.reference_id]
+            : r.reference_type === "advance"
+              ? advanceMap[r.reference_id]
+              : r.reference_type === "transfer"
+                ? transferMap[r.reference_id]
+                : null;
+    return {
+      reference_name: info?.name ?? null,
+      reference_url: info?.url ?? null,
+    };
   });
 }
