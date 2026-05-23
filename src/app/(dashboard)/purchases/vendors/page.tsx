@@ -288,7 +288,7 @@ export default function VendorsPage() {
                               View
                             </Link>
                             {v.due_balance > 0 ? (
-                              <Link href={`/purchases?vendor_id=${v.id}&status=due`} className="bg-primary-container text-white px-4 py-1.5 rounded-lg text-[12px] font-bold hover:bg-primary-container/90 transition-all active:scale-95">
+                              <Link href={`/purchases/vendors/${v.id}`} className="bg-primary-container text-white px-4 py-1.5 rounded-lg text-[12px] font-bold hover:bg-primary-container/90 transition-all active:scale-95">
                                 Pay
                               </Link>
                             ) : (
@@ -411,7 +411,7 @@ export default function VendorsPage() {
                       View
                     </Link>
                     {v.due_balance > 0 ? (
-                      <Link href={`/purchases?vendor_id=${v.id}&status=due`} className="block flex-1 py-2 rounded-lg bg-primary text-on-primary font-bold text-sm transition-colors hover:opacity-90 active:scale-[0.98] text-center">
+                      <Link href={`/purchases/vendors/${v.id}`} className="block flex-1 py-2 rounded-lg bg-primary text-on-primary font-bold text-sm transition-colors hover:opacity-90 active:scale-[0.98] text-center">
                         Pay
                       </Link>
                     ) : (

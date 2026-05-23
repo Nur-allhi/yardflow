@@ -290,7 +290,7 @@ export default function CustomersPage() {
                               View
                             </Link>
                             {c.due_balance > 0 ? (
-                              <Link href={`/sales?customer_id=${c.id}&status=due`} className="bg-primary-container text-white px-4 py-1.5 rounded-lg text-[12px] font-bold hover:bg-primary-container/90 transition-all active:scale-95">
+                              <Link href={`/sales/customers/${c.id}`} className="bg-primary-container text-white px-4 py-1.5 rounded-lg text-[12px] font-bold hover:bg-primary-container/90 transition-all active:scale-95">
                                 Receive Payment
                               </Link>
                             ) : (
@@ -394,7 +394,7 @@ export default function CustomersPage() {
                           View
                         </Link>
                         {c.due_balance > 0 && (
-                          <Link href={`/sales?customer_id=${c.id}&status=due`} className="bg-on-tertiary-container text-on-primary px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-1 shadow-sm active:scale-95 transition-transform">
+                          <Link href={`/sales/customers/${c.id}`} className="bg-on-tertiary-container text-on-primary px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-1 shadow-sm active:scale-95 transition-transform">
                             <span className="material-symbols-outlined text-sm">payments</span>
                             Collect
                           </Link>

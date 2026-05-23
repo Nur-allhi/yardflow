@@ -88,7 +88,7 @@ export default function MobileSidebar() {
                 {navItems.map((item) => {
                   const active = isActive(item.href);
                   return (
-                    <motion.div key={item.href} variants={navItemVariants}>
+                    <motion.div key={item.href} variants={navItemVariants} whileTap={{ scale: 0.97 }}>
                       <Link
                         href={item.href}
                         onClick={() => setOpen(false)}
