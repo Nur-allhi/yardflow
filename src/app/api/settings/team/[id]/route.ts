@@ -2,17 +2,20 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 
 export async function PUT(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
+  const userId = session.user_id;
 
   const [existing] = await db
-    .select({ id: users.id })
+    .select({ id: users.id, name: users.name })
     .from(users)
     .where(
       and(
@@ -44,6 +47,15 @@ export async function PUT(
       .where(eq(users.id, id))
       .returning();
 
+    logActivity({
+      orgId,
+      userId,
+      action: "update",
+      entityType: "user",
+      entityId: user.id,
+      description: `${is_active ? "Activated" : "Deactivated"} ${user.name}`,
+    });
+
     return NextResponse.json({
       id: user.id,
       name: user.name,
@@ -65,10 +77,12 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
+  const userId = session.user_id;
 
   const [existing] = await db
-    .select({ id: users.id, role: users.role })
+    .select({ id: users.id, role: users.role, name: users.name })
     .from(users)
     .where(
       and(
@@ -94,6 +108,15 @@ export async function DELETE(
     .update(users)
     .set({ deleted_at: sql`NOW()`, updated_at: sql`NOW()` })
     .where(eq(users.id, id));
+
+  logActivity({
+    orgId,
+    userId,
+    action: "delete",
+    entityType: "user",
+    entityId: id,
+    description: `Removed ${existing.name} from team`,
+  });
 
   return NextResponse.json({ success: true });
 }

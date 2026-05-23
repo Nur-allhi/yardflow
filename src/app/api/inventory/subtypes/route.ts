@@ -4,7 +4,8 @@ import { materialSubtypes } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
 import { calculateWAC, getStockQuantity } from "@/lib/calculations/wac";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 
 const subtypeSchema = z.object({
   category_id: z.string().uuid("Invalid category"),
@@ -13,13 +14,13 @@ const subtypeSchema = z.object({
 });
 
 export async function GET(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   const { searchParams } = new URL(request.url);
   const categoryId = searchParams.get("category_id");
 
   const conditions = and(
-    eq(materialSubtypes.organization_id, orgId),
+    eq(materialSubtypes.organization_id, session.org_id),
     sql`${materialSubtypes.deleted_at} IS NULL`,
     categoryId ? eq(materialSubtypes.category_id, categoryId) : undefined,
   );
@@ -33,8 +34,8 @@ export async function GET(request: Request) {
   const enriched = await Promise.all(
     subtypes.map(async (st) => ({
       ...st,
-      current_stock_kg: await getStockQuantity(orgId, st.id),
-      wac: await calculateWAC(orgId, st.id),
+      current_stock_kg: await getStockQuantity(session.org_id, st.id),
+      wac: await calculateWAC(session.org_id, st.id),
     })),
   );
 
@@ -42,7 +43,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const body = await request.json();
@@ -57,12 +58,21 @@ export async function POST(request: Request) {
     const [subtype] = await db
       .insert(materialSubtypes)
       .values({
-        organization_id: orgId,
+        organization_id: session.org_id,
         category_id: parsed.data.category_id,
         name: parsed.data.name,
         unit: parsed.data.unit || "kg",
       })
       .returning();
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "create",
+      entityType: "subtype",
+      entityId: subtype.id,
+      description: `Created subtype ${subtype.name}`,
+    });
 
     return NextResponse.json(subtype, { status: 201 });
   } catch (error) {

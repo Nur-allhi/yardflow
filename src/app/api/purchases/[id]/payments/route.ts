@@ -6,7 +6,8 @@ import {
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { purchasePaymentSchema } from "@/lib/validations/schemas";
-import { requireOrg } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
+import { requireSession } from "@/lib/auth/session";
 import { recordAccountTransaction } from "@/lib/accounts";
 
 export async function POST(
@@ -14,7 +15,8 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
 
   try {
     const body = await request.json();
@@ -94,6 +96,15 @@ export async function POST(
       });
 
       return payment;
+    });
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "payment",
+      entityType: "purchase_payment",
+      entityId: result.id,
+      description: `Recorded payment of ${parsed.data.amount} for purchase`,
     });
 
     return NextResponse.json(result, { status: 201 });

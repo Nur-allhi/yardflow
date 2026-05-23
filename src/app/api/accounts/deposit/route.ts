@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { accounts } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 import { recordAccountTransaction } from "@/lib/accounts";
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const body = await request.json();
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
         .where(
           and(
             eq(accounts.id, account_id),
-            eq(accounts.organization_id, orgId),
+            eq(accounts.organization_id, session.org_id),
             eq(accounts.is_active, true),
             sql`${accounts.deleted_at} IS NULL`,
           ),
@@ -38,7 +39,7 @@ export async function POST(request: Request) {
       }
 
       await recordAccountTransaction({
-        organization_id: orgId,
+        organization_id: session.org_id,
         account_id: account_id,
         type: "credit",
         amount: String(amount),
@@ -57,6 +58,14 @@ export async function POST(request: Request) {
         ...updatedAccount,
         current_balance: Number(updatedAccount.current_balance),
       };
+    });
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "create",
+      entityType: "account_transaction",
+      description: `Deposited ${amount} to ${result.name}`,
     });
 
     return NextResponse.json(result, { status: 200 });

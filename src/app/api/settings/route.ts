@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { organizations } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
 import { z } from "zod";
+import { logActivity } from "@/lib/activity-log";
 
 const updateOrgSchema = z.object({
   name: z.string().min(1, "Company name is required"),
@@ -13,7 +14,8 @@ const updateOrgSchema = z.object({
 });
 
 export async function GET() {
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
 
   const [org] = await db
     .select()
@@ -38,7 +40,9 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
+  const userId = session.user_id;
 
   try {
     const body = await request.json();
@@ -69,6 +73,16 @@ export async function PUT(request: Request) {
     if (!org) {
       return NextResponse.json({ error: "Organization not found" }, { status: 404 });
     }
+
+    logActivity({
+      orgId,
+      userId,
+      action: "update",
+      entityType: "organization",
+      entityId: orgId,
+      description: "Updated organization settings",
+      changes: { name, address, phone, email },
+    });
 
     return NextResponse.json({
       id: org.id,

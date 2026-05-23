@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { workers, salaryAdvances } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 import { workerSchema } from "@/lib/validations/schemas";
 
 export async function GET() {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   const workersList = await db
     .select({
@@ -20,7 +21,7 @@ export async function GET() {
     .from(workers)
     .where(
       and(
-        eq(workers.organization_id, orgId),
+        eq(workers.organization_id, session.org_id),
         sql`${workers.deleted_at} IS NULL`,
       ),
     )
@@ -38,7 +39,7 @@ export async function GET() {
     .from(salaryAdvances)
     .where(
       and(
-        eq(salaryAdvances.organization_id, orgId),
+        eq(salaryAdvances.organization_id, session.org_id),
         eq(salaryAdvances.month, currentMonth),
         eq(salaryAdvances.year, currentYear),
         sql`${salaryAdvances.deleted_at} IS NULL`,
@@ -75,7 +76,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const body = await request.json();
@@ -90,7 +91,7 @@ export async function POST(request: Request) {
     const [worker] = await db
       .insert(workers)
       .values({
-        organization_id: orgId,
+        organization_id: session.org_id,
         name: parsed.data.name,
         phone: parsed.data.phone || null,
         designation: parsed.data.designation || null,
@@ -98,6 +99,15 @@ export async function POST(request: Request) {
         join_date: new Date(),
       })
       .returning();
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "create",
+      entityType: "worker",
+      entityId: worker.id,
+      description: `Added worker ${worker.name}`,
+    });
 
     return NextResponse.json(
       {

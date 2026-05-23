@@ -16,11 +16,13 @@ import {
 } from "drizzle-orm";
 import { purchaseSchema } from "@/lib/validations/schemas";
 import { calculateWAC } from "@/lib/calculations/wac";
-import { requireOrg } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
+import { requireSession } from "@/lib/auth/session";
 import { recordAccountTransaction } from "@/lib/accounts";
 
 export async function GET(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
 
   const { searchParams } = new URL(request.url);
   const vendorId = searchParams.get("vendor_id");
@@ -174,7 +176,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
 
   try {
     const body = await request.json();
@@ -268,6 +271,26 @@ export async function POST(request: Request) {
     await Promise.all(
       uniqueSubtypeIds.map((sid) => calculateWAC(orgId, sid)),
     );
+
+    const [vendor] = await db
+      .select({ name: vendors.name })
+      .from(vendors)
+      .where(
+        and(
+          eq(vendors.id, parsed.data.vendor_id),
+          sql`${vendors.deleted_at} IS NULL`,
+        ),
+      )
+      .limit(1);
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "create",
+      entityType: "purchase",
+      entityId: result.id,
+      description: `Created purchase for ${vendor?.name ?? "Unknown"}`,
+    });
 
     return NextResponse.json(result, { status: 201 });
   } catch (error) {

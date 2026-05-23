@@ -50,6 +50,13 @@
       "when": 1779522191370,
       "tag": "0006_rare_zombie",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1779551570095,
+      "tag": "0007_curious_blacklash",
+      "breakpoints": true
     }
   ]
 }

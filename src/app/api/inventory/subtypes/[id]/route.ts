@@ -3,7 +3,8 @@ import { db } from "@/lib/db";
 import { materialSubtypes } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 
 const updateSubtypeSchema = z.object({
   category_id: z.string().uuid("Invalid category"),
@@ -16,7 +17,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   const [subtype] = await db
     .select()
@@ -24,7 +25,7 @@ export async function GET(
     .where(
       and(
         eq(materialSubtypes.id, id),
-        eq(materialSubtypes.organization_id, orgId),
+        eq(materialSubtypes.organization_id, session.org_id),
         sql`${materialSubtypes.deleted_at} IS NULL`,
       ),
     )
@@ -42,7 +43,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const body = await request.json();
@@ -60,7 +61,7 @@ export async function PUT(
       .where(
         and(
           eq(materialSubtypes.id, id),
-          eq(materialSubtypes.organization_id, orgId),
+          eq(materialSubtypes.organization_id, session.org_id),
           sql`${materialSubtypes.deleted_at} IS NULL`,
         ),
       )
@@ -81,10 +82,19 @@ export async function PUT(
       .where(
         and(
           eq(materialSubtypes.id, id),
-          eq(materialSubtypes.organization_id, orgId),
+          eq(materialSubtypes.organization_id, session.org_id),
         ),
       )
       .returning();
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "update",
+      entityType: "subtype",
+      entityId: updated.id,
+      description: `Updated subtype ${updated.name}`,
+    });
 
     return NextResponse.json(updated);
   } catch (error) {
@@ -101,7 +111,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   const [existing] = await db
     .select({ id: materialSubtypes.id })
@@ -109,7 +119,7 @@ export async function DELETE(
     .where(
       and(
         eq(materialSubtypes.id, id),
-        eq(materialSubtypes.organization_id, orgId),
+        eq(materialSubtypes.organization_id, session.org_id),
         sql`${materialSubtypes.deleted_at} IS NULL`,
       ),
     )
@@ -125,7 +135,7 @@ export async function DELETE(
     .where(
       and(
         eq(materialSubtypes.id, id),
-        eq(materialSubtypes.organization_id, orgId),
+        eq(materialSubtypes.organization_id, session.org_id),
       ),
     );
 

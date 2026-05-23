@@ -18,12 +18,14 @@ import {
 } from "drizzle-orm";
 import { saleSchema } from "@/lib/validations/schemas";
 import { calculateWAC } from "@/lib/calculations/wac";
-import { requireOrg } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
+import { requireSession } from "@/lib/auth/session";
 import { recordAccountTransaction } from "@/lib/accounts";
 
 export async function GET(request: Request) {
   try {
-    const orgId = await requireOrg();
+    const session = await requireSession();
+    const orgId = session.org_id;
 
     const { searchParams } = new URL(request.url);
     const customerId = searchParams.get("customer_id");
@@ -231,7 +233,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
 
   try {
     const body = await request.json();
@@ -365,6 +368,30 @@ export async function POST(request: Request) {
       }
 
       return sale;
+    });
+
+    let customerName = parsed.data.customer_name || null;
+    if (!customerName && parsed.data.customer_id) {
+      const [customer] = await db
+        .select({ name: customers.name })
+        .from(customers)
+        .where(
+          and(
+            eq(customers.id, parsed.data.customer_id),
+            sql`${customers.deleted_at} IS NULL`,
+          ),
+        )
+        .limit(1);
+      customerName = customer?.name ?? "Unknown";
+    }
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "create",
+      entityType: "sale",
+      entityId: result.id,
+      description: `Created sale for ${customerName ?? "Unknown"}`,
     });
 
     return NextResponse.json(result, { status: 201 });

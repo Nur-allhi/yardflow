@@ -8,6 +8,7 @@ import {
   text,
   timestamp,
   uuid,
+  jsonb,
 } from "drizzle-orm/pg-core";
 import { sql, relations } from "drizzle-orm";
 
@@ -630,6 +631,31 @@ export const periodReports = pgTable("period_reports", {
 }));
 
 // ──────────────────────────────────────────────
+// ACTIVITY LOGS
+// ──────────────────────────────────────────────
+
+export const activityLogs = pgTable("activity_logs", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organization_id: uuid("organization_id")
+    .notNull()
+    .references(() => organizations.id),
+  user_id: uuid("user_id")
+    .notNull()
+    .references(() => users.id),
+  action: text("action").notNull(),
+  entity_type: text("entity_type").notNull(),
+  entity_id: uuid("entity_id"),
+  description: text("description").notNull(),
+  changes: jsonb("changes"),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at", { withTimezone: true }),
+}, (table) => ({
+  orgIdx: index("idx_activity_logs_org").on(table.organization_id),
+  entityIdx: index("idx_activity_logs_entity").on(table.entity_type, table.entity_id),
+  createdAtIdx: index("idx_activity_logs_created").on(table.created_at),
+}));
+
+// ──────────────────────────────────────────────
 // RELATIONS
 // ──────────────────────────────────────────────
 
@@ -1047,3 +1073,6 @@ export type NewSalaryPayment = InferInsertModel<typeof salaryPayments>;
 
 export type PeriodReport = InferSelectModel<typeof periodReports>;
 export type NewPeriodReport = InferInsertModel<typeof periodReports>;
+
+export type ActivityLog = InferSelectModel<typeof activityLogs>;
+export type NewActivityLog = InferInsertModel<typeof activityLogs>;

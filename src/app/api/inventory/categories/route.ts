@@ -3,7 +3,8 @@ import { db } from "@/lib/db";
 import { materialCategories } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 
 const categorySchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -11,14 +12,14 @@ const categorySchema = z.object({
 });
 
 export async function GET(_request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   const categories = await db
     .select()
     .from(materialCategories)
     .where(
       and(
-        eq(materialCategories.organization_id, orgId),
+        eq(materialCategories.organization_id, session.org_id),
         sql`${materialCategories.deleted_at} IS NULL`,
       ),
     )
@@ -28,7 +29,7 @@ export async function GET(_request: Request) {
 }
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const body = await request.json();
@@ -43,11 +44,20 @@ export async function POST(request: Request) {
     const [category] = await db
       .insert(materialCategories)
       .values({
-        organization_id: orgId,
+        organization_id: session.org_id,
         name: parsed.data.name,
         description: parsed.data.description || null,
       })
       .returning();
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "create",
+      entityType: "category",
+      entityId: category.id,
+      description: `Created category ${category.name}`,
+    });
 
     return NextResponse.json(category, { status: 201 });
   } catch (error) {

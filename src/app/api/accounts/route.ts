@@ -2,18 +2,19 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { accounts, accountTransactions } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 import { accountSchema } from "@/lib/validations/schemas";
 
 export async function GET(_request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   const result = await db
     .select()
     .from(accounts)
     .where(
       and(
-        eq(accounts.organization_id, orgId),
+        eq(accounts.organization_id, session.org_id),
         eq(accounts.is_active, true),
         sql`${accounts.deleted_at} IS NULL`,
       ),
@@ -26,7 +27,7 @@ export async function GET(_request: Request) {
 }
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const body = await request.json();
@@ -45,7 +46,7 @@ export async function POST(request: Request) {
       const [account] = await tx
         .insert(accounts)
         .values({
-          organization_id: orgId,
+          organization_id: session.org_id,
           name,
           type,
           bank_name: bank_name || null,
@@ -56,7 +57,7 @@ export async function POST(request: Request) {
 
       if (opening_balance && opening_balance > 0) {
         await tx.insert(accountTransactions).values({
-          organization_id: orgId,
+          organization_id: session.org_id,
           account_id: account.id,
           type: "credit",
           amount: String(opening_balance),
@@ -68,6 +69,15 @@ export async function POST(request: Request) {
       }
 
       return account;
+    });
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "create",
+      entityType: "account",
+      entityId: result.id,
+      description: `Created account ${result.name}`,
     });
 
     return NextResponse.json(

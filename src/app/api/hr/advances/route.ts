@@ -5,12 +5,13 @@ import {
   workers,
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 import { advanceSchema } from "@/lib/validations/schemas";
 import { recordAccountTransaction } from "@/lib/accounts";
 
 export async function GET(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   const { searchParams } = new URL(request.url);
   const workerId = searchParams.get("worker_id");
@@ -18,7 +19,7 @@ export async function GET(request: Request) {
   const year = searchParams.get("year");
 
   const conditions = [
-    eq(salaryAdvances.organization_id, orgId),
+    eq(salaryAdvances.organization_id, session.org_id),
     sql`${salaryAdvances.deleted_at} IS NULL`,
   ] as (ReturnType<typeof eq> | ReturnType<typeof sql>)[];
 
@@ -59,7 +60,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const body = await request.json();
@@ -75,7 +76,7 @@ export async function POST(request: Request) {
       const [advance] = await tx
         .insert(salaryAdvances)
         .values({
-          organization_id: orgId,
+          organization_id: session.org_id,
           worker_id: parsed.data.worker_id,
           amount: parsed.data.amount.toFixed(2),
           account_id: parsed.data.account_id,
@@ -87,7 +88,7 @@ export async function POST(request: Request) {
         .returning();
 
       await recordAccountTransaction({
-        organization_id: orgId,
+        organization_id: session.org_id,
         account_id: parsed.data.account_id,
         type: "debit",
         amount: parsed.data.amount.toFixed(2),
@@ -98,6 +99,15 @@ export async function POST(request: Request) {
       });
 
       return advance;
+    });
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "create",
+      entityType: "advance",
+      entityId: result.id,
+      description: `Recorded advance of ${result.amount} for worker`,
     });
 
     return NextResponse.json(

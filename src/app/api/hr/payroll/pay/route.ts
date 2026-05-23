@@ -6,12 +6,13 @@ import {
   salaryPayments,
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 import { salaryPaymentSchema } from "@/lib/validations/schemas";
 import { recordAccountTransaction } from "@/lib/accounts";
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const body = await request.json();
@@ -30,7 +31,7 @@ export async function POST(request: Request) {
         .where(
           and(
             eq(workers.id, parsed.data.worker_id),
-            eq(workers.organization_id, orgId),
+            eq(workers.organization_id, session.org_id),
             sql`${workers.deleted_at} IS NULL`,
           ),
         )
@@ -48,7 +49,7 @@ export async function POST(request: Request) {
         .where(
           and(
             eq(salaryAdvances.worker_id, parsed.data.worker_id),
-            eq(salaryAdvances.organization_id, orgId),
+            eq(salaryAdvances.organization_id, session.org_id),
             eq(salaryAdvances.month, parsed.data.month),
             eq(salaryAdvances.year, parsed.data.year),
             sql`${salaryAdvances.deleted_at} IS NULL`,
@@ -65,7 +66,7 @@ export async function POST(request: Request) {
         .where(
           and(
             eq(salaryPayments.worker_id, parsed.data.worker_id),
-            eq(salaryPayments.organization_id, orgId),
+            eq(salaryPayments.organization_id, session.org_id),
             eq(salaryPayments.month, parsed.data.month),
             eq(salaryPayments.year, parsed.data.year),
             sql`${salaryPayments.deleted_at} IS NULL`,
@@ -93,7 +94,7 @@ export async function POST(request: Request) {
           .where(
             and(
               eq(salaryPayments.id, existingPayment.id),
-              eq(salaryPayments.organization_id, orgId),
+              eq(salaryPayments.organization_id, session.org_id),
             ),
           )
           .returning();
@@ -104,7 +105,7 @@ export async function POST(request: Request) {
         [payment] = await tx
           .insert(salaryPayments)
           .values({
-            organization_id: orgId,
+            organization_id: session.org_id,
             worker_id: parsed.data.worker_id,
             month: parsed.data.month,
             year: parsed.data.year,
@@ -119,7 +120,7 @@ export async function POST(request: Request) {
       }
 
       await recordAccountTransaction({
-        organization_id: orgId,
+        organization_id: session.org_id,
         account_id: parsed.data.account_id,
         type: "debit",
         amount: parsed.data.paid_amount.toFixed(2),
@@ -130,6 +131,15 @@ export async function POST(request: Request) {
       });
 
       return payment;
+    });
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "payment",
+      entityType: "payroll",
+      entityId: result.id,
+      description: `Paid salaries for ${parsed.data.month} ${parsed.data.year}`,
     });
 
     return NextResponse.json(

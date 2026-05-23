@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
+import { logActivity } from "@/lib/activity-log";
 
 const inviteSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -14,7 +15,8 @@ const inviteSchema = z.object({
 });
 
 export async function GET() {
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
 
   const team = await db
     .select({
@@ -38,7 +40,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
+  const userId = session.user_id;
 
   try {
     const body = await request.json();
@@ -77,6 +81,15 @@ export async function POST(request: Request) {
         role,
       })
       .returning();
+
+    logActivity({
+      orgId,
+      userId,
+      action: "create",
+      entityType: "user",
+      entityId: user.id,
+      description: `Invited ${name} as ${role}`,
+    });
 
     return NextResponse.json(
       {

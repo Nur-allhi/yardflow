@@ -7,7 +7,8 @@ import {
 } from "@/lib/db/schema";
 import { eq, and, sql, desc } from "drizzle-orm";
 import { z } from "zod";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 import { recordAccountTransaction } from "@/lib/accounts";
 
 const consumablesSchema = z.object({
@@ -23,7 +24,7 @@ const consumablesSchema = z.object({
 });
 
 export async function GET(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   const { searchParams } = new URL(request.url);
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
@@ -37,7 +38,7 @@ export async function GET(request: Request) {
     .from(consumablesLog)
     .where(
       and(
-        eq(consumablesLog.organization_id, orgId),
+        eq(consumablesLog.organization_id, session.org_id),
         sql`${consumablesLog.deleted_at} IS NULL`,
       ),
     );
@@ -62,7 +63,7 @@ export async function GET(request: Request) {
     .leftJoin(accounts, eq(consumablesLog.account_id, accounts.id))
     .where(
       and(
-        eq(consumablesLog.organization_id, orgId),
+        eq(consumablesLog.organization_id, session.org_id),
         sql`${consumablesLog.deleted_at} IS NULL`,
       ),
     )
@@ -79,7 +80,7 @@ export async function GET(request: Request) {
     .from(consumablesLog)
     .where(
       and(
-        eq(consumablesLog.organization_id, orgId),
+        eq(consumablesLog.organization_id, session.org_id),
         sql`${consumablesLog.deleted_at} IS NULL`,
       ),
     );
@@ -93,7 +94,7 @@ export async function GET(request: Request) {
     .innerJoin(consumablesLog, eq(consumptionLogs.consumable_id, consumablesLog.id))
     .where(
       and(
-        eq(consumablesLog.organization_id, orgId),
+        eq(consumablesLog.organization_id, session.org_id),
         sql`${consumablesLog.deleted_at} IS NULL`,
         sql`${consumptionLogs.deleted_at} IS NULL`,
       ),
@@ -115,7 +116,7 @@ export async function GET(request: Request) {
     .innerJoin(consumablesLog, eq(consumptionLogs.consumable_id, consumablesLog.id))
     .where(
       and(
-        eq(consumablesLog.organization_id, orgId),
+        eq(consumablesLog.organization_id, session.org_id),
         sql`${consumablesLog.deleted_at} IS NULL`,
         sql`${consumptionLogs.deleted_at} IS NULL`,
       ),
@@ -152,7 +153,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const body = await request.json();
@@ -170,7 +171,7 @@ export async function POST(request: Request) {
       const [log] = await tx
         .insert(consumablesLog)
         .values({
-          organization_id: orgId,
+          organization_id: session.org_id,
           item_name: parsed.data.item_name,
           quantity: qty,
           stock_quantity: qty,
@@ -187,7 +188,7 @@ export async function POST(request: Request) {
         .returning();
 
       await recordAccountTransaction({
-        organization_id: orgId,
+        organization_id: session.org_id,
         account_id: parsed.data.account_id,
         type: "debit",
         amount: String(parsed.data.total_price),
@@ -198,6 +199,15 @@ export async function POST(request: Request) {
       });
 
       return log;
+    });
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "create",
+      entityType: "consumable",
+      entityId: entry.id,
+      description: `Added consumable ${parsed.data.item_name}`,
     });
 
     return NextResponse.json(

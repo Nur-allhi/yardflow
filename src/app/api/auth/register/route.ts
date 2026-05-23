@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { users, organizations } from "@/lib/db/schema";
 import { registerSchema } from "@/lib/validations/schemas";
 import { createSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 
 export async function POST(request: Request) {
   try {
@@ -68,6 +69,15 @@ export async function POST(request: Request) {
       user_id: result.user.id,
       org_id: result.org.id,
       role: result.user.role,
+    });
+
+    logActivity({
+      orgId: result.org.id,
+      userId: result.user.id,
+      action: "create",
+      entityType: "organization",
+      entityId: result.org.id,
+      description: "Registered organization",
     });
 
     return NextResponse.json(

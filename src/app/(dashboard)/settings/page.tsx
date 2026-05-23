@@ -99,6 +99,7 @@ export default function SettingsPage() {
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
         <span className="px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap bg-primary text-on-primary">General</span>
         <Link href="/settings/team" className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-colors">Team Members</Link>
+        <Link href="/settings/logs" className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-colors">Activity Logs</Link>
       </div>
 
       {/* Loading */}

@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { scrapPool, sales, saleItems } from "@/lib/db/schema";
 import { eq, and, desc, isNull } from "drizzle-orm";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const body = await request.json();
@@ -18,13 +19,22 @@ export async function POST(request: Request) {
     const [entry] = await db
       .insert(scrapPool)
       .values({
-        organization_id: orgId,
+        organization_id: session.org_id,
         movement_type: "in",
         quantity_kg: String(quantity_kg),
         movement_date: movement_date ? new Date(movement_date) : new Date(),
         note: note || "Manual addition",
       })
       .returning();
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "create",
+      entityType: "scrap",
+      entityId: entry.id,
+      description: `Recorded ${entry.quantity_kg} kg scrap`,
+    });
 
     return NextResponse.json(entry, { status: 201 });
   } catch (error) {
@@ -34,7 +44,7 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const movements = await db
@@ -50,7 +60,7 @@ export async function GET() {
       .from(scrapPool)
       .where(
         and(
-          eq(scrapPool.organization_id, orgId),
+          eq(scrapPool.organization_id, session.org_id),
           isNull(scrapPool.deleted_at),
         ),
       )
@@ -84,7 +94,7 @@ export async function GET() {
       .from(sales)
       .where(
         and(
-          eq(sales.organization_id, orgId),
+          eq(sales.organization_id, session.org_id),
           eq(sales.sale_type, "scrap"),
           isNull(sales.deleted_at),
         ),

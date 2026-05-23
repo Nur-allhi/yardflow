@@ -5,6 +5,7 @@ import { users } from "@/lib/db/schema";
 import { loginSchema } from "@/lib/validations/schemas";
 import { createSession } from "@/lib/auth/session";
 import { eq } from "drizzle-orm";
+import { logActivity } from "@/lib/activity-log";
 
 export async function POST(request: Request) {
   try {
@@ -51,6 +52,15 @@ export async function POST(request: Request) {
       user_id: user.id,
       org_id: user.organization_id,
       role: user.role,
+    });
+
+    logActivity({
+      orgId: user.organization_id,
+      userId: user.id,
+      action: "login",
+      entityType: "user",
+      entityId: user.id,
+      description: "User logged in",
     });
 
     return NextResponse.json({

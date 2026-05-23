@@ -223,6 +223,7 @@ export default function TeamPage() {
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
         <Link href="/settings" className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-colors">General</Link>
         <span className="px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap bg-primary text-on-primary">Team Members</span>
+        <Link href="/settings/logs" className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-colors">Activity Logs</Link>
       </div>
 
       {/* Search Bar */}

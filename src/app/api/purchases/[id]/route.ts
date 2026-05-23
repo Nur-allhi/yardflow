@@ -10,7 +10,8 @@ import {
   stockLedger,
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
-import { requireOrg } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
+import { requireSession } from "@/lib/auth/session";
 import { purchaseSchema } from "@/lib/validations/schemas";
 import { calculateWAC } from "@/lib/calculations/wac";
 
@@ -19,7 +20,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
 
   const [purchase] = await db
     .select({
@@ -127,7 +129,8 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
 
   try {
     const body = await request.json();
@@ -253,7 +256,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const orgId = await requireOrg();
+  const session = await requireSession();
+  const orgId = session.org_id;
 
   try {
     const result = await db.transaction(async (tx) => {
@@ -333,6 +337,15 @@ export async function DELETE(
     await Promise.all(
       subtypeIds.map((sid) => calculateWAC(orgId, sid)),
     );
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "delete",
+      entityType: "purchase",
+      entityId: id,
+      description: "Deleted purchase",
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

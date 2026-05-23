@@ -3,7 +3,8 @@ import { db } from "@/lib/db";
 import { consumablesLog, consumptionLogs } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 
 const useSchema = z.object({
   consumable_id: z.string().uuid("Invalid consumable"),
@@ -13,7 +14,7 @@ const useSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const body = await request.json();
@@ -27,12 +28,12 @@ export async function POST(request: Request) {
 
     const result = await db.transaction(async (tx) => {
       const [consumable] = await tx
-        .select({ id: consumablesLog.id, stock_quantity: consumablesLog.stock_quantity })
+        .select({ id: consumablesLog.id, stock_quantity: consumablesLog.stock_quantity, item_name: consumablesLog.item_name })
         .from(consumablesLog)
         .where(
           and(
             eq(consumablesLog.id, parsed.data.consumable_id),
-            eq(consumablesLog.organization_id, orgId),
+            eq(consumablesLog.organization_id, session.org_id),
             sql`${consumablesLog.deleted_at} IS NULL`,
           ),
         )
@@ -62,7 +63,7 @@ export async function POST(request: Request) {
       const [log] = await tx
         .insert(consumptionLogs)
         .values({
-          organization_id: orgId,
+          organization_id: session.org_id,
           consumable_id: parsed.data.consumable_id,
           quantity: String(useQty),
           used_at: new Date(parsed.data.used_at),
@@ -70,10 +71,19 @@ export async function POST(request: Request) {
         })
         .returning();
 
-      return log;
+      return { log, itemName: consumable.item_name };
     });
 
-    return NextResponse.json(result, { status: 201 });
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "update",
+      entityType: "consumable",
+      entityId: parsed.data.consumable_id,
+      description: `Used ${parsed.data.quantity} of ${result.itemName}`,
+    });
+
+    return NextResponse.json(result.log, { status: 201 });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Failed to record consumption";

@@ -2,19 +2,20 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { periodReports } from "@/lib/db/schema";
 import { eq, and, sql, desc } from "drizzle-orm";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
+import { logActivity } from "@/lib/activity-log";
 import { calculatePeriodProfit } from "@/lib/calculations/profit";
 import { generateReportSchema } from "@/lib/validations/schemas";
 
 export async function GET() {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   const reports = await db
     .select()
     .from(periodReports)
     .where(
       and(
-        eq(periodReports.organization_id, orgId),
+        eq(periodReports.organization_id, session.org_id),
         sql`${periodReports.deleted_at} IS NULL`,
       ),
     )
@@ -43,7 +44,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   try {
     const body = await request.json();
@@ -58,12 +59,12 @@ export async function POST(request: Request) {
     const startDate = new Date(parsed.data.start_date);
     const endDate = new Date(parsed.data.end_date);
 
-    const data = await calculatePeriodProfit(orgId, startDate, endDate, parsed.data.total_other_expenses);
+    const data = await calculatePeriodProfit(session.org_id, startDate, endDate, parsed.data.total_other_expenses);
 
     const [report] = await db
       .insert(periodReports)
       .values({
-        organization_id: orgId,
+        organization_id: session.org_id,
         period_type: parsed.data.period_type,
         start_date: startDate,
         end_date: endDate,
@@ -85,6 +86,15 @@ export async function POST(request: Request) {
         result: data.result,
       })
       .returning();
+
+    await logActivity({
+      orgId: session.org_id,
+      userId: session.user_id,
+      action: "create",
+      entityType: "report",
+      entityId: report.id,
+      description: `Generated ${parsed.data.period_type} report`,
+    });
 
     return NextResponse.json(
       {

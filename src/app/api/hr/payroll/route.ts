@@ -6,10 +6,10 @@ import {
   salaryPayments,
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
-import { requireOrg } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
 
 export async function GET(request: Request) {
-  const orgId = await requireOrg();
+  const session = await requireSession();
 
   const { searchParams } = new URL(request.url);
   const now = new Date();
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
     .from(workers)
     .where(
       and(
-        eq(workers.organization_id, orgId),
+        eq(workers.organization_id, session.org_id),
         eq(workers.is_active, true),
         sql`${workers.deleted_at} IS NULL`,
       ),
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
       .from(salaryAdvances)
       .where(
         and(
-          eq(salaryAdvances.organization_id, orgId),
+          eq(salaryAdvances.organization_id, session.org_id),
           eq(salaryAdvances.month, month),
           eq(salaryAdvances.year, year),
           sql`${salaryAdvances.deleted_at} IS NULL`,
@@ -85,7 +85,7 @@ export async function GET(request: Request) {
       .from(salaryPayments)
       .where(
         and(
-          eq(salaryPayments.organization_id, orgId),
+          eq(salaryPayments.organization_id, session.org_id),
           eq(salaryPayments.month, month),
           eq(salaryPayments.year, year),
           sql`${salaryPayments.deleted_at} IS NULL`,
