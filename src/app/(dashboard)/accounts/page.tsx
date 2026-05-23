@@ -1,8 +1,11 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
+import DataTable from "@/components/DataTable";
+import type { ColumnDef } from "@/components/DataTable";
 
 interface Account {
   id: string;
@@ -75,6 +78,106 @@ const { data: transactionsData } = useQuery<Transaction[]>({
     return res.json();
   },
 });
+
+  const [filterParams, setFilterParams] = useState<URLSearchParams>(new URLSearchParams());
+
+  const filteredTransactions = useMemo(() => {
+    const txns = transactionsData ?? [];
+    const dateFrom = filterParams.get("date_from");
+    const dateTo = filterParams.get("date_to");
+    const descLike = filterParams.get("description__like")?.toLowerCase();
+    const accountLike = filterParams.get("account__like")?.toLowerCase();
+    return txns.filter((t) => {
+      if (dateFrom && t.transaction_date < dateFrom) return false;
+      if (dateTo && t.transaction_date > dateTo) return false;
+      if (descLike && !descriptionLabel(t).toLowerCase().includes(descLike)) return false;
+      if (accountLike && !t.account_name.toLowerCase().includes(accountLike)) return false;
+      return true;
+    });
+  }, [transactionsData, filterParams]);
+
+  const columns: ColumnDef<Transaction>[] = [
+    {
+      key: "transaction_date",
+      label: "Date",
+      filterable: true,
+      filterType: "date-range",
+      render: (t) => <span className="text-secondary whitespace-nowrap">{formatDate(t.transaction_date)}</span>,
+    },
+    {
+      key: "account_name",
+      label: "Account",
+      filterable: true,
+      filterType: "text",
+      filterParam: "account__like",
+      render: (t) => <span className="text-secondary font-medium">{t.account_name}</span>,
+    },
+    {
+      key: "description",
+      label: "Description",
+      filterable: true,
+      filterType: "text",
+      filterParam: "description__like",
+      render: (t) =>
+        t.reference_url ? (
+          <Link href={t.reference_url} className="text-tertiary hover:underline text-sm font-medium">
+            {descriptionLabel(t)}
+          </Link>
+        ) : (
+          <span className="text-secondary text-sm">{descriptionLabel(t)}</span>
+        ),
+    },
+    {
+      key: "amount",
+      label: "Amount",
+      sortable: true,
+      className: "text-right",
+      render: (t) => {
+        const isCredit = t.type === "credit";
+        return (
+          <span className={`font-mono font-semibold flex items-center gap-1 justify-end ${isCredit ? "text-success" : "text-error"}`}>
+            <span className="material-symbols-outlined text-xs">{isCredit ? "arrow_upward" : "arrow_downward"}</span>
+            {formatMoney(t.amount)}
+          </span>
+        );
+      },
+    },
+  ];
+
+  function mobileTransactionCard(t: Transaction) {
+    const isCredit = t.type === "credit";
+    return (
+      <div className="bg-surface p-4 rounded-lg border border-outline-variant shadow-sm flex items-center gap-4 active:bg-surface-container-low transition-colors">
+        <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isCredit ? "bg-success/10 text-success" : "bg-error/10 text-error"}`}>
+          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
+            {isCredit ? "arrow_upward" : "arrow_downward"}
+          </span>
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex justify-between items-start">
+            <h4 className="font-bold text-on-surface text-sm truncate">
+              {t.reference_url ? (
+                <Link href={t.reference_url} className="hover:underline text-tertiary">
+                  {descriptionLabel(t)}
+                </Link>
+              ) : (
+                descriptionLabel(t)
+              )}
+            </h4>
+            <span className={`font-code text-sm font-bold shrink-0 ${isCredit ? "text-tertiary-container" : "text-error"}`}>
+              {isCredit ? "+" : "-"}{formatMoney(t.amount)}
+            </span>
+          </div>
+          {t.note && <p className="text-caption text-on-surface-variant mt-0.5">{t.note}</p>}
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-[10px] text-outline uppercase font-bold">{formatDate(t.transaction_date)}</span>
+            <span className="w-1 h-1 rounded-full bg-outline-variant" />
+            <span className="text-[10px] text-outline uppercase font-bold">{t.account_name}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const totalBalance = (accountsData ?? []).reduce(
     (s, a) => s + (a.is_active ? a.current_balance : 0),
@@ -263,113 +366,17 @@ const { data: transactionsData } = useQuery<Transaction[]>({
           <h2 className="font-display font-semibold text-primary-container">
             Recent Transactions
           </h2>
-          <span className="text-tertiary-container text-caption font-bold">{transactionsData?.length ?? 0} transactions</span>
+          <span className="text-tertiary-container text-caption font-bold">{filteredTransactions.length} transactions</span>
         </div>
-        {(transactionsData ?? []).length === 0 ? (
-          <div className="p-8 text-center text-secondary text-sm">
-            No transactions yet.
-          </div>
-        ) : (
-          <>
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-white text-left border-b border-outline-variant/20">
-                  <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-outline uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-outline uppercase tracking-wider">
-                    Account
-                  </th>
-                  <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-outline uppercase tracking-wider">
-                    Description
-                  </th>
-                  <th className="px-4 md:px-6 py-3 md:py-4 text-[10px] font-bold text-outline uppercase tracking-wider">
-                    Amount
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-outline-variant/10 text-sm">
-                {(transactionsData ?? []).map((tx) => {
-                  const isCredit = tx.type === "credit";
-                  return (
-                    <tr
-                      key={tx.id}
-                      className="hover:bg-white transition-colors"
-                    >
-                      <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-on-background">
-                        {formatDate(tx.transaction_date)}
-                      </td>
-                      <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-secondary font-medium">
-                        {tx.account_name}
-                      </td>
-                      <td className="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                        {tx.reference_url ? (
-                          <Link href={tx.reference_url} className="text-tertiary hover:underline text-sm font-medium">
-                            {descriptionLabel(tx)}
-                          </Link>
-                        ) : (
-                          <span className="text-secondary text-sm">
-                            {descriptionLabel(tx)}
-                          </span>
-                        )}
-                      </td>
-                      <td
-                        className={`px-4 md:px-6 py-3 md:py-4 whitespace-nowrap font-mono font-bold ${
-                          isCredit ? "text-success" : "text-error"
-                        }`}
-                      >
-                        <span className="flex items-center gap-1">
-                          <span className="material-symbols-outlined text-xs">
-                            {isCredit ? "arrow_upward" : "arrow_downward"}
-                          </span>
-                          {formatMoney(tx.amount)}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          <div className="md:hidden space-y-3 p-4">
-            {(transactionsData ?? []).map((tx) => {
-              const isCredit = tx.type === "credit";
-              return (
-                <div key={tx.id} className="bg-surface p-4 rounded-lg border border-outline-variant shadow-sm flex items-center gap-4 active:bg-surface-container-low transition-colors">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isCredit ? "bg-success/10 text-success" : "bg-error/10 text-error"}`}>
-                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
-                      {isCredit ? "arrow_upward" : "arrow_downward"}
-                    </span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start">
-                      <h4 className="font-bold text-on-surface text-sm truncate">
-                        {tx.reference_url ? (
-                          <Link href={tx.reference_url} className="hover:underline text-tertiary">
-                            {descriptionLabel(tx)}
-                          </Link>
-                        ) : (
-                          descriptionLabel(tx)
-                        )}
-                      </h4>
-                      <span className={`font-code text-sm font-bold shrink-0 ${isCredit ? "text-tertiary-container" : "text-error"}`}>
-                        {isCredit ? "+" : "-"}{formatMoney(tx.amount)}
-                      </span>
-                    </div>
-                    {tx.note && <p className="text-caption text-on-surface-variant mt-0.5">{tx.note}</p>}
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[10px] text-outline uppercase font-bold">{formatDate(tx.transaction_date)}</span>
-                      <span className="w-1 h-1 rounded-full bg-outline-variant" />
-                      <span className="text-[10px] text-outline uppercase font-bold">{tx.account_name}</span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          </>
-        )}      </div>
+        <DataTable
+          columns={columns}
+          data={filteredTransactions}
+          keyExtractor={(t) => t.id}
+          onFilterChange={(params) => setFilterParams(params)}
+          emptyMessage="No transactions yet."
+          mobileCard={mobileTransactionCard}
+        />
+      </div>
     </div>
   );
 }

@@ -718,3 +718,34 @@ User tested the app live at `localhost:3000`. All findings and errors were logge
 - `npx tsc --noEmit` — zero errors
 - `npx eslint .` — zero errors
 - `npx next build` — successful
+
+---
+
+## 2026-05-23 (continued) — ERROR.md fixes + UI responsiveness
+
+### Fixed
+- **Viewport deprecation warning**: Moved `viewport` from `metadata` export to separate `viewport` export in root `layout.tsx` — eliminates warning on all 12+ pages
+- **Sales API `status=all` 500**: Added `status !== "all"` guard before enum cast in `sales/route.ts:46`
+- **DB timeout (intermittent)**: Added `organization_id` + join column indexes on all 23 tables (migration `0006`)
+- **Dashboard `AggregateError`**: Eliminated N+1 category stock queries (single `GROUP BY` replaces per-category queries); increased Postgres pool from 10→20 with connect/idle timeouts
+- **Pay/Receive Payment links**: Customers list "Receive Payment" now links to `/sales/customers/{id}`; Vendors list "Pay" now links to `/purchases/vendors/{id}` (both already have inline payment modals)
+- **Route transition loading**: Added `loading.tsx` with shimmer skeleton at `(dashboard)/loading.tsx`
+- **PageTransitionWrapper**: Removed `mode="wait"` from `AnimatePresence` — new content no longer blocked by exit animation
+- **MobileSidebar**: Added `whileTap={{ scale: 0.97 }}` for instant press feedback
+- **Accounts transaction enrichment**: Added `enrichTransactions()` to `src/lib/accounts.ts` — batch-resolves `reference_id` through purchase/sale/salary chains to show "Payment to {vendor}", "Receipt from {customer}" etc. with clickable links to source records
+- **Account detail page**: Fixed broken reference links (were checking `"purchase"` instead of `"purchase_payment"`); replaced "Reference"+"Note" columns with single clickable "Description" column
+- **Accounts list page**: Replaced cryptic `#PUR-xxxx` reference codes with human-readable description + link; removed dead "View All" span (replaced with transaction count)
+- **Created `.opencode/plans/DATATABLE_PLAN.md`**: Design for a reusable `<DataTable>` component with per-column filters across all list pages
+
+### Commits
+- `e111dc2` — Sales/purchases card alignment
+- `e439ff9` — Viewport, status=all, DB indexes
+- `b3f6541` — Dashboard AggregateError fix
+- `581fa18` — Pay links + loading.tsx + whileTap
+- `2586504` — Account transaction enrichment
+- `266be56` — Remove dead "View All" span
+
+### Verification
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors
+- `npx next build` — successful

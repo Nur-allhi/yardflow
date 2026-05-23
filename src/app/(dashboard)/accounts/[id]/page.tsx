@@ -2,7 +2,10 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useState, useMemo } from "react";
 import Breadcrumb from "@/components/Breadcrumb";
+import DataTable from "@/components/DataTable";
+import type { ColumnDef } from "@/components/DataTable";
 import { useQuery } from "@tanstack/react-query";
 
 interface AccountDetail {
@@ -72,6 +75,86 @@ export default function AccountDetailPage() {
       return res.json();
     },
   });
+
+  const [filterParams, setFilterParams] = useState<URLSearchParams>(new URLSearchParams());
+
+  const filteredTransactions = useMemo(() => {
+    const txns = account?.transactions ?? [];
+    const dateFrom = filterParams.get("date_from");
+    const dateTo = filterParams.get("date_to");
+    const descLike = filterParams.get("description__like")?.toLowerCase();
+    return txns.filter((t) => {
+      if (dateFrom && t.transaction_date < dateFrom) return false;
+      if (dateTo && t.transaction_date > dateTo) return false;
+      if (descLike && !descriptionLabel(t).toLowerCase().includes(descLike)) return false;
+      return true;
+    });
+  }, [account, filterParams]);
+
+  const columns: ColumnDef<Transaction>[] = [
+    {
+      key: "transaction_date",
+      label: "Date",
+      filterable: true,
+      filterType: "date-range",
+      render: (t) => <span className="text-secondary whitespace-nowrap">{formatDate(t.transaction_date)}</span>,
+    },
+    {
+      key: "description",
+      label: "Description",
+      filterable: true,
+      filterType: "text",
+      filterParam: "description__like",
+      render: (t) =>
+        t.reference_url ? (
+          <Link href={t.reference_url} className="text-tertiary hover:underline text-sm font-medium">
+            {descriptionLabel(t)}
+            {t.note && <span className="text-secondary font-normal ml-1">· {t.note}</span>}
+          </Link>
+        ) : (
+          <span className="text-secondary text-sm">
+            {descriptionLabel(t)}
+            {t.note && <span className="ml-1">· {t.note}</span>}
+          </span>
+        ),
+    },
+    {
+      key: "amount",
+      label: "Amount",
+      sortable: true,
+      className: "text-right",
+      render: (t) => (
+        <span className={`font-mono font-semibold ${t.type === "credit" ? "text-success" : "text-error"}`}>
+          {t.type === "credit" ? "+" : "-"}{formatMoney(t.amount)}
+        </span>
+      ),
+    },
+  ];
+
+  function mobileTransactionCard(t: Transaction) {
+    return (
+      <div className="border border-outline-variant/30 rounded-lg p-4">
+        <div className="flex justify-between items-start mb-2">
+          <div className="space-y-1">
+            <p className="text-xs text-secondary">{formatDate(t.transaction_date)}</p>
+            {t.reference_url ? (
+              <Link href={t.reference_url} className="text-tertiary hover:underline text-sm font-medium">
+                {descriptionLabel(t)}
+              </Link>
+            ) : (
+              <p className="text-sm text-secondary">{descriptionLabel(t)}</p>
+            )}
+          </div>
+          <p className={`font-mono text-base font-bold ${t.type === "credit" ? "text-success" : "text-error"}`}>
+            {t.type === "credit" ? "+" : "-"}{formatMoney(t.amount)}
+          </p>
+        </div>
+        {t.note && (
+          <p className="text-[11px] text-secondary italic pt-2 border-t border-outline-variant/20 mt-2">{t.note}</p>
+        )}
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -167,85 +250,14 @@ export default function AccountDetailPage() {
                 Transaction History
               </h3>
             </div>
-
-            {account.transactions.length === 0 ? (
-              <div className="p-6 text-center text-secondary text-sm">
-                <span className="material-symbols-outlined text-3xl block mb-2 text-outline-variant">
-                  receipt_long
-                </span>
-                No transactions yet
-              </div>
-            ) : (
-              <>
-                {/* Desktop Table */}
-                <div className="hidden md:block overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
-                    <thead className="bg-surface-container-high border-b border-outline-variant">
-                      <tr>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Date</th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Description</th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider text-right">Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-outline-variant/30">
-                      {account.transactions.map((txn) => (
-                        <tr key={txn.id} className="hover:bg-background">
-                          <td className="px-6 py-4 text-sm text-secondary whitespace-nowrap">
-                            {formatDate(txn.transaction_date)}
-                          </td>
-                          <td className="px-6 py-4">
-                            {txn.reference_url ? (
-                              <Link href={txn.reference_url} className="text-tertiary hover:underline text-sm font-medium">
-                                {descriptionLabel(txn)}
-                                {txn.note && <span className="text-secondary font-normal ml-1">· {txn.note}</span>}
-                              </Link>
-                            ) : (
-                              <span className="text-sm text-secondary">
-                                {descriptionLabel(txn)}
-                                {txn.note && <span className="ml-1">· {txn.note}</span>}
-                              </span>
-                            )}
-                          </td>
-                          <td className={`px-6 py-4 font-mono text-sm text-right font-semibold ${
-                            txn.type === "credit" ? "text-success" : "text-error"
-                          }`}>
-                            {txn.type === "credit" ? "+" : "-"}{formatMoney(txn.amount)}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Mobile Transactions */}
-                <div className="md:hidden space-y-3 p-4">
-                  {account.transactions.map((txn) => (
-                    <div key={txn.id} className="border border-outline-variant/30 rounded-lg p-4">
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="space-y-1">
-                          <p className="text-xs text-secondary">{formatDate(txn.transaction_date)}</p>
-                          {txn.reference_url ? (
-                            <Link href={txn.reference_url} className="text-tertiary hover:underline text-sm font-medium">
-                              {descriptionLabel(txn)}
-                            </Link>
-                          ) : (
-                            <p className="text-sm text-secondary">{descriptionLabel(txn)}</p>
-                          )}
-                        </div>
-                        <p className={`font-mono text-base font-bold ${
-                          txn.type === "credit" ? "text-success" : "text-error"
-                        }`}>
-                          {txn.type === "credit" ? "+" : "-"}{formatMoney(txn.amount)}
-                        </p>
-                      </div>
-                      {txn.note && (
-                        <p className="text-[11px] text-secondary italic pt-2 border-t border-outline-variant/20 mt-2">{txn.note}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
+            <DataTable
+              columns={columns}
+              data={filteredTransactions}
+              keyExtractor={(t) => t.id}
+              onFilterChange={(params) => setFilterParams(params)}
+              emptyMessage="No transactions yet"
+              mobileCard={mobileTransactionCard}
+            />
           </div>
         </div>
 
