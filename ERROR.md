@@ -22,6 +22,11 @@
 - **Repro**: Click "All" filter tab on Sales list page
 - **Severity**: HIGH — breaks the sales list filter
 
+## 4. [FIXED] Inconsistent `formatMoney` between sales and purchases pages
+- **Files**: `src/app/(dashboard)/sales/page.tsx` and `src/app/(dashboard)/purchases/page.tsx`
+- **Issue**: Sales defined `formatMoney` as `n.toLocaleString("en-IN") + " tk"` (e.g. "1,23,456 tk"), while Purchases defined it as `"৳" + n.toLocaleString("en-IN")` (e.g. "৳1,23,456"). The two pages showed different currency formats on their summary cards.
+- **Fix**: Unified both to `"1,23,456 tk"` (tk suffix) to match CONTEXT.md convention.
+
 ## 3. [BUG 500] Multiple API endpoints — DB timeout
 - **Endpoints affected**:
   - `GET /api/accounts` (10s+ response → 500)
@@ -32,3 +37,4 @@
   - `GET /api/sales?page=1&limit=15` (10s+ → 500)
 - **Issue**: Consistent 10+ second response times followed by 500. Likely DB query timeout or connection pool exhaustion. Only occurs on some requests while others complete instantly.
 - **Severity**: HIGH — intermittent but breaks core features randomly
+- **Observed during 2026-05-23 testing**: `AggregateError: ETIMEDOUT` on `GET /api/accounts/{id}` — confirmed still active

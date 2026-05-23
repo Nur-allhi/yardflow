@@ -42,7 +42,7 @@ function formatDate(dateStr: string | null) {
 }
 
 function formatMoney(n: number) {
-  return "৳" + n.toLocaleString("en-IN");
+  return n.toLocaleString("en-IN") + " tk";
 }
 
 function StatusChip({ status }: { status: string }) {
@@ -142,6 +142,7 @@ export default function PurchasesPage() {
       </div>
 
       {/* Summary Cards */}
+      <h2 className="md:hidden font-headline text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3 px-1">Purchases Overview</h2>
       <div className="flex md:grid md:grid-cols-4 gap-3 md:gap-6 mb-6 overflow-x-auto hide-scrollbar pb-2 md:pb-0">
         <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
           <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">
@@ -172,7 +173,7 @@ export default function PurchasesPage() {
             This Month
           </p>
           <p className="font-mono text-lg md:text-2xl font-bold text-secondary">
-            {data?.summary ? data.summary.this_month.toLocaleString("en-IN") : "—"}
+            {data?.summary ? formatMoney(data.summary.this_month) : "—"}
           </p>
         </div>
       </div>

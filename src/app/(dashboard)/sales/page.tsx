@@ -249,74 +249,30 @@ export default function SalesPage() {
       {/* Summary Strip */}
       <section className="mb-6">
         <h2 className="md:hidden font-headline text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3 px-1">Sales Overview</h2>
-        <div className="flex md:grid md:grid-cols-4 gap-3 md:gap-4 overflow-x-auto no-scrollbar pb-2 md:pb-0">
-          <div className="flex-shrink-0 w-fit min-w-[120px] md:min-w-0 bg-surface-container md:bg-white border border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
-            {data?.summary && (
-              <>
-                <div className="hidden md:flex p-3 bg-secondary-container rounded-lg text-secondary">
-                  <span className="material-symbols-outlined">payments</span>
-                </div>
-                <div>
-                  <p className="text-[10px] md:text-xs font-medium md:font-bold text-on-surface-variant md:text-secondary uppercase mb-0.5 md:mb-1">
-                    Total Sales
-                  </p>
-                  <p className="font-mono text-base md:text-xl font-bold text-primary md:text-primary-container">
-                    ৳{data.summary.total_sales.toLocaleString("en-IN")}
-                  </p>
-                </div>
-              </>
-            )}
+        <div className="flex md:grid md:grid-cols-4 gap-3 md:gap-6 overflow-x-auto hide-scrollbar pb-2 md:pb-0">
+          <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
+            <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">Total Sales</p>
+            <p className="font-mono text-lg md:text-2xl font-bold text-primary-container">
+              {data?.summary ? formatMoney(data.summary.total_sales) : "—"}
+            </p>
           </div>
-          <div className="flex-shrink-0 w-fit min-w-[120px] md:min-w-0 bg-surface-container md:bg-white border border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
-            {data?.summary && (
-              <>
-                <div className="hidden md:flex p-3 bg-tertiary/10 rounded-lg text-tertiary">
-                  <span className="material-symbols-outlined">account_balance_wallet</span>
-                </div>
-                <div>
-                  <p className="text-[10px] md:text-xs font-medium md:font-bold text-on-surface-variant md:text-secondary uppercase mb-0.5 md:mb-1">
-                    Received
-                  </p>
-                  <p className="font-mono text-base md:text-xl font-bold text-on-tertiary-container md:text-success">
-                    {formatMoney(data.summary.total_paid)}
-                  </p>
-                </div>
-              </>
-            )}
+          <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
+            <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">Received</p>
+            <p className="font-mono text-lg md:text-2xl font-bold text-tertiary">
+              {data?.summary ? formatMoney(data.summary.total_paid) : "—"}
+            </p>
           </div>
-          <div className="flex-shrink-0 w-fit min-w-[120px] md:min-w-0 bg-error-container md:bg-white border border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
-            {data?.summary && (
-              <>
-                <div className="hidden md:flex p-3 bg-error-container rounded-lg text-error">
-                  <span className="material-symbols-outlined">pending_actions</span>
-                </div>
-                <div>
-                  <p className="text-[10px] md:text-xs font-medium md:font-bold text-on-error-container md:text-secondary uppercase mb-0.5 md:mb-1">
-                    Total Due
-                  </p>
-                  <p className="font-mono text-base md:text-xl font-bold text-error">
-                    {formatMoney(data.summary.total_due)}
-                  </p>
-                </div>
-              </>
-            )}
+          <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
+            <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">Total Due</p>
+            <p className="font-mono text-lg md:text-2xl font-bold text-error">
+              {data?.summary ? formatMoney(data.summary.total_due) : "—"}
+            </p>
           </div>
-          <div className="flex-shrink-0 w-fit min-w-[120px] md:min-w-0 bg-secondary-container md:bg-white border border-outline-variant p-3 md:p-5 rounded-xl md:rounded-lg shadow-sm flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
-            {data?.summary && (
-              <>
-                <div className="hidden md:flex p-3 bg-surface-container-highest rounded-lg text-secondary">
-                  <span className="material-symbols-outlined">today</span>
-                </div>
-                <div>
-                  <p className="text-[10px] md:text-xs font-medium md:font-bold text-on-secondary-container md:text-secondary uppercase mb-0.5 md:mb-1">
-                    Today
-                  </p>
-                  <p className="font-mono text-base md:text-xl font-bold text-on-secondary-fixed md:text-primary-container">
-                    {formatMoney(data.summary.this_month)}
-                  </p>
-                </div>
-              </>
-            )}
+          <div className="flex-shrink-0 min-w-[140px] md:min-w-0 bg-surface-container-lowest p-4 md:p-6 rounded-lg shadow-sm border border-outline-variant/30 md:border-outline-variant">
+            <p className="text-secondary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">This Month</p>
+            <p className="font-mono text-lg md:text-2xl font-bold text-secondary">
+              {data?.summary ? formatMoney(data.summary.this_month) : "—"}
+            </p>
           </div>
         </div>
       </section>
