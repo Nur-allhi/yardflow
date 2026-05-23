@@ -1,6 +1,7 @@
 import {
   boolean,
   decimal,
+  index,
   integer,
   pgEnum,
   pgTable,
@@ -97,7 +98,9 @@ export const users = pgTable("users", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_users_org").on(table.organization_id),
+}));
 
 export const sessions = pgTable("sessions", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -107,7 +110,9 @@ export const sessions = pgTable("sessions", {
   token: text("token").notNull().unique(),
   expires_at: timestamp("expires_at", { withTimezone: true }).notNull(),
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-});
+}, (table) => ({
+  userIdx: index("idx_sessions_user").on(table.user_id),
+}));
 
 // ──────────────────────────────────────────────
 // 5.2 BANK & CASH ACCOUNTS
@@ -129,7 +134,9 @@ export const accounts = pgTable("accounts", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_accounts_org").on(table.organization_id),
+}));
 
 export const accountTransactions = pgTable("account_transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -148,7 +155,10 @@ export const accountTransactions = pgTable("account_transactions", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_account_transactions_org").on(table.organization_id),
+  accountIdx: index("idx_account_transactions_account").on(table.account_id),
+}));
 
 // ──────────────────────────────────────────────
 // 5.3 INVENTORY
@@ -165,7 +175,9 @@ export const materialCategories = pgTable("material_categories", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_material_categories_org").on(table.organization_id),
+}));
 
 export const materialSubtypes = pgTable("material_subtypes", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -181,7 +193,10 @@ export const materialSubtypes = pgTable("material_subtypes", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_material_subtypes_org").on(table.organization_id),
+  categoryIdx: index("idx_material_subtypes_category").on(table.category_id),
+}));
 
 export const stockLedger = pgTable("stock_ledger", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -202,7 +217,11 @@ export const stockLedger = pgTable("stock_ledger", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_stock_ledger_org").on(table.organization_id),
+  subtypeIdx: index("idx_stock_ledger_subtype").on(table.subtype_id),
+  movementDateIdx: index("idx_stock_ledger_movement_date").on(table.movement_date),
+}));
 
 export const scrapPool = pgTable("scrap_pool", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -217,7 +236,10 @@ export const scrapPool = pgTable("scrap_pool", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_scrap_pool_org").on(table.organization_id),
+  referenceIdx: index("idx_scrap_pool_reference_id").on(table.reference_id),
+}));
 
 export const consumablesLog = pgTable("consumables_log", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -239,7 +261,10 @@ export const consumablesLog = pgTable("consumables_log", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_consumables_log_org").on(table.organization_id),
+  accountIdx: index("idx_consumables_log_account").on(table.account_id),
+}));
 
 export const consumptionLogs = pgTable("consumption_logs", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -254,7 +279,10 @@ export const consumptionLogs = pgTable("consumption_logs", {
   note: text("note"),
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_consumption_logs_org").on(table.organization_id),
+  consumableIdx: index("idx_consumption_logs_consumable").on(table.consumable_id),
+}));
 
 // ──────────────────────────────────────────────
 // 5.4 VENDORS & PURCHASES
@@ -276,7 +304,9 @@ export const vendors = pgTable("vendors", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_vendors_org").on(table.organization_id),
+}));
 
 export const purchases = pgTable("purchases", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -302,7 +332,11 @@ export const purchases = pgTable("purchases", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_purchases_org").on(table.organization_id),
+  vendorIdx: index("idx_purchases_vendor").on(table.vendor_id),
+  purchaseDateIdx: index("idx_purchases_purchase_date").on(table.purchase_date),
+}));
 
 export const purchaseItems = pgTable("purchase_items", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -323,7 +357,11 @@ export const purchaseItems = pgTable("purchase_items", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_purchase_items_org").on(table.organization_id),
+  purchaseIdx: index("idx_purchase_items_purchase").on(table.purchase_id),
+  subtypeIdx: index("idx_purchase_items_subtype").on(table.subtype_id),
+}));
 
 export const purchasePayments = pgTable("purchase_payments", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -342,7 +380,11 @@ export const purchasePayments = pgTable("purchase_payments", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_purchase_payments_org").on(table.organization_id),
+  purchaseIdx: index("idx_purchase_payments_purchase").on(table.purchase_id),
+  accountIdx: index("idx_purchase_payments_account").on(table.account_id),
+}));
 
 // ──────────────────────────────────────────────
 // 5.5 CUSTOMERS & SALES
@@ -364,7 +406,9 @@ export const customers = pgTable("customers", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_customers_org").on(table.organization_id),
+}));
 
 export const sales = pgTable("sales", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -388,7 +432,11 @@ export const sales = pgTable("sales", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_sales_org").on(table.organization_id),
+  customerIdx: index("idx_sales_customer").on(table.customer_id),
+  saleDateIdx: index("idx_sales_sale_date").on(table.sale_date),
+}));
 
 export const saleItems = pgTable("sale_items", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -407,7 +455,11 @@ export const saleItems = pgTable("sale_items", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_sale_items_org").on(table.organization_id),
+  saleIdx: index("idx_sale_items_sale").on(table.sale_id),
+  subtypeIdx: index("idx_sale_items_subtype").on(table.subtype_id),
+}));
 
 export const salePayments = pgTable("sale_payments", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -426,7 +478,11 @@ export const salePayments = pgTable("sale_payments", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_sale_payments_org").on(table.organization_id),
+  saleIdx: index("idx_sale_payments_sale").on(table.sale_id),
+  accountIdx: index("idx_sale_payments_account").on(table.account_id),
+}));
 
 // ──────────────────────────────────────────────
 // 5.6 HR & PAYROLL
@@ -447,7 +503,9 @@ export const workers = pgTable("workers", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_workers_org").on(table.organization_id),
+}));
 
 export const salaryAdvances = pgTable("salary_advances", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -468,7 +526,10 @@ export const salaryAdvances = pgTable("salary_advances", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_salary_advances_org").on(table.organization_id),
+  workerIdx: index("idx_salary_advances_worker").on(table.worker_id),
+}));
 
 export const salaryPayments = pgTable("salary_payments", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -498,7 +559,10 @@ export const salaryPayments = pgTable("salary_payments", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_salary_payments_org").on(table.organization_id),
+  workerIdx: index("idx_salary_payments_worker").on(table.worker_id),
+}));
 
 // ──────────────────────────────────────────────
 // 5.7 PERIOD REPORTS
@@ -561,7 +625,9 @@ export const periodReports = pgTable("period_reports", {
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_period_reports_org").on(table.organization_id),
+}));
 
 // ──────────────────────────────────────────────
 // RELATIONS
@@ -726,7 +792,11 @@ export const purchaseOtherExpenses = pgTable("purchase_other_expenses", {
   add_to_vendor_total: boolean("add_to_vendor_total").default(false).notNull(),
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => ({
+  orgIdx: index("idx_purchase_other_expenses_org").on(table.organization_id),
+  purchaseIdx: index("idx_purchase_other_expenses_purchase").on(table.purchase_id),
+  accountIdx: index("idx_purchase_other_expenses_account").on(table.account_id),
+}));
 
 export const purchasesRelations = relations(purchases, ({ one, many }) => ({
   organization: one(organizations, {

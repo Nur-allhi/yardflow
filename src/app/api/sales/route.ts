@@ -43,7 +43,7 @@ export async function GET(request: Request) {
 
     if (customerId) conditions.push(eq(sales.customer_id, customerId));
     if (saleType) conditions.push(eq(sales.sale_type, saleType as "fabricated" | "raw_passthrough" | "scrap"));
-    if (status) conditions.push(eq(sales.status, status as "paid" | "partial" | "due"));
+    if (status && status !== "all") conditions.push(eq(sales.status, status as "paid" | "partial" | "due"));
     if (dateFrom) conditions.push(gte(sales.sale_date, new Date(dateFrom)));
     if (dateTo) conditions.push(lte(sales.sale_date, new Date(dateTo)));
 

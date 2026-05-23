@@ -700,3 +700,21 @@ User tested the app live at `localhost:3000`. All findings and errors were logge
 - `npx tsc --noEmit` — zero errors
 - `npx eslint .` — zero errors  
 - `npx next build` — successful
+
+---
+
+## 2026-05-23 (later) — Sales/Purchases Card Alignment
+
+### Fixed
+- **Sales page**: Restyled 4 summary cards from icon+row layout to plain stacked (matching purchases): `bg-surface-container-lowest`, `p-4 md:p-6`, `min-w-[140px]`, `border-outline-variant/30 md:border-outline-variant`, `rounded-lg`, per-card `data ? value : "—"` fallback
+- **Sales page**: Fixed "Today" → "This Month" label
+- **Sales page**: `no-scrollbar` → `hide-scrollbar` (correct class name)
+- **Sales page**: Card 1 now uses `formatMoney()` (was hardcoded `৳` prefix with `toLocaleString`)
+- **Purchases page**: Unified `formatMoney` from `"৳" + n.toLocaleString("en-IN")` to `n.toLocaleString("en-IN") + " tk"` (matches CONTEXT.md)
+- **Purchases page**: Card 4 now uses `formatMoney()` for `this_month` (was raw `toLocaleString`)
+- **Purchases page**: Added mobile heading "Purchases Overview" above cards
+
+### Verification
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors
+- `npx next build` — successful
