@@ -263,7 +263,7 @@ const { data: transactionsData } = useQuery<Transaction[]>({
           <h2 className="font-display font-semibold text-primary-container">
             Recent Transactions
           </h2>
-          <span className="text-tertiary-container text-caption font-bold">View All</span>
+          <span className="text-tertiary-container text-caption font-bold">{transactionsData?.length ?? 0} transactions</span>
         </div>
         {(transactionsData ?? []).length === 0 ? (
           <div className="p-8 text-center text-secondary text-sm">
