@@ -31,7 +31,7 @@ npx tsc --noEmit        # TypeScript — zero errors required
 npx eslint .            # Lint — zero errors required
 npx next build          # Build — must succeed before task is considered done
 ```
-- Update session log.
+- Update `SESSION_LOG.md` — append a summary of what was done, with key files changed and verification results.
 - commit the changes.
 
 ---

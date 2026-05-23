@@ -482,13 +482,12 @@ Branch: `ui-polish-master`
 - **Remaining fix**: Stock ledger mobile card list added with in/out icons and price/kg
 
 ### P2 — Touch Targets & Form UX (11 items)
-- MobileBottomNav: `min-h-[56px]`
-- Breadcrumb: `min-h-[44px]`
-- InventoryNav: `py-2.5 px-4`
+- **Files changed**: `src/components/MobileBottomNav.tsx` (`py-1` → `min-h-[56px] py-2`), `src/components/Breadcrumb.tsx` (added `min-h-[44px] flex items-center`), `src/components/InventoryNav.tsx` (mobile pills: `py-1.5` → `py-2.5 px-4`)
 - All form inputs: `h-[42px]` → `h-[44px]` (5 remaining files fixed: ledger, subtypes, categories, consumables/use, reports/[id])
 - Pagination: `min-w-[44px] min-h-[44px]`
 - Globals: `-webkit-tap-highlight-color: transparent`, `overscroll-behavior: none`
 - autoComplete/inputMode/enterKeyHint added to 13+ form pages (including inventory: ledger, subtypes, categories, scrap, consumables, consumables/use)
+- Commit: `00f8817`
 
 ### P3 — Animations (6 items)
 - Created `src/lib/animation.ts` with spring configs
@@ -500,9 +499,10 @@ Branch: `ui-polish-master`
 
 ### P4 — Accessibility (4 items)
 - `prefers-reduced-motion` media query for `.animate-slide-up`
-- `LoadingSpinner` or spinner text during `isPending` on 12 form pages
-- `role="alert" aria-live="polite"` on 15 error containers
-- `focus-visible:ring-2 focus-visible:ring-primary-container` on critical interactive elements
+- **Loading spinners on mutation buttons** — 12 form pages: accounts/new, deposit, transfer; purchases/new; sales/new, quick, scrap; hr/workers/new, advances/new, payroll; reports/generate; settings/team — replaced `"Saving..."` text with CSS spinner (`w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin`)
+- **`aria-live` on error containers** — Added `role="alert" aria-live="polite"` to error divs in 15 files (login desktop+mobile, register desktop+mobile, all form pages)
+- **`focus-visible` rings** — Added `focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2` to login/register submit buttons, purchases FABs, MobileBottomNav links, and Sidebar nav links/logout
+- Commit: `29b1b85`
 
 ### P5 — Design Alignment (25 screens)
 Aligned all mobile pages with `designs/{name}_mobile/code.html` mockups:
@@ -686,7 +686,22 @@ User tested the app live at `localhost:3000`. All findings and errors were logge
 
 ### Verification
 - `npx tsc --noEmit` — zero errors
-- `npx eslint .` — zero errors  
+- `npx eslint .` — zero errors
+- `npx next build` — successful
+
+---
+
+## 2026-05-23 — Professional Versioning
+
+### Changes
+- Created `scripts/generate-version.mjs` — reads `package.json version` + `git rev-parse --short HEAD`, writes `src/lib/version.ts`
+- Added `predev` and `prebuild` scripts to `package.json` — auto-generate before every dev/build
+- Added `src/lib/version.ts` to `.gitignore` (auto-generated, never committed)
+- Updated `Sidebar.tsx` to import `APP_VERSION` and `COMMIT_HASH` from `@/lib/version` and display `v{APP_VERSION} ({COMMIT_HASH})`
+- Git commit: `ac9a9b6`
+
+### Verification
+- `npx eslint .` — zero errors
 - `npx next build` — successful
 
 ---
