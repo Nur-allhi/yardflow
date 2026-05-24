@@ -588,28 +588,28 @@ export default function SimplePurchaseDetailPage() {
           {/* Other Expenses Section */}
           {purchase.other_expenses && purchase.other_expenses.length > 0 && (
             <div className="lg:col-span-12">
-              <section className="bg-white rounded-lg border border-outline-variant/50 shadow-sm overflow-hidden">
-                <div className="px-5 py-4 border-b border-outline-variant/50">
-                  <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary-container text-lg">receipt_long</span>
-                    <h2 className="font-display text-base font-semibold">Other Expenses</h2>
-                  </div>
+              <section className="bg-white border border-outline-variant/50 rounded-xl shadow-sm overflow-hidden">
+                <div className="px-5 md:px-6 py-4 border-b border-outline-variant/50 bg-surface-container-low">
+                  <h3 className="font-display font-bold text-primary-container flex items-center gap-2">
+                    <span className="material-symbols-outlined">receipt_long</span>
+                    Other Expenses
+                  </h3>
                 </div>
                 <div className="hidden md:block overflow-x-auto">
                   <table className="w-full text-left border-collapse">
-                    <thead className="bg-surface-container-low border-b border-outline-variant/50">
+                    <thead className="bg-surface-container-high border-b border-outline-variant">
                       <tr>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-secondary">Description</th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Amount</th>
-                        <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-secondary">Adds to Vendor Total</th>
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Description</th>
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider text-right">Amount</th>
+                        <th className="px-6 py-3 text-[10px] font-bold uppercase text-secondary tracking-wider">Adds to Vendor Total</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-outline-variant/30">
                       {purchase.other_expenses.map((exp) => (
                         <tr key={exp.id} className="hover:bg-background">
-                          <td className="px-6 py-3 text-sm">{exp.description}</td>
-                          <td className="px-6 py-3 text-sm text-right font-mono">{formatMoney(exp.amount)}</td>
-                          <td className="px-6 py-3 text-sm">
+                          <td className="px-6 py-4 text-sm font-bold text-primary-container">{exp.description}</td>
+                          <td className="px-6 py-4 font-mono text-sm text-right font-semibold">{formatMoney(exp.amount)}</td>
+                          <td className="px-6 py-4 text-sm">
                             {exp.add_to_vendor_total ? (
                               <span className="text-success text-xs font-bold">Yes</span>
                             ) : (

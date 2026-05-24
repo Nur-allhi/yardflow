@@ -80,6 +80,7 @@ export async function enrichTransactions(rows: TransactionRow[]): Promise<Enrich
   const salaryIds: string[] = [];
   const advanceIds: string[] = [];
   const transferIds: string[] = [];
+  const otherIds: string[] = [];
 
   for (const r of rows) {
     if (!r.reference_id) continue;
@@ -88,9 +89,10 @@ export async function enrichTransactions(rows: TransactionRow[]): Promise<Enrich
     else if (r.reference_type === "salary") salaryIds.push(r.reference_id);
     else if (r.reference_type === "advance") advanceIds.push(r.reference_id);
     else if (r.reference_type === "transfer") transferIds.push(r.reference_id);
+    else if (r.reference_type === "other") otherIds.push(r.reference_id);
   }
 
-  const [purchaseMap, saleMap, simplePurchaseMap, simpleSaleMap, salaryMap, advanceMap, transferMap] = await Promise.all([
+  const [purchaseMap, saleMap, simplePurchaseMap, simpleSaleMap, salaryMap, advanceMap, transferMap, vendorMap, customerMap] = await Promise.all([
     purchaseIds.length
       ? db
           .select({
@@ -197,10 +199,31 @@ export async function enrichTransactions(rows: TransactionRow[]): Promise<Enrich
             Object.fromEntries(res.map((r) => [r.id, { name: r.name, url: `/accounts/${r.id}` }])),
           )
       : Promise.resolve({} as Record<string, { name: string; url: string }>),
+
+    otherIds.length
+      ? db
+          .select({ id: vendors.id, name: vendors.name })
+          .from(vendors)
+          .where(inArray(vendors.id, otherIds))
+          .then((res) =>
+            Object.fromEntries(res.map((r) => [r.id, { name: r.name, url: `/purchases/vendors/${r.id}` }])),
+          )
+      : Promise.resolve({} as Record<string, { name: string; url: string }>),
+
+    otherIds.length
+      ? db
+          .select({ id: customers.id, name: customers.name })
+          .from(customers)
+          .where(inArray(customers.id, otherIds))
+          .then((res) =>
+            Object.fromEntries(res.map((r) => [r.id, { name: r.name, url: `/sales/customers/${r.id}` }])),
+          )
+      : Promise.resolve({} as Record<string, { name: string; url: string }>),
   ]);
 
   const combinedPurchaseMap = { ...purchaseMap, ...simplePurchaseMap };
   const combinedSaleMap = { ...saleMap, ...simpleSaleMap };
+  const combinedOtherMap = { ...vendorMap, ...customerMap };
 
   return rows.map((r) => {
     if (!r.reference_id) return { reference_name: null, reference_url: null };
@@ -215,7 +238,9 @@ export async function enrichTransactions(rows: TransactionRow[]): Promise<Enrich
               ? advanceMap[r.reference_id]
               : r.reference_type === "transfer"
                 ? transferMap[r.reference_id]
-                : null;
+                : r.reference_type === "other"
+                  ? combinedOtherMap[r.reference_id]
+                  : null;
     return {
       reference_name: info?.name ?? null,
       reference_url: info?.url ?? null,

@@ -44,7 +44,11 @@ function descriptionLabel(tx: Transaction): string {
               ? "Advance to"
               : tx.reference_type === "transfer"
                 ? "Transfer to"
-                : "";
+                : tx.reference_type === "other" && tx.reference_url?.includes("/purchases/vendors/")
+                  ? "Opening balance payment to"
+                  : tx.reference_type === "other" && tx.reference_url?.includes("/sales/customers/")
+                    ? "Opening balance receipt from"
+                    : "";
     return prefix ? `${prefix} ${tx.reference_name}` : tx.note || "Manual entry";
   }
   return tx.note || "Manual entry";
