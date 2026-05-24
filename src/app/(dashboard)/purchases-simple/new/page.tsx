@@ -423,10 +423,10 @@ export default function NewSimplePurchasePage() {
                       <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary w-auto min-w-[200px]">
                         Description
                       </th>
-                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right w-[110px]">
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right w-[130px]">
                         Qty (kg)
                       </th>
-                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right w-[120px]">
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right w-[140px]">
                         Price/kg
                       </th>
                       <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right w-[120px]">
