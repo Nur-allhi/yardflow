@@ -11,6 +11,7 @@ import {
   salaryPayments,
   customers,
   vendors,
+  organizations,
   materialCategories,
   materialSubtypes,
 } from "@/lib/db/schema";
@@ -24,6 +25,13 @@ export default async function DashboardPage() {
   const session = await getSession();
   if (!session) redirect("/login");
   const orgId = session.org_id;
+
+  const [org] = await db
+    .select({ inventory_mode: organizations.inventory_mode })
+    .from(organizations)
+    .where(eq(organizations.id, orgId))
+    .limit(1);
+  const inventoryMode = org?.inventory_mode ?? "detailed";
 
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -136,6 +144,9 @@ export default async function DashboardPage() {
   const bankTotal = accountList.filter(a => a.type === "bank").reduce((s, a) => s + Number(a.current_balance), 0);
   const grandTotal = cashTotal + bankTotal;
 
+  const newPurchaseHref = inventoryMode === "simple" ? "/purchases-simple/new" : "/purchases/new";
+  const newSaleHref = inventoryMode === "simple" ? "/sales-simple/new" : "/sales/new";
+
   return (
     <div className="p-4 md:p-6 space-y-6 md:space-y-8">
       {/* ── Desktop: Quick Actions Bar ── */}
@@ -156,13 +167,13 @@ export default async function DashboardPage() {
             Generate Report
           </Link>
           <Link
-            href="/purchases/new"
+            href={newPurchaseHref}
             className="px-4 py-2 border border-primary-container text-primary-container text-sm font-medium hover:bg-primary-container/5 rounded transition-colors"
           >
             + New Purchase
           </Link>
           <Link
-            href="/sales/new"
+            href={newSaleHref}
             className="px-4 py-2 bg-primary-container text-white text-sm font-bold rounded hover:bg-primary-container/90 transition-colors"
           >
             + New Sale
@@ -176,7 +187,7 @@ export default async function DashboardPage() {
           Quick Entry
         </h2>
         <div className="grid grid-cols-2 gap-3">
-          <Link href="/sales/new" className="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
+          <Link href={newSaleHref} className="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
             <span className="material-symbols-outlined text-tertiary bg-tertiary-fixed/30 text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>add_shopping_cart</span>
             <span className="text-sm font-medium text-primary-container">New Sale</span>
           </Link>
