@@ -8,7 +8,7 @@ interface Customer {
   type: "regular" | "walk_in";
   opening_balance: number;
   is_active: boolean;
-  total_purchases: number;
+  total_sales: number;
   total_paid: number;
   total_amount: number;
   due_balance: number;

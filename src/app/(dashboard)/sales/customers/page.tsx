@@ -13,7 +13,7 @@ interface Customer {
   type: "regular" | "walk_in";
   opening_balance: number;
   is_active: boolean;
-  total_purchases: number;
+  total_sales: number;
   total_paid: number;
   due_balance: number;
 }
@@ -274,7 +274,7 @@ export default function CustomersPage() {
                             {typeChip.label}
                           </span>
                         </td>
-                        <td className="px-6 py-5 font-mono text-sm text-secondary">{c.total_purchases}</td>
+                        <td className="px-6 py-5 font-mono text-sm text-secondary">{c.total_sales}</td>
                         <td className="px-6 py-5 font-mono text-sm text-secondary">{formatMoney(c.total_paid)}</td>
                         <td className={`px-6 py-5 font-mono text-sm font-bold ${c.due_balance > 0 ? "text-warning" : "text-success"}`}>
                           {formatMoney(c.due_balance)}

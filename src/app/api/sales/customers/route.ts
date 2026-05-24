@@ -58,7 +58,7 @@ export async function GET(_request: Request) {
     return {
       ...c,
       opening_balance: Number(c.opening_balance),
-      total_purchases: c.total_sales + (s ? s.total_sales : 0),
+      total_sales: c.total_sales + (s ? s.total_sales : 0),
       total_paid: totalPaid,
       total_amount: totalAmount,
       due_balance: Number(c.opening_balance) + totalAmount - totalPaid,

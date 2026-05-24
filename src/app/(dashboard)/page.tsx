@@ -123,7 +123,7 @@ export default async function DashboardPage() {
       .orderBy(sql`${simpleSales.sale_date} DESC`)
       .limit(5);
 
-    categoryStock = [];
+    categoryStock = [{ name: "Total Stock", kg: stockKg }];
   } else {
     const orgConditions = [
       eq(sales.organization_id, orgId),
@@ -160,7 +160,7 @@ export default async function DashboardPage() {
       total_amount: sales.total_amount,
       sale_date: sales.sale_date,
       status: sales.status,
-      customer_name: customers.name,
+      customer_name: sql<string>`COALESCE(${customers.name}, ${sales.customer_name})`,
     }).from(sales)
       .leftJoin(customers, and(eq(sales.customer_id, customers.id), sql`${customers.deleted_at} IS NULL`))
       .where(and(eq(sales.organization_id, orgId), sql`${sales.deleted_at} IS NULL`))
