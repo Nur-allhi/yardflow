@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { customers, sales, salePayments, accounts, simpleSales, simpleSalePayments } from "@/lib/db/schema";
+import { customers, sales, salePayments, accounts, simpleSales, simpleSalePayments, accountTransactions } from "@/lib/db/schema";
 import { eq, and, sql, inArray } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
 
@@ -56,7 +56,7 @@ export async function GET(
   const saleIds = saleList.map((s) => s.id);
   const simpleSaleIds = simpleSaleList.map((s) => s.id);
 
-  const [payments, simplePayments] = await Promise.all([
+  const [payments, simplePayments, openingBalancePayments] = await Promise.all([
     saleIds.length > 0
       ? db
           .select({
@@ -119,6 +119,35 @@ export async function GET(
           id: string; sale_id: string; amount: string; payment_date: Date;
           note: string | null; account_id: string; account_name: string | null;
         }[]),
+    db
+      .select({
+        id: accountTransactions.id,
+        amount: accountTransactions.amount,
+        payment_date: accountTransactions.transaction_date,
+        note: accountTransactions.note,
+        account_id: accountTransactions.account_id,
+        account_name: accounts.name,
+      })
+      .from(accountTransactions)
+      .leftJoin(
+        accounts,
+        and(
+          eq(accountTransactions.account_id, accounts.id),
+          sql`${accounts.deleted_at} IS NULL`,
+        ),
+      )
+      .where(
+        and(
+          eq(accountTransactions.reference_type, "other"),
+          eq(accountTransactions.reference_id, id),
+          eq(accountTransactions.organization_id, orgId),
+          sql`${accountTransactions.deleted_at} IS NULL`,
+        ),
+      )
+      .orderBy(accountTransactions.transaction_date)
+      .then((res) =>
+        res.map((r) => ({ ...r, sale_id: "opening-balance", amount: Number(r.amount) })),
+      ),
   ]);
 
   const openingBalance = Number(customer.opening_balance);
@@ -171,6 +200,7 @@ export async function GET(
         ...p,
         amount: Number(p.amount),
       })),
+      ...openingBalancePayments,
     ],
     summary: {
       total_sales: saleList.length + simpleSaleList.length,

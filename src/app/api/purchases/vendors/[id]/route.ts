@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { vendors, purchases, purchasePayments, accounts, simplePurchases, simplePurchasePayments } from "@/lib/db/schema";
+import { vendors, purchases, purchasePayments, accounts, simplePurchases, simplePurchasePayments, accountTransactions } from "@/lib/db/schema";
 import { eq, and, sql, inArray } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
 
@@ -56,7 +56,7 @@ export async function GET(
   const purchaseIds = purchaseList.map((p) => p.id);
   const simplePurchaseIds = simplePurchaseList.map((p) => p.id);
 
-  const [payments, simplePayments] = await Promise.all([
+  const [payments, simplePayments, openingBalancePayments] = await Promise.all([
     purchaseIds.length > 0
       ? db
           .select({
@@ -119,6 +119,35 @@ export async function GET(
           id: string; purchase_id: string; amount: string; payment_date: Date;
           note: string | null; account_id: string; account_name: string | null;
         }[]),
+    db
+      .select({
+        id: accountTransactions.id,
+        amount: accountTransactions.amount,
+        payment_date: accountTransactions.transaction_date,
+        note: accountTransactions.note,
+        account_id: accountTransactions.account_id,
+        account_name: accounts.name,
+      })
+      .from(accountTransactions)
+      .leftJoin(
+        accounts,
+        and(
+          eq(accountTransactions.account_id, accounts.id),
+          sql`${accounts.deleted_at} IS NULL`,
+        ),
+      )
+      .where(
+        and(
+          eq(accountTransactions.reference_type, "other"),
+          eq(accountTransactions.reference_id, id),
+          eq(accountTransactions.organization_id, orgId),
+          sql`${accountTransactions.deleted_at} IS NULL`,
+        ),
+      )
+      .orderBy(accountTransactions.transaction_date)
+      .then((res) =>
+        res.map((r) => ({ ...r, purchase_id: "opening-balance", amount: Number(r.amount) })),
+      ),
   ]);
 
   const openingBalance = Number(vendor.opening_balance);
@@ -167,6 +196,7 @@ export async function GET(
         ...p,
         amount: Number(p.amount),
       })),
+      ...openingBalancePayments,
     ],
     summary: {
       total_purchases: purchaseList.length + simplePurchaseList.length,
