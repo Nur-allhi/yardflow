@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import Breadcrumb from "@/components/Breadcrumb";
 import { InventorySimpleNav } from "@/components/InventorySimpleNav";
@@ -78,6 +79,17 @@ function SkeletonCard() {
 }
 
 export default function LedgerPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "detailed") router.replace("/inventory");
+      })
+      .catch(() => {});
+  }, [router]);
+
   const [page, setPage] = useState(1);
   const [typeFilter, setTypeFilter] = useState<string>("");
   const [fromDate, setFromDate] = useState("");

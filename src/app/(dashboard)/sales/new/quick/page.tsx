@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -121,6 +121,17 @@ export default function QuickCashSalePage() {
       setSubmitting(false);
     },
   });
+
+  const routerSales = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "simple") routerSales.replace("/sales-simple");
+      })
+      .catch(() => {});
+  }, [routerSales]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

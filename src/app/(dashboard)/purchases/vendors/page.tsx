@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -61,6 +62,17 @@ export default function VendorsPage() {
   const [formOpeningBalance, setFormOpeningBalance] = useState("");
 
   const queryClient = useQueryClient();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "simple") router.replace("/purchases-simple");
+      })
+      .catch(() => {});
+  }, [router]);
 
   const { data: vendors = [], isLoading, error, refetch } = useQuery<Vendor[]>({
     queryKey: ["vendors"],

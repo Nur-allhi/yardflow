@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -73,6 +73,15 @@ export default function SimplePurchaseDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "detailed") router.replace("/purchases");
+      })
+      .catch(() => {});
+  }, [router]);
 
   const queryClient = useQueryClient();
 

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import { InventoryNav } from "@/components/InventoryNav";
@@ -76,6 +77,17 @@ export default function StockLedgerPage() {
   const [adjNote, setAdjNote] = useState("");
   const [adjusting, setAdjusting] = useState(false);
   const [adjMsg, setAdjMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "simple") router.replace("/inventory-simple");
+      })
+      .catch(() => {});
+  }, [router]);
 
   const { data: ledgerData, isLoading, error } = useQuery<{ entries: LedgerEntry[]; summary: LedgerSummary }>({
     queryKey: ["ledger", appliedSubtypeId, appliedDateFrom, appliedDateTo],

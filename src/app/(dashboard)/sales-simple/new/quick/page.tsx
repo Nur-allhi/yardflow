@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -13,6 +13,16 @@ function formatMoney(n: number) {
 
 export default function QuickCashSalePage() {
   const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "detailed") router.replace("/sales");
+      })
+      .catch(() => {});
+  }, [router]);
+
   const queryClient = useQueryClient();
   const { data: accountsData } = useAccounts();
 

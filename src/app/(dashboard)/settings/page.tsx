@@ -22,6 +22,7 @@ export default function SettingsPage() {
   const [org, setOrg] = useState<OrgData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [originalMode, setOriginalMode] = useState<string>("detailed");
 
   const { data: orgData, isLoading: loading, error: loadError, refetch: loadData } = useQuery({
     queryKey: ["settings"],
@@ -36,6 +37,7 @@ export default function SettingsPage() {
         email: data.email || "",
         inventory_mode: data.inventory_mode || "detailed",
       });
+      setOriginalMode(data.inventory_mode || "detailed");
       return data;
     },
   });
@@ -64,7 +66,11 @@ export default function SettingsPage() {
       setOrg(data);
       setSaved(true);
       queryClient.invalidateQueries({ queryKey: ["settings"] });
-      setTimeout(() => setSaved(false), 2500);
+      if (data.inventory_mode !== originalMode) {
+        setTimeout(() => { window.location.reload(); }, 800);
+      } else {
+        setTimeout(() => setSaved(false), 2500);
+      }
     },
     onError: (err: Error) => {
       setError(err.message);

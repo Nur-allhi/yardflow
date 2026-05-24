@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InventoryNav } from "@/components/InventoryNav";
@@ -33,6 +34,17 @@ export default function SubtypesPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [editUnit, setEditUnit] = useState("kg");
+
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "simple") router.replace("/inventory-simple");
+      })
+      .catch(() => {});
+  }, [router]);
 
   const loadCategories = useCallback(async () => {
     const res = await fetch("/api/inventory/categories");

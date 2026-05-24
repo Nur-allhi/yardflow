@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 
 interface Sale {
@@ -199,6 +199,17 @@ export default function SalesPage() {
   });
 
   const totalPages = Math.max(1, Math.ceil((data?.totalCount ?? 0) / PER_PAGE));
+
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "simple") router.replace("/sales-simple");
+      })
+      .catch(() => {});
+  }, [router]);
 
   function getSaleIdDisplay(s: Sale) {
     if (s.id.startsWith("ob-")) return "Opening Balance";

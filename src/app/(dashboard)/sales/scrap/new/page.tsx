@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -28,6 +28,15 @@ export default function ScrapSalePage() {
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "simple") router.replace("/sales-simple");
+      })
+      .catch(() => {});
+  }, [router]);
 
   const qty = parseFloat(quantityKg) || 0;
   const price = parseFloat(pricePerKg) || 0;

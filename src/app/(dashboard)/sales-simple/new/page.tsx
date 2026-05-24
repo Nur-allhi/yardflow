@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -27,6 +27,16 @@ function calcLineTotal(item: LineItem) {
 
 export default function NewSimpleSalePage() {
   const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "detailed") router.replace("/sales");
+      })
+      .catch(() => {});
+  }, [router]);
+
   const queryClient = useQueryClient();
 
   const { data: customersData } = useCustomers();

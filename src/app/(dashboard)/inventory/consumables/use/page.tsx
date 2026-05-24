@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { InventoryNav } from "@/components/InventoryNav";
@@ -21,6 +22,17 @@ export default function UseConsumablePage() {
   const [quantity, setQuantity] = useState("");
   const [usedAt, setUsedAt] = useState(new Date().toISOString().split("T")[0]);
   const [note, setNote] = useState("");
+
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "simple") router.replace("/inventory-simple");
+      })
+      .catch(() => {});
+  }, [router]);
 
   const { data: itemsData, isLoading: loading, error: loadError } = useQuery<ConsumableItem[]>({
     queryKey: ["consumables"],

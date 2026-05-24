@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -96,6 +97,17 @@ function SkeletonTable() {
 }
 
 export default function SimpleSalesPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "detailed") router.replace("/sales");
+      })
+      .catch(() => {});
+  }, [router]);
+
   const [statusFilter, setStatusFilter] = useState("all");
   const [saleTypeFilter, setSaleTypeFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");

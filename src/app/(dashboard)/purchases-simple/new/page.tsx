@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -21,6 +21,16 @@ function formatMoney(n: number) {
 
 export default function NewSimplePurchasePage() {
   const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "detailed") router.replace("/purchases");
+      })
+      .catch(() => {});
+  }, [router]);
+
   const queryClient = useQueryClient();
 
   const { data: vendorsData } = useVendors();

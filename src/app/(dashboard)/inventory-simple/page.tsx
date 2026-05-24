@@ -4,7 +4,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { InventorySimpleNav } from "@/components/InventorySimpleNav";
 import { db } from "@/lib/db";
 import { eq, desc } from "drizzle-orm";
-import { inventoryPool, inventoryMovements } from "@/lib/db/schema";
+import { inventoryPool, inventoryMovements, organizations } from "@/lib/db/schema";
 
 function formatTk(amount: number): string {
   return amount.toLocaleString("en-IN") + " tk";
@@ -26,6 +26,16 @@ function formatDate(date: string | Date): string {
 export default async function InventorySimplePage() {
   const session = await getSession();
   if (!session) redirect("/login");
+
+  const [org] = await db
+    .select({ inventory_mode: organizations.inventory_mode })
+    .from(organizations)
+    .where(eq(organizations.id, session.org_id))
+    .limit(1);
+
+  if (org?.inventory_mode === "detailed") {
+    redirect("/inventory");
+  }
 
   const orgId = session.org_id;
 

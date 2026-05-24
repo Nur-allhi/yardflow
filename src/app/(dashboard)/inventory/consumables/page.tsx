@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 import { InventoryNav } from "@/components/InventoryNav";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -87,6 +88,17 @@ export default function ConsumablesPage() {
     new Date().toISOString().split("T")[0],
   );
   const [note, setNote] = useState("");
+
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "simple") router.replace("/inventory-simple");
+      })
+      .catch(() => {});
+  }, [router]);
 
   const qty = parseFloat(quantity) || 0;
   const price = parseFloat(unitPrice) || 0;

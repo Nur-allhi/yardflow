@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 import { InventorySimpleNav } from "@/components/InventorySimpleNav";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -66,6 +67,17 @@ const COMMON_ITEMS = [
 ];
 
 export default function ConsumablesPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "detailed") router.replace("/inventory");
+      })
+      .catch(() => {});
+  }, [router]);
+
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [submitting, setSubmitting] = useState(false);

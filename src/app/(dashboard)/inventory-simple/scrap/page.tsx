@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import { InventorySimpleNav } from "@/components/InventorySimpleNav";
@@ -50,6 +51,17 @@ function formatDate(dateStr: string): string {
 }
 
 export default function ScrapPoolPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "detailed") router.replace("/inventory");
+      })
+      .catch(() => {});
+  }, [router]);
+
   const queryClient = useQueryClient();
   const [addScrapKg, setAddScrapKg] = useState("");
   const [addScrapDate, setAddScrapDate] = useState(new Date().toISOString().split("T")[0]);

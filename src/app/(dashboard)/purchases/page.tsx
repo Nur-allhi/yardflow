@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 interface Vendor {
   id: string;
@@ -108,6 +108,17 @@ export default function PurchasesPage() {
   });
 
   const totalPages = Math.max(1, Math.ceil((data?.totalCount ?? 0) / perPage));
+
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "simple") router.replace("/purchases-simple");
+      })
+      .catch(() => {});
+  }, [router]);
 
   return (
     <div className="p-4 md:p-8">
