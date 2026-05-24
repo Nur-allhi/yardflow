@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import { InventorySimpleNav } from "@/components/InventorySimpleNav";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface ScrapMovement {
   id: string;
@@ -63,11 +63,6 @@ export default function ScrapPoolPage() {
   }, [router]);
 
   const queryClient = useQueryClient();
-  const [addScrapKg, setAddScrapKg] = useState("");
-  const [addScrapDate, setAddScrapDate] = useState(new Date().toISOString().split("T")[0]);
-  const [addScrapNote, setAddScrapNote] = useState("");
-  const [addingScrap, setAddingScrap] = useState(false);
-  const [addScrapMsg, setAddScrapMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const { data, isLoading, error } = useQuery<ScrapData>({
     queryKey: ["scrap"],
@@ -80,46 +75,6 @@ export default function ScrapPoolPage() {
       return res.json();
     },
   });
-
-  const addScrapMutation = useMutation({
-    mutationFn: async (data: Record<string, unknown>) => {
-      const res = await fetch("/api/inventory/scrap", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to add scrap");
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["scrap"] });
-      queryClient.invalidateQueries({ queryKey: ["accounts"] });
-      setAddScrapMsg({ type: "success", text: "Scrap added successfully!" });
-      setAddScrapKg("");
-      setAddScrapNote("");
-      setTimeout(() => setAddScrapMsg(null), 3000);
-    },
-    onError: (err) => {
-      setAddScrapMsg({ type: "error", text: err instanceof Error ? err.message : "Failed to add scrap" });
-    },
-    onSettled: () => {
-      setAddingScrap(false);
-    },
-  });
-
-  async function handleAddScrap(e: React.FormEvent) {
-    e.preventDefault();
-    if (!addScrapKg || Number(addScrapKg) <= 0) return;
-    setAddingScrap(true);
-    setAddScrapMsg(null);
-    addScrapMutation.mutate({
-      quantity_kg: Number(addScrapKg),
-      movement_date: addScrapDate,
-      note: addScrapNote || undefined,
-    });
-  }
 
   if (isLoading) {
     return (
@@ -427,51 +382,14 @@ export default function ScrapPoolPage() {
             )}
           </div>
 
-          {/* Right: Add Scrap + Sell Scrap */}
+          {/* Right: Sell Scrap */}
           <div className="lg:col-span-4 space-y-4">
-            <h3 className="font-display text-lg md:text-xl font-bold text-primary-container">Add Scrap</h3>
-            <div className="bg-white p-6 rounded-lg border border-outline-variant/30 shadow-sm">
-              <form onSubmit={handleAddScrap} className="space-y-5">
-                {addScrapMsg && (
-                  <div className={`p-3 rounded-md text-sm font-medium ${
-                    addScrapMsg.type === "success" ? "bg-success/10 text-success" : "bg-error-container text-on-error-container"
-                  }`}>
-                    {addScrapMsg.text}
-                  </div>
-                )}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-secondary uppercase tracking-wider">Quantity (kg)</label>
-                  <input type="number" min="0" step="0.001" value={addScrapKg}
-                    onChange={(e) => setAddScrapKg(e.target.value)} required placeholder="0.000"
-                    inputMode="decimal" autoComplete="off" enterKeyHint="next"
-                    className="w-full bg-surface-container-low border border-outline-variant rounded-md font-mono text-sm py-2.5 px-3 focus:ring-1 focus:ring-primary-container focus:border-primary-container transition-all" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-secondary uppercase tracking-wider">Date</label>
-                  <input type="date" value={addScrapDate}
-                    onChange={(e) => setAddScrapDate(e.target.value)} required
-                    autoComplete="off" enterKeyHint="next"
-                    className="w-full bg-surface-container-low border border-outline-variant rounded-md text-sm py-2 px-3 focus:ring-1 focus:ring-primary-container focus:border-primary-container transition-all" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-secondary uppercase tracking-wider">Note</label>
-                  <textarea value={addScrapNote} onChange={(e) => setAddScrapNote(e.target.value)}
-                    placeholder="Source of scrap..." rows={2}
-                    className="w-full bg-surface-container-low border border-outline-variant rounded-md text-sm py-2.5 px-3 focus:ring-1 focus:ring-primary-container focus:border-primary-container transition-all resize-none" />
-                </div>
-                <button type="submit" disabled={addingScrap}
-                  className="w-full py-3 bg-tertiary text-white font-bold rounded-md hover:bg-tertiary/90 transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2 disabled:opacity-50">
-                  <span className="material-symbols-outlined text-sm">add_circle</span>
-                  {addingScrap ? "Adding..." : "Add Scrap"}
-                </button>
-              </form>
-            </div>
-
+            <h3 className="font-display text-lg md:text-xl font-bold text-primary-container">Actions</h3>
             <Link
               href="/sales-simple/scrap/new"
-              className="flex items-center justify-center gap-2 w-full py-3 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-[0.98] text-center text-sm"
+              className="flex items-center justify-center gap-2 w-full py-4 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-[0.98] text-center text-sm shadow-sm"
             >
-              <span className="material-symbols-outlined text-sm">add_circle</span>
+              <span className="material-symbols-outlined text-lg">add_shopping_cart</span>
               Sell Scrap
             </Link>
           </div>
