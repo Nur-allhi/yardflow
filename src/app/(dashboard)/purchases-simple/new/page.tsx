@@ -232,7 +232,7 @@ export default function NewSimplePurchasePage() {
                       Vendor
                     </label>
                     <Link
-                      href="/purchases/vendors/new"
+                      href="/purchases/vendors"
                       className="text-[10px] text-tertiary font-bold hover:underline flex items-center gap-0.5"
                     >
                       <span className="material-symbols-outlined text-[12px]">add</span>
