@@ -8,6 +8,7 @@ import {
   vendors,
   accounts,
   inventoryPool,
+  inventoryMovements,
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
@@ -298,6 +299,16 @@ export async function DELETE(
             total_value: String(newValue),
           },
         });
+
+      await tx
+        .delete(inventoryMovements)
+        .where(
+          and(
+            eq(inventoryMovements.reference_id, id),
+            eq(inventoryMovements.reference_type, "purchase"),
+            eq(inventoryMovements.organization_id, orgId),
+          ),
+        );
 
       await tx
         .update(simplePurchaseItems)

@@ -24,6 +24,7 @@ export default function GenerateReportPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [totalOtherExpenses, setTotalOtherExpenses] = useState<number | string>("");
+  const [burnoutPercent, setBurnoutPercent] = useState<number | string>("");
   const [error, setError] = useState<string | null>(null);
 
   const mutation = useMutation({
@@ -80,6 +81,7 @@ export default function GenerateReportPage() {
       start_date,
       end_date,
       total_other_expenses: totalOtherExpenses === "" ? 0 : Number(totalOtherExpenses),
+      burnout_percent: burnoutPercent === "" ? 0 : Number(burnoutPercent),
     });
   }
 
@@ -255,6 +257,28 @@ export default function GenerateReportPage() {
                 className="w-full h-[44px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
               />
               <p className="text-xs text-secondary mt-1">Rent, electricity, transportation, etc.</p>
+            </div>
+
+            {/* Burnout Percentage */}
+            <div className="bg-surface-container-lowest rounded-xl border border-outline-variant p-4 shadow-sm">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1 block">
+                Burnout % (estimate)
+              </label>
+              <input
+                type="number"
+                min="0"
+                max="100"
+                step="0.1"
+                value={burnoutPercent}
+                onChange={(e) => setBurnoutPercent(e.target.value === "" ? "" : Number(e.target.value))}
+                autoComplete="off"
+                inputMode="decimal"
+                enterKeyHint="next"
+                className="w-full h-[44px] bg-white border border-outline-variant rounded px-3 text-sm outline-none focus:border-primary-container"
+              />
+              <p className="text-xs text-secondary mt-1">
+                Estimated material loss as % of total sales (simple inventory). Burnout kg = % &times; total sales kg
+              </p>
             </div>
 
             {/* Selected Summary */}

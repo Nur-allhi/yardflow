@@ -174,6 +174,14 @@ export async function POST(request: Request) {
         .where(eq(inventoryPool.organization_id, orgId))
         .limit(1);
 
+      const poolQty = pool ? Number(pool.total_quantity_kg) : 0;
+      const saleQty = parsed.data.items.reduce((s, i) => s + i.quantity_kg, 0);
+      if (saleQty > poolQty) {
+        throw new Error(
+          `Insufficient stock: ${saleQty.toFixed(3)} kg sold but only ${poolQty.toFixed(3)} kg available`,
+        );
+      }
+
       for (const item of parsed.data.items) {
         await tx.insert(simpleSaleItems).values({
           organization_id: orgId,
@@ -275,9 +283,8 @@ export async function POST(request: Request) {
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
     console.error("Error creating simple sale:", error);
-    return NextResponse.json(
-      { error: "Failed to create sale" },
-      { status: 500 },
-    );
+    const message = error instanceof Error ? error.message : "Failed to create sale";
+    const status = message.includes("Insufficient stock") ? 400 : 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }

@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     const startDate = new Date(parsed.data.start_date);
     const endDate = new Date(parsed.data.end_date);
 
-    const data = await calculatePeriodProfit(session.org_id, startDate, endDate, parsed.data.total_other_expenses);
+    const data = await calculatePeriodProfit(session.org_id, startDate, endDate, parsed.data.total_other_expenses, undefined, parsed.data.burnout_percent);
 
     const [report] = await db
       .insert(periodReports)

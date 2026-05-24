@@ -13,6 +13,7 @@ import {
   simplePurchaseItems,
   simpleSales,
   simpleSaleItems,
+  inventoryPool,
 } from "@/lib/db/schema";
 import { eq, and, sql, gte, lte } from "drizzle-orm";
 
@@ -43,6 +44,7 @@ export async function calculatePeriodProfit(
   endDate: Date,
   totalOtherExpenses: number = 0,
   inventoryMode?: string,
+  burnoutPercent: number = 0,
 ): Promise<PeriodProfitData> {
   if (!inventoryMode) {
     const [org] = await db
@@ -132,6 +134,14 @@ export async function calculatePeriodProfit(
 
     total_sold_fabricated_kg = Number(simpleFabricatedKg.total);
     total_sold_raw_kg = Number(simpleRawKg.total);
+
+    const [pool] = await db
+      .select()
+      .from(inventoryPool)
+      .where(eq(inventoryPool.organization_id, orgId))
+      .limit(1);
+
+    current_stock_kg = Number(pool?.total_quantity_kg ?? 0);
   } else {
     const dateFilter = [
       eq(purchases.organization_id, orgId),
@@ -238,16 +248,26 @@ export async function calculatePeriodProfit(
 
   const total_scrap_sold_kg = Number(scrapKg.total);
 
-  const burnout_kg = Math.max(
-    0,
-    total_purchased_kg -
-      total_sold_fabricated_kg -
-      total_sold_raw_kg -
-      total_scrap_sold_kg -
-      current_stock_kg,
-  );
-  const burnout_percent =
-    total_purchased_kg > 0 ? (burnout_kg / total_purchased_kg) * 100 : 0;
+  const total_sold_kg = total_sold_fabricated_kg + total_sold_raw_kg;
+  let burnout_kg: number;
+  let burnout_percent: number;
+
+  if (inventoryMode === "simple") {
+    burnout_kg = (burnoutPercent / 100) * total_sold_kg;
+    burnout_percent = burnoutPercent;
+    current_stock_kg = Math.max(0, current_stock_kg - burnout_kg);
+  } else {
+    burnout_kg = Math.max(
+      0,
+      total_purchased_kg -
+        total_sold_fabricated_kg -
+        total_sold_raw_kg -
+        total_scrap_sold_kg -
+        current_stock_kg,
+    );
+    burnout_percent =
+      total_purchased_kg > 0 ? (burnout_kg / total_purchased_kg) * 100 : 0;
+  }
 
   let [income] = await db
     .select({
@@ -318,7 +338,6 @@ export async function calculatePeriodProfit(
     total_salary_cost +
     total_other_expenses;
   const net_profit = total_income - total_cost;
-  const total_sold_kg = total_sold_fabricated_kg + total_sold_raw_kg;
   const profit_per_kg = total_sold_kg > 0 ? net_profit / total_sold_kg : 0;
   const result = net_profit >= 0 ? "profit" : "loss";
 

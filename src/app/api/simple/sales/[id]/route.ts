@@ -291,6 +291,16 @@ export async function DELETE(
       }
 
       await tx
+        .delete(inventoryMovements)
+        .where(
+          and(
+            eq(inventoryMovements.reference_id, id),
+            eq(inventoryMovements.reference_type, "sale"),
+            eq(inventoryMovements.organization_id, orgId),
+          ),
+        );
+
+      await tx
         .update(simpleSaleItems)
         .set({ deleted_at: now })
         .where(

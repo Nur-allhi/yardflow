@@ -129,6 +129,7 @@ export const generateReportSchema = z.object({
   start_date: z.string().min(1, "Start date is required"),
   end_date: z.string().min(1, "End date is required"),
   total_other_expenses: z.number().optional().default(0),
+  burnout_percent: z.number().min(0).max(100).optional().default(0),
 });
 
 export const workerSchema = z.object({
