@@ -887,3 +887,40 @@ Already handled: Reports & profit calculation (branched), customer/vendor list A
 - `npx tsc --noEmit` — zero errors
 - `npx eslint .` — zero errors
 - `npx next build` — successful
+
+---
+
+## 2026-05-24 — Purchase Detail Layout + Account Transaction Notes
+
+### Purchase detail layout (`purchases-simple/[id]/page.tsx`)
+- Reordered grid so Financial Summary + Payment Ledger come before Other Expenses in DOM
+- Other Expenses uses `lg:col-span-12` on row 2 below both columns
+
+### Account transaction notes enrichment (6 files)
+- All `recordAccountTransaction` call sites now include entity name + item descriptions in the note
+- Notes: `"Payment to Acme Steel — Steel Rods, Cement, Bricks"` or `"Receipt from John Doe — Fabricated Frame, Gate"`
+- User-provided notes prepended with `" — "` separator
+- Items truncated to 3 with `& N more` suffix
+- Files: `api/simple/purchases/route.ts`, `api/simple/purchases/[id]/payments/route.ts`, `api/simple/sales/route.ts`, `api/simple/sales/[id]/payments/route.ts`, `api/purchases/[id]/payments/route.ts`, `api/sales/[id]/payments/route.ts`
+
+### Due percentage fix
+- Fixed floating-point precision (`25.700000000000003%` → `25.70%`) by pre-calculating `paidPercent` and `duePercent` with `.toFixed(2)`
+
+### Commits
+| Hash | Message |
+|------|---------|
+| `abd3fa4` | [feat] Add Other Expenses + Add Vendor/Customer to simple inventory module |
+| `2a5c06a` | [fix] Change Add Vendor/Customer links to list pages |
+| `21352df` | [fix] Dashboard New Purchase/Sale buttons link directly based on inventory_mode |
+| `e2aae80` | [fix] Widen Qty (kg) and Price/kg input fields |
+| `6e2f197` | [fix] Sales form: show credit balance, match column widths |
+| `94d1500` | [fix] Customer/vendor due_balance includes simple-mode data |
+| `be01520` | [fix 14-17] Simple-mode interconnections audit |
+| `ab0aecb` | [P3] Purchase detail layout reorder |
+| `7a931b9` | [P2] Account transaction notes enrichment |
+| `ce62564` | [P3] Purchase detail Due percentage fix |
+
+### Verification
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors
+- `npx next build` — successful

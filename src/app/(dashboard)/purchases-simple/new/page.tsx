@@ -691,6 +691,14 @@ export default function NewSimplePurchasePage() {
                     {totalWeight.toFixed(3)} kg
                   </span>
                 </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-white/70 text-sm">Avg Price/kg</span>
+                  <span className="font-mono">
+                    {totalWeight > 0
+                      ? formatMoney(totalAmount / totalWeight)
+                      : "—"}
+                  </span>
+                </div>
                 <div className="border-t border-white/20 my-3" />
                 <div className="flex justify-between items-center">
                   <span className="text-white/70 text-sm">Items Total</span>
