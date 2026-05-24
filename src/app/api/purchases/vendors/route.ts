@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { vendors, purchases } from "@/lib/db/schema";
+import { vendors, purchases, simplePurchases } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { vendorSchema } from "@/lib/validations/schemas";
 import { requireOrg } from "@/lib/auth/session";
@@ -33,12 +33,31 @@ export async function GET(_request: Request) {
     .groupBy(vendors.id)
     .orderBy(vendors.name);
 
+  const simpleAggs = await db
+    .select({
+      vendor_id: simplePurchases.vendor_id,
+      total_purchases: sql<number>`COUNT(*)::int`,
+      total_paid: sql<string>`COALESCE(SUM((${simplePurchases.paid_amount})::numeric), 0)`,
+      total_amount: sql<string>`COALESCE(SUM((${simplePurchases.total_amount})::numeric), 0)`,
+    })
+    .from(simplePurchases)
+    .where(
+      and(
+        eq(simplePurchases.organization_id, orgId),
+        sql`${simplePurchases.deleted_at} IS NULL`,
+      ),
+    )
+    .groupBy(simplePurchases.vendor_id);
+
+  const simpleMap = new Map(simpleAggs.map((a) => [a.vendor_id, a]));
+
   const enriched = vendorList.map((v) => {
-    const totalAmount = Number(v.total_amount);
-    const totalPaid = Number(v.total_paid);
+    const s = simpleMap.get(v.id);
+    const totalAmount = Number(v.total_amount) + (s ? Number(s.total_amount) : 0);
+    const totalPaid = Number(v.total_paid) + (s ? Number(s.total_paid) : 0);
     return {
       ...v,
-      total_purchases: v.total_purchases,
+      total_purchases: v.total_purchases + (s ? s.total_purchases : 0),
       total_paid: totalPaid,
       total_amount: totalAmount,
       due_balance: Number(v.opening_balance) + totalAmount - totalPaid,
