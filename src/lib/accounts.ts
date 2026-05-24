@@ -11,6 +11,10 @@ import {
   salaryPayments,
   salaryAdvances,
   workers,
+  simplePurchasePayments,
+  simplePurchases,
+  simpleSalePayments,
+  simpleSales,
 } from "@/lib/db/schema";
 import { eq, inArray, sql } from "drizzle-orm";
 
@@ -86,7 +90,7 @@ export async function enrichTransactions(rows: TransactionRow[]): Promise<Enrich
     else if (r.reference_type === "transfer") transferIds.push(r.reference_id);
   }
 
-  const [purchaseMap, saleMap, salaryMap, advanceMap, transferMap] = await Promise.all([
+  const [purchaseMap, saleMap, simplePurchaseMap, simpleSaleMap, salaryMap, advanceMap, transferMap] = await Promise.all([
     purchaseIds.length
       ? db
           .select({
@@ -116,6 +120,38 @@ export async function enrichTransactions(rows: TransactionRow[]): Promise<Enrich
           .where(inArray(salePayments.id, saleIds))
           .then((res) =>
             Object.fromEntries(res.map((r) => [r.id, { name: r.name, url: `/sales/${r.saleId}` }])),
+          )
+      : Promise.resolve({} as Record<string, { name: string; url: string }>),
+
+    purchaseIds.length
+      ? db
+          .select({
+            id: simplePurchasePayments.id,
+            name: vendors.name,
+            purchaseId: simplePurchases.id,
+          })
+          .from(simplePurchasePayments)
+          .innerJoin(simplePurchases, eq(simplePurchasePayments.purchase_id, simplePurchases.id))
+          .innerJoin(vendors, eq(simplePurchases.vendor_id, vendors.id))
+          .where(inArray(simplePurchasePayments.id, purchaseIds))
+          .then((res) =>
+            Object.fromEntries(res.map((r) => [r.id, { name: r.name, url: `/purchases-simple/${r.purchaseId}` }])),
+          )
+      : Promise.resolve({} as Record<string, { name: string; url: string }>),
+
+    saleIds.length
+      ? db
+          .select({
+            id: simpleSalePayments.id,
+            name: customers.name,
+            saleId: simpleSales.id,
+          })
+          .from(simpleSalePayments)
+          .innerJoin(simpleSales, eq(simpleSalePayments.sale_id, simpleSales.id))
+          .innerJoin(customers, eq(simpleSales.customer_id, customers.id))
+          .where(inArray(simpleSalePayments.id, saleIds))
+          .then((res) =>
+            Object.fromEntries(res.map((r) => [r.id, { name: r.name, url: `/sales-simple/${r.saleId}` }])),
           )
       : Promise.resolve({} as Record<string, { name: string; url: string }>),
 
@@ -163,13 +199,16 @@ export async function enrichTransactions(rows: TransactionRow[]): Promise<Enrich
       : Promise.resolve({} as Record<string, { name: string; url: string }>),
   ]);
 
+  const combinedPurchaseMap = { ...purchaseMap, ...simplePurchaseMap };
+  const combinedSaleMap = { ...saleMap, ...simpleSaleMap };
+
   return rows.map((r) => {
     if (!r.reference_id) return { reference_name: null, reference_url: null };
     const info =
       r.reference_type === "purchase_payment"
-        ? purchaseMap[r.reference_id]
+        ? combinedPurchaseMap[r.reference_id]
         : r.reference_type === "sale_payment"
-          ? saleMap[r.reference_id]
+          ? combinedSaleMap[r.reference_id]
           : r.reference_type === "salary"
             ? salaryMap[r.reference_id]
             : r.reference_type === "advance"

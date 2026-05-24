@@ -14,6 +14,9 @@ import {
   organizations,
   materialCategories,
   materialSubtypes,
+  simpleSales,
+  simplePurchases,
+  inventoryPool,
 } from "@/lib/db/schema";
 import { eq, and, sql, gte } from "drizzle-orm";
 
@@ -36,109 +39,156 @@ export default async function DashboardPage() {
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  const orgConditions = [
-    eq(sales.organization_id, orgId),
-    sql`${sales.deleted_at} IS NULL`,
-  ];
+  const pendingSalaryRows = await db.select({
+    pending: sql<number>`COUNT(*)::int`,
+  }).from(workers)
+    .leftJoin(salaryPayments, and(
+      eq(workers.id, salaryPayments.worker_id),
+      eq(salaryPayments.month, now.getMonth() + 1),
+      eq(salaryPayments.year, now.getFullYear()),
+      sql`${salaryPayments.deleted_at} IS NULL`,
+    ))
+    .where(and(
+      eq(workers.organization_id, orgId),
+      eq(workers.is_active, true),
+      sql`${workers.deleted_at} IS NULL`,
+      sql`${salaryPayments.id} IS NULL`,
+    ));
 
-  const [[stockResult], [todaySalesResult], [arResult], [apResult], [salaryResult], [arOpeningResult], [apOpeningResult], accountList, categoryList] = await Promise.all([
-    db.select({
+  const arOpeningRows = await db.select({
+    total: sql<string>`COALESCE(SUM(${customers.opening_balance}::numeric), 0)`,
+  }).from(customers)
+    .where(and(eq(customers.organization_id, orgId), sql`${customers.deleted_at} IS NULL`));
+
+  const apOpeningRows = await db.select({
+    total: sql<string>`COALESCE(SUM(${vendors.opening_balance}::numeric), 0)`,
+  }).from(vendors)
+    .where(and(eq(vendors.organization_id, orgId), sql`${vendors.deleted_at} IS NULL`));
+
+  const accountList = await db.select({
+    id: accounts.id, name: accounts.name, type: accounts.type, current_balance: accounts.current_balance,
+  }).from(accounts)
+    .where(and(eq(accounts.organization_id, orgId), eq(accounts.is_active, true), sql`${accounts.deleted_at} IS NULL`))
+    .orderBy(accounts.name);
+
+  const categoryList = await db.select({
+    id: materialCategories.id,
+    name: materialCategories.name,
+  }).from(materialCategories)
+    .where(and(eq(materialCategories.organization_id, orgId), sql`${materialCategories.deleted_at} IS NULL`))
+    .orderBy(materialCategories.name);
+
+  let todaySales: number;
+  let stockKg: number;
+  let arTotal: number;
+  let apTotal: number;
+  let recentSales: { id: string; total_amount: string; sale_date: Date; status: string; customer_name: string | null }[];
+  let categoryStock: { name: string; kg: number }[];
+
+  if (inventoryMode === "simple") {
+    const poolRows = await db.select({
+      total_kg: sql<string>`COALESCE(total_quantity_kg, 0)`,
+    }).from(inventoryPool)
+      .where(eq(inventoryPool.organization_id, orgId));
+
+    const todaySalesRows = await db.select({
+      total: sql<string>`COALESCE(SUM(${simpleSales.total_amount}::numeric), 0)`,
+    }).from(simpleSales)
+      .where(and(eq(simpleSales.organization_id, orgId), sql`${simpleSales.deleted_at} IS NULL`, gte(simpleSales.sale_date, todayStart)));
+
+    const arRows = await db.select({
+      total: sql<string>`COALESCE(SUM(${simpleSales.due_amount}::numeric), 0)`,
+    }).from(simpleSales)
+      .where(and(eq(simpleSales.organization_id, orgId), sql`${simpleSales.deleted_at} IS NULL`));
+
+    const apRows = await db.select({
+      total: sql<string>`COALESCE(SUM(${simplePurchases.due_amount}::numeric), 0)`,
+    }).from(simplePurchases)
+      .where(and(eq(simplePurchases.organization_id, orgId), sql`${simplePurchases.deleted_at} IS NULL`));
+
+    todaySales = Number(todaySalesRows[0]?.total ?? 0);
+    stockKg = Number(poolRows[0]?.total_kg ?? 0);
+    arTotal = Number(arRows[0]?.total ?? 0) + Number(arOpeningRows[0]?.total ?? 0);
+    apTotal = Number(apRows[0]?.total ?? 0) + Number(apOpeningRows[0]?.total ?? 0);
+
+    recentSales = await db.select({
+      id: simpleSales.id,
+      total_amount: simpleSales.total_amount,
+      sale_date: simpleSales.sale_date,
+      status: simpleSales.status,
+      customer_name: customers.name,
+    }).from(simpleSales)
+      .leftJoin(customers, and(eq(simpleSales.customer_id, customers.id), sql`${customers.deleted_at} IS NULL`))
+      .where(and(eq(simpleSales.organization_id, orgId), sql`${simpleSales.deleted_at} IS NULL`))
+      .orderBy(sql`${simpleSales.sale_date} DESC`)
+      .limit(5);
+
+    categoryStock = [];
+  } else {
+    const orgConditions = [
+      eq(sales.organization_id, orgId),
+      sql`${sales.deleted_at} IS NULL`,
+    ];
+
+    const stockRows = await db.select({
       total_kg: sql<string>`COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'in' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'out' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0)`,
     }).from(stockLedger)
-      .where(and(eq(stockLedger.organization_id, orgId), sql`${stockLedger.deleted_at} IS NULL`)),
+      .where(and(eq(stockLedger.organization_id, orgId), sql`${stockLedger.deleted_at} IS NULL`));
 
-    db.select({
+    const todaySalesRows = await db.select({
       total: sql<string>`COALESCE(SUM(${sales.total_amount}::numeric), 0)`,
     }).from(sales)
-      .where(and(...orgConditions, gte(sales.sale_date, todayStart))),
+      .where(and(...orgConditions, gte(sales.sale_date, todayStart)));
 
-    db.select({
+    const arRows = await db.select({
       total: sql<string>`COALESCE(SUM(${sales.due_amount}::numeric), 0)`,
     }).from(sales)
-      .where(and(eq(sales.organization_id, orgId), sql`${sales.deleted_at} IS NULL`)),
+      .where(and(eq(sales.organization_id, orgId), sql`${sales.deleted_at} IS NULL`));
 
-    db.select({
+    const apRows = await db.select({
       total: sql<string>`COALESCE(SUM(${purchases.due_amount}::numeric), 0)`,
     }).from(purchases)
-      .where(and(eq(purchases.organization_id, orgId), sql`${purchases.deleted_at} IS NULL`)),
+      .where(and(eq(purchases.organization_id, orgId), sql`${purchases.deleted_at} IS NULL`));
 
-    db.select({
-      pending: sql<number>`COUNT(*)::int`,
-    }).from(workers)
-      .leftJoin(salaryPayments, and(
-        eq(workers.id, salaryPayments.worker_id),
-        eq(salaryPayments.month, now.getMonth() + 1),
-        eq(salaryPayments.year, now.getFullYear()),
-        sql`${salaryPayments.deleted_at} IS NULL`,
-      ))
+    todaySales = Number(todaySalesRows[0]?.total ?? 0);
+    stockKg = Number(stockRows[0]?.total_kg ?? 0);
+    arTotal = Number(arRows[0]?.total ?? 0) + Number(arOpeningRows[0]?.total ?? 0);
+    apTotal = Number(apRows[0]?.total ?? 0) + Number(apOpeningRows[0]?.total ?? 0);
+
+    recentSales = await db.select({
+      id: sales.id,
+      total_amount: sales.total_amount,
+      sale_date: sales.sale_date,
+      status: sales.status,
+      customer_name: customers.name,
+    }).from(sales)
+      .leftJoin(customers, and(eq(sales.customer_id, customers.id), sql`${customers.deleted_at} IS NULL`))
+      .where(and(eq(sales.organization_id, orgId), sql`${sales.deleted_at} IS NULL`))
+      .orderBy(sql`${sales.sale_date} DESC`)
+      .limit(5);
+
+    const categoryStockRows = await db.select({
+      category_id: materialSubtypes.category_id,
+      kg: sql<string>`COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'in' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'out' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0)`,
+    }).from(stockLedger)
+      .innerJoin(materialSubtypes, eq(stockLedger.subtype_id, materialSubtypes.id))
       .where(and(
-        eq(workers.organization_id, orgId),
-        eq(workers.is_active, true),
-        sql`${workers.deleted_at} IS NULL`,
-        sql`${salaryPayments.id} IS NULL`,
-      )),
+        eq(stockLedger.organization_id, orgId),
+        sql`${stockLedger.deleted_at} IS NULL`,
+        sql`${materialSubtypes.deleted_at} IS NULL`,
+      ))
+      .groupBy(materialSubtypes.category_id);
 
-    db.select({
-      total: sql<string>`COALESCE(SUM(${customers.opening_balance}::numeric), 0)`,
-    }).from(customers)
-      .where(and(eq(customers.organization_id, orgId), sql`${customers.deleted_at} IS NULL`)),
+    const stockByCategory = Object.fromEntries(
+      categoryStockRows.map((r) => [r.category_id, Number(r.kg)]),
+    );
+    categoryStock = categoryList.map((cat) => ({
+      name: cat.name,
+      kg: stockByCategory[cat.id] ?? 0,
+    }));
+  }
 
-    db.select({
-      total: sql<string>`COALESCE(SUM(${vendors.opening_balance}::numeric), 0)`,
-    }).from(vendors)
-      .where(and(eq(vendors.organization_id, orgId), sql`${vendors.deleted_at} IS NULL`)),
-
-    db.select({
-      id: accounts.id, name: accounts.name, type: accounts.type, current_balance: accounts.current_balance,
-    }).from(accounts)
-      .where(and(eq(accounts.organization_id, orgId), eq(accounts.is_active, true), sql`${accounts.deleted_at} IS NULL`))
-      .orderBy(accounts.name),
-
-    db.select({
-      id: materialCategories.id,
-      name: materialCategories.name,
-    }).from(materialCategories)
-      .where(and(eq(materialCategories.organization_id, orgId), sql`${materialCategories.deleted_at} IS NULL`))
-      .orderBy(materialCategories.name),
-  ]);
-
-  const todaySales = Number(todaySalesResult.total);
-  const stockKg = Number(stockResult.total_kg);
-  const arTotal = Number(arResult.total) + Number(arOpeningResult.total);
-  const apTotal = Number(apResult.total) + Number(apOpeningResult.total);
-  const pendingSalaryCount = salaryResult.pending;
-
-  const recentSales = await db.select({
-    id: sales.id,
-    total_amount: sales.total_amount,
-    sale_date: sales.sale_date,
-    status: sales.status,
-    customer_name: customers.name,
-  }).from(sales)
-    .leftJoin(customers, and(eq(sales.customer_id, customers.id), sql`${customers.deleted_at} IS NULL`))
-    .where(and(eq(sales.organization_id, orgId), sql`${sales.deleted_at} IS NULL`))
-    .orderBy(sql`${sales.sale_date} DESC`)
-    .limit(5);
-
-  const categoryStockRows = await db.select({
-    category_id: materialSubtypes.category_id,
-    kg: sql<string>`COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'in' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN ${stockLedger.movement_type} = 'out' THEN ${stockLedger.quantity_kg}::numeric ELSE 0 END), 0)`,
-  }).from(stockLedger)
-    .innerJoin(materialSubtypes, eq(stockLedger.subtype_id, materialSubtypes.id))
-    .where(and(
-      eq(stockLedger.organization_id, orgId),
-      sql`${stockLedger.deleted_at} IS NULL`,
-      sql`${materialSubtypes.deleted_at} IS NULL`,
-    ))
-    .groupBy(materialSubtypes.category_id);
-
-  const stockByCategory = Object.fromEntries(
-    categoryStockRows.map((r) => [r.category_id, Number(r.kg)]),
-  );
-  const categoryStock = categoryList.map((cat) => ({
-    name: cat.name,
-    kg: stockByCategory[cat.id] ?? 0,
-  }));
+  const pendingSalaryCount = pendingSalaryRows[0]?.pending ?? 0;
 
   const cashTotal = accountList.filter(a => a.type === "cash").reduce((s, a) => s + Number(a.current_balance), 0);
   const bankTotal = accountList.filter(a => a.type === "bank").reduce((s, a) => s + Number(a.current_balance), 0);
@@ -191,9 +241,9 @@ export default async function DashboardPage() {
             <span className="material-symbols-outlined text-tertiary bg-tertiary-fixed/30 text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>add_shopping_cart</span>
             <span className="text-sm font-medium text-primary-container">New Sale</span>
           </Link>
-          <Link href="/inventory/subtypes" className="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
+          <Link href={inventoryMode === "simple" ? "/inventory-simple" : "/inventory/subtypes"} className="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
             <span className="material-symbols-outlined text-on-primary-fixed-variant bg-primary-container/10 text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>inventory_2</span>
-            <span className="text-sm font-medium text-primary-container">Add Stock</span>
+            <span className="text-sm font-medium text-primary-container">{inventoryMode === "simple" ? "Inventory" : "Add Stock"}</span>
           </Link>
           <Link href="/hr" className="flex flex-col items-center justify-center p-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm active:scale-95 transition-all">
             <span className="material-symbols-outlined text-on-secondary-fixed-variant bg-secondary-container text-3xl p-2 rounded-lg mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>engineering</span>
