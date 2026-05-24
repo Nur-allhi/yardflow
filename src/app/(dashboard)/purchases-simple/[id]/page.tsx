@@ -24,6 +24,14 @@ interface SimplePayment {
   account_name: string | null;
 }
 
+interface SimpleOtherExpense {
+  id: string;
+  description: string;
+  amount: number;
+  account_id: string | null;
+  add_to_vendor_total: boolean;
+}
+
 interface PurchaseDetail {
   id: string;
   vendor_id: string;
@@ -38,6 +46,7 @@ interface PurchaseDetail {
   vendor_phone: string | null;
   items: SimplePurchaseItem[];
   payments: SimplePayment[];
+  other_expenses: SimpleOtherExpense[];
 }
 
 function formatDate(dateStr: string) {
@@ -438,6 +447,57 @@ export default function SimplePurchaseDetailPage() {
           </div>
         </div>
 
+        {/* Other Expenses Section */}
+        {purchase.other_expenses && purchase.other_expenses.length > 0 && (
+          <div className="lg:col-span-7">
+            <section className="bg-white rounded-lg border border-outline-variant/50 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-outline-variant/50">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary-container text-lg">receipt_long</span>
+                  <h2 className="font-display text-base font-semibold">Other Expenses</h2>
+                </div>
+              </div>
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead className="bg-surface-container-low border-b border-outline-variant/50">
+                    <tr>
+                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-secondary">Description</th>
+                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Amount</th>
+                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-secondary">Adds to Vendor Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-outline-variant/30">
+                    {purchase.other_expenses.map((exp) => (
+                      <tr key={exp.id} className="hover:bg-background">
+                        <td className="px-6 py-3 text-sm">{exp.description}</td>
+                        <td className="px-6 py-3 text-sm text-right font-mono">{formatMoney(exp.amount)}</td>
+                        <td className="px-6 py-3 text-sm">
+                          {exp.add_to_vendor_total ? (
+                            <span className="text-success text-xs font-bold">Yes</span>
+                          ) : (
+                            <span className="text-secondary text-xs">No</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="md:hidden space-y-2 p-4">
+                {purchase.other_expenses.map((exp) => (
+                  <div key={exp.id} className="flex justify-between items-center py-2 border-b border-outline-variant/30 last:border-b-0">
+                    <div>
+                      <p className="text-sm font-medium">{exp.description}</p>
+                      <p className="text-[10px] text-secondary">{exp.add_to_vendor_total ? "Added to vendor total" : "Paid separately"}</p>
+                    </div>
+                    <span className="font-mono text-sm font-bold">{formatMoney(exp.amount)}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
+
         {/* RIGHT */}
         <div className="lg:col-span-5 space-y-6">
           {/* Financial Summary */}
@@ -450,6 +510,31 @@ export default function SimplePurchaseDetailPage() {
               Financial Summary
             </h3>
             <div className="space-y-4 relative z-10">
+              {purchase.other_expenses && purchase.other_expenses.length > 0 && (
+                <>
+                  <div className="flex justify-between items-center pl-4">
+                    <span className="text-white/60 text-xs">Items Total</span>
+                    <span className="font-mono text-sm text-white/80">
+                      {formatMoney(
+                        purchase.total_amount -
+                          purchase.other_expenses
+                            .filter((e) => e.add_to_vendor_total)
+                            .reduce((s, e) => s + e.amount, 0),
+                      )}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center pl-4">
+                    <span className="text-white/60 text-xs">Other Expenses</span>
+                    <span className="font-mono text-sm text-white/80">
+                      +{formatMoney(
+                        purchase.other_expenses
+                          .filter((e) => e.add_to_vendor_total)
+                          .reduce((s, e) => s + e.amount, 0),
+                      )}
+                    </span>
+                  </div>
+                </>
+              )}
               <div className="flex justify-between items-center">
                 <span className="text-white/70 text-sm">Total Amount</span>
                 <span className="font-mono font-bold text-white">

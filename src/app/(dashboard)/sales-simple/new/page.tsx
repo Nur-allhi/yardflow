@@ -190,7 +190,13 @@ export default function NewSimpleSalePage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-secondary">Customer</label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold uppercase tracking-wider text-secondary">Customer</label>
+                    <Link href="/sales/customers/new" className="text-[10px] text-tertiary font-bold hover:underline flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">add</span>
+                      Add Customer
+                    </Link>
+                  </div>
                   <select
                     value={customerId}
                     onChange={(e) => { setCustomerId(e.target.value); setCustomerName(""); }}

@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import {
   simplePurchases,
   simplePurchaseItems,
+  simplePurchaseOtherExpenses,
   vendors,
   inventoryPool,
   inventoryMovements,
@@ -12,6 +13,13 @@ import { z } from "zod";
 import { requireSession } from "@/lib/auth/session";
 import { logActivity } from "@/lib/activity-log";
 import { recordAccountTransaction } from "@/lib/accounts";
+
+const otherExpenseSchema = z.object({
+  description: z.string().min(1),
+  amount: z.number().positive().finite(),
+  account_id: z.string().uuid().nullable().optional(),
+  add_to_vendor_total: z.boolean().optional(),
+});
 
 const createPurchaseSchema = z.object({
   vendor_id: z.string().uuid(),
@@ -28,6 +36,7 @@ const createPurchaseSchema = z.object({
   paid_amount: z.number().min(0).optional(),
   account_id: z.string().uuid().optional(),
   note: z.string().optional(),
+  other_expenses: z.array(otherExpenseSchema).optional(),
 });
 
 export async function GET(request: Request) {
@@ -126,12 +135,17 @@ export async function POST(request: Request) {
       paid_amount = 0,
       account_id,
       note,
+      other_expenses = [],
     } = parsed.data;
 
-    const totalAmount = items.reduce(
+    const itemsTotal = items.reduce(
       (sum, item) => sum + item.quantity_kg * item.price_per_kg,
       0,
     );
+    const vendorExpenseTotal = other_expenses
+      .filter((e) => e.add_to_vendor_total)
+      .reduce((sum, e) => sum + e.amount, 0);
+    const totalAmount = itemsTotal + vendorExpenseTotal;
     const status =
       paid_amount >= totalAmount
         ? "paid"
@@ -208,6 +222,30 @@ export async function POST(request: Request) {
           description: item.description,
           movement_date: new Date(purchase_date),
         });
+      }
+
+      for (const expense of other_expenses) {
+        await tx.insert(simplePurchaseOtherExpenses).values({
+          organization_id: orgId,
+          purchase_id: purchase.id,
+          description: expense.description,
+          amount: expense.amount.toFixed(2),
+          account_id: expense.account_id || null,
+          add_to_vendor_total: expense.add_to_vendor_total ?? false,
+        });
+
+        if (!expense.add_to_vendor_total && expense.account_id) {
+          await recordAccountTransaction({
+            organization_id: orgId,
+            account_id: expense.account_id,
+            type: "debit",
+            amount: expense.amount.toFixed(2),
+            reference_type: "other",
+            reference_id: purchase.id,
+            transaction_date: new Date(purchase_date),
+            note: `Other expense: ${expense.description}`,
+          });
+        }
       }
 
       if (paid_amount > 0 && account_id) {

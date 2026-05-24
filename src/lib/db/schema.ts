@@ -775,6 +775,26 @@ export const simplePurchasePayments = pgTable("simple_purchase_payments", {
   accountIdx: index("idx_simple_purchase_payments_account").on(table.account_id),
 }));
 
+export const simplePurchaseOtherExpenses = pgTable("simple_purchase_other_expenses", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organization_id: uuid("organization_id")
+    .notNull()
+    .references(() => organizations.id),
+  purchase_id: uuid("purchase_id")
+    .notNull()
+    .references(() => simplePurchases.id),
+  description: text("description").notNull(),
+  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
+  account_id: uuid("account_id").references(() => accounts.id),
+  add_to_vendor_total: boolean("add_to_vendor_total").default(false).notNull(),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at", { withTimezone: true }),
+}, (table) => ({
+  orgIdx: index("idx_simple_purch_other_exp_org").on(table.organization_id),
+  purchaseIdx: index("idx_simple_purch_other_exp_purch").on(table.purchase_id),
+  accountIdx: index("idx_simple_purch_other_exp_account").on(table.account_id),
+}));
+
 export const simpleSales = pgTable("simple_sales", {
   id: uuid("id").defaultRandom().primaryKey(),
   organization_id: uuid("organization_id")
@@ -1226,6 +1246,25 @@ export const simplePurchasesRelations = relations(
     }),
     items: many(simplePurchaseItems),
     payments: many(simplePurchasePayments),
+    otherExpenses: many(simplePurchaseOtherExpenses),
+  }),
+);
+
+export const simplePurchaseOtherExpensesRelations = relations(
+  simplePurchaseOtherExpenses,
+  ({ one }) => ({
+    organization: one(organizations, {
+      fields: [simplePurchaseOtherExpenses.organization_id],
+      references: [organizations.id],
+    }),
+    purchase: one(simplePurchases, {
+      fields: [simplePurchaseOtherExpenses.purchase_id],
+      references: [simplePurchases.id],
+    }),
+    account: one(accounts, {
+      fields: [simplePurchaseOtherExpenses.account_id],
+      references: [accounts.id],
+    }),
   }),
 );
 

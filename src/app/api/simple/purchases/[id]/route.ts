@@ -4,6 +4,7 @@ import {
   simplePurchases,
   simplePurchaseItems,
   simplePurchasePayments,
+  simplePurchaseOtherExpenses,
   vendors,
   accounts,
   inventoryPool,
@@ -104,6 +105,17 @@ export async function GET(
     )
     .orderBy(simplePurchasePayments.payment_date);
 
+  const otherExpenses = await db
+    .select()
+    .from(simplePurchaseOtherExpenses)
+    .where(
+      and(
+        eq(simplePurchaseOtherExpenses.purchase_id, id),
+        eq(simplePurchaseOtherExpenses.organization_id, orgId),
+        sql`${simplePurchaseOtherExpenses.deleted_at} IS NULL`,
+      ),
+    );
+
   return NextResponse.json({
     ...purchase,
     total_amount: Number(purchase.total_amount),
@@ -118,6 +130,10 @@ export async function GET(
     payments: payments.map((p) => ({
       ...p,
       amount: Number(p.amount),
+    })),
+    other_expenses: otherExpenses.map((e) => ({
+      ...e,
+      amount: Number(e.amount),
     })),
   });
 }

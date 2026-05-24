@@ -829,6 +829,22 @@ User tested the app live at `localhost:3000`. All findings and errors were logge
 3. **`src/app/api/simple/sales/[id]/payments/route.ts`**
    - `POST` — Record payment in a transaction: inserts `simpleSalePayments`, updates `paid_amount`, recalculates `status`, records account transaction.
 
+## Added Other Expenses + Add Vendor/Customer to simple module
+
+### Changes
+- **Schema**: Added `simplePurchaseOtherExpenses` table (org_id, purchase_id, description, amount, account_id, add_to_vendor_total) with relations and indexes
+- **Migration**: Generated & applied `0009_jazzy_bullseye.sql`
+- **API POST `/api/simple/purchases`**: Accepts `other_expenses[]`, inserts into table, adds vendor-total expenses to `total_amount`, records account transactions for non-vendor-total expenses
+- **API GET `/api/simple/purchases/[id]`**: Returns `other_expenses` in response
+- **UI: New Purchase Form (`purchases-simple/new`)**: Added "Other Expenses" section (description, amount, account, add_to_vendor_total checkbox), order summary shows items vs expense breakdown; added "Add Vendor" link
+- **UI: New Sale Form (`sales-simple/new`)**: Added "Add Customer" link
+- **UI: Purchase Detail Page (`purchases-simple/[id]`)**: Shows "Other Expenses" table, financial summary shows items/expense breakdown
+
+### How it works
+- Expenses with "Add to vendor total" checked → added to purchase `total_amount` (increases vendor due balance)
+- Expenses without it → recorded separately; if account selected, debits that account
+- Only line items affect inventory pool (qty/value) — other expenses are financial tracking only
+
 ### Verification
 - `npx tsc --noEmit` — zero errors
 - `npx eslint .` — zero errors
