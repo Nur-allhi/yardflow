@@ -129,6 +129,13 @@ export default function SimplePurchasesPage() {
         </div>
         <div className="flex gap-3">
           <Link
+            href="/purchases/vendors"
+            className="flex items-center gap-2 px-4 py-2 border border-primary-container text-primary-container font-semibold rounded-lg hover:bg-primary-container/5 transition-all text-sm"
+          >
+            <span className="material-symbols-outlined text-lg">people</span>
+            Vendors
+          </Link>
+          <Link
             href="/purchases-simple/new"
             className="flex items-center gap-2 px-4 py-2 bg-primary-container text-white font-semibold rounded-lg hover:bg-primary-container/90 transition-all text-sm shadow-sm active:scale-95"
           >

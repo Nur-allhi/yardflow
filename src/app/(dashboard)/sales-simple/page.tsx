@@ -177,6 +177,27 @@ export default function SimpleSalesPage() {
         </h1>
         <div className="flex gap-3">
           <Link
+            href="/sales/customers"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-primary-container text-primary-container font-bold hover:bg-surface-container-low transition-all active:scale-95"
+          >
+            <span className="material-symbols-outlined text-lg">people</span>
+            Customers
+          </Link>
+          <Link
+            href="/sales/scrap/new"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-tertiary text-tertiary font-bold hover:bg-tertiary/5 transition-all active:scale-95"
+          >
+            <span className="material-symbols-outlined text-lg">recycling</span>
+            Scrap Sale
+          </Link>
+          <Link
+            href="/sales-simple/new/quick"
+            className="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-primary-container text-primary-container font-bold hover:bg-surface-container-low transition-all active:scale-95"
+          >
+            <span className="material-symbols-outlined text-lg">receipt_long</span>
+            + Quick Cash Sale
+          </Link>
+          <Link
             href="/sales-simple/new"
             className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-primary-container text-white font-bold hover:bg-primary-container/90 transition-all shadow-md active:scale-95"
           >
