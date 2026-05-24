@@ -116,7 +116,7 @@ export default async function DashboardPage() {
       total_amount: simpleSales.total_amount,
       sale_date: simpleSales.sale_date,
       status: simpleSales.status,
-      customer_name: customers.name,
+      customer_name: sql<string>`COALESCE(${customers.name}, ${simpleSales.customer_name})`,
     }).from(simpleSales)
       .leftJoin(customers, and(eq(simpleSales.customer_id, customers.id), sql`${customers.deleted_at} IS NULL`))
       .where(and(eq(simpleSales.organization_id, orgId), sql`${simpleSales.deleted_at} IS NULL`))

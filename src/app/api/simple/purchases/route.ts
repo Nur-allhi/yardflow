@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import {
   simplePurchases,
   simplePurchaseItems,
+  simplePurchasePayments,
   simplePurchaseOtherExpenses,
   vendors,
   inventoryPool,
@@ -261,13 +262,25 @@ export async function POST(request: Request) {
           : itemNames.slice(0, 3).join(', ') + ` & ${itemNames.length - 3} more`;
         const paymentNote = `Payment to ${vendorRow?.name || 'Vendor'} — ${itemsStr}`;
 
+        const [payment] = await tx
+          .insert(simplePurchasePayments)
+          .values({
+            organization_id: orgId,
+            purchase_id: purchase.id,
+            amount: paid_amount.toFixed(2),
+            account_id,
+            payment_date: new Date(purchase_date),
+            note: note || `Payment against purchase`,
+          })
+          .returning();
+
         await recordAccountTransaction({
           organization_id: orgId,
           account_id,
           type: "debit",
           amount: paid_amount.toFixed(2),
           reference_type: "purchase_payment",
-          reference_id: purchase.id,
+          reference_id: payment.id,
           note: paymentNote,
           transaction_date: new Date(purchase_date),
         });
