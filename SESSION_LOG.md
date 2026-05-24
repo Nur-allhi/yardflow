@@ -1,3 +1,27 @@
+# Session Log — Start: 2026-05-24
+
+## Added mode guards to all 11 simple-mode pages
+
+When org's `inventory_mode` is "detailed", these pages now redirect to the detailed equivalent.
+
+**Files changed:**
+- `src/app/(dashboard)/inventory-simple/page.tsx` — server component, added DB query guard → redirects to `/inventory`
+- `src/app/(dashboard)/inventory-simple/ledger/page.tsx` — client, useEffect fetch → `/inventory`
+- `src/app/(dashboard)/inventory-simple/scrap/page.tsx` — client, useEffect fetch → `/inventory`
+- `src/app/(dashboard)/inventory-simple/consumables/page.tsx` — client, useEffect fetch → `/inventory`
+- `src/app/(dashboard)/purchases-simple/page.tsx` — client, useEffect fetch → `/purchases`
+- `src/app/(dashboard)/purchases-simple/new/page.tsx` — client, useEffect fetch → `/purchases`
+- `src/app/(dashboard)/purchases-simple/[id]/page.tsx` — client, useEffect fetch → `/purchases`
+- `src/app/(dashboard)/sales-simple/page.tsx` — client, useEffect fetch → `/sales`
+- `src/app/(dashboard)/sales-simple/new/page.tsx` — client, useEffect fetch → `/sales`
+- `src/app/(dashboard)/sales-simple/new/quick/page.tsx` — client, useEffect fetch → `/sales`
+- `src/app/(dashboard)/sales-simple/[id]/page.tsx` — client, useEffect fetch → `/sales`
+
+**Verification:**
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors
+- `npx next build` — success (78/78 pages)
+
 # Session Log — Start: 2026-05-19
 
 ## Project
