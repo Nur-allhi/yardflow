@@ -259,19 +259,19 @@ export default function NewSimplePurchasePage() {
                 <table className="w-full text-left border-collapse">
                   <thead className="bg-surface-container-low border-b border-outline-variant/50">
                     <tr>
-                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary w-auto min-w-[200px]">
                         Description
                       </th>
-                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right w-[110px]">
                         Qty (kg)
                       </th>
-                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right w-[120px]">
                         Price/kg
                       </th>
-                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right w-[120px]">
                         Total
                       </th>
-                      <th className="px-6 py-4" />
+                      <th className="px-6 py-4 w-[50px]" />
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant/30">
@@ -286,7 +286,7 @@ export default function NewSimplePurchasePage() {
                             }
                             autoComplete="off"
                             enterKeyHint="next"
-                            className="w-full h-[38px] border border-outline-variant rounded px-2 text-sm focus:border-primary-container outline-none"
+                            className="w-full h-[38px] border border-outline-variant rounded px-3 text-sm focus:border-primary-container outline-none"
                             placeholder="e.g. Raw materials"
                           />
                         </td>
