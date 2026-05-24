@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import {
   purchases,
+  purchaseItems,
   purchasePayments,
+  vendors,
+  materialSubtypes,
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { purchasePaymentSchema } from "@/lib/validations/schemas";
@@ -44,6 +47,29 @@ export async function POST(
       if (!purchase) {
         throw new Error("Purchase not found");
       }
+
+      const items = await tx
+        .select({ name: materialSubtypes.name })
+        .from(purchaseItems)
+        .innerJoin(materialSubtypes, eq(purchaseItems.subtype_id, materialSubtypes.id))
+        .where(
+          and(
+            eq(purchaseItems.purchase_id, id),
+            sql`${purchaseItems.deleted_at} IS NULL`,
+          ),
+        );
+
+      const [vendorRow] = await tx
+        .select({ name: vendors.name })
+        .from(vendors)
+        .where(eq(vendors.id, purchase.vendor_id))
+        .limit(1);
+
+      const itemNames = items.map(i => i.name);
+      const itemsStr = itemNames.length <= 3
+        ? itemNames.join(', ')
+        : itemNames.slice(0, 3).join(', ') + ` & ${itemNames.length - 3} more`;
+      const paymentNote = `Payment to ${vendorRow?.name || 'Vendor'} — ${itemsStr}`;
 
       const oldPaid = Number(purchase.paid_amount);
       const totalAmount = Number(purchase.total_amount);
@@ -92,7 +118,7 @@ export async function POST(
         reference_type: "purchase_payment",
         reference_id: payment.id,
         transaction_date: new Date(parsed.data.payment_date),
-        note: parsed.data.note || null,
+        note: parsed.data.note ? `${parsed.data.note} — ${paymentNote}` : paymentNote,
       });
 
       return payment;

@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import {
   sales,
+  saleItems,
   salePayments,
+  customers,
+  materialSubtypes,
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import { salePaymentSchema } from "@/lib/validations/schemas";
@@ -44,6 +47,33 @@ export async function POST(
       if (!sale) {
         throw new Error("Sale not found");
       }
+
+      const items = await tx
+        .select({ name: materialSubtypes.name })
+        .from(saleItems)
+        .innerJoin(materialSubtypes, eq(saleItems.subtype_id, materialSubtypes.id))
+        .where(
+          and(
+            eq(saleItems.sale_id, id),
+            sql`${saleItems.deleted_at} IS NULL`,
+          ),
+        );
+
+      let customerLabel: string | null = null;
+      if (sale.customer_id) {
+        const [custRow] = await tx
+          .select({ name: customers.name })
+          .from(customers)
+          .where(eq(customers.id, sale.customer_id))
+          .limit(1);
+        customerLabel = custRow?.name || null;
+      }
+
+      const itemNames = items.map(i => i.name);
+      const itemsStr = itemNames.length <= 3
+        ? itemNames.join(', ')
+        : itemNames.slice(0, 3).join(', ') + ` & ${itemNames.length - 3} more`;
+      const saleNote = `Receipt from ${customerLabel || 'Customer'} — ${itemsStr}`;
 
       const oldPaid = Number(sale.paid_amount);
       const totalAmount = Number(sale.total_amount);
@@ -92,7 +122,7 @@ export async function POST(
         reference_type: "sale_payment",
         reference_id: payment.id,
         transaction_date: new Date(parsed.data.payment_date),
-        note: parsed.data.note || null,
+        note: parsed.data.note ? `${parsed.data.note} — ${saleNote}` : saleNote,
       });
 
       return payment;

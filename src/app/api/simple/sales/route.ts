@@ -208,6 +208,22 @@ export async function POST(request: Request) {
       }
 
       if (paidAmount > 0 && parsed.data.account_id) {
+        let customerLabel = parsed.data.customer_name || null;
+        if (!customerLabel && parsed.data.customer_id) {
+          const [custRow] = await tx
+            .select({ name: customers.name })
+            .from(customers)
+            .where(eq(customers.id, parsed.data.customer_id))
+            .limit(1);
+          customerLabel = custRow?.name || null;
+        }
+
+        const itemNames = parsed.data.items.map(i => i.description);
+        const itemsStr = itemNames.length <= 3
+          ? itemNames.join(', ')
+          : itemNames.slice(0, 3).join(', ') + ` & ${itemNames.length - 3} more`;
+        const saleNote = `Receipt from ${customerLabel || 'Customer'} — ${itemsStr}`;
+
         const [payment] = await tx
           .insert(simpleSalePayments)
           .values({
@@ -228,7 +244,7 @@ export async function POST(request: Request) {
           reference_type: "sale_payment",
           reference_id: payment.id,
           transaction_date: new Date(parsed.data.sale_date),
-          note: parsed.data.note || null,
+          note: parsed.data.note ? `${parsed.data.note} — ${saleNote}` : saleNote,
         });
       }
 

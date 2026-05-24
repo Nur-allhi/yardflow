@@ -249,6 +249,18 @@ export async function POST(request: Request) {
       }
 
       if (paid_amount > 0 && account_id) {
+        const [vendorRow] = await tx
+          .select({ name: vendors.name })
+          .from(vendors)
+          .where(eq(vendors.id, vendor_id))
+          .limit(1);
+
+        const itemNames = items.map(i => i.description);
+        const itemsStr = itemNames.length <= 3
+          ? itemNames.join(', ')
+          : itemNames.slice(0, 3).join(', ') + ` & ${itemNames.length - 3} more`;
+        const paymentNote = `Payment to ${vendorRow?.name || 'Vendor'} — ${itemsStr}`;
+
         await recordAccountTransaction({
           organization_id: orgId,
           account_id,
@@ -256,7 +268,7 @@ export async function POST(request: Request) {
           amount: paid_amount.toFixed(2),
           reference_type: "purchase_payment",
           reference_id: purchase.id,
-          note: `Payment for purchase #${purchase.id.slice(0, 8)}`,
+          note: paymentNote,
           transaction_date: new Date(purchase_date),
         });
       }
