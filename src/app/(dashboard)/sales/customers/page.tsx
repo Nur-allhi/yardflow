@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -51,17 +50,6 @@ function getStatusChip(due: number) {
 
 export default function CustomersPage() {
   const queryClient = useQueryClient();
-
-  const router = useRouter();
-
-  useEffect(() => {
-    fetch("/api/simple/mode")
-      .then(r => r.json())
-      .then(data => {
-        if (data.mode === "simple") router.replace("/sales-simple");
-      })
-      .catch(() => {});
-  }, [router]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);

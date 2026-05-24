@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -85,17 +85,6 @@ export default function VendorProfilePage() {
   const id = params.id as string;
 
   const queryClient = useQueryClient();
-
-  const router = useRouter();
-
-  useEffect(() => {
-    fetch("/api/simple/mode")
-      .then(r => r.json())
-      .then(data => {
-        if (data.mode === "simple") router.replace("/purchases-simple");
-      })
-      .catch(() => {});
-  }, [router]);
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [payAmount, setPayAmount] = useState("");
