@@ -204,7 +204,7 @@ export default function NewSimpleSalePage() {
                   >
                     <option value="">Select customer (or enter name below)</option>
                     {customers.map((c) => (
-                      <option key={c.id} value={c.id}>{c.name}{c.due_balance > 0 ? ` (${formatMoney(c.due_balance)} due)` : ""}</option>
+                      <option key={c.id} value={c.id}>{c.name}{c.due_balance > 0 ? ` (${formatMoney(c.due_balance)} due)` : c.due_balance < 0 ? ` (${formatMoney(Math.abs(c.due_balance))} credit)` : ""}</option>
                     ))}
                   </select>
                 </div>
@@ -247,11 +247,11 @@ export default function NewSimpleSalePage() {
                 <table className="w-full text-left border-collapse">
                   <thead className="bg-surface-container-low border-b border-outline-variant/50">
                     <tr>
-                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Description</th>
-                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Qty (kg)</th>
-                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Price/kg</th>
-                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Total</th>
-                      <th className="px-6 py-4" />
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary w-auto min-w-[200px]">Description</th>
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right w-[130px]">Qty (kg)</th>
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right w-[140px]">Price/kg</th>
+                      <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right w-[120px]">Total</th>
+                      <th className="px-6 py-4 w-[50px]" />
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant/30">
