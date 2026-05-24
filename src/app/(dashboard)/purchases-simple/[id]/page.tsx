@@ -228,10 +228,11 @@ export default function SimplePurchaseDetailPage() {
     );
   }
 
-  const paidPercent =
-    purchase.total_amount > 0
-      ? ((purchase.paid_amount / purchase.total_amount) * 100).toFixed(1)
-      : "0";
+  const pct = purchase.total_amount > 0
+    ? (purchase.paid_amount / purchase.total_amount) * 100
+    : 0;
+  const paidPercent = pct.toFixed(2);
+  const duePercent = (100 - pct).toFixed(2);
 
   return (
     <div className="p-4 md:p-8">
@@ -512,7 +513,7 @@ export default function SimplePurchaseDetailPage() {
             <div className="mt-6">
               <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-2">
                 <span className="text-tertiary">Paid {paidPercent}%</span>
-                <span className="text-white/50">Due {100 - Number(paidPercent)}%</span>
+                <span className="text-white/50">Due {duePercent}%</span>
               </div>
               <div className="h-3 w-full bg-white/20 rounded-full overflow-hidden flex">
                 <div
