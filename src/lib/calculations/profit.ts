@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import {
+  organizations,
   purchases,
   purchaseItems,
   sales,
@@ -8,6 +9,10 @@ import {
   stockLedger,
   consumablesLog,
   salaryPayments,
+  simplePurchases,
+  simplePurchaseItems,
+  simpleSales,
+  simpleSaleItems,
 } from "@/lib/db/schema";
 import { eq, and, sql, gte, lte } from "drizzle-orm";
 
@@ -37,71 +42,184 @@ export async function calculatePeriodProfit(
   startDate: Date,
   endDate: Date,
   totalOtherExpenses: number = 0,
+  inventoryMode?: string,
 ): Promise<PeriodProfitData> {
-  const dateFilter = [
-    eq(purchases.organization_id, orgId),
-    sql`${purchases.deleted_at} IS NULL`,
-    gte(purchases.purchase_date, startDate),
-    lte(purchases.purchase_date, endDate),
-  ];
+  if (!inventoryMode) {
+    const [org] = await db
+      .select({ inventory_mode: organizations.inventory_mode })
+      .from(organizations)
+      .where(eq(organizations.id, orgId))
+      .limit(1);
+    inventoryMode = org?.inventory_mode ?? "detailed";
+  }
 
-  const [purchasedKg] = await db
-    .select({
-      total: sql<number>`COALESCE(SUM(CAST(${purchaseItems.quantity_kg} AS numeric)), 0)`,
-    })
-    .from(purchaseItems)
-    .innerJoin(purchases, eq(purchaseItems.purchase_id, purchases.id))
-    .where(
-      and(
-        eq(purchaseItems.organization_id, orgId),
-        sql`${purchaseItems.deleted_at} IS NULL`,
-        ...dateFilter,
-      ),
-    );
+  let total_purchased_kg = 0;
+  let total_purchase_cost = 0;
+  let total_sold_fabricated_kg = 0;
+  let total_sold_raw_kg = 0;
+  let current_stock_kg = 0;
 
-  const [purchaseCost] = await db
-    .select({
-      total: sql<number>`COALESCE(SUM(CAST(${purchases.total_amount} AS numeric)), 0)`,
-    })
-    .from(purchases)
-    .where(and(...dateFilter));
+  if (inventoryMode === "simple") {
+    const simpleDateFilter = [
+      eq(simplePurchases.organization_id, orgId),
+      sql`${simplePurchases.deleted_at} IS NULL`,
+      gte(simplePurchases.purchase_date, startDate),
+      lte(simplePurchases.purchase_date, endDate),
+    ];
 
-  const total_purchased_kg = Number(purchasedKg.total);
-  const total_purchase_cost = Number(purchaseCost.total);
+    const [simplePurchasedKg] = await db
+      .select({
+        total: sql<number>`COALESCE(SUM(CAST(${simplePurchaseItems.quantity_kg} AS numeric)), 0)`,
+      })
+      .from(simplePurchaseItems)
+      .innerJoin(simplePurchases, eq(simplePurchaseItems.purchase_id, simplePurchases.id))
+      .where(
+        and(
+          eq(simplePurchaseItems.organization_id, orgId),
+          sql`${simplePurchaseItems.deleted_at} IS NULL`,
+          ...simpleDateFilter,
+        ),
+      );
 
-  const [fabricatedKg] = await db
-    .select({
-      total: sql<number>`COALESCE(SUM(CAST(${saleItems.quantity_kg} AS numeric)), 0)`,
-    })
-    .from(sales)
-    .innerJoin(saleItems, eq(sales.id, saleItems.sale_id))
-    .where(
-      and(
-        eq(sales.organization_id, orgId),
-        eq(sales.sale_type, "fabricated"),
-        sql`${sales.deleted_at} IS NULL`,
-        sql`${saleItems.deleted_at} IS NULL`,
-        gte(sales.sale_date, startDate),
-        lte(sales.sale_date, endDate),
-      ),
-    );
+    const [simplePurchaseCost] = await db
+      .select({
+        total: sql<number>`COALESCE(SUM(CAST(${simplePurchases.total_amount} AS numeric)), 0)`,
+      })
+      .from(simplePurchases)
+      .where(and(...simpleDateFilter));
 
-  const [rawKg] = await db
-    .select({
-      total: sql<number>`COALESCE(SUM(CAST(${saleItems.quantity_kg} AS numeric)), 0)`,
-    })
-    .from(sales)
-    .innerJoin(saleItems, eq(sales.id, saleItems.sale_id))
-    .where(
-      and(
-        eq(sales.organization_id, orgId),
-        eq(sales.sale_type, "raw_passthrough"),
-        sql`${sales.deleted_at} IS NULL`,
-        sql`${saleItems.deleted_at} IS NULL`,
-        gte(sales.sale_date, startDate),
-        lte(sales.sale_date, endDate),
-      ),
-    );
+    total_purchased_kg = Number(simplePurchasedKg.total);
+    total_purchase_cost = Number(simplePurchaseCost.total);
+
+    const simpleSaleDateFilter = [
+      eq(simpleSales.organization_id, orgId),
+      sql`${simpleSales.deleted_at} IS NULL`,
+      gte(simpleSales.sale_date, startDate),
+      lte(simpleSales.sale_date, endDate),
+    ];
+
+    const [simpleFabricatedKg] = await db
+      .select({
+        total: sql<number>`COALESCE(SUM(CAST(${simpleSaleItems.quantity_kg} AS numeric)), 0)`,
+      })
+      .from(simpleSales)
+      .innerJoin(simpleSaleItems, eq(simpleSales.id, simpleSaleItems.sale_id))
+      .where(
+        and(
+          eq(simpleSales.organization_id, orgId),
+          eq(simpleSales.sale_type, "fabricated"),
+          sql`${simpleSales.deleted_at} IS NULL`,
+          sql`${simpleSaleItems.deleted_at} IS NULL`,
+          ...simpleSaleDateFilter,
+        ),
+      );
+
+    const [simpleRawKg] = await db
+      .select({
+        total: sql<number>`COALESCE(SUM(CAST(${simpleSaleItems.quantity_kg} AS numeric)), 0)`,
+      })
+      .from(simpleSales)
+      .innerJoin(simpleSaleItems, eq(simpleSales.id, simpleSaleItems.sale_id))
+      .where(
+        and(
+          eq(simpleSales.organization_id, orgId),
+          eq(simpleSales.sale_type, "raw_passthrough"),
+          sql`${simpleSales.deleted_at} IS NULL`,
+          sql`${simpleSaleItems.deleted_at} IS NULL`,
+          ...simpleSaleDateFilter,
+        ),
+      );
+
+    total_sold_fabricated_kg = Number(simpleFabricatedKg.total);
+    total_sold_raw_kg = Number(simpleRawKg.total);
+  } else {
+    const dateFilter = [
+      eq(purchases.organization_id, orgId),
+      sql`${purchases.deleted_at} IS NULL`,
+      gte(purchases.purchase_date, startDate),
+      lte(purchases.purchase_date, endDate),
+    ];
+
+    const [purchasedKg] = await db
+      .select({
+        total: sql<number>`COALESCE(SUM(CAST(${purchaseItems.quantity_kg} AS numeric)), 0)`,
+      })
+      .from(purchaseItems)
+      .innerJoin(purchases, eq(purchaseItems.purchase_id, purchases.id))
+      .where(
+        and(
+          eq(purchaseItems.organization_id, orgId),
+          sql`${purchaseItems.deleted_at} IS NULL`,
+          ...dateFilter,
+        ),
+      );
+
+    const [purchaseCost] = await db
+      .select({
+        total: sql<number>`COALESCE(SUM(CAST(${purchases.total_amount} AS numeric)), 0)`,
+      })
+      .from(purchases)
+      .where(and(...dateFilter));
+
+    total_purchased_kg = Number(purchasedKg.total);
+    total_purchase_cost = Number(purchaseCost.total);
+
+    const [fabricatedKg] = await db
+      .select({
+        total: sql<number>`COALESCE(SUM(CAST(${saleItems.quantity_kg} AS numeric)), 0)`,
+      })
+      .from(sales)
+      .innerJoin(saleItems, eq(sales.id, saleItems.sale_id))
+      .where(
+        and(
+          eq(sales.organization_id, orgId),
+          eq(sales.sale_type, "fabricated"),
+          sql`${sales.deleted_at} IS NULL`,
+          sql`${saleItems.deleted_at} IS NULL`,
+          gte(sales.sale_date, startDate),
+          lte(sales.sale_date, endDate),
+        ),
+      );
+
+    const [rawKg] = await db
+      .select({
+        total: sql<number>`COALESCE(SUM(CAST(${saleItems.quantity_kg} AS numeric)), 0)`,
+      })
+      .from(sales)
+      .innerJoin(saleItems, eq(sales.id, saleItems.sale_id))
+      .where(
+        and(
+          eq(sales.organization_id, orgId),
+          eq(sales.sale_type, "raw_passthrough"),
+          sql`${sales.deleted_at} IS NULL`,
+          sql`${saleItems.deleted_at} IS NULL`,
+          gte(sales.sale_date, startDate),
+          lte(sales.sale_date, endDate),
+        ),
+      );
+
+    total_sold_fabricated_kg = Number(fabricatedKg.total);
+    total_sold_raw_kg = Number(rawKg.total);
+
+    const [stock] = await db
+      .select({
+        net: sql<number>`COALESCE(SUM(
+          CASE
+            WHEN ${stockLedger.movement_type} = 'in' THEN CAST(${stockLedger.quantity_kg} AS numeric)
+            ELSE -CAST(${stockLedger.quantity_kg} AS numeric)
+          END
+        ), 0)`,
+      })
+      .from(stockLedger)
+      .where(
+        and(
+          eq(stockLedger.organization_id, orgId),
+          sql`${stockLedger.deleted_at} IS NULL`,
+        ),
+      );
+
+    current_stock_kg = Number(stock.net);
+  }
 
   const [scrapKg] = await db
     .select({
@@ -118,27 +236,7 @@ export async function calculatePeriodProfit(
       ),
     );
 
-  const [stock] = await db
-    .select({
-      net: sql<number>`COALESCE(SUM(
-        CASE
-          WHEN ${stockLedger.movement_type} = 'in' THEN CAST(${stockLedger.quantity_kg} AS numeric)
-          ELSE -CAST(${stockLedger.quantity_kg} AS numeric)
-        END
-      ), 0)`,
-    })
-    .from(stockLedger)
-    .where(
-      and(
-        eq(stockLedger.organization_id, orgId),
-        sql`${stockLedger.deleted_at} IS NULL`,
-      ),
-    );
-
-  const total_sold_fabricated_kg = Number(fabricatedKg.total);
-  const total_sold_raw_kg = Number(rawKg.total);
   const total_scrap_sold_kg = Number(scrapKg.total);
-  const current_stock_kg = Number(stock.net);
 
   const burnout_kg = Math.max(
     0,
@@ -151,7 +249,7 @@ export async function calculatePeriodProfit(
   const burnout_percent =
     total_purchased_kg > 0 ? (burnout_kg / total_purchased_kg) * 100 : 0;
 
-  const [income] = await db
+  let [income] = await db
     .select({
       total: sql<number>`COALESCE(SUM(CAST(${sales.total_amount} AS numeric)), 0)`,
     })
@@ -164,6 +262,23 @@ export async function calculatePeriodProfit(
         lte(sales.sale_date, endDate),
       ),
     );
+
+  if (inventoryMode === "simple") {
+    const [simpleIncome] = await db
+      .select({
+        total: sql<number>`COALESCE(SUM(CAST(${simpleSales.total_amount} AS numeric)), 0)`,
+      })
+      .from(simpleSales)
+      .where(
+        and(
+          eq(simpleSales.organization_id, orgId),
+          sql`${simpleSales.deleted_at} IS NULL`,
+          gte(simpleSales.sale_date, startDate),
+          lte(simpleSales.sale_date, endDate),
+        ),
+      );
+    income = simpleIncome;
+  }
 
   const [consumables] = await db
     .select({

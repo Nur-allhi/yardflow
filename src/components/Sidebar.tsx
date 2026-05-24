@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { staggerContainer, navItemVariants, activeIndicatorVariants, springSnap } from "@/lib/animation";
 import { APP_VERSION, COMMIT_HASH } from "@/lib/version";
 
-const navItems = [
+const detailedNavItems = [
   { href: "/", icon: "dashboard", label: "Dashboard" },
   { href: "/inventory", icon: "inventory_2", label: "Inventory" },
   { href: "/purchases", icon: "shopping_cart", label: "Purchases" },
@@ -16,12 +16,23 @@ const navItems = [
   { href: "/reports", icon: "assessment", label: "Reports" },
 ];
 
+const simpleNavItems = [
+  { href: "/", icon: "dashboard", label: "Dashboard" },
+  { href: "/inventory-simple", icon: "inventory_2", label: "Inventory" },
+  { href: "/purchases-simple", icon: "shopping_cart", label: "Purchases" },
+  { href: "/sales-simple", icon: "sell", label: "Sales" },
+  { href: "/hr", icon: "groups", label: "HR" },
+  { href: "/accounts", icon: "account_balance", label: "Accounts" },
+  { href: "/reports", icon: "assessment", label: "Reports" },
+];
+
 const bottomItems = [
   { href: "/settings", icon: "settings", label: "Settings" },
 ];
 
-export default function Sidebar({ role }: { role?: string }) {
+export default function Sidebar({ role, inventoryMode }: { role?: string; inventoryMode?: string }) {
   const pathname = usePathname();
+  const navItems = inventoryMode === "simple" ? simpleNavItems : detailedNavItems;
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";

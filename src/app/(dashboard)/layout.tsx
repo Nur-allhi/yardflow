@@ -20,19 +20,21 @@ export default async function DashboardLayout({
   if (!session) redirect("/login");
 
   const org = await db
-    .select({ name: organizations.name })
+    .select({ name: organizations.name, inventory_mode: organizations.inventory_mode })
     .from(organizations)
     .where(eq(organizations.id, session.org_id))
     .then((rows) => rows[0]);
+
+  const inventoryMode = org?.inventory_mode ?? "detailed";
 
   return (
     <QueryProvider>
     <div className="min-h-screen bg-background">
       {/* Desktop Sidebar */}
-      <Sidebar role={session.role} />
+      <Sidebar role={session.role} inventoryMode={inventoryMode} />
 
       {/* Mobile Sidebar Drawer */}
-      <MobileSidebar />
+      <MobileSidebar inventoryMode={inventoryMode} />
 
       {/* Main Wrapper */}
       <div className="md:ml-[240px] flex flex-col min-h-screen">
@@ -55,7 +57,7 @@ export default async function DashboardLayout({
         </main>
 
         {/* Mobile Bottom Nav */}
-        <MobileBottomNav />
+        <MobileBottomNav inventoryMode={inventoryMode} />
       </div>
       <CommandPalette />
     </div>
