@@ -1090,6 +1090,7 @@ export const customersRelations = relations(customers, ({ one, many }) => ({
     references: [organizations.id],
   }),
   sales: many(sales),
+  simpleSales: many(simpleSales),
 }));
 
 export const salesRelations = relations(sales, ({ one, many }) => ({
