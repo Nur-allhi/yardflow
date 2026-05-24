@@ -752,3 +752,26 @@ User tested the app live at `localhost:3000`. All findings and errors were logge
 - `npx tsc --noEmit` — zero errors
 - `npx eslint .` — zero errors
 - `npx next build` — successful
+
+---
+
+## 2026-05-24 — Simple Sales API Routes
+
+### Created 3 new API route files for the Simple Inventory module's Sales sub-module:
+
+1. **`src/app/api/simple/sales/route.ts`**
+   - `GET` — List sales with pagination, filterable by `customer_id`, `status`, `sale_type`, date range. Includes customer name via join. Orders by `sale_date DESC`.
+   - `POST` — Create sale with items in a transaction. Reads pool `avg_price_per_kg` for COGS, updates pool (`total_quantity_kg`, `total_value`), creates `inventoryMovements` entries (`movement_type="out"`, `reference_type="sale"`), records account transaction if `paid_amount > 0`. Auto-calculates `total_amount` and `status`.
+
+2. **`src/app/api/simple/sales/[id]/route.ts`**
+   - `GET` — Single sale with items, payments, and customer info.
+   - `PUT` — Update header fields only (`customer_id`, `customer_name`, `sale_type`, `sale_date`, `note`, `total_amount`, `paid_amount`). Recalculates `status`.
+   - `DELETE` — Soft delete sale + items + payments. Reverses pool movements (reads movement `price_per_kg` to restore value).
+
+3. **`src/app/api/simple/sales/[id]/payments/route.ts`**
+   - `POST` — Record payment in a transaction: inserts `simpleSalePayments`, updates `paid_amount`, recalculates `status`, records account transaction.
+
+### Verification
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors
+- `npx next build` — successful
