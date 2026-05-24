@@ -57,6 +57,13 @@
       "when": 1779551570095,
       "tag": "0007_curious_blacklash",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1779593307965,
+      "tag": "0008_aromatic_wallflower",
+      "breakpoints": true
     }
   ]
 }
