@@ -849,3 +849,41 @@ User tested the app live at `localhost:3000`. All findings and errors were logge
 - `npx tsc --noEmit` — zero errors
 - `npx eslint .` — zero errors
 - `npx next build` — successful
+
+## [P2 — fix 14-17] Simple-mode interconnections audit & fixes
+
+### Audit findings
+After implementing the simple-inventory module, several dashboards/APIs still only queried detailed-mode tables:
+
+| Module | Issue | Source |
+|---|---|---|
+| **Customer profile** (`/api/sales/customers/[id]`) | Only queried `sales`/`salePayments` — missed `simple_sales`/`simple_sale_payments` | Profile showed 0 sales, 0 payments, 0 due |
+| **Vendor profile** (`/api/purchases/vendors/[id]`) | Only queried `purchases`/`purchasePayments` — missed `simple_purchases`/`simple_purchase_payments` | Profile showed 0 purchases, 0 payments, 0 due |
+| **Dashboard** (`/app/(dashboard)/page.tsx`) | All 7+ KPIs used detailed tables only | Stock, sales, AR, AP, recent sales all returned 0 |
+| **Accounts enrichment** (`/lib/accounts.ts`) | `enrichTransactions` only looked up `purchasePayments`/`salePayments` | Simple-mode payment refs returned null name/URL |
+| Mobile quick-entry links | "Add Stock" hardcoded to `/inventory/subtypes` | No mode-aware link for simple mode |
+
+Already handled: Reports & profit calculation (branched), customer/vendor list APIs (fixed earlier).
+
+### Fixes applied
+
+1. **Customer detail API** — Parallel queries for `simple_sales` + `simple_sale_payments` alongside `sales`/`salePayments`, combined in JS for unified response
+2. **Vendor detail API** — Same pattern with `simple_purchases` + `simple_purchase_payments`
+3. **Dashboard** — Split query block into `if (inventoryMode === "simple")`/`else` branches:
+   - Simple: queries `inventoryPool`, `simpleSales`, `simplePurchases`; no category stock breakdown
+   - Detailed: existing queries (`stockLedger`, `sales`, `purchases`, categories)
+   - Shared queries (salaries, opening balances, accounts) — pulled out of branch
+4. **Accounts enrichment** — Added parallel lookups for `simplePurchasePayments` + `simpleSalePayments`, combined maps with detailed maps before lookup
+5. **Mobile links** — "Add Stock" → `/inventory-simple` in simple mode, label changes to "Inventory"
+6. **TypeScript fixes** — Replaced `Promise.all` destructuring with individual `await` + `[0]` indexing for better type inference
+
+### Files changed
+- `src/app/api/sales/customers/[id]/route.ts` — parallel simple-sale queries + combined response
+- `src/app/api/purchases/vendors/[id]/route.ts` — parallel simple-purchase queries + combined response
+- `src/app/(dashboard)/page.tsx` — branched queries for simple mode
+- `src/lib/accounts.ts` — simple-mode payment table lookups in enrichment
+
+### Verification
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors
+- `npx next build` — successful
