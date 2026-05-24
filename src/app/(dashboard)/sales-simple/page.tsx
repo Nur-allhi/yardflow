@@ -184,7 +184,7 @@ export default function SimpleSalesPage() {
             Customers
           </Link>
           <Link
-            href="/sales/scrap/new"
+            href="/sales-simple/scrap/new"
             className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-tertiary text-tertiary font-bold hover:bg-tertiary/5 transition-all active:scale-95"
           >
             <span className="material-symbols-outlined text-lg">recycling</span>
