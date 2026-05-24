@@ -1,5 +1,39 @@
 # Session Log — Start: 2026-05-24
 
+## Added mode guards to all 19 detailed-mode pages
+
+Added redirect guards to detailed-mode inventory/purchases/sales pages. When org's `inventory_mode` is "simple", these pages now redirect to the simple equivalent.
+
+**Files changed (guard added):**
+- `src/app/(dashboard)/inventory/page.tsx` — server component, DB query guard → `/inventory-simple`
+- `src/app/(dashboard)/inventory/categories/page.tsx` — client, useEffect fetch → `/inventory-simple`
+- `src/app/(dashboard)/inventory/subtypes/page.tsx` — client → `/inventory-simple`
+- `src/app/(dashboard)/inventory/ledger/page.tsx` — client → `/inventory-simple`
+- `src/app/(dashboard)/inventory/scrap/page.tsx` — client → `/inventory-simple`
+- `src/app/(dashboard)/inventory/consumables/page.tsx` — client → `/inventory-simple`
+- `src/app/(dashboard)/inventory/consumables/use/page.tsx` — client → `/inventory-simple`
+- `src/app/(dashboard)/purchases/page.tsx` — client → `/purchases-simple`
+- `src/app/(dashboard)/purchases/new/page.tsx` — client → `/purchases-simple`
+- `src/app/(dashboard)/purchases/[id]/page.tsx` — client → `/purchases-simple`
+- `src/app/(dashboard)/purchases/vendors/page.tsx` — client → `/purchases-simple`
+- `src/app/(dashboard)/purchases/vendors/[id]/page.tsx` — client → `/purchases-simple`
+- `src/app/(dashboard)/sales/page.tsx` — client → `/sales-simple`
+- `src/app/(dashboard)/sales/new/page.tsx` — client → `/sales-simple`
+- `src/app/(dashboard)/sales/new/quick/page.tsx` — client → `/sales-simple`
+- `src/app/(dashboard)/sales/[id]/page.tsx` — client → `/sales-simple`
+- `src/app/(dashboard)/sales/customers/page.tsx` — client → `/sales-simple`
+- `src/app/(dashboard)/sales/customers/[id]/page.tsx` — client → `/sales-simple`
+- `src/app/(dashboard)/sales/scrap/new/page.tsx` — client → `/sales-simple`
+
+**Bug fix:** Removed duplicate `const router = useRouter()` in `sales/scrap/new/page.tsx`
+
+**Verification:**
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors
+- `npx next build` — success (78/78 pages)
+
+---
+
 ## Added mode guards to all 11 simple-mode pages
 
 When org's `inventory_mode` is "detailed", these pages now redirect to the detailed equivalent.
