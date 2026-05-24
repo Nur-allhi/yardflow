@@ -4,9 +4,10 @@ import {
   simpleSales,
   simpleSaleItems,
   simpleSalePayments,
-  scrapPool,
+  inventoryPool,
+  inventoryMovements,
 } from "@/lib/db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
 import { recordAccountTransaction } from "@/lib/accounts";
 import { z } from "zod";
@@ -60,26 +61,21 @@ export async function POST(request: Request) {
       : (note || "Scrap sale");
 
     const result = await db.transaction(async (tx) => {
-      const [scrapQty] = await tx
-        .select({
-          total: sql<number>`COALESCE(SUM(
-            CASE WHEN ${scrapPool.movement_type} = 'in' THEN CAST(${scrapPool.quantity_kg} AS numeric) ELSE -CAST(${scrapPool.quantity_kg} AS numeric) END
-          ), 0)`,
-        })
-        .from(scrapPool)
-        .where(
-          and(
-            eq(scrapPool.organization_id, orgId),
-            sql`${scrapPool.deleted_at} IS NULL`,
-          ),
-        );
+      const [pool] = await tx
+        .select()
+        .from(inventoryPool)
+        .where(eq(inventoryPool.organization_id, orgId))
+        .limit(1);
 
-      const availableKg = Number(scrapQty.total);
-      if (quantity_kg > availableKg) {
+      const poolQty = pool ? Number(pool.total_quantity_kg) : 0;
+      if (quantity_kg > poolQty) {
         throw new Error(
-          `Insufficient scrap: ${quantity_kg.toFixed(3)} kg sold but only ${availableKg.toFixed(3)} kg available`,
+          `Insufficient stock: ${quantity_kg.toFixed(3)} kg sold but only ${poolQty.toFixed(3)} kg available`,
         );
       }
+
+      const avgPrice = pool ? Number(pool.avg_price_per_kg) : 0;
+      const cogs = quantity_kg * avgPrice;
 
       const [sale] = await tx
         .insert(simpleSales)
@@ -105,13 +101,24 @@ export async function POST(request: Request) {
         price_per_kg: price_per_kg.toFixed(2),
       });
 
-      await tx.insert(scrapPool).values({
+      await tx
+        .update(inventoryPool)
+        .set({
+          total_quantity_kg: sql`${inventoryPool.total_quantity_kg}::numeric - ${quantity_kg.toFixed(3)}::numeric`,
+          total_value: sql`${inventoryPool.total_value}::numeric - ${cogs.toFixed(2)}::numeric`,
+        })
+        .where(eq(inventoryPool.organization_id, orgId));
+
+      await tx.insert(inventoryMovements).values({
         organization_id: orgId,
         movement_type: "out",
         quantity_kg: quantity_kg.toFixed(3),
+        price_per_kg: avgPrice.toFixed(2),
+        total_value: cogs.toFixed(2),
+        reference_type: "sale",
         reference_id: sale.id,
+        description: buyer_name ? `Scrap — ${buyer_name}` : "Scrap sale",
         movement_date: new Date(sale_date),
-        note: saleNote,
       });
 
       if (amount_received > 0) {
@@ -146,7 +153,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Error creating simple scrap sale:", error);
     const message = error instanceof Error ? error.message : "Failed to create scrap sale";
-    const status = message.includes("Insufficient scrap") ? 400 : 500;
+    const status = message.includes("Insufficient stock") ? 400 : 500;
     return NextResponse.json({ error: message }, { status });
   }
 }
