@@ -920,6 +920,36 @@ Already handled: Reports & profit calculation (branched), customer/vendor list A
 | `7a931b9` | [P2] Account transaction notes enrichment |
 | `ce62564` | [P3] Purchase detail Due percentage fix |
 
+---
+
+## 2026-05-24 — Simple-mode Calculation Overhaul + Bug Fixes
+
+### Burnout System Redesign (Simple Mode Only)
+
+**Problem:** Simple-mode profit reports had `current_stock_kg = 0` (never queried `inventoryPool`), causing burnout to be massively overestimated. Burnout was auto-calculated from gap analysis (`purchased - sold - scrap - stock`) which doesn't apply to simple mode (no per-order stock tracking).
+
+**Fix:** Replaced with user-input burnout percentage:
+- Report generate page now shows **"Burnout % (estimate)"** input field
+- `burnout_kg = burnout_percent × total_sold_kg / 100`
+- `current_stock_kg = pool_kg - burnout_kg` (shows closing stock after burnout deduction)
+- Detailed mode unchanged — keeps existing auto-calculation
+
+### Files changed:
+- `src/lib/calculations/profit.ts` — inventoryPool query + `burnoutPercent` param + branched burnout calc
+- `src/lib/validations/schemas.ts` — `burnout_percent` field in `generateReportSchema`
+- `src/app/api/reports/route.ts` — pass `burnout_percent` to calculation
+- `src/app/(dashboard)/reports/generate/page.tsx` — added burnout % input field
+
+### API Bug Fixes:
+- **DELETE simple/purchases**: now deletes `inventoryMovements` rows (were orphaned — movement ledger permanently inflated)
+- **DELETE simple/sales**: same fix — `inventoryMovements` rows now removed on void
+- **POST simple/sales**: added insufficient stock guard — returns 400 with message if sale qty > pool qty
+
+### Commits:
+| Hash | Message |
+|------|---------|
+| `503263a` | Simple-mode calculation overhaul: burnout redesign + bug fixes |
+
 ### Verification
 - `npx tsc --noEmit` — zero errors
 - `npx eslint .` — zero errors

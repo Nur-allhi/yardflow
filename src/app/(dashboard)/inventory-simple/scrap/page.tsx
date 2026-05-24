@@ -468,7 +468,7 @@ export default function ScrapPoolPage() {
             </div>
 
             <Link
-              href="/sales/scrap/new"
+              href="/sales-simple/scrap/new"
               className="flex items-center justify-center gap-2 w-full py-3 bg-primary-container text-white font-bold rounded-lg hover:bg-primary-container/90 transition-all active:scale-[0.98] text-center text-sm"
             >
               <span className="material-symbols-outlined text-sm">add_circle</span>
@@ -481,7 +481,7 @@ export default function ScrapPoolPage() {
       {/* Mobile FAB */}
       <div className="md:hidden fixed bottom-24 right-6 z-40">
         <Link
-          href="/sales/scrap/new"
+          href="/sales-simple/scrap/new"
           className="bg-primary text-on-primary h-14 pl-5 pr-6 rounded-full flex items-center gap-2 shadow-lg active:scale-95 duration-150"
         >
           <span className="material-symbols-outlined">add_shopping_cart</span>
