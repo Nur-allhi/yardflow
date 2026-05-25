@@ -3,15 +3,8 @@ import { db } from "@/lib/db";
 import { eq, and, sql } from "drizzle-orm";
 import { requireSession } from "@/lib/auth/session";
 import { logActivity } from "@/lib/activity-log";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let _archiver: any;
-async function getArchiver() {
-  if (!_archiver) {
-    _archiver = (await import("archiver")).default;
-  }
-  return _archiver;
-}
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const archiver = require("archiver");
 import {
   organizations, users,
   accounts, accountTransactions,
@@ -183,8 +176,7 @@ export async function GET(request: Request) {
       }
 
       if (tableParam === "all") {
-        const archiverFn = await getArchiver();
-        const archive = archiverFn("zip", { zlib: { level: 9 } });
+        const archive = archiver("zip", { zlib: { level: 9 } });
         const buffers: Buffer[] = [];
         archive.on("data", (d: Buffer) => buffers.push(d));
 
