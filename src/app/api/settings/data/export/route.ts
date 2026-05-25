@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { eq, and, sql } from "drizzle-orm";
 import { requireSession } from "@/lib/auth/session";
 import { logActivity } from "@/lib/activity-log";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const archiver = require("archiver");
 import {
   organizations, users,
   accounts, accountTransactions,
@@ -174,33 +176,39 @@ export async function GET(request: Request) {
       }
 
       if (tableParam === "all") {
-        const data: Record<string, Record<string, unknown>[]> = {
-          organization: [org as unknown as Record<string, unknown>],
-        };
+        const archive = archiver("zip", { zlib: { level: 9 } });
+        const buffers: Buffer[] = [];
+        archive.on("data", (d: Buffer) => buffers.push(d));
+
+        const orgRows = [org as unknown as Record<string, unknown>];
+        archive.append(rowsToCsv(orgRows), { name: "organization.csv" });
 
         for (const entry of TABLE_ENTRIES) {
-          data[entry.name] = await queryTable(entry, orgId);
+          const rows = await queryTable(entry, orgId);
+          const csv = rowsToCsv(rows);
+          archive.append(csv, { name: `${entry.name}.csv` });
         }
+
+        await new Promise<void>((resolve, reject) => {
+          archive.on("finish", resolve);
+          archive.on("error", reject);
+          archive.finalize();
+        });
+        const zipBuffer = Buffer.concat(buffers);
 
         logActivity({
           orgId,
           userId: session.user_id,
           action: "export",
           entityType: "all",
-          description: "Exported all data as JSON (CSV ZIP requires archiver)",
+          description: "Exported all data as CSV ZIP",
         });
 
-        const json = JSON.stringify(
-          { ...data, exported_at: new Date().toISOString(), version: "1.0.0" },
-          null,
-          2,
-        );
-
-        return new NextResponse(json, {
+        return new NextResponse(zipBuffer, {
           status: 200,
           headers: {
-            "Content-Type": "application/json",
-            "Content-Disposition": `attachment; filename="yardflow-export-${safeName}-${dateStr}.json"`,
+            "Content-Type": "application/zip",
+            "Content-Disposition": `attachment; filename="yardflow-export-${safeName}-${dateStr}.zip"`,
           },
         });
       }
