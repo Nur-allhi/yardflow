@@ -99,8 +99,11 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     if (!body.exported_at || !body.version) {
+      const missing = [];
+      if (!body.exported_at) missing.push("exported_at");
+      if (!body.version) missing.push("version");
       return NextResponse.json(
-        { error: "Invalid import file: missing exported_at or version" },
+        { error: `Invalid import file: missing ${missing.join(" and ")}. Export data from /api/settings/data/export first.` },
         { status: 400 },
       );
     }
@@ -152,6 +155,13 @@ export async function POST(request: Request) {
       }
     }
 
+    function toDate(value: unknown): unknown {
+      if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}/.test(value)) {
+        return new Date(value);
+      }
+      return value;
+    }
+
     function prepareRow(
       row: Record<string, unknown>,
       table: string,
@@ -163,7 +173,7 @@ export async function POST(request: Request) {
       for (const [k, v] of Object.entries(row)) {
         if (k === "id") continue;
         if (GENERATED_COLUMNS[table]?.has(k)) continue;
-        cleaned[k] = v;
+        cleaned[k] = toDate(v);
       }
 
       cleaned.organization_id = orgId;
@@ -358,8 +368,9 @@ export async function POST(request: Request) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error importing data:", error);
+    const message = error instanceof Error ? error.message : "Failed to import data";
     return NextResponse.json(
-      { error: "Failed to import data" },
+      { error: message },
       { status: 500 },
     );
   }

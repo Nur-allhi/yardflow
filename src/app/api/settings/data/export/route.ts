@@ -191,7 +191,7 @@ export async function GET(request: Request) {
         });
 
         const json = JSON.stringify(
-          { ...data, exported_at: new Date().toISOString() },
+          { ...data, exported_at: new Date().toISOString(), version: "1.0.0" },
           null,
           2,
         );
@@ -229,7 +229,7 @@ export async function GET(request: Request) {
     });
 
     const json = JSON.stringify(
-      { ...data, exported_at: new Date().toISOString() },
+      { ...data, exported_at: new Date().toISOString(), version: "1.0.0" },
       null,
       2,
     );
