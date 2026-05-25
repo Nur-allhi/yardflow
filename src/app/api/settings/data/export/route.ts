@@ -8,9 +8,7 @@ import { logActivity } from "@/lib/activity-log";
 let _archiver: any;
 async function getArchiver() {
   if (!_archiver) {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const mod = require("archiver");
-    _archiver = mod.default || mod;
+    _archiver = (await import("archiver")).default;
   }
   return _archiver;
 }
