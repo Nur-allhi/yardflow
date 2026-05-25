@@ -58,6 +58,7 @@ export async function POST(
         type: "credit",
         amount: String(amount),
         reference_type: "other",
+        reference_id: id,
         transaction_date: new Date(payment_date),
         note: note || `Opening balance received from customer: ${customer.name}`,
       });

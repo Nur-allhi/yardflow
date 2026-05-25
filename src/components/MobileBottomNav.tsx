@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { springSnap } from "@/lib/animation";
 
-const navItems = [
+const detailedNavItems = [
   { href: "/", label: "Home", icon: "home" },
   { href: "/inventory", label: "Inventory", icon: "inventory_2" },
   { href: "/purchases", label: "Purchases", icon: "shopping_cart" },
@@ -16,7 +16,19 @@ const navItems = [
   { href: "/settings", label: "Settings", icon: "settings" },
 ];
 
-export default function MobileBottomNav() {
+const simpleNavItems = [
+  { href: "/", label: "Home", icon: "home" },
+  { href: "/inventory-simple", label: "Inventory", icon: "inventory_2" },
+  { href: "/purchases-simple", label: "Purchases", icon: "shopping_cart" },
+  { href: "/sales-simple", label: "Sales", icon: "sell" },
+  { href: "/hr", label: "HR", icon: "groups" },
+  { href: "/accounts", label: "Accounts", icon: "account_balance" },
+  { href: "/reports", label: "Reports", icon: "assessment" },
+  { href: "/settings", label: "Settings", icon: "settings" },
+];
+
+export default function MobileBottomNav({ inventoryMode }: { inventoryMode?: string }) {
+  const navItems = inventoryMode === "simple" ? simpleNavItems : detailedNavItems;
   const pathname = usePathname();
 
   return (

@@ -69,6 +69,12 @@ export const periodTypeEnum = pgEnum("period_type", [
   "custom",
 ]);
 export const reportResultEnum = pgEnum("report_result", ["profit", "loss"]);
+export const inventoryModeEnum = pgEnum("inventory_mode", ["detailed", "simple"]);
+export const simpleMovementTypeEnum = pgEnum("simple_movement_type", [
+  "purchase",
+  "sale",
+  "adjustment",
+]);
 
 // ──────────────────────────────────────────────
 // 5.1 ORGANIZATIONS & AUTH
@@ -81,6 +87,7 @@ export const organizations = pgTable("organizations", {
   phone: text("phone"),
   email: text("email"),
   plan: planEnum("plan").default("free").notNull(),
+  inventory_mode: inventoryModeEnum("inventory_mode").default("detailed").notNull(),
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   deleted_at: timestamp("deleted_at", { withTimezone: true }),
@@ -656,6 +663,212 @@ export const activityLogs = pgTable("activity_logs", {
 }));
 
 // ──────────────────────────────────────────────
+// 5.8 SIMPLE INVENTORY MODULE
+// ──────────────────────────────────────────────
+
+export const inventoryPool = pgTable("inventory_pool", {
+  organization_id: uuid("organization_id")
+    .notNull()
+    .primaryKey()
+    .references(() => organizations.id),
+  total_quantity_kg: decimal("total_quantity_kg", { precision: 15, scale: 3 })
+    .default("0")
+    .notNull(),
+  total_value: decimal("total_value", { precision: 15, scale: 2 })
+    .default("0")
+    .notNull(),
+  avg_price_per_kg: decimal("avg_price_per_kg", { precision: 15, scale: 2 })
+    .generatedAlwaysAs(sql`CASE WHEN total_quantity_kg = 0 THEN 0 ELSE total_value / total_quantity_kg END`)
+    .notNull(),
+});
+
+export const inventoryMovements = pgTable("inventory_movements", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organization_id: uuid("organization_id")
+    .notNull()
+    .references(() => organizations.id),
+  movement_type: movementTypeEnum("movement_type").notNull(),
+  quantity_kg: decimal("quantity_kg", { precision: 12, scale: 3 }).notNull(),
+  price_per_kg: decimal("price_per_kg", { precision: 10, scale: 2 }),
+  total_value: decimal("total_value", { precision: 15, scale: 2 }),
+  reference_type: simpleMovementTypeEnum("reference_type").notNull(),
+  reference_id: uuid("reference_id"),
+  description: text("description"),
+  movement_date: timestamp("movement_date", { withTimezone: true }).notNull(),
+  note: text("note"),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => ({
+  orgIdx: index("idx_inventory_movements_org").on(table.organization_id),
+  movementDateIdx: index("idx_inventory_movements_date").on(table.movement_date),
+  referenceIdx: index("idx_inventory_movements_reference").on(table.reference_type, table.reference_id),
+}));
+
+export const simplePurchases = pgTable("simple_purchases", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organization_id: uuid("organization_id")
+    .notNull()
+    .references(() => organizations.id),
+  vendor_id: uuid("vendor_id")
+    .notNull()
+    .references(() => vendors.id),
+  purchase_date: timestamp("purchase_date", { withTimezone: true }).notNull(),
+  total_amount: decimal("total_amount", { precision: 15, scale: 2 }).notNull(),
+  paid_amount: decimal("paid_amount", { precision: 15, scale: 2 })
+    .default("0")
+    .notNull(),
+  due_amount: decimal("due_amount", { precision: 15, scale: 2 })
+    .generatedAlwaysAs(sql`total_amount - paid_amount`)
+    .notNull(),
+  status: paymentStatusEnum("status").default("due").notNull(),
+  note: text("note"),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at", { withTimezone: true }),
+}, (table) => ({
+  orgIdx: index("idx_simple_purchases_org").on(table.organization_id),
+  vendorIdx: index("idx_simple_purchases_vendor").on(table.vendor_id),
+  purchaseDateIdx: index("idx_simple_purchases_date").on(table.purchase_date),
+}));
+
+export const simplePurchaseItems = pgTable("simple_purchase_items", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organization_id: uuid("organization_id")
+    .notNull()
+    .references(() => organizations.id),
+  purchase_id: uuid("purchase_id")
+    .notNull()
+    .references(() => simplePurchases.id),
+  description: text("description").notNull(),
+  quantity_kg: decimal("quantity_kg", { precision: 12, scale: 3 }).notNull(),
+  price_per_kg: decimal("price_per_kg", { precision: 10, scale: 2 }).notNull(),
+  total_amount: decimal("total_amount", { precision: 15, scale: 2 })
+    .generatedAlwaysAs(sql`quantity_kg * price_per_kg`)
+    .notNull(),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at", { withTimezone: true }),
+}, (table) => ({
+  orgIdx: index("idx_simple_purchase_items_org").on(table.organization_id),
+  purchaseIdx: index("idx_simple_purchase_items_purchase").on(table.purchase_id),
+}));
+
+export const simplePurchasePayments = pgTable("simple_purchase_payments", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organization_id: uuid("organization_id")
+    .notNull()
+    .references(() => organizations.id),
+  purchase_id: uuid("purchase_id")
+    .notNull()
+    .references(() => simplePurchases.id),
+  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
+  account_id: uuid("account_id")
+    .notNull()
+    .references(() => accounts.id),
+  payment_date: timestamp("payment_date", { withTimezone: true }).notNull(),
+  note: text("note"),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at", { withTimezone: true }),
+}, (table) => ({
+  orgIdx: index("idx_simple_purchase_payments_org").on(table.organization_id),
+  purchaseIdx: index("idx_simple_purchase_payments_purchase").on(table.purchase_id),
+  accountIdx: index("idx_simple_purchase_payments_account").on(table.account_id),
+}));
+
+export const simplePurchaseOtherExpenses = pgTable("simple_purchase_other_expenses", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organization_id: uuid("organization_id")
+    .notNull()
+    .references(() => organizations.id),
+  purchase_id: uuid("purchase_id")
+    .notNull()
+    .references(() => simplePurchases.id),
+  description: text("description").notNull(),
+  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
+  account_id: uuid("account_id").references(() => accounts.id),
+  add_to_vendor_total: boolean("add_to_vendor_total").default(false).notNull(),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at", { withTimezone: true }),
+}, (table) => ({
+  orgIdx: index("idx_simple_purch_other_exp_org").on(table.organization_id),
+  purchaseIdx: index("idx_simple_purch_other_exp_purch").on(table.purchase_id),
+  accountIdx: index("idx_simple_purch_other_exp_account").on(table.account_id),
+}));
+
+export const simpleSales = pgTable("simple_sales", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organization_id: uuid("organization_id")
+    .notNull()
+    .references(() => organizations.id),
+  customer_id: uuid("customer_id").references(() => customers.id),
+  customer_name: text("customer_name"),
+  sale_type: saleTypeEnum("sale_type").notNull(),
+  is_quick_cash_sale: boolean("is_quick_cash_sale").default(false).notNull(),
+  sale_date: timestamp("sale_date", { withTimezone: true }).notNull(),
+  total_amount: decimal("total_amount", { precision: 15, scale: 2 }).notNull(),
+  paid_amount: decimal("paid_amount", { precision: 15, scale: 2 })
+    .default("0")
+    .notNull(),
+  due_amount: decimal("due_amount", { precision: 15, scale: 2 })
+    .generatedAlwaysAs(sql`total_amount - paid_amount`)
+    .notNull(),
+  status: paymentStatusEnum("status").default("due").notNull(),
+  note: text("note"),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at", { withTimezone: true }),
+}, (table) => ({
+  orgIdx: index("idx_simple_sales_org").on(table.organization_id),
+  customerIdx: index("idx_simple_sales_customer").on(table.customer_id),
+  saleDateIdx: index("idx_simple_sales_date").on(table.sale_date),
+}));
+
+export const simpleSaleItems = pgTable("simple_sale_items", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organization_id: uuid("organization_id")
+    .notNull()
+    .references(() => organizations.id),
+  sale_id: uuid("sale_id")
+    .notNull()
+    .references(() => simpleSales.id),
+  description: text("description").notNull(),
+  quantity_kg: decimal("quantity_kg", { precision: 12, scale: 3 }).notNull(),
+  price_per_kg: decimal("price_per_kg", { precision: 10, scale: 2 }).notNull(),
+  total_amount: decimal("total_amount", { precision: 15, scale: 2 })
+    .generatedAlwaysAs(sql`quantity_kg * price_per_kg`)
+    .notNull(),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at", { withTimezone: true }),
+}, (table) => ({
+  orgIdx: index("idx_simple_sale_items_org").on(table.organization_id),
+  saleIdx: index("idx_simple_sale_items_sale").on(table.sale_id),
+}));
+
+export const simpleSalePayments = pgTable("simple_sale_payments", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  organization_id: uuid("organization_id")
+    .notNull()
+    .references(() => organizations.id),
+  sale_id: uuid("sale_id")
+    .notNull()
+    .references(() => simpleSales.id),
+  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
+  account_id: uuid("account_id")
+    .notNull()
+    .references(() => accounts.id),
+  payment_date: timestamp("payment_date", { withTimezone: true }).notNull(),
+  note: text("note"),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at", { withTimezone: true }),
+}, (table) => ({
+  orgIdx: index("idx_simple_sale_payments_org").on(table.organization_id),
+  saleIdx: index("idx_simple_sale_payments_sale").on(table.sale_id),
+  accountIdx: index("idx_simple_sale_payments_account").on(table.account_id),
+}));
+
+// ──────────────────────────────────────────────
 // RELATIONS
 // ──────────────────────────────────────────────
 
@@ -681,7 +894,8 @@ export const organizationsRelations = relations(organizations, ({ many }) => ({
   workers: many(workers),
   salaryAdvances: many(salaryAdvances),
   salaryPayments: many(salaryPayments),
-  periodReports: many(periodReports),
+  simplePurchasePayments: many(simplePurchasePayments),
+  simpleSalePayments: many(simpleSalePayments),
 }));
 
 export const usersRelations = relations(users, ({ one, many }) => ({
@@ -802,6 +1016,7 @@ export const vendorsRelations = relations(vendors, ({ one, many }) => ({
     references: [organizations.id],
   }),
   purchases: many(purchases),
+  simplePurchases: many(simplePurchases),
 }));
 
 export const purchaseOtherExpenses = pgTable("purchase_other_expenses", {
@@ -895,6 +1110,7 @@ export const customersRelations = relations(customers, ({ one, many }) => ({
     references: [organizations.id],
   }),
   sales: many(sales),
+  simpleSales: many(simpleSales),
 }));
 
 export const salesRelations = relations(sales, ({ one, many }) => ({
@@ -997,6 +1213,142 @@ export const periodReportsRelations = relations(periodReports, ({ one }) => ({
 }));
 
 // ──────────────────────────────────────────────
+// SIMPLE INVENTORY RELATIONS
+// ──────────────────────────────────────────────
+
+export const inventoryPoolRelations = relations(inventoryPool, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [inventoryPool.organization_id],
+    references: [organizations.id],
+  }),
+}));
+
+export const inventoryMovementsRelations = relations(
+  inventoryMovements,
+  ({ one }) => ({
+    organization: one(organizations, {
+      fields: [inventoryMovements.organization_id],
+      references: [organizations.id],
+    }),
+  }),
+);
+
+export const simplePurchasesRelations = relations(
+  simplePurchases,
+  ({ one, many }) => ({
+    organization: one(organizations, {
+      fields: [simplePurchases.organization_id],
+      references: [organizations.id],
+    }),
+    vendor: one(vendors, {
+      fields: [simplePurchases.vendor_id],
+      references: [vendors.id],
+    }),
+    items: many(simplePurchaseItems),
+    payments: many(simplePurchasePayments),
+    otherExpenses: many(simplePurchaseOtherExpenses),
+  }),
+);
+
+export const simplePurchaseOtherExpensesRelations = relations(
+  simplePurchaseOtherExpenses,
+  ({ one }) => ({
+    organization: one(organizations, {
+      fields: [simplePurchaseOtherExpenses.organization_id],
+      references: [organizations.id],
+    }),
+    purchase: one(simplePurchases, {
+      fields: [simplePurchaseOtherExpenses.purchase_id],
+      references: [simplePurchases.id],
+    }),
+    account: one(accounts, {
+      fields: [simplePurchaseOtherExpenses.account_id],
+      references: [accounts.id],
+    }),
+  }),
+);
+
+export const simplePurchaseItemsRelations = relations(
+  simplePurchaseItems,
+  ({ one }) => ({
+    organization: one(organizations, {
+      fields: [simplePurchaseItems.organization_id],
+      references: [organizations.id],
+    }),
+    purchase: one(simplePurchases, {
+      fields: [simplePurchaseItems.purchase_id],
+      references: [simplePurchases.id],
+    }),
+  }),
+);
+
+export const simplePurchasePaymentsRelations = relations(
+  simplePurchasePayments,
+  ({ one }) => ({
+    organization: one(organizations, {
+      fields: [simplePurchasePayments.organization_id],
+      references: [organizations.id],
+    }),
+    purchase: one(simplePurchases, {
+      fields: [simplePurchasePayments.purchase_id],
+      references: [simplePurchases.id],
+    }),
+    account: one(accounts, {
+      fields: [simplePurchasePayments.account_id],
+      references: [accounts.id],
+    }),
+  }),
+);
+
+export const simpleSalesRelations = relations(
+  simpleSales,
+  ({ one, many }) => ({
+    organization: one(organizations, {
+      fields: [simpleSales.organization_id],
+      references: [organizations.id],
+    }),
+    customer: one(customers, {
+      fields: [simpleSales.customer_id],
+      references: [customers.id],
+    }),
+    items: many(simpleSaleItems),
+    payments: many(simpleSalePayments),
+  }),
+);
+
+export const simpleSaleItemsRelations = relations(
+  simpleSaleItems,
+  ({ one }) => ({
+    organization: one(organizations, {
+      fields: [simpleSaleItems.organization_id],
+      references: [organizations.id],
+    }),
+    sale: one(simpleSales, {
+      fields: [simpleSaleItems.sale_id],
+      references: [simpleSales.id],
+    }),
+  }),
+);
+
+export const simpleSalePaymentsRelations = relations(
+  simpleSalePayments,
+  ({ one }) => ({
+    organization: one(organizations, {
+      fields: [simpleSalePayments.organization_id],
+      references: [organizations.id],
+    }),
+    sale: one(simpleSales, {
+      fields: [simpleSalePayments.sale_id],
+      references: [simpleSales.id],
+    }),
+    account: one(accounts, {
+      fields: [simpleSalePayments.account_id],
+      references: [accounts.id],
+    }),
+  }),
+);
+
+// ──────────────────────────────────────────────
 // TYPES
 // ──────────────────────────────────────────────
 
@@ -1076,3 +1428,21 @@ export type NewPeriodReport = InferInsertModel<typeof periodReports>;
 
 export type ActivityLog = InferSelectModel<typeof activityLogs>;
 export type NewActivityLog = InferInsertModel<typeof activityLogs>;
+
+// Simple Inventory
+export type InventoryPool = InferSelectModel<typeof inventoryPool>;
+export type NewInventoryPool = InferInsertModel<typeof inventoryPool>;
+export type InventoryMovement = InferSelectModel<typeof inventoryMovements>;
+export type NewInventoryMovement = InferInsertModel<typeof inventoryMovements>;
+export type SimplePurchase = InferSelectModel<typeof simplePurchases>;
+export type NewSimplePurchase = InferInsertModel<typeof simplePurchases>;
+export type SimplePurchaseItem = InferSelectModel<typeof simplePurchaseItems>;
+export type NewSimplePurchaseItem = InferInsertModel<typeof simplePurchaseItems>;
+export type SimplePurchasePayment = InferSelectModel<typeof simplePurchasePayments>;
+export type NewSimplePurchasePayment = InferInsertModel<typeof simplePurchasePayments>;
+export type SimpleSale = InferSelectModel<typeof simpleSales>;
+export type NewSimpleSale = InferInsertModel<typeof simpleSales>;
+export type SimpleSaleItem = InferSelectModel<typeof simpleSaleItems>;
+export type NewSimpleSaleItem = InferInsertModel<typeof simpleSaleItems>;
+export type SimpleSalePayment = InferSelectModel<typeof simpleSalePayments>;
+export type NewSimpleSalePayment = InferInsertModel<typeof simpleSalePayments>;

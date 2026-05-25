@@ -12,15 +12,17 @@ interface OrgData {
   phone: string | null;
   email: string | null;
   plan: string;
+  inventory_mode: "detailed" | "simple";
 }
 
 export default function SettingsPage() {
   const queryClient = useQueryClient();
 
-  const [form, setForm] = useState({ name: "", address: "", phone: "", email: "" });
+  const [form, setForm] = useState({ name: "", address: "", phone: "", email: "", inventory_mode: "detailed" as "detailed" | "simple" });
   const [org, setOrg] = useState<OrgData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [originalMode, setOriginalMode] = useState<string>("detailed");
 
   const { data: orgData, isLoading: loading, error: loadError, refetch: loadData } = useQuery({
     queryKey: ["settings"],
@@ -33,7 +35,9 @@ export default function SettingsPage() {
         address: data.address || "",
         phone: data.phone || "",
         email: data.email || "",
+        inventory_mode: data.inventory_mode || "detailed",
       });
+      setOriginalMode(data.inventory_mode || "detailed");
       return data;
     },
   });
@@ -62,7 +66,11 @@ export default function SettingsPage() {
       setOrg(data);
       setSaved(true);
       queryClient.invalidateQueries({ queryKey: ["settings"] });
-      setTimeout(() => setSaved(false), 2500);
+      if (data.inventory_mode !== originalMode) {
+        setTimeout(() => { window.location.reload(); }, 800);
+      } else {
+        setTimeout(() => setSaved(false), 2500);
+      }
     },
     onError: (err: Error) => {
       setError(err.message);
@@ -197,6 +205,45 @@ export default function SettingsPage() {
                 className="w-full h-[44px] px-4 bg-surface-container-low border border-outline-variant rounded-lg text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-medium"
                 placeholder="Enter email address"
               />
+            </div>
+
+            {/* Inventory Mode */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-on-surface-variant uppercase ml-1">
+                Inventory Mode
+              </label>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setForm((prev) => ({ ...prev, inventory_mode: "detailed" }))}
+                  className={`flex-1 flex items-center gap-2 px-4 py-3 rounded-lg border-2 text-sm font-semibold transition-all ${
+                    form.inventory_mode === "detailed"
+                      ? "border-primary bg-primary/5 text-primary"
+                      : "border-outline-variant text-on-surface-variant hover:border-primary/50"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-lg">category</span>
+                  <span className="text-left">
+                    <span className="block">Detailed</span>
+                    <span className="block text-[11px] font-normal opacity-70">Categories + Sub-types</span>
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setForm((prev) => ({ ...prev, inventory_mode: "simple" }))}
+                  className={`flex-1 flex items-center gap-2 px-4 py-3 rounded-lg border-2 text-sm font-semibold transition-all ${
+                    form.inventory_mode === "simple"
+                      ? "border-primary bg-primary/5 text-primary"
+                      : "border-outline-variant text-on-surface-variant hover:border-primary/50"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-lg">inventory_2</span>
+                  <span className="text-left">
+                    <span className="block">Simple</span>
+                    <span className="block text-[11px] font-normal opacity-70">Single pool, no sub-types</span>
+                  </span>
+                </button>
+              </div>
             </div>
 
             {/* Plan + Save */}

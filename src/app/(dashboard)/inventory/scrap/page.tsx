@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import { InventoryNav } from "@/components/InventoryNav";
@@ -56,6 +57,17 @@ export default function ScrapPoolPage() {
   const [addScrapNote, setAddScrapNote] = useState("");
   const [addingScrap, setAddingScrap] = useState(false);
   const [addScrapMsg, setAddScrapMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "simple") router.replace("/inventory-simple");
+      })
+      .catch(() => {});
+  }, [router]);
 
   const { data, isLoading, error } = useQuery<ScrapData>({
     queryKey: ["scrap"],

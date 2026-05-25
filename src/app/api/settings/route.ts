@@ -10,7 +10,8 @@ const updateOrgSchema = z.object({
   name: z.string().min(1, "Company name is required"),
   address: z.string().optional(),
   phone: z.string().optional(),
-  email: z.string().email("Invalid email").optional(),
+  email: z.union([z.string().email(), z.literal("")]).optional(),
+  inventory_mode: z.enum(["detailed", "simple"]).optional(),
 });
 
 export async function GET() {
@@ -36,6 +37,7 @@ export async function GET() {
     phone: org.phone,
     email: org.email,
     plan: org.plan,
+    inventory_mode: org.inventory_mode,
   });
 }
 
@@ -54,15 +56,16 @@ export async function PUT(request: Request) {
       );
     }
 
-    const { name, address, phone, email } = parsed.data;
+    const { name, address, phone, email, inventory_mode } = parsed.data;
 
     const [org] = await db
       .update(organizations)
       .set({
         name,
-        address: address ?? null,
-        phone: phone ?? null,
-        email: email ?? null,
+        address: address || null,
+        phone: phone || null,
+        email: email || null,
+        inventory_mode: inventory_mode ?? undefined,
         updated_at: sql`NOW()`,
       })
       .where(
@@ -91,6 +94,7 @@ export async function PUT(request: Request) {
       phone: org.phone,
       email: org.email,
       plan: org.plan,
+      inventory_mode: org.inventory_mode,
     });
   } catch (error) {
     console.error("Error updating organization:", error);

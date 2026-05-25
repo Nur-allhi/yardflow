@@ -6,11 +6,21 @@ import { InventoryClient } from "./InventoryClient";
 import { InventoryNav } from "@/components/InventoryNav";
 import { db } from "@/lib/db";
 import { eq, and, sql } from "drizzle-orm";
-import { materialCategories, materialSubtypes, stockLedger, scrapPool } from "@/lib/db/schema";
+import { materialCategories, materialSubtypes, stockLedger, scrapPool, organizations } from "@/lib/db/schema";
 
 export default async function InventoryPage() {
   const session = await getSession();
   if (!session) redirect("/login");
+
+  const [org] = await db
+    .select({ inventory_mode: organizations.inventory_mode })
+    .from(organizations)
+    .where(eq(organizations.id, session.org_id))
+    .limit(1);
+
+  if (org?.inventory_mode === "simple") {
+    redirect("/inventory-simple");
+  }
 
   const orgId = session.org_id;
 

@@ -1,3 +1,61 @@
+# Session Log — Start: 2026-05-24
+
+## Added mode guards to all 19 detailed-mode pages
+
+Added redirect guards to detailed-mode inventory/purchases/sales pages. When org's `inventory_mode` is "simple", these pages now redirect to the simple equivalent.
+
+**Files changed (guard added):**
+- `src/app/(dashboard)/inventory/page.tsx` — server component, DB query guard → `/inventory-simple`
+- `src/app/(dashboard)/inventory/categories/page.tsx` — client, useEffect fetch → `/inventory-simple`
+- `src/app/(dashboard)/inventory/subtypes/page.tsx` — client → `/inventory-simple`
+- `src/app/(dashboard)/inventory/ledger/page.tsx` — client → `/inventory-simple`
+- `src/app/(dashboard)/inventory/scrap/page.tsx` — client → `/inventory-simple`
+- `src/app/(dashboard)/inventory/consumables/page.tsx` — client → `/inventory-simple`
+- `src/app/(dashboard)/inventory/consumables/use/page.tsx` — client → `/inventory-simple`
+- `src/app/(dashboard)/purchases/page.tsx` — client → `/purchases-simple`
+- `src/app/(dashboard)/purchases/new/page.tsx` — client → `/purchases-simple`
+- `src/app/(dashboard)/purchases/[id]/page.tsx` — client → `/purchases-simple`
+- `src/app/(dashboard)/purchases/vendors/page.tsx` — client → `/purchases-simple`
+- `src/app/(dashboard)/purchases/vendors/[id]/page.tsx` — client → `/purchases-simple`
+- `src/app/(dashboard)/sales/page.tsx` — client → `/sales-simple`
+- `src/app/(dashboard)/sales/new/page.tsx` — client → `/sales-simple`
+- `src/app/(dashboard)/sales/new/quick/page.tsx` — client → `/sales-simple`
+- `src/app/(dashboard)/sales/[id]/page.tsx` — client → `/sales-simple`
+- `src/app/(dashboard)/sales/customers/page.tsx` — client → `/sales-simple`
+- `src/app/(dashboard)/sales/customers/[id]/page.tsx` — client → `/sales-simple`
+- `src/app/(dashboard)/sales/scrap/new/page.tsx` — client → `/sales-simple`
+
+**Bug fix:** Removed duplicate `const router = useRouter()` in `sales/scrap/new/page.tsx`
+
+**Verification:**
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors
+- `npx next build` — success (78/78 pages)
+
+---
+
+## Added mode guards to all 11 simple-mode pages
+
+When org's `inventory_mode` is "detailed", these pages now redirect to the detailed equivalent.
+
+**Files changed:**
+- `src/app/(dashboard)/inventory-simple/page.tsx` — server component, added DB query guard → redirects to `/inventory`
+- `src/app/(dashboard)/inventory-simple/ledger/page.tsx` — client, useEffect fetch → `/inventory`
+- `src/app/(dashboard)/inventory-simple/scrap/page.tsx` — client, useEffect fetch → `/inventory`
+- `src/app/(dashboard)/inventory-simple/consumables/page.tsx` — client, useEffect fetch → `/inventory`
+- `src/app/(dashboard)/purchases-simple/page.tsx` — client, useEffect fetch → `/purchases`
+- `src/app/(dashboard)/purchases-simple/new/page.tsx` — client, useEffect fetch → `/purchases`
+- `src/app/(dashboard)/purchases-simple/[id]/page.tsx` — client, useEffect fetch → `/purchases`
+- `src/app/(dashboard)/sales-simple/page.tsx` — client, useEffect fetch → `/sales`
+- `src/app/(dashboard)/sales-simple/new/page.tsx` — client, useEffect fetch → `/sales`
+- `src/app/(dashboard)/sales-simple/new/quick/page.tsx` — client, useEffect fetch → `/sales`
+- `src/app/(dashboard)/sales-simple/[id]/page.tsx` — client, useEffect fetch → `/sales`
+
+**Verification:**
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors
+- `npx next build` — success (78/78 pages)
+
 # Session Log — Start: 2026-05-19
 
 ## Project
@@ -747,6 +805,150 @@ User tested the app live at `localhost:3000`. All findings and errors were logge
 - `581fa18` — Pay links + loading.tsx + whileTap
 - `2586504` — Account transaction enrichment
 - `266be56` — Remove dead "View All" span
+
+### Verification
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors
+- `npx next build` — successful
+
+---
+
+## 2026-05-24 — Simple Sales API Routes
+
+### Created 3 new API route files for the Simple Inventory module's Sales sub-module:
+
+1. **`src/app/api/simple/sales/route.ts`**
+   - `GET` — List sales with pagination, filterable by `customer_id`, `status`, `sale_type`, date range. Includes customer name via join. Orders by `sale_date DESC`.
+   - `POST` — Create sale with items in a transaction. Reads pool `avg_price_per_kg` for COGS, updates pool (`total_quantity_kg`, `total_value`), creates `inventoryMovements` entries (`movement_type="out"`, `reference_type="sale"`), records account transaction if `paid_amount > 0`. Auto-calculates `total_amount` and `status`.
+
+2. **`src/app/api/simple/sales/[id]/route.ts`**
+   - `GET` — Single sale with items, payments, and customer info.
+   - `PUT` — Update header fields only (`customer_id`, `customer_name`, `sale_type`, `sale_date`, `note`, `total_amount`, `paid_amount`). Recalculates `status`.
+   - `DELETE` — Soft delete sale + items + payments. Reverses pool movements (reads movement `price_per_kg` to restore value).
+
+3. **`src/app/api/simple/sales/[id]/payments/route.ts`**
+   - `POST` — Record payment in a transaction: inserts `simpleSalePayments`, updates `paid_amount`, recalculates `status`, records account transaction.
+
+## Added Other Expenses + Add Vendor/Customer to simple module
+
+### Changes
+- **Schema**: Added `simplePurchaseOtherExpenses` table (org_id, purchase_id, description, amount, account_id, add_to_vendor_total) with relations and indexes
+- **Migration**: Generated & applied `0009_jazzy_bullseye.sql`
+- **API POST `/api/simple/purchases`**: Accepts `other_expenses[]`, inserts into table, adds vendor-total expenses to `total_amount`, records account transactions for non-vendor-total expenses
+- **API GET `/api/simple/purchases/[id]`**: Returns `other_expenses` in response
+- **UI: New Purchase Form (`purchases-simple/new`)**: Added "Other Expenses" section (description, amount, account, add_to_vendor_total checkbox), order summary shows items vs expense breakdown; added "Add Vendor" link
+- **UI: New Sale Form (`sales-simple/new`)**: Added "Add Customer" link
+- **UI: Purchase Detail Page (`purchases-simple/[id]`)**: Shows "Other Expenses" table, financial summary shows items/expense breakdown
+
+### How it works
+- Expenses with "Add to vendor total" checked → added to purchase `total_amount` (increases vendor due balance)
+- Expenses without it → recorded separately; if account selected, debits that account
+- Only line items affect inventory pool (qty/value) — other expenses are financial tracking only
+
+### Verification
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors
+- `npx next build` — successful
+
+## [P2 — fix 14-17] Simple-mode interconnections audit & fixes
+
+### Audit findings
+After implementing the simple-inventory module, several dashboards/APIs still only queried detailed-mode tables:
+
+| Module | Issue | Source |
+|---|---|---|
+| **Customer profile** (`/api/sales/customers/[id]`) | Only queried `sales`/`salePayments` — missed `simple_sales`/`simple_sale_payments` | Profile showed 0 sales, 0 payments, 0 due |
+| **Vendor profile** (`/api/purchases/vendors/[id]`) | Only queried `purchases`/`purchasePayments` — missed `simple_purchases`/`simple_purchase_payments` | Profile showed 0 purchases, 0 payments, 0 due |
+| **Dashboard** (`/app/(dashboard)/page.tsx`) | All 7+ KPIs used detailed tables only | Stock, sales, AR, AP, recent sales all returned 0 |
+| **Accounts enrichment** (`/lib/accounts.ts`) | `enrichTransactions` only looked up `purchasePayments`/`salePayments` | Simple-mode payment refs returned null name/URL |
+| Mobile quick-entry links | "Add Stock" hardcoded to `/inventory/subtypes` | No mode-aware link for simple mode |
+
+Already handled: Reports & profit calculation (branched), customer/vendor list APIs (fixed earlier).
+
+### Fixes applied
+
+1. **Customer detail API** — Parallel queries for `simple_sales` + `simple_sale_payments` alongside `sales`/`salePayments`, combined in JS for unified response
+2. **Vendor detail API** — Same pattern with `simple_purchases` + `simple_purchase_payments`
+3. **Dashboard** — Split query block into `if (inventoryMode === "simple")`/`else` branches:
+   - Simple: queries `inventoryPool`, `simpleSales`, `simplePurchases`; no category stock breakdown
+   - Detailed: existing queries (`stockLedger`, `sales`, `purchases`, categories)
+   - Shared queries (salaries, opening balances, accounts) — pulled out of branch
+4. **Accounts enrichment** — Added parallel lookups for `simplePurchasePayments` + `simpleSalePayments`, combined maps with detailed maps before lookup
+5. **Mobile links** — "Add Stock" → `/inventory-simple` in simple mode, label changes to "Inventory"
+6. **TypeScript fixes** — Replaced `Promise.all` destructuring with individual `await` + `[0]` indexing for better type inference
+
+### Files changed
+- `src/app/api/sales/customers/[id]/route.ts` — parallel simple-sale queries + combined response
+- `src/app/api/purchases/vendors/[id]/route.ts` — parallel simple-purchase queries + combined response
+- `src/app/(dashboard)/page.tsx` — branched queries for simple mode
+- `src/lib/accounts.ts` — simple-mode payment table lookups in enrichment
+
+### Verification
+- `npx tsc --noEmit` — zero errors
+- `npx eslint .` — zero errors
+- `npx next build` — successful
+
+---
+
+## 2026-05-24 — Purchase Detail Layout + Account Transaction Notes
+
+### Purchase detail layout (`purchases-simple/[id]/page.tsx`)
+- Reordered grid so Financial Summary + Payment Ledger come before Other Expenses in DOM
+- Other Expenses uses `lg:col-span-12` on row 2 below both columns
+
+### Account transaction notes enrichment (6 files)
+- All `recordAccountTransaction` call sites now include entity name + item descriptions in the note
+- Notes: `"Payment to Acme Steel — Steel Rods, Cement, Bricks"` or `"Receipt from John Doe — Fabricated Frame, Gate"`
+- User-provided notes prepended with `" — "` separator
+- Items truncated to 3 with `& N more` suffix
+- Files: `api/simple/purchases/route.ts`, `api/simple/purchases/[id]/payments/route.ts`, `api/simple/sales/route.ts`, `api/simple/sales/[id]/payments/route.ts`, `api/purchases/[id]/payments/route.ts`, `api/sales/[id]/payments/route.ts`
+
+### Due percentage fix
+- Fixed floating-point precision (`25.700000000000003%` → `25.70%`) by pre-calculating `paidPercent` and `duePercent` with `.toFixed(2)`
+
+### Commits
+| Hash | Message |
+|------|---------|
+| `abd3fa4` | [feat] Add Other Expenses + Add Vendor/Customer to simple inventory module |
+| `2a5c06a` | [fix] Change Add Vendor/Customer links to list pages |
+| `21352df` | [fix] Dashboard New Purchase/Sale buttons link directly based on inventory_mode |
+| `e2aae80` | [fix] Widen Qty (kg) and Price/kg input fields |
+| `6e2f197` | [fix] Sales form: show credit balance, match column widths |
+| `94d1500` | [fix] Customer/vendor due_balance includes simple-mode data |
+| `be01520` | [fix 14-17] Simple-mode interconnections audit |
+| `ab0aecb` | [P3] Purchase detail layout reorder |
+| `7a931b9` | [P2] Account transaction notes enrichment |
+| `ce62564` | [P3] Purchase detail Due percentage fix |
+
+---
+
+## 2026-05-24 — Simple-mode Calculation Overhaul + Bug Fixes
+
+### Burnout System Redesign (Simple Mode Only)
+
+**Problem:** Simple-mode profit reports had `current_stock_kg = 0` (never queried `inventoryPool`), causing burnout to be massively overestimated. Burnout was auto-calculated from gap analysis (`purchased - sold - scrap - stock`) which doesn't apply to simple mode (no per-order stock tracking).
+
+**Fix:** Replaced with user-input burnout percentage:
+- Report generate page now shows **"Burnout % (estimate)"** input field
+- `burnout_kg = burnout_percent × total_sold_kg / 100`
+- `current_stock_kg = pool_kg - burnout_kg` (shows closing stock after burnout deduction)
+- Detailed mode unchanged — keeps existing auto-calculation
+
+### Files changed:
+- `src/lib/calculations/profit.ts` — inventoryPool query + `burnoutPercent` param + branched burnout calc
+- `src/lib/validations/schemas.ts` — `burnout_percent` field in `generateReportSchema`
+- `src/app/api/reports/route.ts` — pass `burnout_percent` to calculation
+- `src/app/(dashboard)/reports/generate/page.tsx` — added burnout % input field
+
+### API Bug Fixes:
+- **DELETE simple/purchases**: now deletes `inventoryMovements` rows (were orphaned — movement ledger permanently inflated)
+- **DELETE simple/sales**: same fix — `inventoryMovements` rows now removed on void
+- **POST simple/sales**: added insufficient stock guard — returns 400 with message if sale qty > pool qty
+
+### Commits:
+| Hash | Message |
+|------|---------|
+| `503263a` | Simple-mode calculation overhaul: burnout redesign + bug fixes |
 
 ### Verification
 - `npx tsc --noEmit` — zero errors

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { customers, sales, salePayments, accounts } from "@/lib/db/schema";
+import { customers, sales, salePayments, accounts, simpleSales, simpleSalePayments, accountTransactions } from "@/lib/db/schema";
 import { eq, and, sql, inArray } from "drizzle-orm";
 import { requireOrg } from "@/lib/auth/session";
 
@@ -27,60 +27,136 @@ export async function GET(
     return NextResponse.json({ error: "Customer not found" }, { status: 404 });
   }
 
-  const saleList = await db
-    .select()
-    .from(sales)
-    .where(
-      and(
-        eq(sales.customer_id, id),
-        eq(sales.organization_id, orgId),
-        sql`${sales.deleted_at} IS NULL`,
-      ),
-    )
-    .orderBy(sql`${sales.sale_date} DESC`);
+  const [saleList, simpleSaleList] = await Promise.all([
+    db
+      .select()
+      .from(sales)
+      .where(
+        and(
+          eq(sales.customer_id, id),
+          eq(sales.organization_id, orgId),
+          sql`${sales.deleted_at} IS NULL`,
+        ),
+      )
+      .orderBy(sql`${sales.sale_date} DESC`),
+
+    db
+      .select()
+      .from(simpleSales)
+      .where(
+        and(
+          eq(simpleSales.customer_id, id),
+          eq(simpleSales.organization_id, orgId),
+          sql`${simpleSales.deleted_at} IS NULL`,
+        ),
+      )
+      .orderBy(sql`${simpleSales.sale_date} DESC`),
+  ]);
 
   const saleIds = saleList.map((s) => s.id);
-  let payments: {
-    id: string;
-    sale_id: string;
-    amount: string;
-    payment_date: Date;
-    note: string | null;
-    account_id: string;
-    account_name: string | null;
-  }[] = [];
-  if (saleIds.length > 0) {
-    payments = await db
+  const simpleSaleIds = simpleSaleList.map((s) => s.id);
+
+  const [payments, simplePayments, openingBalancePayments] = await Promise.all([
+    saleIds.length > 0
+      ? db
+          .select({
+            id: salePayments.id,
+            sale_id: salePayments.sale_id,
+            amount: salePayments.amount,
+            payment_date: salePayments.payment_date,
+            note: salePayments.note,
+            account_id: salePayments.account_id,
+            account_name: accounts.name,
+          })
+          .from(salePayments)
+          .leftJoin(
+            accounts,
+            and(
+              eq(salePayments.account_id, accounts.id),
+              sql`${accounts.deleted_at} IS NULL`,
+            ),
+          )
+          .where(
+            and(
+              inArray(salePayments.sale_id, saleIds),
+              eq(salePayments.organization_id, orgId),
+              sql`${salePayments.deleted_at} IS NULL`,
+            ),
+          )
+          .orderBy(salePayments.payment_date)
+      : Promise.resolve([] as {
+          id: string; sale_id: string; amount: string; payment_date: Date;
+          note: string | null; account_id: string; account_name: string | null;
+        }[]),
+    simpleSaleIds.length > 0
+      ? db
+          .select({
+            id: simpleSalePayments.id,
+            sale_id: simpleSalePayments.sale_id,
+            amount: simpleSalePayments.amount,
+            payment_date: simpleSalePayments.payment_date,
+            note: simpleSalePayments.note,
+            account_id: simpleSalePayments.account_id,
+            account_name: accounts.name,
+          })
+          .from(simpleSalePayments)
+          .leftJoin(
+            accounts,
+            and(
+              eq(simpleSalePayments.account_id, accounts.id),
+              sql`${accounts.deleted_at} IS NULL`,
+            ),
+          )
+          .where(
+            and(
+              inArray(simpleSalePayments.sale_id, simpleSaleIds),
+              eq(simpleSalePayments.organization_id, orgId),
+              sql`${simpleSalePayments.deleted_at} IS NULL`,
+            ),
+          )
+          .orderBy(simpleSalePayments.payment_date)
+      : Promise.resolve([] as {
+          id: string; sale_id: string; amount: string; payment_date: Date;
+          note: string | null; account_id: string; account_name: string | null;
+        }[]),
+    db
       .select({
-        id: salePayments.id,
-        sale_id: salePayments.sale_id,
-        amount: salePayments.amount,
-        payment_date: salePayments.payment_date,
-        note: salePayments.note,
-        account_id: salePayments.account_id,
+        id: accountTransactions.id,
+        amount: accountTransactions.amount,
+        payment_date: accountTransactions.transaction_date,
+        note: accountTransactions.note,
+        account_id: accountTransactions.account_id,
         account_name: accounts.name,
       })
-      .from(salePayments)
+      .from(accountTransactions)
       .leftJoin(
         accounts,
         and(
-          eq(salePayments.account_id, accounts.id),
+          eq(accountTransactions.account_id, accounts.id),
           sql`${accounts.deleted_at} IS NULL`,
         ),
       )
       .where(
         and(
-          inArray(salePayments.sale_id, saleIds),
-          eq(salePayments.organization_id, orgId),
-          sql`${salePayments.deleted_at} IS NULL`,
+          eq(accountTransactions.reference_type, "other"),
+          eq(accountTransactions.reference_id, id),
+          eq(accountTransactions.organization_id, orgId),
+          sql`${accountTransactions.deleted_at} IS NULL`,
         ),
       )
-      .orderBy(salePayments.payment_date);
-  }
+      .orderBy(accountTransactions.transaction_date)
+      .then((res) =>
+        res.map((r) => ({ ...r, sale_id: "opening-balance", amount: Number(r.amount) })),
+      ),
+  ]);
 
   const openingBalance = Number(customer.opening_balance);
-  const totalSaleAmount = saleList.reduce((s, sa) => s + Number(sa.total_amount), 0);
-  const totalReceived = saleList.reduce((s, sa) => s + Number(sa.paid_amount), 0);
+  const totalSaleAmount =
+    saleList.reduce((s, sa) => s + Number(sa.total_amount), 0) +
+    simpleSaleList.reduce((s, sa) => s + Number(sa.total_amount), 0);
+  const totalReceived =
+    saleList.reduce((s, sa) => s + Number(sa.paid_amount), 0) +
+    simpleSaleList.reduce((s, sa) => s + Number(sa.paid_amount), 0);
   const totalDue = openingBalance + totalSaleAmount - totalReceived;
 
   return NextResponse.json({
@@ -91,23 +167,43 @@ export async function GET(
     type: customer.type,
     opening_balance: openingBalance,
     is_active: customer.is_active,
-    sales: saleList.map((s) => ({
-      id: s.id,
-      sale_type: s.sale_type,
-      is_quick_cash_sale: s.is_quick_cash_sale,
-      sale_date: s.sale_date,
-      total_amount: Number(s.total_amount),
-      paid_amount: Number(s.paid_amount),
-      due_amount: Number(s.due_amount),
-      status: s.status,
-      note: s.note,
-    })),
-    payments: payments.map((p) => ({
-      ...p,
-      amount: Number(p.amount),
-    })),
+    sales: [
+      ...saleList.map((s) => ({
+        id: s.id,
+        sale_type: s.sale_type,
+        is_quick_cash_sale: s.is_quick_cash_sale,
+        sale_date: s.sale_date,
+        total_amount: Number(s.total_amount),
+        paid_amount: Number(s.paid_amount),
+        due_amount: Number(s.due_amount),
+        status: s.status,
+        note: s.note,
+      })),
+      ...simpleSaleList.map((s) => ({
+        id: s.id,
+        sale_type: s.sale_type,
+        is_quick_cash_sale: s.is_quick_cash_sale,
+        sale_date: s.sale_date,
+        total_amount: Number(s.total_amount),
+        paid_amount: Number(s.paid_amount),
+        due_amount: Number(s.due_amount),
+        status: s.status,
+        note: s.note,
+      })),
+    ],
+    payments: [
+      ...payments.map((p) => ({
+        ...p,
+        amount: Number(p.amount),
+      })),
+      ...simplePayments.map((p) => ({
+        ...p,
+        amount: Number(p.amount),
+      })),
+      ...openingBalancePayments,
+    ],
     summary: {
-      total_sales: saleList.length,
+      total_sales: saleList.length + simpleSaleList.length,
       total_sale_amount: totalSaleAmount,
       total_received: totalReceived,
       total_due: totalDue,

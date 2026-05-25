@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -161,6 +161,17 @@ export default function NewPurchasePage() {
   function getSubtypesFor(item: LineItem): Subtype[] {
     return (subtypesData ?? []).filter((st) => st.category_id === item.category_id);
   }
+
+  const routerPurchases = useRouter();
+
+  useEffect(() => {
+    fetch("/api/simple/mode")
+      .then(r => r.json())
+      .then(data => {
+        if (data.mode === "simple") routerPurchases.replace("/purchases-simple");
+      })
+      .catch(() => {});
+  }, [routerPurchases]);
 
   const mutation = useMutation({
     mutationFn: async (formData: Record<string, unknown>) => {
