@@ -108,6 +108,7 @@ export default function SettingsPage() {
         <span className="px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap bg-primary text-on-primary">General</span>
         <Link href="/settings/team" className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-colors">Team Members</Link>
         <Link href="/settings/logs" className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-colors">Activity Logs</Link>
+        <Link href="/settings/data" className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-colors">Data Management</Link>
       </div>
 
       {/* Loading */}
@@ -284,11 +285,11 @@ export default function SettingsPage() {
             <h3 className="font-display text-sm font-bold text-error uppercase tracking-wider">Danger Zone</h3>
           </div>
           <p className="text-sm text-on-surface-variant leading-relaxed mb-6">
-            Deleting this organization will permanently remove all associated records. This action <span className="font-bold underline text-on-surface">cannot be undone</span>.
+            Manage data export, import, and erasure in the <span className="font-bold">Data Management</span> section.
           </p>
-          <button className="w-full py-3 px-4 border border-error text-error font-bold text-sm rounded-lg hover:bg-error/5 active:bg-error/10 transition-all">
-            Delete Organization
-          </button>
+          <Link href="/settings/data" className="block w-full py-3 px-4 border border-error text-error font-bold text-sm rounded-lg hover:bg-error/5 active:bg-error/10 transition-all text-center">
+            Go to Data Management
+          </Link>
         </div></>
       )}
     </div>

@@ -136,6 +136,7 @@ export default function ActivityLogsPage() {
         <Link href="/settings" className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-colors">General</Link>
         <Link href="/settings/team" className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-colors">Team Members</Link>
         <span className="px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap bg-primary text-on-primary">Activity Logs</span>
+        <Link href="/settings/data" className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-colors">Data Management</Link>
       </div>
 
       {/* Filters */}
